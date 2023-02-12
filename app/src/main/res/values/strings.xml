@@ -1,3 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <string name="app_name"> </string>
+    <string name="app_name">PyCulator</string>
+    <string name="code_example">"# Write your functions, constants, etc here
+
+from math import factorial as f
+def C(n, r): return f(n) // (f(r)*f(n-r)) # Number of Combinations formula
+class squareEquationSolution:
+    def __init__(self, x1, x2, sqrtD, D):
+        self.x1 = x1
+        self.x2 = x2
+        self.sqrtD = sqrtD
+        self.D = D
+    def __str__(self):
+        return f\'\'\'x1 = {self.x1}
+x2 = {self.x2}
+sqrt(D) = {self.sqrtD}
+D = {self.D}\'\'\'
+
+def solveSquareEquation(a,b,c):
+    d = b*b-4*a*c
+    x1 = (-b+d**.5)/(2*a)
+    x2 = (-b-d**.5)/(2*a)
+    try:
+       x1, x2 = sorted([x1, x2])
+    except TypeError: # In case of complex roots
+       pass
+    return squareEquationSolution(x1, x2, d**.5, d)"
+    </string>
+    <string name="delete">Delete</string>
+    <string name="paste">Paste</string>
+    <string name="view_full">View full</string>
+
 </resources>
