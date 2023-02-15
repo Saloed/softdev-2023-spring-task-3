@@ -7,14 +7,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.IconButton
 import androidx.compose.material.TextField
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.R
 
 import java.io.File
 
@@ -61,7 +61,7 @@ fun Page2(
                 }
             },
         ) {
-            Icon(Icons.Filled.Save, contentDescription = "")
+            Icon(painterResource(id = R.drawable.baseline_save_24), contentDescription = "")
         }
     }
 }
