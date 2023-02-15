@@ -64,6 +64,9 @@ fun Calculator(
             if (pageNumber == 2) {
                 Page2(filesDir)
             }
+            if (pageNumber == 3) {
+                Page3()
+            }
         }
     }
 }
