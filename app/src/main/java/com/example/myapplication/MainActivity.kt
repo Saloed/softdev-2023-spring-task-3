@@ -14,14 +14,17 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import java.io.File
+import com.example.myapplication.viewmodels.MemoryViewModel
 
+
+val memoryViewModel = MemoryViewModel()
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             PyApplication()
             Calculator(
+                memoryViewModel,
                 filesDir = applicationContext.filesDir,
             )
         }
@@ -31,11 +34,14 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Calculator(
+    memoryViewModel: MemoryViewModel,
     staticResult: String? = null, // Preview can't calculate result
     filesDir: File?,
 ) {
     MyApplicationTheme {
-        val memoryList = remember { mutableStateListOf<MemoryElement>() } // TODO: Change to ViewModel
+
+        val memoryList by memoryViewModel.memoryList.collectAsState()
+
         val pagerState = rememberPagerState(1)
         var toEval by remember { mutableStateOf("") }
 
@@ -67,6 +73,7 @@ fun Calculator(
 @Composable
 fun CalculatorPreview() {
     Calculator(
+        memoryViewModel,
         staticResult = "Result",
         filesDir = null,
     )

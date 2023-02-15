@@ -21,11 +21,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.chaquo.python.Python
 import com.example.myapplication.R
+import com.example.myapplication.viewmodels.MemoryElement
 import java.io.File
 
-data class MemoryElement(var variableName: String, var variable: String) {
-    override fun toString(): String = "$variableName = $variable\n"
-}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

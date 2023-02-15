@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.myapplication.R
-
+import com.example.myapplication.viewmodels.MemoryElement
 
 @Composable
 fun MemoryElementCard(
