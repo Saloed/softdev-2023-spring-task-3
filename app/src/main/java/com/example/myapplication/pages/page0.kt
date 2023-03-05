@@ -192,7 +192,7 @@ private fun MemoryElementCard(
                         fullVariableInfoShown = true
                     }
                 ) {
-                    Text(LocalContext.current.getString(R.string.view_full))
+                    Text(LocalContext.current.getString(R.string.View_full))
                 }
                 DropdownMenuItem(
                     {
@@ -200,7 +200,7 @@ private fun MemoryElementCard(
                         onPaste(variable)
                     },
                 ) {
-                    Text(LocalContext.current.getString(R.string.paste))
+                    Text(LocalContext.current.getString(R.string.Paste))
                 }
                 DropdownMenuItem(
                     {
@@ -208,7 +208,7 @@ private fun MemoryElementCard(
                         onDelete()
                     }
                 ) {
-                    Text(LocalContext.current.getString(R.string.delete))
+                    Text(LocalContext.current.getString(R.string.Delete))
                 }
             }
         }

@@ -40,7 +40,7 @@ fun Page2(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(5.dp)
+            .padding(top = 5.dp, start = 5.dp, end = 5.dp)
     ) {
         BasicTextField(
             modifier = Modifier

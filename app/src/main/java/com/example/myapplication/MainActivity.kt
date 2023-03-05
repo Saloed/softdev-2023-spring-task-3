@@ -4,11 +4,12 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.chaquo.python.Python
@@ -70,7 +71,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun Calculator(
     memoryViewModel: MemoryViewModel,
@@ -79,19 +80,31 @@ fun Calculator(
 ) {
     MyApplicationTheme {
 
+        val keyboard = LocalSoftwareKeyboardController.current
         val scope = rememberCoroutineScope()
         val memoryList by memoryViewModel.memoryList.collectAsState()
         var toEval by remember { mutableStateOf("") }
 
         val pagerState = rememberPagerState(1)
         val scaffoldState = rememberScaffoldState()
-        val pageNames = listOf("Favorites", "Expression", "Script", "Settings")
+        val pageNames = listOf(
+            LocalContext.current.getString(R.string.Favorites),
+            LocalContext.current.getString(R.string.Expression),
+            LocalContext.current.getString(R.string.Code),
+            LocalContext.current.getString(R.string.Settings),
+        )
         val pageIcons = listOf(
             painterResource(R.drawable.baseline_favorite_24),
             painterResource(R.drawable.baseline_create_24),
             painterResource(R.drawable.baseline_code_24),
             painterResource(R.drawable.baseline_settings_24),
         )
+
+        LaunchedEffect(pagerState) {
+            snapshotFlow { pagerState.currentPage }.collect {
+                keyboard?.hide()
+            }
+        }
 
         // HorizontalPager with BottomAppBar
         Scaffold(
@@ -118,7 +131,7 @@ fun Calculator(
             }
         ) {
             HorizontalPager(
-                modifier = Modifier.padding(it),
+                contentPadding = it,
                 count = 4,
                 state = pagerState,
             ) { pageNumber ->

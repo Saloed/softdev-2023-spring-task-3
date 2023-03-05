@@ -28,8 +28,12 @@ def solveQuadraticEquation(a,b,c):
        pass
     return squareEquationSolution(x1, x2, d**.5, d)"
     </string>
-    <string name="delete">Delete</string>
-    <string name="paste">Paste</string>
-    <string name="view_full">View full</string>
+    <string name="Delete">Delete</string>
+    <string name="Paste">Paste</string>
+    <string name="View_full">View full</string>
+    <string name="Favorites">Favorites</string>
+    <string name="Expression">Expression</string>
+    <string name="Code">Code</string>
+    <string name="Settings">Options</string>
 
 </resources>

@@ -14,8 +14,6 @@ def main(toExec, toEval):
         except Exception as Error:
             return f"Error while trying to eval: {Error}"
 
-
-
         return str(result)
     except Exception as Error:
         return Error
