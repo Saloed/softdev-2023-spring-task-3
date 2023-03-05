@@ -1,6 +1,5 @@
 package com.example.myapplication.pages
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,7 +9,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,8 +45,9 @@ fun Page2(
         BasicTextField(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .horizontalScroll(rememberScrollState()),
+                //.horizontalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+
             value = execInput,
             onValueChange = { execInput = it },
             textStyle = TextStyle(fontFamily = FontFamily.Monospace),
@@ -67,7 +66,7 @@ fun Page2(
                 }
             },
         ) {
-            Icon(painterResource(id = R.drawable.baseline_save_24), contentDescription = "")
+            Icon(painterResource(R.drawable.baseline_save_24), null)
         }
     }
 }

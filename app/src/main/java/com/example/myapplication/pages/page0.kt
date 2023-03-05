@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.myapplication.R
 import com.example.myapplication.eval
-import com.example.myapplication.viewmodels.MemoryElement
+import com.example.myapplication.viewmodels.FavoriteElement
 import java.io.File
 
 @Composable
@@ -39,7 +39,7 @@ private fun MemoryElementCard(
     onDelete: () -> Unit,
     onPaste: (String) -> Unit,
     filesDir: File?,
-    memoryList: SnapshotStateList<MemoryElement>,
+    memoryList: SnapshotStateList<FavoriteElement>,
 ) {
     Card(
         modifier = Modifier
@@ -89,7 +89,7 @@ private fun MemoryElementCard(
                                     ),
                                     colors = TextFieldDefaults.textFieldColors(
                                         // TODO: change TextFieldDefaults
-                                        //backgroundColor = Color.White,
+                                        // backgroundColor = Color.White,
                                         focusedIndicatorColor = Color.Transparent,
                                         unfocusedIndicatorColor = Color.Transparent,
                                     ),
@@ -217,7 +217,7 @@ private fun MemoryElementCard(
 
 @Composable
 fun Page0(
-    memoryList: SnapshotStateList<MemoryElement>,
+    memoryList: SnapshotStateList<FavoriteElement>,
     onPaste: (String) -> Unit,
     filesDir: File?,
 ) {
@@ -227,7 +227,7 @@ fun Page0(
                 MemoryElementCard(
                     variable = memoryList[i].variable,
                     onVariableChange = {
-                        memoryList[i] = MemoryElement(
+                        memoryList[i] = FavoriteElement(
                             memoryList[i].variableName,
                             it,
                             memoryList[i].variableScript
@@ -235,7 +235,7 @@ fun Page0(
                     },
                     variableName = memoryList[i].variableName,
                     onVariableNameChange = {
-                        memoryList[i] = MemoryElement(
+                        memoryList[i] = FavoriteElement(
                             it,
                             memoryList[i].variable,
                             memoryList[i].variableScript
@@ -243,7 +243,7 @@ fun Page0(
                     },
                     variableScript = memoryList[i].variableScript,
                     onVariableScriptChange = {
-                        memoryList[i] = MemoryElement(
+                        memoryList[i] = FavoriteElement(
                             memoryList[i].variableName,
                             memoryList[i].variable,
                             it

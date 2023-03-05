@@ -18,17 +18,16 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.chaquo.python.Python
 import com.example.myapplication.R
 import com.example.myapplication.eval
-import com.example.myapplication.viewmodels.MemoryElement
+import com.example.myapplication.viewmodels.FavoriteElement
 import java.io.File
 
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Page1(
-    memoryList: MutableList<MemoryElement>,
+    memoryList: MutableList<FavoriteElement>,
     toEval: String,
     onToEvalChange: (String) -> Unit,
     filesDir: File?,
@@ -73,7 +72,7 @@ fun Page1(
             modifier = Modifier
                 .align(Alignment.BottomEnd),
             onClick = {
-                memoryList.add(MemoryElement("a${memoryList.size+1}", result, toEval))
+                memoryList.add(FavoriteElement("a${memoryList.size+1}", result, toEval))
             },
         ) {
             Icon(painterResource(id = R.drawable.baseline_save_alt_24), contentDescription = null)

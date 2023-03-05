@@ -7,18 +7,21 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.chaquo.python.Python
 import com.chaquo.python.android.PyApplication
 import com.example.myapplication.pages.*
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import com.example.myapplication.viewmodels.MemoryElement
+import com.example.myapplication.viewmodels.FavoriteElement
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import java.io.File
 import com.example.myapplication.viewmodels.MemoryViewModel
+import kotlinx.coroutines.launch
 
 
 val memoryViewModel = MemoryViewModel()
@@ -26,7 +29,7 @@ val py = Python.getInstance()
 
 
 fun eval(
-    memoryList: MutableList<MemoryElement>,
+    memoryList: MutableList<FavoriteElement>,
     filesDir: File?,
     toEval: String,
     context: Context
@@ -47,8 +50,8 @@ fun eval(
     return py.getModule("main").callAttr(
         "main",
         rememberedConstants + toExec,
-        toEval)
-        .toString()
+        toEval
+    ).toString()
 }
 
 class MainActivity : ComponentActivity() {
@@ -76,33 +79,67 @@ fun Calculator(
 ) {
     MyApplicationTheme {
 
+        val scope = rememberCoroutineScope()
         val memoryList by memoryViewModel.memoryList.collectAsState()
+        var toEval by remember { mutableStateOf("") }
 
         val pagerState = rememberPagerState(1)
-        var toEval by remember { mutableStateOf("") }
-        
-        HorizontalPager(count = 4, state = pagerState) { pageNumber ->
-            if (pageNumber == 0) {
-                Page0(
-                    memoryList = memoryList,
-                    onPaste = { toEval += it },
-                    filesDir = filesDir,
-                )
+        val scaffoldState = rememberScaffoldState()
+        val pageNames = listOf("Favorites", "Eval", "Script", "Settings")
+        val pageIcons = listOf(
+            painterResource(R.drawable.baseline_favorite_24),
+            painterResource(R.drawable.baseline_create_24),
+            painterResource(R.drawable.baseline_code_24),
+            painterResource(R.drawable.baseline_settings_24),
+        )
+
+        // HorizontalPager with BottomAppBar
+        Scaffold(
+            scaffoldState = scaffoldState,
+            bottomBar = {
+                BottomNavigation {
+                    for (pageNumber in pageNames.indices) {
+                        BottomNavigationItem(
+                            icon = {
+                                Icon(pageIcons[pageNumber], null)
+                            },
+                            selected = pageNumber == pagerState.currentPage,
+                            onClick = {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(pageNumber)
+                                }
+                            },
+                            selectedContentColor = Color.Magenta,
+                            unselectedContentColor = Color.LightGray,
+                            label = { Text(pageNames[pageNumber]) }
+                        )
+                    }
+                }
             }
-            if (pageNumber == 1) {
-                Page1(
-                    memoryList = memoryList,
-                    toEval = toEval,
-                    onToEvalChange = { toEval = it },
-                    filesDir = filesDir,
-                    staticResult = staticResult
-                )
-            }
-            if (pageNumber == 2) {
-                Page2(filesDir)
-            }
-            if (pageNumber == 3) {
-                Page3()
+        ) {
+            HorizontalPager(
+                modifier = Modifier.padding(it),
+                count = 4,
+                state = pagerState,
+            ) { pageNumber ->
+                when (pageNumber) {
+                    0 -> Page0(
+                        memoryList = memoryList,
+                        onPaste = { toEval += it },
+                        filesDir = filesDir,
+                    )
+                    1 -> Page1(
+                        memoryList = memoryList,
+                        toEval = toEval,
+                        onToEvalChange = { toEval = it },
+                        filesDir = filesDir,
+                        staticResult = staticResult,
+                    )
+                    2 -> Page2(
+                        filesDir
+                    )
+                    3 -> Page3()
+                }
             }
         }
     }
