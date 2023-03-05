@@ -6,7 +6,7 @@
 
 from math import factorial as f
 def C(n, r): return f(n) // (f(r)*f(n-r)) # Number of Combinations formula
-class squareEquationSolution:
+class quadraticEquationSolution:
     def __init__(self, x1, x2, sqrtD, D):
         self.x1 = x1
         self.x2 = x2
@@ -18,7 +18,7 @@ x2 = {self.x2}
 sqrt(D) = {self.sqrtD}
 D = {self.D}\'\'\'
 
-def solveSquareEquation(a,b,c):
+def solveQuadraticEquation(a,b,c):
     d = b*b-4*a*c
     x1 = (-b+d**.5)/(2*a)
     x2 = (-b-d**.5)/(2*a)

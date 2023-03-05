@@ -1,15 +1,19 @@
 package com.example.myapplication
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.chaquo.python.Python
 import com.chaquo.python.android.PyApplication
 import com.example.myapplication.pages.*
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.viewmodels.MemoryElement
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -18,11 +22,42 @@ import com.example.myapplication.viewmodels.MemoryViewModel
 
 
 val memoryViewModel = MemoryViewModel()
+val py = Python.getInstance()
+
+
+fun eval(
+    memoryList: MutableList<MemoryElement>,
+    filesDir: File?,
+    toEval: String,
+    context: Context
+): String {
+    val toExec = if (filesDir != null) {
+        val file = File(filesDir, "toExec.py")
+        if (file.createNewFile()) {
+            file.writer().use {
+                it.write(context.getString(R.string.code_example))
+            }
+        }
+        file.reader().use { it.readText() }
+    } else "pass"
+
+    var rememberedConstants = ""
+    memoryList.forEach { rememberedConstants += it.toString() }
+
+    return py.getModule("main").callAttr(
+        "main",
+        rememberedConstants + toExec,
+        toEval)
+        .toString()
+}
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             PyApplication()
+
             Calculator(
                 memoryViewModel,
                 filesDir = applicationContext.filesDir,
@@ -30,6 +65,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -44,12 +80,13 @@ fun Calculator(
 
         val pagerState = rememberPagerState(1)
         var toEval by remember { mutableStateOf("") }
-
-        HorizontalPager(count = 3, state = pagerState) { pageNumber ->
+        
+        HorizontalPager(count = 4, state = pagerState) { pageNumber ->
             if (pageNumber == 0) {
                 Page0(
                     memoryList = memoryList,
                     onPaste = { toEval += it },
+                    filesDir = filesDir,
                 )
             }
             if (pageNumber == 1) {

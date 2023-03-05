@@ -1,10 +1,12 @@
 package com.example.myapplication.pages
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -13,11 +15,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 
 import java.io.File
-
 
 
 @Composable
@@ -35,17 +38,20 @@ fun Page2(
             }
         )
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(5.dp)
     ) {
-        TextField(
+        BasicTextField(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .horizontalScroll(rememberScrollState()),
             value = execInput,
             onValueChange = { execInput = it },
+            textStyle = TextStyle(fontFamily = FontFamily.Monospace),
         )
         IconButton(
             modifier = Modifier

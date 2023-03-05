@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.chaquo.python.Python
 import com.example.myapplication.R
+import com.example.myapplication.eval
 import com.example.myapplication.viewmodels.MemoryElement
 import java.io.File
 
@@ -30,21 +31,9 @@ fun Page1(
     memoryList: MutableList<MemoryElement>,
     toEval: String,
     onToEvalChange: (String) -> Unit,
-
     filesDir: File?,
     staticResult: String?,
 ) {
-    val toExec = if (filesDir != null) {
-        val file = File(filesDir, "toExec.py")
-        if (file.createNewFile()) {
-            val writer = file.writer()
-            writer.write(LocalContext.current.getString(R.string.code_example))
-            writer.close()
-        }
-        val reader = file.reader()
-        reader.readText().also { reader.close() }
-    } else "Stub!"
-
     val keyboard = LocalSoftwareKeyboardController.current
     var result = ""
 
@@ -68,16 +57,8 @@ fun Page1(
                 ),
             )
 
-            var rememberedConstants = ""
-            memoryList.forEach { rememberedConstants += it.toString() }
-
-            println(rememberedConstants)
-
             // That's for preview to work properly
-            result = if (staticResult == null) {
-                val py = Python.getInstance()
-                py.getModule("main").callAttr("main", rememberedConstants + toExec, toEval).toString()
-            } else staticResult
+            result = staticResult ?: eval(memoryList, filesDir, toEval, LocalContext.current)
 
             Text(
                 result,
@@ -92,10 +73,10 @@ fun Page1(
             modifier = Modifier
                 .align(Alignment.BottomEnd),
             onClick = {
-                memoryList.add(MemoryElement("a${memoryList.size+1}", result))
+                memoryList.add(MemoryElement("a${memoryList.size+1}", result, toEval))
             },
         ) {
-            Icon(painterResource(id = R.drawable.baseline_save_alt_24), contentDescription = "")
+            Icon(painterResource(id = R.drawable.baseline_save_alt_24), contentDescription = null)
         }
     }
 }

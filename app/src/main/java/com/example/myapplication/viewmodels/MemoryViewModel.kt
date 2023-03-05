@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 
-data class MemoryElement(var variableName: String, var variable: String) {
+class MemoryElement(var variableName: String, var variable: String, var variableScript: String) {
     override fun toString(): String = "$variableName = $variable\n"
 }
 
