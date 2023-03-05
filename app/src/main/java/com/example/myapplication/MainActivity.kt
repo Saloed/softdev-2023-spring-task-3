@@ -85,7 +85,7 @@ fun Calculator(
 
         val pagerState = rememberPagerState(1)
         val scaffoldState = rememberScaffoldState()
-        val pageNames = listOf("Favorites", "Eval", "Script", "Settings")
+        val pageNames = listOf("Favorites", "Expression", "Script", "Settings")
         val pageIcons = listOf(
             painterResource(R.drawable.baseline_favorite_24),
             painterResource(R.drawable.baseline_create_24),
