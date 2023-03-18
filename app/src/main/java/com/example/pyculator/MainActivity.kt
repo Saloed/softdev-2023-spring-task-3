@@ -16,19 +16,19 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.chaquo.python.Python
 import com.chaquo.python.android.PyApplication
-import com.example.pyculator.ui.theme.PyculatorTheme
 import com.example.pyculator.pages.Page0
 import com.example.pyculator.pages.Page1
 import com.example.pyculator.pages.Page2
 import com.example.pyculator.pages.Page3
+import com.example.pyculator.ui.theme.PyculatorTheme
 import com.example.pyculator.viewmodels.FavoriteElement
+import com.example.pyculator.viewmodels.MemoryViewModel
+import com.example.pyculator.viewmodels.SettingsViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import java.io.File
-import com.example.pyculator.viewmodels.MemoryViewModel
-import com.example.pyculator.viewmodels.SettingsViewModel
 import kotlinx.coroutines.launch
+import java.io.File
 
 
 val memoryViewModel = MemoryViewModel()
