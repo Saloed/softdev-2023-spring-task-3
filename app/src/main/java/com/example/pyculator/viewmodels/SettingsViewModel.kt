@@ -1,4 +1,4 @@
-package com.example.myapplication.viewmodels
+package com.example.pyculator.viewmodels
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.dataStore
+import com.example.pyculator.dataStore
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 

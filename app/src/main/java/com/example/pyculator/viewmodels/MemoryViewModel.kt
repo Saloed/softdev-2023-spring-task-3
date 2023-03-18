@@ -1,4 +1,4 @@
-package com.example.myapplication.viewmodels
+package com.example.pyculator.viewmodels
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel

@@ -1,4 +1,4 @@
-package com.example.myapplication.pages
+package com.example.pyculator.pages
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.myapplication.R
-import com.example.myapplication.eval
-import com.example.myapplication.viewmodels.FavoriteElement
+import com.example.pyculator.R
+import com.example.pyculator.eval
+import com.example.pyculator.viewmodels.FavoriteElement
 import java.io.File
 
 @Composable

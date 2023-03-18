@@ -1,4 +1,4 @@
-package com.example.myapplication.pages
+package com.example.pyculator.pages
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -18,9 +18,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.R
-import com.example.myapplication.eval
-import com.example.myapplication.viewmodels.FavoriteElement
+import com.example.pyculator.R
+import com.example.pyculator.eval
+import com.example.pyculator.viewmodels.FavoriteElement
 import java.io.File
 
 

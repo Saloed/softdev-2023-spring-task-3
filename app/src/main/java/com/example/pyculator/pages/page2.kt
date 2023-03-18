@@ -1,4 +1,4 @@
-package com.example.myapplication.pages
+package com.example.pyculator.pages
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.R
+import com.example.pyculator.R
 
 import java.io.File
 

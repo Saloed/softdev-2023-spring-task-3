@@ -1,15 +1,15 @@
-package com.example.myapplication.pages
+package com.example.pyculator.pages
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import com.example.myapplication.R
+import com.example.pyculator.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.example.myapplication.viewmodels.SettingsViewModel
+import com.example.pyculator.viewmodels.SettingsViewModel
 
 
 @Composable
