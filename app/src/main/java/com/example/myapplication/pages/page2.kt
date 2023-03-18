@@ -5,16 +5,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
 
@@ -42,7 +40,7 @@ fun Page2(
             .fillMaxSize()
             .padding(top = 5.dp, start = 5.dp, end = 5.dp)
     ) {
-        BasicTextField(
+        TextField(
             modifier = Modifier
                 .fillMaxSize()
                 //.horizontalScroll(rememberScrollState())
@@ -50,7 +48,7 @@ fun Page2(
 
             value = execInput,
             onValueChange = { execInput = it },
-            textStyle = TextStyle(fontFamily = FontFamily.Monospace),
+            //textStyle = TextStyle(fontFamily = FontFamily.Monospace),
         )
         IconButton(
             modifier = Modifier
