@@ -159,6 +159,7 @@ fun PyCulatorApp(
                         staticResult = staticResult,
                     )
                     2 -> Page2(
+                        context,
                         filesDir
                     )
                     3 -> Page3(
@@ -170,14 +171,4 @@ fun PyCulatorApp(
     }
 }
 
-// It's too useless
 
-/*@Preview(showBackground = true, widthDp = 360, heightDp = 640, fontScale = 1f)
-@Composable
-fun CalculatorPreview() {
-    Calculator(
-        memoryViewModel,
-        staticResult = "Result",
-        filesDir = null,
-    )
-}*/
