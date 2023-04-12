@@ -20,18 +20,20 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.pyculator.R
 import com.example.pyculator.eval
-import com.example.pyculator.viewmodels.FavoriteElement
+import com.example.pyculator.viewmodels.FavoriteVariable
+import kotlinx.coroutines.CoroutineScope
 import java.io.File
 
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Page1(
-    memoryList: MutableList<FavoriteElement>,
+    memoryList: MutableList<FavoriteVariable>,
     toEval: String,
     onToEvalChange: (String) -> Unit,
     filesDir: File?,
     staticResult: String?,
+    coroutineScope: CoroutineScope,
 ) {
     val keyboard = LocalSoftwareKeyboardController.current
     var result = ""
@@ -56,8 +58,10 @@ fun Page1(
                 ),
             )
 
+            println("calculating result")
             // That's for preview to work properly
             result = staticResult ?: eval(memoryList, filesDir, toEval, LocalContext.current)
+            println("calculated result")
 
             Text(
                 result,
@@ -72,7 +76,7 @@ fun Page1(
             modifier = Modifier
                 .align(Alignment.BottomEnd),
             onClick = {
-                memoryList.add(FavoriteElement("a${memoryList.size+1}", result, toEval))
+                memoryList.add(FavoriteVariable("a${memoryList.size+1}", result, toEval))
             },
         ) {
             Icon(painterResource(id = R.drawable.baseline_save_alt_24), contentDescription = null)

@@ -5,6 +5,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
     primary = Color(0xFFBB86FC),
@@ -38,15 +39,22 @@ private val LightColorPalette = lightColors(
 
 @Composable
 fun PyculatorTheme(theme: String, content: @Composable () -> Unit) {
-    val colors = when (theme) {
+    /*val colors = when (theme) {
         "dark" -> DarkColorPalette
         else -> LightColorPalette
-    }
+    }*/
+    val systemUiController = rememberSystemUiController()
+
+    val colors = if (theme == "dark") DarkColorPalette else LightColorPalette
+
+    systemUiController.setSystemBarsColor(
+        color = colors.background
+    )
 
     MaterialTheme(
         colors = colors,
         typography = Typography,
         shapes = Shapes,
-        content = content
+        content = content,
     )
 }

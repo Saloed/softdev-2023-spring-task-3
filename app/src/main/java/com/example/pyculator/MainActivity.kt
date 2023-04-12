@@ -21,7 +21,7 @@ import com.example.pyculator.pages.Page1
 import com.example.pyculator.pages.Page2
 import com.example.pyculator.pages.Page3
 import com.example.pyculator.ui.theme.PyculatorTheme
-import com.example.pyculator.viewmodels.FavoriteElement
+import com.example.pyculator.viewmodels.FavoriteVariable
 import com.example.pyculator.viewmodels.MemoryViewModel
 import com.example.pyculator.viewmodels.SettingsViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -37,13 +37,13 @@ val py = Python.getInstance()
 
 
 fun eval(
-    memoryList: MutableList<FavoriteElement>,
+    memoryList: MutableList<FavoriteVariable>,
     filesDir: File?,
     toEval: String,
     context: Context
 ): String {
-
-    val toExec = if (filesDir != null) {
+    println("evaluating")
+    /*val toExec = if (filesDir != null) {
         val file = File(filesDir, "toExec.py")
         if (file.createNewFile()) {
             file.writer().use {
@@ -51,15 +51,24 @@ fun eval(
             }
         }
         file.reader().use { it.readText() }
-    } else "pass"
+    } else "pass"*/
 
     var rememberedConstants = ""
     memoryList.forEach { rememberedConstants += it.toString() }
 
     return py.getModule("main").callAttr(
         "main",
-        rememberedConstants + toExec,
-        toEval
+        rememberedConstants,
+        toEval,
+    ).toString()
+}
+
+fun compile(
+    toCompile: String
+): String {
+    return py.getModule("main").callAttr(
+        "compileCode",
+        toCompile
     ).toString()
 }
 
@@ -90,7 +99,7 @@ fun PyCulatorApp(
     val filesDir = context.filesDir
 
     val keyboard = LocalSoftwareKeyboardController.current
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     val memoryList by memoryViewModel.memoryList.collectAsState()
     var toEval by remember { mutableStateOf("") }
 
@@ -125,12 +134,11 @@ fun PyCulatorApp(
                     for (pageNumber in pageNames.indices) {
                         BottomNavigationItem(
                             icon = {
-
                                 Icon(pageIcons[pageNumber], null)
                             },
                             selected = pageNumber == pagerState.currentPage,
                             onClick = {
-                                scope.launch {
+                                coroutineScope.launch {
                                     pagerState.animateScrollToPage(pageNumber)
                                 }
                             },
@@ -157,10 +165,12 @@ fun PyCulatorApp(
                         onToEvalChange = { toEval = it },
                         filesDir = filesDir,
                         staticResult = staticResult,
+                        coroutineScope = coroutineScope,
                     )
                     2 -> Page2(
-                        context,
-                        filesDir
+                        toCompile = { toCompile: String -> compile(toCompile) },
+                        context = context,
+                        filesDir = filesDir
                     )
                     3 -> Page3(
                         settingsViewModel = settingsViewModel

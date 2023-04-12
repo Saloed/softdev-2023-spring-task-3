@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.pyculator.R
 import com.example.pyculator.eval
-import com.example.pyculator.viewmodels.FavoriteElement
+import com.example.pyculator.viewmodels.FavoriteVariable
 import java.io.File
 
 @Composable
@@ -39,7 +39,7 @@ private fun MemoryElementCard(
     onDelete: () -> Unit,
     onPaste: (String) -> Unit,
     filesDir: File?,
-    memoryList: SnapshotStateList<FavoriteElement>,
+    memoryList: SnapshotStateList<FavoriteVariable>,
 ) {
     Card(
         modifier = Modifier
@@ -217,7 +217,7 @@ private fun MemoryElementCard(
 
 @Composable
 fun Page0(
-    memoryList: SnapshotStateList<FavoriteElement>,
+    memoryList: SnapshotStateList<FavoriteVariable>,
     onPaste: (String) -> Unit,
     filesDir: File?,
 ) {
@@ -227,27 +227,15 @@ fun Page0(
                 MemoryElementCard(
                     variable = memoryList[i].variable,
                     onVariableChange = {
-                        memoryList[i] = FavoriteElement(
-                            memoryList[i].variableName,
-                            it,
-                            memoryList[i].variableScript
-                        )
+                        memoryList[i] = memoryList[i].copy(variable = it)
                     },
                     variableName = memoryList[i].variableName,
                     onVariableNameChange = {
-                        memoryList[i] = FavoriteElement(
-                            it,
-                            memoryList[i].variable,
-                            memoryList[i].variableScript
-                        )
+                        memoryList[i] = memoryList[i].copy(variableName = it)
                     },
                     variableScript = memoryList[i].variableScript,
                     onVariableScriptChange = {
-                        memoryList[i] = FavoriteElement(
-                            memoryList[i].variableName,
-                            memoryList[i].variable,
-                            it
-                        )
+                        memoryList[i] = memoryList[i].copy(variableScript = it)
                     },
                     onDelete = { memoryList.removeAt(i) },
                     onPaste = onPaste,
