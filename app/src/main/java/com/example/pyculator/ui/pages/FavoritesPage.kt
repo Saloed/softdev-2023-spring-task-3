@@ -1,4 +1,4 @@
-package com.example.pyculator.pages
+package com.example.pyculator.ui.pages
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -24,9 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.pyculator.R
-import com.example.pyculator.eval
+import com.example.pyculator.utils.eval
 import com.example.pyculator.viewmodels.FavoriteVariable
-import java.io.File
 
 @Composable
 private fun MemoryElementCard(
@@ -38,7 +37,6 @@ private fun MemoryElementCard(
     onVariableScriptChange: (String) -> Unit,
     onDelete: () -> Unit,
     onPaste: (String) -> Unit,
-    filesDir: File?,
     memoryList: SnapshotStateList<FavoriteVariable>,
 ) {
     Card(
@@ -95,7 +93,6 @@ private fun MemoryElementCard(
                                     ),
                                 )
 
-                                val context = LocalContext.current
                                 Button(
                                     modifier = Modifier
                                         //.weight(0.2f)
@@ -105,9 +102,7 @@ private fun MemoryElementCard(
                                         onVariableChange(
                                             eval(
                                                 memoryList,
-                                                filesDir,
                                                 variableScript,
-                                                context
                                             )
                                         )
                                     },
@@ -216,10 +211,9 @@ private fun MemoryElementCard(
 }
 
 @Composable
-fun Page0(
+fun FavoritesPage(
     memoryList: SnapshotStateList<FavoriteVariable>,
     onPaste: (String) -> Unit,
-    filesDir: File?,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(modifier = Modifier.align(Alignment.TopCenter)) {
@@ -239,7 +233,6 @@ fun Page0(
                     },
                     onDelete = { memoryList.removeAt(i) },
                     onPaste = onPaste,
-                    filesDir = filesDir,
                     memoryList = memoryList,
                 )
             }

@@ -1,4 +1,4 @@
-package com.example.pyculator.pages
+package com.example.pyculator.ui.pages
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -10,30 +10,26 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.pyculator.R
-import com.example.pyculator.eval
+import com.example.pyculator.utils.eval
 import com.example.pyculator.viewmodels.FavoriteVariable
-import kotlinx.coroutines.CoroutineScope
-import java.io.File
 
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun Page1(
-    memoryList: MutableList<FavoriteVariable>,
+fun ExpressionPage(
+    memoryList: SnapshotStateList<FavoriteVariable>,
     toEval: String,
     onToEvalChange: (String) -> Unit,
-    filesDir: File?,
     staticResult: String?,
-    coroutineScope: CoroutineScope,
 ) {
     val keyboard = LocalSoftwareKeyboardController.current
     var result = ""
@@ -57,11 +53,8 @@ fun Page1(
                     }
                 ),
             )
-
-            println("calculating result")
             // That's for preview to work properly
-            result = staticResult ?: eval(memoryList, filesDir, toEval, LocalContext.current)
-            println("calculated result")
+            result = staticResult ?: eval(memoryList, toEval)
 
             Text(
                 result,
@@ -69,9 +62,8 @@ fun Page1(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
             )
-
-
         }
+
         IconButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd),

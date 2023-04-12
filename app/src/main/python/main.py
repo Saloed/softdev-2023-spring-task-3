@@ -3,9 +3,8 @@ def compileCode(toCompile):
     global compiled
     try:
         compiled = compile(toCompile, "Code", 'exec')
-        return "Done"
+        return "OK"
     except Exception as Error:
-        print(str(Error) + " " + str(Error.args[1][1]) + " " + str(Error.args[1][2]))
         return str(Error) + " " + str(Error.args[1][1]) + " " + str(Error.args[1][2])
 
 def main(constants, toEval):

@@ -1,4 +1,4 @@
-package com.example.pyculator.pages
+package com.example.pyculator.ui.pages
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
