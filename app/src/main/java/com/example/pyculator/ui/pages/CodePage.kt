@@ -49,11 +49,11 @@ fun CodePage(
     filesDir: File?,
 ) {
     val initialExecInput = stringResource(R.string.code_example)
-    var errorString by remember { mutableStateOf("OK") }
     var execInput by remember {
         mutableStateOf(
             if (filesDir != null) {
                 val file = File(filesDir, "toExec.py")
+                if (file.createNewFile()) file.writeText(initialExecInput)
                 val reader = file.reader()
                 reader.readText().also { reader.close() }
             } else {
@@ -61,6 +61,7 @@ fun CodePage(
             }
         )
     }
+    var errorString by remember { mutableStateOf(compile(execInput)) }
 
     val pxInDp = context.resources.displayMetrics.densityDpi/160f
 
@@ -160,6 +161,7 @@ fun CodePage(
                             file.writer().use { it.write(execInput) }
                         }
                         errorString = compile(execInput)
+                        //println(errorString)
                     },
                     backgroundColor = Color.Transparent,
                     elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),

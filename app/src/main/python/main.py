@@ -1,4 +1,4 @@
-compiled = None
+compiled = compile("", "Code", 'exec')
 def compileCode(toCompile):
     global compiled
     try:
