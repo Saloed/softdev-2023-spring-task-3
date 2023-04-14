@@ -29,7 +29,8 @@ fun PyCulatorApp(
     context: Context,
 ) {
     val settingsViewModel = SettingsViewModel(context)
-    val settings = settingsViewModel.settingsState.collectAsState(if (isSystemInDarkTheme()) "dark" else "light")
+    val theme = settingsViewModel.themeFlow.collectAsState(if (isSystemInDarkTheme()) "dark" else "light")
+    val codeFontSize = settingsViewModel.codeFontSizeFlow.collectAsState(16)
 
     val filesDir = context.filesDir
 
@@ -60,7 +61,7 @@ fun PyCulatorApp(
         }
     }
 
-    PyculatorTheme(settings.value) {
+    PyculatorTheme(theme.value) {
         // HorizontalPager with BottomAppBar
         Scaffold(
             scaffoldState = scaffoldState,
@@ -101,10 +102,12 @@ fun PyCulatorApp(
                     )
                     2 -> CodePage(
                         context = context,
-                        filesDir = filesDir
+                        filesDir = filesDir,
+                        codeFontSize = codeFontSize.value,
                     )
                     3 -> Page3(
-                        settingsViewModel = settingsViewModel
+                        settingsViewModel = settingsViewModel,
+                        codeFontSize = codeFontSize.value,
                     )
                 }
             }

@@ -15,9 +15,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFontFamilyResolver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.Paragraph
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.pyculator.R
 
 import com.example.pyculator.utils.Highlighting
@@ -43,11 +47,17 @@ fun MeasureUnconstrainedViewWidth(
     }
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun CodePage(
     context: Context,
     filesDir: File?,
+    codeFontSize: Int,
 ) {
+    val textStyle = MaterialTheme.typography.body1.copy(
+        fontSize = codeFontSize.sp,
+        lineBreak = LineBreak.Simple
+    )
     val initialExecInput = stringResource(R.string.code_example)
     var execInput by remember {
         mutableStateOf(
@@ -73,9 +83,9 @@ fun CodePage(
         val scriptFieldWidth =
             context.resources.displayMetrics.widthPixels - lineNumerationWidth
 
-        return androidx.compose.ui.text.Paragraph(
+        return Paragraph(
             text = line,
-            style = MaterialTheme.typography.body1,
+            style = textStyle,
             constraints = Constraints(maxWidth = scriptFieldWidth),
             density = LocalDensity.current,
             fontFamilyResolver = LocalFontFamilyResolver.current,
@@ -86,14 +96,14 @@ fun CodePage(
         viewToMeasure = {
             BasicTextField(
                 modifier = Modifier.width(IntrinsicSize.Min),
-                value = "1",
+                value = "_",
                 onValueChange = {},
-                textStyle = MaterialTheme.typography.body1
+                textStyle = textStyle,
             )
         }
     ) { oneCharWidth ->
         val lineNumerationWidth =
-            oneCharWidth * 3 + pxInDp
+            oneCharWidth * 3 + 4*pxInDp
 
         Row {
             val linesNumerationBuilder = StringBuilder()
@@ -112,7 +122,7 @@ fun CodePage(
                 value = linesNumerationBuilder.toString(),
                 enabled = false,
                 onValueChange = { },
-                textStyle = MaterialTheme.typography.body1.copy(
+                textStyle = textStyle.copy(
                     color = MaterialTheme.colors.onSurface,
                     textAlign = TextAlign.Right
                 ),
@@ -146,7 +156,7 @@ fun CodePage(
 
                     value = execInput,
                     onValueChange = { execInput = it },
-                    textStyle = MaterialTheme.typography.body1.copy(
+                    textStyle = textStyle.copy(
                         color = MaterialTheme.colors.onSurface
                     ),
                     visualTransformation = Highlighting(errorString)
