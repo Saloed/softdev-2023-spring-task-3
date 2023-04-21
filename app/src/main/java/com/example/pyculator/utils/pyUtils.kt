@@ -25,3 +25,14 @@ fun compile(
         toCompile
     ).toString()
 }
+
+fun symPy(
+    func: String,
+    what: String
+): String {
+    return py.getModule("main").callAttr(
+        "symPy",
+        func,
+        what
+    ).toString()
+}

@@ -1,3 +1,5 @@
+from sympy import *
+
 compiled = compile("", "Code", 'exec')
 def compileCode(toCompile):
     global compiled
@@ -10,12 +12,13 @@ def compileCode(toCompile):
 def main(constants, toEval):
     dloc = {}
     try:
+        #local_globals = {k: v for k, v in globals().items()}
         exec(constants, globals(), dloc)
     except Exception as Error:
         return f"Error while compiling constants: {Error}"
 
     for i in dloc:
-        exec(f"{i} = {dloc[i]}", globals())
+       exec(f"{i} = {dloc[i]}", globals())
 
     try:
         try:
@@ -36,7 +39,12 @@ def main(constants, toEval):
     except Exception as Error:
         return Error
     finally:
+
         for i in dloc:
             del globals()[i]
 
-
+def symPy(func, what):
+    try:
+        return str(eval(func + '("' + what + '")'))
+    except Exception as Error:
+        return f"Error while running code: {Error}"

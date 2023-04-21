@@ -8,12 +8,12 @@ import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 
-val keywordsRegex = Regex(
+private val keywordsRegex = Regex(
     """\s(False|None|True|__peg_parser__|and|as|assert|async|await|break|class|
     |continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|
     |or|pass|raise|return|try|while|with|yield)(:|\s)""".trimMargin()
 )
-val functionsRegex = Regex(
+private val functionsRegex = Regex(
     """\s(abs|aiter|all|any|anext|ascii|bin|bool|breakpoint|bytearray|bytes|
     |callable|chr|classmethod|compile|complex|delattr|dict|dir|divmod|enumerate|eval|exec|filter|
     |float|format|frozenset|getattr|globals|hasattr|hash|help|hex|id|input|int|isinstance|
@@ -21,25 +21,28 @@ val functionsRegex = Regex(
     |print|property|range|repr|reversed|round|set|setattr|slice|sorted|staticmethod|str|
     |sum|super|tuple|type|vars|zip|__import__)\s""".trimMargin()
 )
-val operatorsRegex = Regex(
+private val operatorsRegex = Regex(
     """=|
         |==|!=|<|<=|>|>=|
         |\+|-|\*|/|//|%|\*\*|
         |\+=|-=|\*=|/=|%=|
         |^|\||&|~|>>|<<""".trimMargin()
 )
-val braces = mapOf(
+private val braces = mapOf(
     '(' to ')', '{' to '}', '[' to ']',
 )
-val bracesRegex = Regex("""[(){}\[\]]""")
-val strRegex = Regex("""([rfbu]?'[^'\\\n]*(\\.[^'\\\n]*)*')|([rfbu]?"[^"\\\n]*(\\.[^"\\\n]*)*")""")
-val bigStrRegex = Regex("") // TODO()
-val numericRegex = Regex("""(\b[+-]?[0-9_]+[lL]?\b)
-    ||(\b[+-]?0[xX][0-9A-Fa-f_]+[lL]?\b)
-    ||(\b[+-]?[0-9_]+(?:\.[0-9_]+)?(?:[eE][+-]?[0-9_]+)?\b)""".trimMargin()
+private val bracesRegex = Regex("""[(){}\[\]]""")
+private val strRegex = Regex("""([rfbu]?'[^'\\\n]*(\\.[^'\\\n]*)*')|([rfbu]?"[^"\\\n]*(\\.[^"\\\n]*)*")""")
+
+private val bigStrRegex = Regex("""[rfbu]?(\"\"\"(.|\n)*\"\"\")|
+    |(\'\'\'(.|\n)*\'\'\')""".trimMargin())
+
+private val numericRegex = Regex("""(\b[+-]?[0-9_]+[lL]?\b)|
+    |(\b[+-]?0[xX][0-9A-Fa-f_]+[lL]?\b)|
+    |(\b[+-]?[0-9_]+(?:\.[0-9_]+)?(?:[eE][+-]?[0-9_]+)?\b)""".trimMargin()
 ) // Decimal Hex Float
 
-val commentRegex = Regex("""#.*""")
+private val commentRegex = Regex("""#.*""")
 
 fun highlight(text: String, errorString: String): AnnotatedString {
 

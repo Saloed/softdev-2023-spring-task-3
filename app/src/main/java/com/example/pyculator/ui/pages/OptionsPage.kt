@@ -8,7 +8,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -16,16 +15,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.pyculator.R
 import com.example.pyculator.viewmodels.SettingsViewModel
-import java.lang.Integer.max
 import kotlin.math.min
 
 
 @Composable
-fun Page3(
+fun OptionsPage(
     settingsViewModel: SettingsViewModel,
     codeFontSize: Int
 ) {
-    val themes = listOf("light", "dark") // TODO
+    val themes = listOf("light", "dark")
 
     var themeChangeDialogShown by remember { mutableStateOf(false) }
 

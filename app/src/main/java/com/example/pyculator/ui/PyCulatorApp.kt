@@ -9,10 +9,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.example.pyculator.R
-import com.example.pyculator.ui.pages.FavoritesPage
-import com.example.pyculator.ui.pages.ExpressionPage
-import com.example.pyculator.ui.pages.CodePage
-import com.example.pyculator.ui.pages.Page3
+import com.example.pyculator.ui.pages.*
 import com.example.pyculator.ui.theme.PyculatorTheme
 import com.example.pyculator.viewmodels.MemoryViewModel
 import com.example.pyculator.viewmodels.SettingsViewModel
@@ -44,12 +41,14 @@ fun PyCulatorApp(
     val pageNames = listOf(
         stringResource(R.string.Favorites),
         stringResource(R.string.Expression),
+        "SymPy",
         stringResource(R.string.Code),
         stringResource(R.string.Settings),
     )
     val pageIcons = listOf(
         painterResource(R.drawable.baseline_favorite_24),
         painterResource(R.drawable.baseline_create_24),
+        painterResource(R.drawable.baseline_sentiment_neutral_24),
         painterResource(R.drawable.baseline_code_24),
         painterResource(R.drawable.baseline_settings_24),
     )
@@ -86,7 +85,7 @@ fun PyCulatorApp(
         ) { innerPadding ->
             HorizontalPager(
                 contentPadding = innerPadding,
-                count = 4,
+                count = 5,
                 state = pagerState,
             ) { pageNumber ->
                 when (pageNumber) {
@@ -100,12 +99,16 @@ fun PyCulatorApp(
                         onToEvalChange = { toEval = it },
                         staticResult = staticResult,
                     )
-                    2 -> CodePage(
+                    2 -> SymPyPage(
+                        coroutineScope = coroutineScope,
+                        memoryList = memoryList,
+                    )
+                    3 -> CodePage(
                         context = context,
                         filesDir = filesDir,
                         codeFontSize = codeFontSize.value,
                     )
-                    3 -> Page3(
+                    4 -> OptionsPage(
                         settingsViewModel = settingsViewModel,
                         codeFontSize = codeFontSize.value,
                     )

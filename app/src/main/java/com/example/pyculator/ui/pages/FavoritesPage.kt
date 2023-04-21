@@ -86,8 +86,6 @@ private fun MemoryElementCard(
                                         fontSize = 16.sp,
                                     ),
                                     colors = TextFieldDefaults.textFieldColors(
-                                        // TODO: change TextFieldDefaults
-                                        // backgroundColor = Color.White,
                                         focusedIndicatorColor = Color.Transparent,
                                         unfocusedIndicatorColor = Color.Transparent,
                                     ),
@@ -108,8 +106,10 @@ private fun MemoryElementCard(
                                     },
                                 ) {
                                     Icon(
-                                        painterResource(id = R.drawable.baseline_keyboard_double_arrow_down_24),
-                                        contentDescription = null
+                                        painterResource(
+                                            id = R.drawable.baseline_keyboard_double_arrow_down_24
+                                        ),
+                                            contentDescription = null
                                     )
                                 }
                             }
@@ -128,7 +128,6 @@ private fun MemoryElementCard(
                                     fontSize = 16.sp,
                                 ),
                                 colors = TextFieldDefaults.textFieldColors(
-                                    //backgroundColor = Color.White,
                                     focusedIndicatorColor = Color.Transparent,
                                     unfocusedIndicatorColor = Color.Transparent,
                                 )
@@ -150,7 +149,8 @@ private fun MemoryElementCard(
                     value = variableName,
                     onValueChange = onVariableNameChange,
                     singleLine = true,
-                    textStyle = TextStyle(fontSize = 16.sp, textAlign = TextAlign.Center)
+                    textStyle = TextStyle(fontSize = 16.sp, textAlign = TextAlign.Center,
+                        color = MaterialTheme.colors.onSurface)
                 )
                 Spacer(
                     modifier = Modifier
@@ -164,7 +164,7 @@ private fun MemoryElementCard(
                         .verticalScroll(rememberScrollState()),
                     value = variable,
                     onValueChange = onVariableChange,
-                    textStyle = TextStyle(fontSize = 16.sp),
+                    textStyle = TextStyle(fontSize = 16.sp, color = MaterialTheme.colors.onSurface),
                 )
                 Spacer(modifier = Modifier.size(5.dp))
                 IconButton(modifier = Modifier

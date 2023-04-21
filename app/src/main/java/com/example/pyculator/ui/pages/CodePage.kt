@@ -56,7 +56,7 @@ fun CodePage(
 ) {
     val textStyle = MaterialTheme.typography.body1.copy(
         fontSize = codeFontSize.sp,
-        lineBreak = LineBreak.Simple
+        lineBreak = LineBreak.Simple,
     )
     val initialExecInput = stringResource(R.string.code_example)
     var execInput by remember {

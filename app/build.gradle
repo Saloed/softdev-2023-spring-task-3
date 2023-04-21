@@ -24,13 +24,15 @@ android {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
 
-
         /*
         In this version of Chaquopy, the default Python version is 3.8.
         The other available versions are 3.9, 3.10 and 3.11, but these may have fewer packages available.
          */
         python {
             version "3.8"
+            pip {
+                install "sympy"
+            }
         }
     }
 
