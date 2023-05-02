@@ -11,9 +11,9 @@ import ktx.app.KtxScreen
 class SurroundedAndHunted : KtxGame<KtxScreen>() {
 
     override fun create() {
-        Gdx.app.logLevel = Application.LOG_DEBUG
+//        Gdx.app.logLevel = Application.LOG_DEBUG
+//        addScreen(GameScreen())
 
-        addScreen(GameScreen())
         setScreen<GameScreen>()
     }
 
