@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pyculator.R
-
 import com.example.pyculator.utils.Highlighting
 import com.example.pyculator.utils.compile
 import java.io.File
@@ -40,7 +39,7 @@ fun MeasureUnconstrainedViewWidth(
 
         val contentPlaceable = subcompose("content") {
             content(measuredWidth)
-        }[0].measure(constraints)
+        }.first().measure(constraints)
         layout(contentPlaceable.width, contentPlaceable.height) {
             contentPlaceable.place(0, 0)
         }
@@ -51,8 +50,8 @@ fun MeasureUnconstrainedViewWidth(
 @Composable
 fun CodePage(
     context: Context,
-    filesDir: File?,
-    codeFontSize: Int,
+    filesDir: File,
+    codeFontSize: Float,
 ) {
     val textStyle = MaterialTheme.typography.body1.copy(
         fontSize = codeFontSize.sp,
@@ -61,13 +60,10 @@ fun CodePage(
     val initialExecInput = stringResource(R.string.code_example)
     var execInput by remember {
         mutableStateOf(
-            if (filesDir != null) {
+            run {
                 val file = File(filesDir, "toExec.py")
                 if (file.createNewFile()) file.writeText(initialExecInput)
-                file.reader().use { it.readText() }
-
-            } else {
-                initialExecInput
+                file.readText()
             }
         )
     }
@@ -92,6 +88,31 @@ fun CodePage(
         ).lineCount
     }
 
+    @Composable
+    fun getLinesNumerationString(
+        lineNumerationWidth: Float
+    ): String {
+        val linesNumerationBuilder = StringBuilder()
+        for ((i, line) in execInput.split('\n').withIndex()) {
+            val lineString = if (i < 1000) {
+                (i + 1).toString()
+            } else {
+                "#" + (i + 1) % 1000
+            }
+            linesNumerationBuilder.append(lineString)
+            linesNumerationBuilder.append(
+                "\n".repeat(
+                    linesUsed(
+                        context,
+                        line,
+                        lineNumerationWidth.toInt()
+                    )
+                )
+            )
+        }
+        return linesNumerationBuilder.toString()
+    }
+
     MeasureUnconstrainedViewWidth(
         viewToMeasure = {
             BasicTextField(
@@ -106,20 +127,9 @@ fun CodePage(
             oneCharWidth * 3 + 4*pxInDp
 
         Row {
-            val linesNumerationBuilder = StringBuilder()
-
-            for ((i, line) in execInput.split('\n').withIndex()) {
-                val lineString = if (i < 1000) {
-                    (i + 1).toString()
-                } else {
-                    "#" + (i+1)%1000
-                }
-                linesNumerationBuilder.append(lineString)
-                linesNumerationBuilder.append("\n".repeat(linesUsed(context, line, lineNumerationWidth.toInt())))
-            }
 
             BasicTextField(
-                value = linesNumerationBuilder.toString(),
+                value = getLinesNumerationString(lineNumerationWidth),
                 enabled = false,
                 onValueChange = { },
                 textStyle = textStyle.copy(
@@ -165,13 +175,11 @@ fun CodePage(
                     modifier = Modifier
                         .align(Alignment.BottomEnd),
                     onClick = {
-                        if (filesDir != null) {
-                            val file = File(filesDir, "toExec.py")
-                            file.createNewFile()
-                            file.writer().use { it.write(execInput) }
-                        }
+                        val file = File(filesDir, "toExec.py")
+                        file.createNewFile()
+                        file.writeText(execInput)
+
                         errorString = compile(execInput)
-                        //println(errorString)
                     },
                     backgroundColor = Color.Transparent,
                     elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),

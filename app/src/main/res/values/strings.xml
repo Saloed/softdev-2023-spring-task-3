@@ -5,6 +5,7 @@
     <string name="code_example">"# Write your functions, constants, etc here
 
 from math import factorial as f
+
 def C(n, r): return f(n) // (f(r)*f(n-r)) # Number of Combinations formula
 class quadraticEquationSolution:
     def __init__(self, x1, x2, sqrtD, D):
@@ -28,8 +29,10 @@ def solveQuadraticEquation(a, b, c):
     <string name="Delete">Delete</string>
     <string name="Paste">Paste</string>
     <string name="View_full">View full</string>
+
     <string name="Favorites">Favorites</string>
     <string name="Expression">Expression</string>
+    <string name="SymPy">SymPy</string>
     <string name="Code">Code</string>
     <string name="Settings">Options</string>
 

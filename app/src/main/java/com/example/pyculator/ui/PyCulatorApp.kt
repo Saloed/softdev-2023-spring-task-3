@@ -10,7 +10,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.example.pyculator.R
 import com.example.pyculator.ui.pages.*
-import com.example.pyculator.ui.theme.PyculatorTheme
+import com.example.pyculator.ui.theme.PyCulatorTheme
+import com.example.pyculator.ui.theme.Theme
 import com.example.pyculator.viewmodels.MemoryViewModel
 import com.example.pyculator.viewmodels.SettingsViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -25,9 +26,16 @@ fun PyCulatorApp(
     staticResult: String? = null, // Preview can't calculate result
     context: Context,
 ) {
-    val settingsViewModel = SettingsViewModel(context)
-    val theme = settingsViewModel.themeFlow.collectAsState(if (isSystemInDarkTheme()) "dark" else "light")
-    val codeFontSize = settingsViewModel.codeFontSizeFlow.collectAsState(16)
+    val settingsViewModel = SettingsViewModel(
+        context,
+        MaterialTheme.typography.body1.fontSize.value
+    )
+    val theme =
+        settingsViewModel.themeFlow.collectAsState(if (isSystemInDarkTheme()) Theme.DARK else Theme.LIGHT)
+    val codeFontSize =
+        settingsViewModel.codeFontSizeFlow.collectAsState(
+            MaterialTheme.typography.body1.fontSize.value
+        )
 
     val filesDir = context.filesDir
 
@@ -41,7 +49,7 @@ fun PyCulatorApp(
     val pageNames = listOf(
         stringResource(R.string.Favorites),
         stringResource(R.string.Expression),
-        "SymPy",
+        stringResource(R.string.SymPy),
         stringResource(R.string.Code),
         stringResource(R.string.Settings),
     )
@@ -60,7 +68,9 @@ fun PyCulatorApp(
         }
     }
 
-    PyculatorTheme(theme.value) {
+
+
+    PyCulatorTheme(theme.value) {
         // HorizontalPager with BottomAppBar
         Scaffold(
             scaffoldState = scaffoldState,

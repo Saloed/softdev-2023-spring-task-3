@@ -37,15 +37,17 @@ private val LightColorPalette = lightColors(
     onError = Color.White
 )
 
+enum class Theme { LIGHT, DARK, UNDEFINED }
+
 @Composable
-fun PyculatorTheme(theme: String, content: @Composable () -> Unit) {
+fun PyCulatorTheme(theme: Theme, content: @Composable () -> Unit) {
     /*val colors = when (theme) {
         "dark" -> DarkColorPalette
         else -> LightColorPalette
     }*/
     val systemUiController = rememberSystemUiController()
 
-    val colors = if (theme == "dark") DarkColorPalette else LightColorPalette
+    val colors = if (theme == Theme.DARK) DarkColorPalette else LightColorPalette
 
     systemUiController.setSystemBarsColor(
         color = colors.background

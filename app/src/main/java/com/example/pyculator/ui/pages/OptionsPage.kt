@@ -18,10 +18,23 @@ import com.example.pyculator.viewmodels.SettingsViewModel
 import kotlin.math.min
 
 
+private fun String.makeFloat(): Float {
+    val sb = StringBuilder()
+    var f = true
+    for (c in this) {
+        if (c.isDigit()) sb.append(c)
+        if (f && c == '.') {
+            sb.append(c)
+            f = false
+        }
+    }
+    return sb.toString().toFloat()
+}
+
 @Composable
 fun OptionsPage(
     settingsViewModel: SettingsViewModel,
-    codeFontSize: Int
+    codeFontSize: Float
 ) {
     val themes = listOf("light", "dark")
 
@@ -76,8 +89,8 @@ fun OptionsPage(
                         imeAction = ImeAction.Done
                     ),
                     onValueChange = {
-                        val new = if (it == "") 0 else it.filter { it.isDigit() }.toInt()
-                        settingsViewModel.changeCodeFontSize(min(new,200))
+                        val new = if (it == "") 0f else it.makeFloat()
+                        settingsViewModel.changeCodeFontSize(min(new,200f))
                     },
                     textStyle = MaterialTheme.typography.button.copy(
                         color = MaterialTheme.colors.onSurface
