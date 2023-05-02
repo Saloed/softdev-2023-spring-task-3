@@ -11,40 +11,31 @@ import ktx.assets.disposeSafely
 
 class GameScreen: KtxScreen {
 
-//    private val stage: Stage = Stage(ExtendViewport(16f, 9f))
-//    private val texture: Texture = Texture("graphics/test_image/red_dot_png.png")
+    override fun dispose() {
+        super.dispose()
+    }
 
+    override fun hide() {
+        super.hide()
+    }
 
-//    companion object {
-//        private val log = logger<GameScreen>()
-//    }
-
-    override fun show() {
-//        log.debug { "GameScreen gets shown" }
-//
-//        stage.addActor(
-//            Image(texture).apply {
-//                setPosition(1f, 1f)
-//                setSize(1f, 1f)
-//                setScaling(Scaling.fill)
-//            }
-//        )
+    override fun pause() {
+        super.pause()
     }
 
     override fun render(delta: Float) {
-//        with(stage) {
-//            act(delta)
-//            draw()
-//        }
-
+        super.render(delta)
     }
 
     override fun resize(width: Int, height: Int) {
-//        stage.viewport.update(width, height, true)
+        super.resize(width, height)
     }
 
-    override fun dispose() {
-//        stage.disposeSafely()
-//        texture.disposeSafely()
-//    }
+    override fun resume() {
+        super.resume()
+    }
+
+    override fun show() {
+        super.show()
+    }
 }
