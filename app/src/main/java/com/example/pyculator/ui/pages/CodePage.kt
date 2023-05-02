@@ -64,8 +64,8 @@ fun CodePage(
             if (filesDir != null) {
                 val file = File(filesDir, "toExec.py")
                 if (file.createNewFile()) file.writeText(initialExecInput)
-                val reader = file.reader()
-                reader.readText().also { reader.close() }
+                file.reader().use { it.readText() }
+
             } else {
                 initialExecInput
             }
