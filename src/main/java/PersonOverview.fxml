@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane prefHeight="300.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="DemoViewer">
+   <children>
+      <Accordion layoutX="14.0" layoutY="14.0">
+        <panes>
+          <TitledPane animated="false" prefHeight="93.0" prefWidth="202.0" text="Light">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="2.0" prefWidth="200.0">
+                     <children>
+                        <VBox layoutX="-2.0" layoutY="-4.0" prefHeight="72.0" prefWidth="202.0">
+                           <children>
+                              <Accordion>
+                                <panes>
+                                  <TitledPane animated="false" text="Brightness">
+                                    <content>
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <Slider layoutX="6.0" layoutY="4.0" />
+                                             </children>
+                                          </AnchorPane>
+                                    </content>
+                                  </TitledPane>
+                                  <TitledPane animated="false" prefWidth="202.0" text="Radius">
+                                    <content>
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <Slider layoutY="4.0" />
+                                             </children>
+                                          </AnchorPane>
+                                    </content>
+                                  </TitledPane>
+                                </panes>
+                              </Accordion>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </TitledPane>
+          <TitledPane animated="false" prefWidth="202.0" text="Rotation">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField layoutX="14.0" layoutY="2.0" text="поворот по осям XY" />
+                        <Slider layoutX="14.0" layoutY="27.0" />
+                        <TextField layoutX="14.0" layoutY="41.0" text="поворот по осям YZ" />
+                        <Slider layoutX="14.0" layoutY="66.0" />
+                        <TextField layoutX="14.0" layoutY="78.0" text="поворот по осям XZ" />
+                        <Slider layoutX="14.0" layoutY="103.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </TitledPane>
+        </panes>
+      </Accordion>
+   </children>
+</AnchorPane>
