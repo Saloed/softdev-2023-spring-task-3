@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Test</string>
+    <string name="chat">Чат</string>
+    <string name="settings">Настройки</string>
+    <string name="font_size">Размер шрифта</string>
+    <string name="back_button">Назад</string>
+    <string name="discord_token">Токен Discord</string>
+
+</resources>
