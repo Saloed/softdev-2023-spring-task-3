@@ -10,19 +10,6 @@ class Player(
     height: Float,
     position: Point,
 ) : BaseEntity(texture, width, height, position) {
-    private val inputController = InputController()
-
-    fun setInputController() {
-        Gdx.input.inputProcessor = inputController
-    }
-
-    fun checkUserInput(
-        joystickDeviation: Float,
-        joystickDirectionX: Float,
-        joystickDirectionY: Float
-    ) {
-
-    }
 
     override fun update() {
         TODO("Not yet implemented")
@@ -44,12 +31,5 @@ class Player(
     override fun die() {
         TODO("Not yet implemented")
     }
-
-
-
-
-
-
-
 
 }

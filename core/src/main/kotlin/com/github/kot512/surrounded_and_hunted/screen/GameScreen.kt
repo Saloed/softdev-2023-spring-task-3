@@ -10,6 +10,7 @@ import ktx.app.KtxScreen
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
+import com.github.kot512.surrounded_and_hunted.controls.Joystick
 
 class GameScreen: KtxScreen {
 //    параметры мира
@@ -23,15 +24,25 @@ class GameScreen: KtxScreen {
 
 //    графика
     private val batch: SpriteBatch = SpriteBatch()
-    private val locationTexture: Texture = Texture("graphics/test_image/dark_grass_background.jpg") // TODO()
+    private val locationTexture: Texture = Texture("graphics/test_image/dark_grass_background.jpg")
+    private val jBaseTexture: Texture = Texture("graphics/test_image/joystick_base.png")
+    private val jKnobTexture: Texture = Texture("graphics/test_image/joystick_knob.png")
 
 //    игровые объекты
     private val stage: Stage = Stage(viewport) // сцена, ответственная за рендер UI
+    private val joystick: Joystick = Joystick(jBaseTexture, jKnobTexture)
+
+    init {
+        batch.projectionMatrix = camera.combined
+        Gdx.input.inputProcessor = stage
+    }
 
 
 
     override fun dispose() {
-        super.dispose()
+        locationTexture.dispose()
+        jBaseTexture.dispose()
+        jKnobTexture.dispose()
     }
 
     override fun hide() {
@@ -45,8 +56,8 @@ class GameScreen: KtxScreen {
     override fun render(delta: Float) {
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_CLEAR_VALUE)
-        batch.projectionMatrix = camera.combined //TODO(Чета не работает)
-        Gdx.input.inputProcessor = stage
+
+
 
 //        super.render(delta)
         batch.begin() // начало рендера
@@ -54,6 +65,9 @@ class GameScreen: KtxScreen {
         batch.draw(locationTexture, 0f, 0f, LEVEL_WIDTH, LEVEL_HEIGHT) // рендерим текстуру локации
 
         batch.end() // конец рендера
+
+        stage.addActor(joystick)
+        stage.draw()
     }
 
     override fun resume() {
