@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.kot512.surrounded_and_hunted.controls.Joystick
 import com.github.kot512.surrounded_and_hunted.entities.Player
+import com.github.kot512.surrounded_and_hunted.entities.PlayerSprite
 import com.github.kot512.surrounded_and_hunted.tools.Point
 
 class GameScreen: KtxScreen {
@@ -35,12 +36,8 @@ class GameScreen: KtxScreen {
 //    игровые объекты
     private val stage: Stage = Stage(viewport) // сцена, ответственная за рендер UI
     private val joystick: Joystick = Joystick(jBaseTexture, jKnobTexture)
-    private val player: Player = Player(
-        Texture("graphics/test_image/red_dot_png.png"),
-        Point(LEVEL_WIDTH / 2, LEVEL_HEIGHT / 2),
-        joystick
-    )
-
+    private val player: PlayerSprite = PlayerSprite(Texture("graphics/test_image/red_dot_png.png"), joystick)
+//        Point(LEVEL_WIDTH / 2, LEVEL_HEIGHT / 2),
 
     init {
         batch.projectionMatrix = camera.combined
@@ -67,15 +64,11 @@ class GameScreen: KtxScreen {
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_CLEAR_VALUE)
 
-
-
 //        super.render(delta)
         batch.begin() // начало рендера
 
         batch.draw(locationTexture, 0f, 0f, LEVEL_WIDTH, LEVEL_HEIGHT) // рендерим текстуру локации
-
         player.draw(batch)
-        player.update()
 
         batch.end() // конец рендера
 

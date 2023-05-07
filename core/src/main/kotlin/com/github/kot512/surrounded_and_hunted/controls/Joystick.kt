@@ -39,6 +39,7 @@ class Joystick(
         knobPosition.setPoint(
             Point(basePosition.x + knobRadius, basePosition.y + knobRadius)
         )
+        knobDeviation.setPoint(Point(0f, 0f))
     }
 
     fun moveKnob(touchPointX: Float, touchPointY: Float) {

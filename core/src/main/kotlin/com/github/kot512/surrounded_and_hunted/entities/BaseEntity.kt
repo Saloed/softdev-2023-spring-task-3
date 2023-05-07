@@ -14,7 +14,7 @@ abstract class BaseEntity(
 //    обязательные свойства
     protected var width: Float = GameScreen.LEVEL_HEIGHT / 4
     protected var height: Float = GameScreen.LEVEL_HEIGHT / 4
-    val sprite = Sprite(texture)
+    protected val sprite = Sprite(texture)
 //    базовые характеристики сущности
     protected var velocityX = 0f
     protected var velocityY = 0f
