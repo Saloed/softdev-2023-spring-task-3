@@ -2,11 +2,7 @@ package com.github.kot512.surrounded_and_hunted.entities
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.scenes.scene2d.Action
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.github.kot512.surrounded_and_hunted.entities.tools.InputController
-import com.github.kot512.surrounded_and_hunted.entities.tools.Point
-import ktx.actors.stage
+import com.github.kot512.surrounded_and_hunted.tools.Point
 
 class Player(
     texture: Texture,

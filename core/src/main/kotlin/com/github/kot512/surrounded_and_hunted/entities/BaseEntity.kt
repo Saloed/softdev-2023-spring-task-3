@@ -3,7 +3,7 @@ package com.github.kot512.surrounded_and_hunted.entities
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.github.kot512.surrounded_and_hunted.entities.tools.Point
+import com.github.kot512.surrounded_and_hunted.tools.Point
 
 abstract class BaseEntity(
     texture: Texture,
