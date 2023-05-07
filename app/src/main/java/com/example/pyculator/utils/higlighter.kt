@@ -137,6 +137,7 @@ class HighlighterListener() : Python3BaseListener() {
 
 
 fun highlight(text: String, errorString: String): AnnotatedString {
+    styles.clear()
     val parser = Python3Parser( CommonTokenStream( Python3Lexer( ANTLRInputStream(text) ) ) )
     val listener = HighlighterListener()
     parser.addParseListener(listener)
