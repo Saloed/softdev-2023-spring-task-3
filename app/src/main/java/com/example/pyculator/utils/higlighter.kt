@@ -10,8 +10,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import org.antlr.v4.runtime.*
 
-private val commentRegex = Regex("""#.*""")
-
 private val styles = mutableSetOf<AnnotatedString.Range<SpanStyle>>()
 
 private fun addStyle(spanStyle: SpanStyle, start: Int, end: Int) {
@@ -146,7 +144,7 @@ fun highlight(text: String, errorString: String): AnnotatedString {
     val errorLine = if (errorString == "OK") -1 else errorStringSplit[errorStringSplit.size - 2].toInt()
     val errorChar = if (errorString == "OK") -1 else errorStringSplit.last().toInt()
 
-    for (i in commentRegex.findAll(text)) addStyle(Color.Gray, i.range)
+    for (i in Regex("#.*").findAll(text)) addStyle(Color.Gray, i.range)
 
     if (errorString != "OK") {
         var line = 1
