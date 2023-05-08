@@ -148,7 +148,7 @@ fun highlight(text: String, errorString: String): AnnotatedString {
         token = lexer.nextToken()
         color = getColor(token)
         if (color != null) addStyle(color, token)
-    } while (token.type != -1)
+    } while (token.text != "<EOF>")
 
     val errorStringSplit = errorString.split(" ")
     val errorLine = if (errorString == "OK") -1 else errorStringSplit[errorStringSplit.size - 2].toInt()
