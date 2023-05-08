@@ -4,20 +4,29 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
-import com.badlogic.gdx.math.Vector2
 import com.github.kot512.surrounded_and_hunted.controls.Joystick
 import com.github.kot512.surrounded_and_hunted.screen.GameScreen
-import com.github.kot512.surrounded_and_hunted.screen.GameScreen.Companion.LEVEL_HEIGHT
-import com.github.kot512.surrounded_and_hunted.screen.GameScreen.Companion.LEVEL_WIDTH
+import com.github.kot512.surrounded_and_hunted.screen.GameScreen.Companion.PLAYER_POS
+import com.github.kot512.surrounded_and_hunted.screen.GameScreen.Companion.SCREEN_HEIGHT
+import com.github.kot512.surrounded_and_hunted.screen.GameScreen.Companion.SCREEN_WIDTH
 import com.github.kot512.surrounded_and_hunted.tools.Point
 
-class PlayerSprite(characterTexture: Texture, private val movementController: Joystick) : Sprite(characterTexture) {
-    private var movementSpeed = GameScreen.LEVEL_WIDTH / 10
+class PlayerSprite(characterTexture: Texture, private val movementController: Joystick)
+    : Sprite(characterTexture) {
+    private var movementSpeed = 500f
     private val velocity = Point(0f, 0f)
 
     init {
-        setPosition(LEVEL_WIDTH / 2, LEVEL_HEIGHT / 2)
+        setPosition(PLAYER_POS.x, PLAYER_POS.y)
+        setSize(SCREEN_HEIGHT / 5, SCREEN_HEIGHT / 5)
     }
+
+    val centerX: Float
+    get() = x + width / 2
+
+    val centerY: Float
+    get() = y + height / 2
+
 
     override fun draw(batch: Batch) {
         update(Gdx.graphics.deltaTime)

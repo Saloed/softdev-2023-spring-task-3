@@ -11,7 +11,7 @@ import com.github.kot512.surrounded_and_hunted.tools.Point
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Joystick(
+class JoystickBase(
     baseTexture: Texture,
     knobTexture: Texture,
     position: Point
@@ -96,30 +96,29 @@ class Joystick(
 
     }
 
-//    слушатель действий джойстика
-    inner class JoystickListener: InputListener() {
+    abstract inner class JoystickListener: InputListener() {
 
-        override fun touchDown(
+        abstract override fun touchDown(
             event: InputEvent?,
             x: Float,
             y: Float,
             pointer: Int,
             button: Int
-        ): Boolean {
-            this@Joystick.isTouched = true
-            moveKnob(x, y)
+        ): Boolean
 
-            return true
-        }
+        abstract override fun touchUp(
+            event: InputEvent?,
+            x: Float,
+            y: Float,
+            pointer: Int,
+            button: Int
+        )
 
-        override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
-            this@Joystick.isTouched = false
-            resetKnobPosition()
-        }
-
-        override fun touchDragged(event: InputEvent?, x: Float, y: Float, pointer: Int) {
-            moveKnob(x, y)
-
-        }
+        abstract override fun touchDragged(
+            event: InputEvent?,
+            x: Float,
+            y: Float,
+            pointer: Int
+        )
     }
 }
