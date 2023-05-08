@@ -14,7 +14,10 @@ class quadraticEquationSolution:
         self.sqrtD = sqrtD
         self.D = D
     def __str__(self):
-        return f'x1 = {self.x1}\\nx2 = {self.x2}\\nsqrt(D) = {self.sqrtD}\\nD = {self.D}'
+        return f\"\"\"x1 = {self.x1}
+x2 = {self.x2}
+sqrt(D) = {self.sqrtD}
+D = {self.D}\"\"\"
 
 def solveQuadraticEquation(a, b, c):
     d = b*b-4*a*c
