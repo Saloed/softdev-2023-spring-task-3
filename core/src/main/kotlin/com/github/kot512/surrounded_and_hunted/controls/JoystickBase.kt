@@ -11,17 +11,19 @@ import com.github.kot512.surrounded_and_hunted.tools.Point
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class JoystickBase(
+abstract class JoystickBase(
     baseTexture: Texture,
     knobTexture: Texture,
     position: Point
 ) : Actor() {
 
+    abstract val listener: JoystickListener
+
     init {
         setPosition(position.x, position.y)
         this.width = GameScreen.SCREEN_HEIGHT / 2.8f
         this.height = GameScreen.SCREEN_HEIGHT / 2.8f
-        addListener(JoystickListener())
+        addListener(listener)
     }
 
     private val baseRadius = this.width / 2
@@ -37,7 +39,7 @@ class JoystickBase(
     private val knobSprite = Sprite(knobTexture)
 
     private var isTouched = false // "нажат" ли стик
-    val knobDeviation = Point(0f, 0f)
+    val knobDeviation = Point(0f, 0f) // направление и сила отклонения стика
 
     fun resetKnobPosition() {
         knobPosition.setPoint(
@@ -49,19 +51,7 @@ class JoystickBase(
         knobDeviation.setPoint(Point(0f, 0f))
     }
 
-    fun moveKnob(touchPointX: Float, touchPointY: Float) {
-        var tpX = touchPointX - baseRadius
-        var tpY = touchPointY - baseRadius
-
-        val deviation = sqrt(tpX.pow(2) + tpY.pow(2))
-        if (deviation > baseRadius) {
-            val coeff = baseRadius / deviation
-            tpX *= coeff
-            tpY *= coeff
-        }
-        knobDeviation.setPoint(Point(tpX / baseRadius, tpY / baseRadius))
-        knobPosition.setPoint(Point(tpX + basePosition.x, tpY + basePosition.y))
-    }
+    abstract fun moveKnob(touchPointX: Float, touchPointY: Float)
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         batch.draw(
