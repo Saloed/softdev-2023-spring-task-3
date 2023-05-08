@@ -144,7 +144,7 @@ fun highlight(text: String, errorString: String): AnnotatedString {
     var token: Token
     var color: Color?
 
-    do  {
+    do {
         token = lexer.nextToken()
         color = getColor(token)
         if (color != null) addStyle(color, token)
