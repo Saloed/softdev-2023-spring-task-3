@@ -42,7 +42,6 @@ public class Game implements Runnable {
         levelManager = new LevelManager(this);
         mainCharacter = new MainCharacter(200, 200, (int) (Scale * 48), (int) (Scale * 48));
         mainCharacter.lvlData(levelManager.getLevel().getLevelData());
-        //System.out.println(GameWidth + " " + GameHeight);
     }
 
     public void update() {
@@ -73,8 +72,6 @@ public class Game implements Runnable {
         int updates = 0;
         double timeOfLastFrame = 1000000000.0 / FPS;
         double timeOfLastUpdate = 1000000000.0 / UPS;
-        long thisTime = System.nanoTime();
-        long lastFrame = System.nanoTime();
         long lastCheck = System.currentTimeMillis();
         long lastTime = System.nanoTime();
 

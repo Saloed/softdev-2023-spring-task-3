@@ -19,7 +19,6 @@ public abstract class Entity {
         hitbox = new Rectangle2D.Float(x, y, w, h);
     }
 
-
     protected void drawHitbox(Graphics g) {
         g.setColor(new Color(0, 0, 0, 0));
         g.drawRect((int) hitbox.x, (int) hitbox.y, (int) hitbox.width, (int) hitbox.height);
