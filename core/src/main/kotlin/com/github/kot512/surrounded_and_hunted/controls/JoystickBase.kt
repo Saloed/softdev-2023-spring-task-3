@@ -17,20 +17,24 @@ abstract class JoystickBase(
     position: Point
 ) : Actor() {
 
-    abstract val listener: JoystickListener
+    val listener = JoystickListener()
 
-    init {
+    fun setup(listener: JoystickListener, position: Point) {
         setPosition(position.x, position.y)
         this.width = GameScreen.SCREEN_HEIGHT / 2.8f
         this.height = GameScreen.SCREEN_HEIGHT / 2.8f
         addListener(listener)
     }
 
-    private val baseRadius = this.width / 2
+    init {
+        setup(listener, position)
+    }
+
+    protected val baseRadius = this.width / 2
     private val knobRadius = baseRadius / 2
 
-    private val basePosition = Point(this.x, this.y)
-    private val knobPosition = Point(
+    protected val basePosition = Point(this.x, this.y)
+    protected val knobPosition = Point(
         basePosition.x + 2 * knobRadius - baseRadius,
         basePosition.y + 2 * knobRadius - baseRadius
     )
@@ -38,20 +42,31 @@ abstract class JoystickBase(
     private val baseSprite = Sprite(baseTexture)
     private val knobSprite = Sprite(knobTexture)
 
-    private var isTouched = false // "нажат" ли стик
-    val knobDeviation = Point(0f, 0f) // направление и сила отклонения стика
+    var isTouched = false // "нажат" ли стик
 
-    fun resetKnobPosition() {
+    open fun resetKnobPosition() {
         knobPosition.setPoint(
             Point(
                 basePosition.x + 2 * knobRadius - baseRadius,
                 basePosition.y + 2 * knobRadius - baseRadius
             )
         )
-        knobDeviation.setPoint(Point(0f, 0f))
     }
 
-    abstract fun moveKnob(touchPointX: Float, touchPointY: Float)
+    open fun moveKnob(touchPointX: Float, touchPointY: Float): Point {
+        var tpX = touchPointX - baseRadius
+        var tpY = touchPointY - baseRadius
+
+        val deviation = sqrt(tpX.pow(2) + tpY.pow(2))
+        if (deviation > baseRadius) {
+            val coeff = baseRadius / deviation
+            tpX *= coeff
+            tpY *= coeff
+        }
+        knobPosition.setPoint(Point(tpX + basePosition.x, tpY + basePosition.y))
+
+        return Point(tpX, tpY)
+    }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
         batch.draw(
@@ -86,29 +101,30 @@ abstract class JoystickBase(
 
     }
 
-    abstract inner class JoystickListener: InputListener() {
+    //    слушатель действий джойстика
+    inner class JoystickListener: InputListener() {
 
-        abstract override fun touchDown(
+        override fun touchDown(
             event: InputEvent?,
             x: Float,
             y: Float,
             pointer: Int,
             button: Int
-        ): Boolean
+        ): Boolean {
+            this@JoystickBase.isTouched = true
+            moveKnob(x, y)
 
-        abstract override fun touchUp(
-            event: InputEvent?,
-            x: Float,
-            y: Float,
-            pointer: Int,
-            button: Int
-        )
+            return true
+        }
 
-        abstract override fun touchDragged(
-            event: InputEvent?,
-            x: Float,
-            y: Float,
-            pointer: Int
-        )
+        override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
+            this@JoystickBase.isTouched = false
+            resetKnobPosition()
+        }
+
+        override fun touchDragged(event: InputEvent?, x: Float, y: Float, pointer: Int) {
+            moveKnob(x, y)
+
+        }
     }
 }

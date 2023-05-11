@@ -2,7 +2,7 @@ package com.github.kot512.surrounded_and_hunted.tools
 
 import com.badlogic.gdx.math.Vector2
 
-class Point(x: Float, y: Float): Vector2(x, y) {
+open class Point(x: Float, y: Float): Vector2(x, y) {
     var x: Float
         get() = super.x
         set(value: Float) {

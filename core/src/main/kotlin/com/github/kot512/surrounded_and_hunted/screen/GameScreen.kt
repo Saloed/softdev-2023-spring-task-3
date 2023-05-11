@@ -10,8 +10,10 @@ import ktx.app.KtxScreen
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.github.kot512.surrounded_and_hunted.controls.Joystick
-import com.github.kot512.surrounded_and_hunted.entities.PlayerSprite
+import com.github.kot512.surrounded_and_hunted.controls.AimJoystick
+import com.github.kot512.surrounded_and_hunted.controls.MovementJoystick
+import com.github.kot512.surrounded_and_hunted.entities.EnemyEntity
+import com.github.kot512.surrounded_and_hunted.entities.Player
 import com.github.kot512.surrounded_and_hunted.tools.Point
 
 class GameScreen: KtxScreen {
@@ -19,7 +21,16 @@ class GameScreen: KtxScreen {
     companion object {
         val SCREEN_WIDTH = Gdx.graphics.width.toFloat()
         val SCREEN_HEIGHT = Gdx.graphics.height.toFloat()
-        val PLAYER_POS = Point(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        val PLAYER_POS =
+            Point(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+//            Point(0f, 0f)
+
+        val BOUNDS_X = 0f..SCREEN_WIDTH
+        val BOUNDS_Y = 0f..SCREEN_HEIGHT
+
+        val ENEMY_LIST: MutableList<EnemyEntity> = mutableListOf()
+
+        val BALL_PROJ_TEXT: Texture = Texture("graphics/test_image/joystick_knob.png")
     }
 //    константы
     val L_JOYSTICK_POS = Point(150f, 95f)
@@ -32,15 +43,30 @@ class GameScreen: KtxScreen {
 
 //    графика
     private val batch: SpriteBatch = SpriteBatch()
-    private val locationTexture: Texture = Texture("graphics/test_image/dark_grass_background.jpg")
+    private val locationTexture: Texture = Texture("graphics/test_image/pixel_grass_background.png")
     private val jBaseTexture: Texture = Texture("graphics/test_image/joystick_base.png")
     private val jKnobTexture: Texture = Texture("graphics/test_image/joystick_knob.png")
+    private val entityTexture: Texture = Texture("graphics/test_image/red_dot_png.png")
 
 //    игровые объекты
     private val stage: Stage = Stage(viewport) // сцена, ответственная за рендер UI
-    private val joystick: Joystick = Joystick(jBaseTexture, jKnobTexture, L_JOYSTICK_POS)
-    private val joystick2: Joystick = Joystick(jBaseTexture, jKnobTexture, R_JOYSTICK_POS)
-    private val player: PlayerSprite = PlayerSprite(Texture("graphics/test_image/red_dot_png.png"), joystick)
+    private val joystick: MovementJoystick =
+        MovementJoystick(jBaseTexture, jKnobTexture, L_JOYSTICK_POS)
+    private val joystick2: AimJoystick =
+        AimJoystick(jBaseTexture, jKnobTexture, R_JOYSTICK_POS)
+    private val player: Player =
+        Player(
+            entityTexture,
+            PLAYER_POS,
+            joystick,
+            joystick2
+        )
+    private val enemyTest: EnemyEntity =
+        EnemyEntity(
+            entityTexture,
+            PLAYER_POS,
+            player
+        )
 
     init {
         Gdx.input.inputProcessor = stage
@@ -54,11 +80,13 @@ class GameScreen: KtxScreen {
         batch.begin() // начало рендера
         batch.projectionMatrix = camera.combined
 
-        camera.position.set(player.centerX, player.centerY, 0f)  // обновление позиции камеры
+        camera.position.set(player.originBasedX, player.originBasedY, 0f)  // обновление позиции камеры
         camera.update()
 
-        batch.draw(locationTexture, 0f, 0f, SCREEN_WIDTH * 2, SCREEN_WIDTH * 2) // рендерим текстуру локации
+        batch.draw(locationTexture, 0f, 0f, SCREEN_WIDTH, SCREEN_HEIGHT) // рендерим текстуру локации
         player.draw(batch)
+
+        enemyTest.draw(batch)
 
         batch.end() // конец рендера
 
@@ -72,6 +100,8 @@ class GameScreen: KtxScreen {
         locationTexture.dispose()
         jBaseTexture.dispose()
         jKnobTexture.dispose()
+        entityTexture.dispose()
+        BALL_PROJ_TEXT.dispose()
     }
 
     override fun resume() {
