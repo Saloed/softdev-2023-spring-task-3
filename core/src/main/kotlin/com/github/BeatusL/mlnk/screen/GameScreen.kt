@@ -1,41 +1,53 @@
 package com.github.BeatusL.mlnk.screen
 
-import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.ExtendViewport
+import com.github.BeatusL.mlnk.component.ImageComponent
+import com.github.BeatusL.mlnk.system.RenderSystem
+import com.github.quillraven.fleks.World
 import ktx.app.KtxScreen
 import ktx.log.logger
 
 class GameScreen: KtxScreen {
-    private val stage: Stage = Stage(ExtendViewport(16f, 9f))
-    private val texture: Texture = Texture("assets/background.png")
-
+    private val stage: Stage = Stage(ExtendViewport(9f, 16f))
+    private val texture: Texture = Texture("background.png")
+    private val world: World = World {
+        entityCapacity = 64
+        inject(stage)
+        componentListener<ImageComponent.Companion.ImageComponentListener>()
+        system<RenderSystem>()
+    }
     override fun show() {
-        log.debug { "GameScreen shown" }
-        stage.addActor(
-            Image(texture).apply {
-                setPosition(0f, 0f)
-                setSize(3f, 3f)
-                setScaling(Scaling.fill)
+        world.entity {
+            add<ImageComponent> {
+                image = Image(texture).apply {
+                    setPosition(0f, 0f)
+                    setSize(9f, 16f)
+                    setScaling(Scaling.fill)
+                }
             }
-        )
+        }
+
+        log.debug { "GameScreen shown" }
     }
 
     override fun resize(width: Int, height: Int) {
         stage.viewport.update(width, height, true)
+        log.debug { "View resized" }
     }
 
     override fun render(delta: Float) {
-        with(stage) {
-            act(delta)
-            draw()
-        }
+        world.update(delta)
     }
 
     override fun dispose() {
         stage.dispose()
+        texture.dispose()
+        world.dispose()
+        log.debug { "Resources disposed" }
     }
 
     companion object {
