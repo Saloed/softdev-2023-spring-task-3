@@ -10,10 +10,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import org.antlr.v4.runtime.*
 
-private val styles = mutableSetOf<AnnotatedString.Range<SpanStyle>>()
-
-private fun addStyle(spanStyle: SpanStyle, start: Int, end: Int) {
-    styles.add(
+private fun MutableCollection<
+        AnnotatedString.Range<SpanStyle>
+        >.addStyle(spanStyle: SpanStyle, start: Int, end: Int) {
+    this.add(
         AnnotatedString.Range(
             spanStyle,
             start,
@@ -21,15 +21,21 @@ private fun addStyle(spanStyle: SpanStyle, start: Int, end: Int) {
         )
     )
 }
-private fun addStyle(color: Color, start: Int, end: Int) {
-    addStyle(SpanStyle(color = color), start, end)
+private fun MutableCollection<
+        AnnotatedString.Range<SpanStyle>
+        >.addStyle(color: Color, start: Int, end: Int) {
+    this.addStyle(SpanStyle(color = color), start, end)
 }
 
-private fun addStyle(color: Color, token: Token) {
-    addStyle(color, token.startIndex, token.stopIndex + 1)
+private fun MutableCollection<
+        AnnotatedString.Range<SpanStyle>
+        >.addStyle(color: Color, token: Token) {
+    this.addStyle(color, token.startIndex, token.stopIndex + 1)
 }
-private fun addStyle(color: Color, range: IntRange) {
-    addStyle(color, range.first, range.last + 1)
+private fun MutableCollection<
+        AnnotatedString.Range<SpanStyle>
+        >.addStyle(color: Color, range: IntRange) {
+    this.addStyle(color, range.first, range.last + 1)
 }
 
 
@@ -129,23 +135,22 @@ private fun getColor(
     }
 
 fun highlight(text: String, errorString: String): AnnotatedString {
-    styles.clear()
+    val styles = mutableListOf<AnnotatedString.Range<SpanStyle>>()
     val lexer = Python3Lexer( ANTLRInputStream(text) )
+
     var token: Token
     var color: Color?
-
     do {
         token = lexer.nextToken()
         color = getColor(token)
-        if (color != null) addStyle(color, token)
+        if (color != null) styles.addStyle(color, token)
     } while (token.text != "<EOF>")
+
+    for (i in Regex("#.*").findAll(text)) styles.addStyle(Color.Gray, i.range)
 
     val errorStringSplit = errorString.split(" ")
     val errorLine = if (errorString == "OK") -1 else errorStringSplit[errorStringSplit.size - 2].toInt()
     val errorChar = if (errorString == "OK") -1 else errorStringSplit.last().toInt()
-
-    for (i in Regex("#.*").findAll(text)) addStyle(Color.Gray, i.range)
-
     if (errorString != "OK") {
         var line = 1
         var charInLine = 1
@@ -158,7 +163,7 @@ fun highlight(text: String, errorString: String): AnnotatedString {
                 charInLine = 1
             }
             if (line == errorLine && charInLine == errorChar) {
-                addStyle(
+                styles.addStyle(
                     SpanStyle(textDecoration = TextDecoration.Underline, color = Color.Red),
                     totalChar,
                     totalChar + 1
@@ -168,7 +173,7 @@ fun highlight(text: String, errorString: String): AnnotatedString {
     }
     return AnnotatedString(
         text = text,
-        spanStyles = styles.toList()
+        spanStyles = styles
     )
 }
 
