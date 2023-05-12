@@ -51,8 +51,7 @@ fun SymPyPage(
                     toSymPy = it
 
                     simplifierJob?.cancel()
-                    simplifierJob = coroutineScope.launch(Dispatchers.IO) {
-                        delay(1000)
+                    simplifierJob = coroutineScope.launch(Dispatchers.Default) {
                         simplifiedToSymPy = symPy("simplify", toSymPy)
                     }
                 },
