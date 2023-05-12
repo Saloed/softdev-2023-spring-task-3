@@ -111,7 +111,6 @@ fun PyCulatorApp(
                     )
                     2 -> SymPyPage(
                         coroutineScope = coroutineScope,
-                        memoryList = memoryList,
                     )
                     3 -> CodePage(
                         context = context,
