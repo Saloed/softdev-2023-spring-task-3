@@ -45,7 +45,7 @@ class AnimationSystem(
                 gdxError("No such texture regions!")
             }
             Animation(default_duration, regions.map { TextureRegionDrawable(it) }) // map from ktx.collection
-                                // ^ 8fps
+                                // ^ 16fps
         }
     }
 
