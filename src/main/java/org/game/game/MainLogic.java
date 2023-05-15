@@ -1,5 +1,7 @@
 package org.game.game;
 
+import org.game.view_control.Controller;
+
 import java.util.Random;
 
 import static org.game.game.Constants.*;
@@ -14,6 +16,37 @@ public class MainLogic {
 
     private static void merged16384() {
         isThere16384 = true;
+        Controller.win = true;
+    }
+
+    public static boolean isItEnd() {
+        HexGrid save = new HexGrid();
+        for (int q = 0; q < COUNT_TILES_Q; q++) {
+            for (int r = 0; r < COUNT_TILES_R; r++) {
+                save.setState(q, r, grid.getState(q, r));
+            }
+        }
+        if(shift(Direction.DOWN_RIGHT)) {
+            grid = save;
+            return false;
+        } else if(shift(Direction.UP_RIGHT)) {
+            grid = save;
+            return false;
+        } else if(shift(Direction.RIGHT)) {
+            grid = save;
+            return false;
+        } else if(shift(Direction.UP_LEFT)) {
+            grid = save;
+            return false;
+        } else if(shift(Direction.LEFT)) {
+            grid = save;
+            return false;
+        } else if(shift(Direction.DOWN_LEFT)) {
+            grid = save;
+            return false;
+        }
+        endOfGame = true;
+        return true;
     }
 
     public static void init(){
@@ -164,7 +197,7 @@ public class MainLogic {
                         ret.didItMoved = true;
                         ret.shiftedRow[j] = oldRowWithoutZeros[i] * 2;
                         score += oldRowWithoutZeros[i] * 2;
-                        if(ret.shiftedRow[j] == 16384) merged16384();
+                        if(ret.shiftedRow[j] == 16384 && !isThere16384) merged16384();
                         i++;
                     } else if (oldRowWithoutZeros[i] != -1){
                         ret.shiftedRow[j] = oldRowWithoutZeros[i];

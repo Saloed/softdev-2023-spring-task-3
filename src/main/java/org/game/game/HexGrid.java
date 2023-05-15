@@ -4,23 +4,23 @@ import static org.game.game.Constants.*;
 
 public class HexGrid {
 
-    private static int[][] grid;
+    private final int[][] grid;
 
     public HexGrid() {
-        grid = new int[COUNT_TILES_Q][COUNT_TILES_R];
+        this.grid = new int[COUNT_TILES_Q][COUNT_TILES_R];
 
         for (int q = 0; q < COUNT_TILES_Q; q++) {
             for (int r = 0; r < COUNT_TILES_Q; r++) {
-                grid[q][r] = 0;
+                this.grid[q][r] = 0;
             }
         }
 
-        grid[0][0] = -1;
-        grid[0][1] = -1;
-        grid[1][0] = -1;
-        grid[3][4] = -1;
-        grid[4][3] = -1;
-        grid[4][4] = -1;
+        this.grid[0][0] = -1;
+        this.grid[0][1] = -1;
+        this.grid[1][0] = -1;
+        this.grid[3][4] = -1;
+        this.grid[4][3] = -1;
+        this.grid[4][4] = -1;
     }
 
     public int getState(int q, int r) {
@@ -87,29 +87,29 @@ public class HexGrid {
         }
     }
 
-    public void print() {
-        System.out.print("  ");
-        for (int i = 2; i < 5; i++) {
-            System.out.print(grid[0][i] + " ");
-        }
-        System.out.print("\n");
-        for (int i = 1; i < 5; i++) {
-            System.out.print(" " + grid[1][i]);
-        }
-        System.out.print("\n");
-        for (int i = 0; i < 5; i++) {
-            System.out.print(grid[2][i] + " ");
-        }
-        System.out.print("\n");
-        for (int i = 0; i < 4; i++) {
-            System.out.print(" " + grid[3][i]);
-        }
-        System.out.print("\n");
-        System.out.print("  ");
-        for (int i = 0; i < 3; i++) {
-            System.out.print(grid[4][i] + " ");
-        }
-        System.out.print("\n");
-    }
+//    public void print() {
+//        System.out.print("  ");
+//        for (int i = 2; i < 5; i++) {
+//            System.out.print(grid[0][i] + " ");
+//        }
+//        System.out.print("\n");
+//        for (int i = 1; i < 5; i++) {
+//            System.out.print(" " + grid[1][i]);
+//        }
+//        System.out.print("\n");
+//        for (int i = 0; i < 5; i++) {
+//            System.out.print(grid[2][i] + " ");
+//        }
+//        System.out.print("\n");
+//        for (int i = 0; i < 4; i++) {
+//            System.out.print(" " + grid[3][i]);
+//        }
+//        System.out.print("\n");
+//        System.out.print("  ");
+//        for (int i = 0; i < 3; i++) {
+//            System.out.print(grid[4][i] + " ");
+//        }
+//        System.out.print("\n");
+//    }
 }
 

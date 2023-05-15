@@ -5,15 +5,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import org.game.game.MainLogic;
 import org.game.game.Constants;
 
 public class Controller {
 
     @FXML
-    public Label startLabel;
+    private Pane winPane;
     @FXML
-    public BorderPane papa;
+    public Pane failPane;
+    @FXML
+    public Pane startPane;
     @FXML
     public TextField tile1;
     @FXML
@@ -54,28 +57,39 @@ public class Controller {
     public TextField tile19;
     @FXML
     private Label scoreLabel;
+    public static Boolean win = false;
     public TextField[][] gameField;
     private final Colors colors = new Colors();
 
     @FXML
     public void keyPressed(KeyEvent key) {
-        if(startLabel.isVisible()) {
+        if(startPane.isVisible()) {
             for (int i = 0; i < 2; i++) {
                 MainLogic.generateNewTile();
             }
             updateUi();
-        } else {
+        } else if(!winPane.isVisible()){
             MainLogic.input(key.getCode().toString());
             if(MainLogic.move()) {
                 updateUi();
                 scoreLabel.setText(String.valueOf(MainLogic.score));
+                if(win) {
+                    winPane.setVisible(true);
+                }
             }
-
+            else {
+                if(MainLogic.isItEnd()) {
+                    failPane.setVisible(true);
+                }
+            }
+        } else {
+            winPane.setVisible(false);
+            win = false;
         }
     }
 
     public void updateUi() {
-        if(startLabel.isVisible()) {
+        if(startPane.isVisible()) {
             gameField = new TextField[Constants.COUNT_TILES_Q][Constants.COUNT_TILES_R];
             gameField[0][2] = tile1;
             gameField[0][3] = tile2;
@@ -96,7 +110,7 @@ public class Controller {
             gameField[4][0] = tile17;
             gameField[4][1] = tile18;
             gameField[4][2] = tile19;
-            startLabel.setVisible(false);
+            startPane.setVisible(false);
         }
         for (int q = 0; q < Constants.COUNT_TILES_Q; q++) {
             for (int r = 0; r < Constants.COUNT_TILES_R; r++) {
