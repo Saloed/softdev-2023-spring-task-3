@@ -7,4 +7,9 @@ data class ChatUiState(
     val selectedChat: ChatElement? = null,
 //    val selectedChatList:ChatList? = null // заготовка под списки чатов
     val chatList: ChatList = ChatList(listOf())
-)
+){
+    fun ChatUiState.toChatList():ChatList = chatList
+    fun ChatList.toChatUiState(actionEnabled:Boolean=false):ChatUiState = ChatUiState(chatList=chatList)
+
+    fun ChatUiState.isValid():Boolean = true// TODO: Другая validation функция
+}

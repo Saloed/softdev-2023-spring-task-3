@@ -10,4 +10,7 @@ class ChatList(
     fun updateChatById(chat: ChatElement) =
         ChatList(chats.filter { it.id != chat.id }.toMutableList() + chat)
 
+    operator fun plus(other: ChatList) =
+        ChatList(chats + other.chats)
+
 }

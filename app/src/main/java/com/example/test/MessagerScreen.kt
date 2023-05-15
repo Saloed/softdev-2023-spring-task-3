@@ -32,11 +32,14 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.remember
 
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.test.data.ChatDatabase
+import com.example.test.data.ChatRepository
 
 import com.example.test.data.UserPreferencesRepository
 import com.example.test.ui.SettingsScreen
@@ -52,11 +55,14 @@ enum class MessengerRoutes(@StringRes val title: Int) {
 @Composable
 fun MessengerApp(
     modifier: Modifier = Modifier,
-    userPreferencesRepository: UserPreferencesRepository
+    userPreferencesRepository: UserPreferencesRepository,
+    chatRepository: ChatRepository
 ) {
     val navController = rememberNavController()
-    val viewModel = ChatViewModel(userPreferencesRepository)
-    viewModel.updateChats()
+    val viewModel = ChatViewModel(userPreferencesRepository, chatRepository)
+    viewModel.loadChats()
+    viewModel.telegramInit(LocalContext.current.filesDir.absolutePath)
+//    viewModel.updateChats()
     // DataStore
 
 
@@ -65,7 +71,9 @@ fun MessengerApp(
         topBar = {
             TopBar(
                 onSettingsButtonClicked = { navController.navigate(MessengerRoutes.Settings.name) },
-                onNavigateUpButtonClicked = { navController.navigateUp() })
+                onNavigateUpButtonClicked = { navController.navigateUp() },
+                onRefreshButtonClicked = { viewModel.updateChats() }
+            )
         }
     )
     { innerPadding ->
@@ -84,14 +92,14 @@ fun MessengerApp(
                     ChatListScreen(uiState.chatList, onChatClick = {
                         viewModel.setSelectedChat(it)
                         navController.navigate(MessengerRoutes.Chat.name)
-                    }
+                    }, onRefresh = { viewModel.updateChats() }
                     )
 
                 }
             }
             composable(route = MessengerRoutes.Chat.name) {
                 ChatScreen(
-                    uiState.selectedChat!!.messages,
+                    uiState.selectedChat!!,
                     userPreferencesRepository = userPreferencesRepository
                 ) // TODO: Проверить NullAssert или сделать инициализацию
 
@@ -100,7 +108,10 @@ fun MessengerApp(
 
 //                    userPreferencesRepository.saveFontSizePreference(13)
 
-                SettingsScreen(userPreferencesRepository = userPreferencesRepository)
+                SettingsScreen(
+                    userPreferencesRepository = userPreferencesRepository,
+                    viewModel = viewModel
+                )
             }
         }
     }
@@ -132,7 +143,8 @@ fun TopBar(
     modifier: Modifier = Modifier,
     onSettingsButtonClicked: () -> Unit,
     text: String = stringResource(R.string.back_button),
-    onNavigateUpButtonClicked: () -> Unit
+    onNavigateUpButtonClicked: () -> Unit,
+    onRefreshButtonClicked: () -> Unit
 ) {
     val canNavigateBack = true
     TopAppBar(
@@ -153,6 +165,14 @@ fun TopBar(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Settings,
+                    contentDescription = text
+                )
+            }
+            IconButton(
+                onClick = onRefreshButtonClicked
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Refresh,
                     contentDescription = text
                 )
             }

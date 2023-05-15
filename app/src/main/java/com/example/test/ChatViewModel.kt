@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.example.test.data.ChatElement
 import com.example.test.data.ChatList
+import com.example.test.data.ChatRepository
 import com.example.test.data.ChatUiState
 import com.example.test.data.IChannelMessages
 import com.example.test.data.IChatList
@@ -26,9 +27,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.lang.Exception
 
+import com.example.test.td.Example
+import kotlinx.coroutines.runBlocking
 
 class ChatViewModel(
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val userPreferencesRepository: UserPreferencesRepository,
+    private val chatRepository: ChatRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState.asStateFlow()
@@ -36,25 +40,59 @@ class ChatViewModel(
 
     fun setSelectedChat(chat: ChatElement) {
         _uiState.update { currentState ->
+            chat.updatemessages()
             currentState.copy(
                 isChatSelected = true,
                 selectedChat = chat,
                 selectedChatId = chat.id
             )
         }
-        if (chat.messages.isEmpty()) { // TODO:Lazy load сообщений
-            updateChatMessages(chat) // TODO: Придумать как обновить сам чат, а не только его копию в selectedChat
+//        if (chat.messages.isEmpty()) { // TODO:Lazy load сообщений
+//        updateChatMessages(chat) // TODO: Придумать как обновить сам чат, а не только его копию в selectedChat
+//        }
+    }
+
+    fun saveChats() {
+        viewModelScope.launch {
+            for (chat in _uiState.value.chatList.chats) {
+                chatRepository.insertChat(chat)
+            }
         }
+    }
+
+    fun loadChats() {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                try {
+                    currentState.copy(
+                        chatList = ChatList(chatRepository.getAllChatsStream().first())
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()// TODO: Error handling
+                    currentState
+                }
+            }
+
+        }
+
+
     }
 
     fun updateChats() {
         viewModelScope.launch {
             _uiState.update { currentState ->
-                currentState.copy(
-                    chatList = updateDiscord()
-                )
+                try {
+                    currentState.copy(
+                        chatList = updateDiscord() + updateTelegramChats() // Можно вызвать nullReference, если не запущена тг
+                    )
+                } catch (e: IllegalAccessError) {
+                    e.printStackTrace()// TODO: Error handling
+                    currentState
+                }
             }
+
         }
+        saveChats()
     }
 
     private val json = Json {
@@ -87,9 +125,11 @@ class ChatViewModel(
     }
 
     private fun updateChatMessages(chat: ChatElement) {
+        updateTelegramMessages(chat.id)
         viewModelScope.launch {
             _uiState.update { currentState ->
-                val updatedChat = chat.updateMessages(updateDiscordMessages(chat.id))
+                val updatedChat =
+                    chat// TODO: chat.updateMessages(updateDiscordMessages(chat.id))
                 currentState.copy(
                     chatList = _uiState.value.chatList.updateChatById(updatedChat),
                     isChatSelected = true,
@@ -127,4 +167,57 @@ class ChatViewModel(
             return@withContext (messages)
         }
     }
+
+    fun updateTelegramChats(): ChatList =
+        Example.getChats()
+
+
+    //LocalContext.current.filesDir.absolutePath
+    fun telegramInit(dbPath: String) {
+
+        Example.main(dbPath) { prompt -> runBlocking { telegramLoginCallback(prompt) } }
+
+    }
+
+    fun onTelegramPromptUpdate(result: String) {
+        telegramPromptResult = result
+    }
+
+    private var telegramPromptResult = ""
+    private suspend fun telegramLoginCallback(prompt: String): String {
+        viewModelScope.launch {}
+        return withContext(Dispatchers.Default) {
+            while (telegramPromptResult == "") {
+            }
+            val out = telegramPromptResult
+            telegramPromptResult = ""
+            return@withContext out
+        }
+
+    }
+
+    fun updateTelegramMessages(chatId: String) {
+        Example.getMessages(chatId) { onTelegramChatUpdate(it) }
+    }
+
+    fun onTelegramChatUpdate(messages: List<Message>): String {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                val chat = _uiState.value.selectedChat
+                val updatedChat =
+                    chat!!.updateMessagesOld(messages)// TODO: Null-safety
+                currentState.copy(
+                    chatList = _uiState.value.chatList.updateChatById(updatedChat),
+                    isChatSelected = true,
+                    selectedChat = updatedChat,
+                    selectedChatId = chat.id
+                )
+
+            }
+        }
+
+        return ""
+    }
+
+
 }

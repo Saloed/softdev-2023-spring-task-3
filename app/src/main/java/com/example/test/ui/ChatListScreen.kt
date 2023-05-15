@@ -7,7 +7,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,7 +18,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 
 
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,35 +33,73 @@ import com.example.test.data.ChatElement
 import com.example.test.data.ChatList
 
 import androidx.compose.material.Scaffold
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.zIndex
 import com.example.test.R
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 
 @Composable
 fun ChatListScreen(
     chatList: ChatList,
     onChatClick: (ChatElement) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRefresh: () -> Unit
 ) {
+    var refreshing by remember { mutableStateOf(false) }
+    val ptrState = rememberPullRefreshState(
+        refreshing = refreshing,
+        onRefresh = {
+            refreshing = true
+            onRefresh()
+            refreshing = false
+        },
+    )
     Scaffold() {
+
 //        innerPadding-> val uiState by viewModel.uiState.collectAsState()
-        LazyColumn {
+        Box(
+            modifier = Modifier
+                .pullRefresh(ptrState, true)
+                .fillMaxSize()
 
-            items(chatList.chats) { chat ->
-                Box(modifier = modifier.padding(4.dp).animateItemPlacement(tween(durationMillis = 250) // TODO: Тут анимация
-                )) {
-                    ChatDisplay(chat, onChatClick)
+        ) {
+            PullRefreshIndicator(refreshing, ptrState, Modifier.zIndex(5.0f).align(Alignment.TopCenter))
+            LazyColumn(
+            ) {
+
+                items(chatList.chats) { chat ->
+
+                    Box(
+                        modifier = modifier
+                            .padding(4.dp)
+                            .animateItemPlacement(
+                                tween(durationMillis = 250) // TODO: Тут анимация
+                            )
+                    ) {
+                        ChatDisplay(chat, onChatClick)
+                    }
+
                 }
-            }
 
+            }
         }
     }
 
 }
+
 
 @Composable
 fun ChatDisplay(
@@ -69,7 +113,7 @@ fun ChatDisplay(
             .clip(RoundedCornerShape(16.dp))
             .background(com.example.test.ui.theme.Purple80)
             .fillMaxWidth()
-            .clickable(onClick =  { onChatClick(chatElement)  })
+            .clickable(onClick = { onChatClick(chatElement) })
     ) {
         Column(
             modifier = modifier

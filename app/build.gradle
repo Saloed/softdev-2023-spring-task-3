@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.20'
 }
-
+apply plugin: 'kotlin-kapt'
 android {
     namespace 'com.example.test'
     compileSdk 33
@@ -21,6 +21,11 @@ android {
         }
     }
 
+    sourceSets.main {
+        jniLibs.srcDir 'src/main/libs'
+        jni.srcDirs = [] //disable automatic ndk-build call
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -28,11 +33,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17 //JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_17  //JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaLanguageVersion.of(17)//'1.8'// 1.8
     }
     buildFeatures {
         compose true
@@ -46,7 +51,9 @@ android {
         }
     }
 }
-
+java{
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.10.0'
@@ -68,13 +75,23 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
     implementation "androidx.navigation:navigation-compose:2.5.3"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-
+    implementation 'androidx.compose.material:material:1.5.0-alpha04' // Второй material
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
 // Retrofit with Scalar Converter
     implementation "com.squareup.retrofit2:converter-scalars:2.9.0"
 
     implementation "androidx.datastore:datastore-preferences:1.1.0-alpha04"
+
+    def room_version = "2.5.1"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    // To use Kotlin annotation processing tool (kapt)
+    kapt "androidx.room:room-compiler:$room_version"
+    // To use Kotlin Symbol Processing (KSP)
+//    ksp "androidx.room:room-compiler:$room_version"
 
 
 }

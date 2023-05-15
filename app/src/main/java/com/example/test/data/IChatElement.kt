@@ -1,9 +1,12 @@
 package com.example.test.data
 
-import retrofit2.http.GET
-import retrofit2.http.Header
+interface IChatElement {
+    var id: String
+    var name: String
+    var previewImage: String
+    var displayMessage: String
+    val recipients: List<RecipientsData>
+    var messages:List<Message>
 
-interface IChatList {
-    @GET("users/@me/channels")
-    suspend fun chats(@Header("Authorization") auth: String): String
+    fun updateMessages()
 }
