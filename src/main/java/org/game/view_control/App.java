@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.game.game.MainLogic;
 
@@ -18,6 +19,7 @@ public class App extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.setTitle("16384");
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("icon.jpg")));
         primaryStage.show();
         MainLogic.init();
     }
