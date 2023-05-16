@@ -1,6 +1,5 @@
 package org.game.game;
 
-import com.sun.tools.javac.Main;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
