@@ -14,6 +14,7 @@ public class IndieGame extends ApplicationAdapter {
     private GameStateManager stateManager;
     private SpriteBatch batch;
 
+
     @Override
     public void create() {
         batch = new SpriteBatch();
