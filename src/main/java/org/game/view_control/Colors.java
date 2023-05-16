@@ -7,7 +7,7 @@ public class Colors {
     public final static HashMap<Integer, String> colors = new HashMap<>();
 
     static {
-        colors.put(0, "#ccb69f");
+        colors.put(0, "transparent");
         colors.put(2, "#dacab8");
         colors.put(4, "#99928b");
         colors.put(8, "#dfa16f");

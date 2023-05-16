@@ -1,17 +1,26 @@
 package org.game.view_control;
 
+import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import org.game.game.MainLogic;
 import org.game.game.Constants;
 
+import java.io.IOException;
+
 public class Controller {
 
+    @FXML
+    private StackPane papa;
     @FXML
     private Pane winPane;
     @FXML
@@ -58,8 +67,6 @@ public class Controller {
     public TextField tile19;
     @FXML
     private Label scoreLabel;
-    @FXML
-    private Button restartButton;
     public static Boolean win = false;
     public TextField[][] gameField;
 
@@ -95,9 +102,13 @@ public class Controller {
                 if(gameField[q][r] != null) {
                     int valOfTile = MainLogic.grid.getState(q, r);
                     String style = "-fx-background-color: " + Colors.colors.get(valOfTile) +
-                            "; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;";
+                            "; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; " +
+                            "-fx-font-family: " + App.myFont.getFamily() + "; -fx-font-size: 27.0";
                     gameField[q][r].setStyle(style);
-                    if(valOfTile != 0) gameField[q][r].setText(String.valueOf(valOfTile));
+                    if(valOfTile != 0) {
+                        if(gameField[q][r].getText().equals("")) gameField[q][r].setText(String.valueOf(valOfTile));
+                        else gameField[q][r].setText(String.valueOf(valOfTile));
+                    }
                     else gameField[q][r].setText("");
                 }
             }
@@ -138,5 +149,23 @@ public class Controller {
         failPane.setVisible(false);
         start();
     }
+
+//    public void spawnAnimation(int q, int r) {
+//        ScaleTransition anim = new ScaleTransition(Duration.millis(300), gameField[q][r]);
+//        anim.setFromX(.1);
+//        anim.setToX(1.0);
+//        anim.setFromY(.1);
+//        anim.setToY(1.0);
+//        anim.play();
+//    }
+
+//    public void mergeAnimation(int q, int r) {
+//        ScaleTransition anim = new ScaleTransition(Duration.millis(300), gameField[q][r]);
+//        anim.setFromX(1.2);
+//        anim.setToX(1.0);
+//        anim.setFromY(1.2);
+//        anim.setToY(1.0);
+//        anim.play();
+//    }
 
 }

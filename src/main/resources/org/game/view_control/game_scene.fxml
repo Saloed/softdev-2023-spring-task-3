@@ -12,26 +12,19 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#keyPressed" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.game.view_control.Controller">
+<StackPane fx:id="papa" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#keyPressed" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.game.view_control.Controller">
    <children>
       <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #fddfbd;">
          <top>
             <Pane prefHeight="85.0" prefWidth="640.0" BorderPane.alignment="CENTER">
                <children>
-                  <Text layoutX="14.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SCORE: " wrappingWidth="140.53671264648438">
-                     <font>
-                        <Font name="Harpseal" size="34.0" />
-                     </font>
+                  <Text layoutX="14.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Harpseal; -fx-font-size: 34.0" text="SCORE: " wrappingWidth="140.53671264648438">
                   </Text>
-                  <Label fx:id="scoreLabel" layoutX="155.0" layoutY="25.0" prefHeight="35.0" prefWidth="234.0" text="0">
-                     <font>
-                        <Font name="Harpseal" size="34.0" />
-                     </font>
+                  <Label fx:id="scoreLabel" layoutX="155.0" layoutY="25.0" prefHeight="35.0" prefWidth="234.0" style="-fx-font-family: Harpseal; -fx-font-size: 34.0" text="0">
                   </Label>
-                  <Button fx:id="restartButton" layoutX="627.0" layoutY="23.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#restart" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #f18b06;">
+                  <Button fx:id="restartButton" layoutX="627.0" layoutY="23.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#restart" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #f18b06; -fx-background-radius: 50%;">
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0">
                            <image>
@@ -46,10 +39,7 @@
          <bottom>
             <Pane prefHeight="55.0" prefWidth="640.0" BorderPane.alignment="CENTER">
                <children>
-                  <Text layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CONTROLS: W, E, A, D, Z, X">
-                     <font>
-                        <Font name="Harpseal" size="24.0" />
-                     </font>
+                  <Text layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Harpseal; -fx-font-size: 24.0" text="CONTROLS: W, E, A, D, Z, X">
                   </Text>
                </children>
             </Pane>
@@ -60,177 +50,196 @@
                   <HBox prefHeight="100.0" prefWidth="640.0" spacing="35.0">
                      <children>
                         <Pane prefHeight="100.0" prefWidth="100.0" />
-                        <TextField fx:id="tile1" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile2" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile3" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile1" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-padding: 4; -fx-background-radius: 50%; -fx-text-fill: fafafa; -fx-background-color: transparent; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile2" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile3" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="35.0">
                      <children>
                         <Pane prefHeight="100.0" prefWidth="32.5" />
-                        <TextField fx:id="tile4" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile5" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile6" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile7" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile4" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile5" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile6" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile7" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="35.0">
                      <children>
-                        <TextField fx:id="tile8" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile9" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile10" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile11" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile12" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile8" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile9" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile10" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile11" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile12" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="35.0">
                      <children>
                         <Pane prefHeight="100.0" prefWidth="32.5" />
-                        <TextField fx:id="tile13" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile14" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile15" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile16" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile13" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile14" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile15" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile16" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="640.0" spacing="35.0">
                      <children>
                         <Pane prefHeight="100.0" prefWidth="100.0" />
-                        <TextField fx:id="tile17" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile18" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
-                        <TextField fx:id="tile19" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa;">
-                           <font>
-                              <Font name="Harpseal" size="27.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </TextField>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile17" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile18" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
+                        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #ccb69f; -fx-background-radius: 50%;">
+                           <children>
+                              <TextField fx:id="tile19" alignment="CENTER" editable="false" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: fafafa; -fx-font-family: Harpseal; -fx-font-size: 27.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </TextField>
+                           </children>
+                        </Pane>
                      </children>
                   </HBox>
                </children>
@@ -246,40 +255,25 @@
       <Pane fx:id="startPane" prefHeight="200.0" prefWidth="200.0">
          <children>
             <Label opacity="0.4" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #f5ca1f;" />
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" text="PRESS ANY BUTTON TO START" textAlignment="CENTER">
-               <font>
-                  <Font name="Harpseal" size="27.0" />
-               </font>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" style="-fx-font-family: Harpseal; -fx-font-size: 27.0" text="PRESS ANY BUTTON TO START" textAlignment="CENTER">
             </Label>
          </children>
       </Pane>
       <Pane fx:id="failPane" prefHeight="200.0" prefWidth="200.0" visible="false">
          <children>
             <Label opacity="0.4" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #f5ca1f;" />
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" text="Game Over" textAlignment="CENTER">
-               <font>
-                  <Font name="Harpseal" size="27.0" />
-               </font>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" style="-fx-font-family: Harpseal; -fx-font-size: 27.0" text="Game Over" textAlignment="CENTER">
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="200.0" layoutY="363.0" prefHeight="34.0" prefWidth="301.0" text="PRESS ANY BUTTON TO RESTART" textAlignment="CENTER">
-               <font>
-                  <Font name="Harpseal" size="15.0" />
-               </font>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="184.0" layoutY="363.0" prefHeight="34.0" prefWidth="317.0" style="-fx-font-family: Harpseal; -fx-font-size: 15;" text="PRESS ANY BUTTON TO RESTART" textAlignment="CENTER">
             </Label>
          </children>
       </Pane>
       <Pane fx:id="winPane" prefHeight="200.0" prefWidth="200.0" visible="false">
          <children>
             <Label opacity="0.4" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #f5ca1f;" />
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" text="You won!" textAlignment="CENTER">
-               <font>
-                  <Font name="Harpseal" size="27.0" />
-               </font>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" style="-fx-font-family: Harpseal; -fx-font-size: 27.0" text="You won!" textAlignment="CENTER">
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="154.0" prefHeight="449.0" prefWidth="585.0" text="PRESS ANY BUTTON TO CONTINUE" textAlignment="CENTER">
-               <font>
-                  <Font name="Harpseal" size="15.0" />
-               </font>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="154.0" prefHeight="449.0" prefWidth="585.0" style="-fx-font-family: Harpseal; -fx-font-size: 27.0" text="PRESS ANY BUTTON TO CONTINUE" textAlignment="CENTER">
             </Label>
          </children>
       </Pane>
