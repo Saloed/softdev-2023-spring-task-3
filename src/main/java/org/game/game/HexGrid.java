@@ -14,7 +14,6 @@ public class HexGrid {
                 this.grid[q][r] = 0;
             }
         }
-
         this.grid[0][0] = -1;
         this.grid[0][1] = -1;
         this.grid[1][0] = -1;
@@ -87,29 +86,8 @@ public class HexGrid {
         }
     }
 
-//    public void print() {
-//        System.out.print("  ");
-//        for (int i = 2; i < 5; i++) {
-//            System.out.print(grid[0][i] + " ");
-//        }
-//        System.out.print("\n");
-//        for (int i = 1; i < 5; i++) {
-//            System.out.print(" " + grid[1][i]);
-//        }
-//        System.out.print("\n");
-//        for (int i = 0; i < 5; i++) {
-//            System.out.print(grid[2][i] + " ");
-//        }
-//        System.out.print("\n");
-//        for (int i = 0; i < 4; i++) {
-//            System.out.print(" " + grid[3][i]);
-//        }
-//        System.out.print("\n");
-//        System.out.print("  ");
-//        for (int i = 0; i < 3; i++) {
-//            System.out.print(grid[4][i] + " ");
-//        }
-//        System.out.print("\n");
-//    }
+    protected int[][] getArray() {
+        return grid;
+    }
 }
 

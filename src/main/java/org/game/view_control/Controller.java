@@ -1,6 +1,7 @@
 package org.game.view_control;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -57,18 +58,16 @@ public class Controller {
     public TextField tile19;
     @FXML
     private Label scoreLabel;
+    @FXML
+    private Button restartButton;
     public static Boolean win = false;
     public TextField[][] gameField;
-    private final Colors colors = new Colors();
 
     @FXML
     public void keyPressed(KeyEvent key) {
         if(startPane.isVisible()) {
-            for (int i = 0; i < 2; i++) {
-                MainLogic.generateNewTile();
-            }
-            updateUi();
-        } else if(!winPane.isVisible()){
+            start();
+        } else if(!winPane.isVisible() & !failPane.isVisible()){
             MainLogic.input(key.getCode().toString());
             if(MainLogic.move()) {
                 updateUi();
@@ -82,36 +81,15 @@ public class Controller {
                     failPane.setVisible(true);
                 }
             }
-        } else {
+        } else if(winPane.isVisible()) {
             winPane.setVisible(false);
             win = false;
+        } else if(failPane.isVisible()) {
+            restart();
         }
     }
 
     public void updateUi() {
-        if(startPane.isVisible()) {
-            gameField = new TextField[Constants.COUNT_TILES_Q][Constants.COUNT_TILES_R];
-            gameField[0][2] = tile1;
-            gameField[0][3] = tile2;
-            gameField[0][4] = tile3;
-            gameField[1][1] = tile4;
-            gameField[1][2] = tile5;
-            gameField[1][3] = tile6;
-            gameField[1][4] = tile7;
-            gameField[2][0] = tile8;
-            gameField[2][1] = tile9;
-            gameField[2][2] = tile10;
-            gameField[2][3] = tile11;
-            gameField[2][4] = tile12;
-            gameField[3][0] = tile13;
-            gameField[3][1] = tile14;
-            gameField[3][2] = tile15;
-            gameField[3][3] = tile16;
-            gameField[4][0] = tile17;
-            gameField[4][1] = tile18;
-            gameField[4][2] = tile19;
-            startPane.setVisible(false);
-        }
         for (int q = 0; q < Constants.COUNT_TILES_Q; q++) {
             for (int r = 0; r < Constants.COUNT_TILES_R; r++) {
                 if(gameField[q][r] != null) {
@@ -124,6 +102,41 @@ public class Controller {
                 }
             }
         }
+    }
+
+    public void start() {
+        MainLogic.init();
+        for (int i = 0; i < 2; i++) {
+            MainLogic.generateNewTile();
+        }
+        gameField = new TextField[Constants.COUNT_TILES_Q][Constants.COUNT_TILES_R];
+        gameField[0][2] = tile1;
+        gameField[0][3] = tile2;
+        gameField[0][4] = tile3;
+        gameField[1][1] = tile4;
+        gameField[1][2] = tile5;
+        gameField[1][3] = tile6;
+        gameField[1][4] = tile7;
+        gameField[2][0] = tile8;
+        gameField[2][1] = tile9;
+        gameField[2][2] = tile10;
+        gameField[2][3] = tile11;
+        gameField[2][4] = tile12;
+        gameField[3][0] = tile13;
+        gameField[3][1] = tile14;
+        gameField[3][2] = tile15;
+        gameField[3][3] = tile16;
+        gameField[4][0] = tile17;
+        gameField[4][1] = tile18;
+        gameField[4][2] = tile19;
+        if(startPane.isVisible()) startPane.setVisible(false);
+        updateUi();
+    }
+
+    @FXML
+    public void restart() {
+        failPane.setVisible(false);
+        start();
     }
 
 }

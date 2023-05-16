@@ -8,6 +8,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.game.game.MainLogic;
 
+import java.util.Objects;
+
 public class App extends Application {
 
     @Override
@@ -19,9 +21,8 @@ public class App extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.setTitle("16384");
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("icon.jpg")));
+        primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.jpg"))));
         primaryStage.show();
-        MainLogic.init();
     }
 
     public static void main(String[] args) {

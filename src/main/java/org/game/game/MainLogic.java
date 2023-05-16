@@ -89,7 +89,7 @@ public class MainLogic {
         return ret;
     }
 
-    private static boolean shift(Direction direction) {
+    protected static boolean shift(Direction direction) {
         boolean ret = false;
         switch (direction) {
             case UP_RIGHT:
@@ -250,6 +250,14 @@ public class MainLogic {
                 }
             }
         }
+    }
+
+    protected static void initForTests() {
+        score = 0;
+        endOfGame = false;
+        isThere16384 = false;
+        direction = Direction.AWAITING;
+        grid = new HexGrid();
     }
 
 }

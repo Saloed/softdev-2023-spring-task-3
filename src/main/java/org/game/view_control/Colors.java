@@ -4,9 +4,9 @@ import java.util.HashMap;
 
 public class Colors {
 
-    public static HashMap<Integer, String> colors = new HashMap<>();
+    public final static HashMap<Integer, String> colors = new HashMap<>();
 
-    public Colors() {
+    static {
         colors.put(0, "#ccb69f");
         colors.put(2, "#dacab8");
         colors.put(4, "#99928b");
