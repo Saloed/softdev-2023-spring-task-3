@@ -1,1 +1,1 @@
-![гифка](zaichik.gif)
+![типикал](picture.png)
