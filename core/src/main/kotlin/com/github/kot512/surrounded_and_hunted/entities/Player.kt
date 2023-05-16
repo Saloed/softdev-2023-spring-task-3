@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.github.kot512.surrounded_and_hunted.controls.AimJoystick
 import com.github.kot512.surrounded_and_hunted.controls.MovementJoystick
-import com.github.kot512.surrounded_and_hunted.objects.combat_system.weapons.ProjectileManager
-import com.github.kot512.surrounded_and_hunted.objects.combat_system.weapons.SemiAutomaticBalls
+import com.github.kot512.surrounded_and_hunted.combat_system.weapons.ProjectileManager
+import com.github.kot512.surrounded_and_hunted.combat_system.weapons.SemiAutomaticBalls
 import com.github.kot512.surrounded_and_hunted.tools.Point
 
 class Player(

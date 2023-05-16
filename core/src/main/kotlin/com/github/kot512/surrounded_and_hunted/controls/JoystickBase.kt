@@ -6,20 +6,20 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.JOYSTICK_BASE_TXTR
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.JOYSTICK_KNOB_TXTR
 import com.github.kot512.surrounded_and_hunted.screen.GameScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import kotlin.math.pow
 import kotlin.math.sqrt
 
 abstract class JoystickBase(
-    baseTexture: Texture,
-    knobTexture: Texture,
     position: Point
 ) : Actor() {
 
-    val listener = JoystickListener()
+    private val listener = JoystickListener()
 
-    fun setup(listener: JoystickListener, position: Point) {
+    private fun setup(listener: JoystickListener, position: Point) {
         setPosition(position.x, position.y)
         this.width = GameScreen.SCREEN_HEIGHT / 2.8f
         this.height = GameScreen.SCREEN_HEIGHT / 2.8f
@@ -39,8 +39,8 @@ abstract class JoystickBase(
         basePosition.y + 2 * knobRadius - baseRadius
     )
 
-    private val baseSprite = Sprite(baseTexture)
-    private val knobSprite = Sprite(knobTexture)
+    private val baseSprite = Sprite(JOYSTICK_BASE_TXTR)
+    private val knobSprite = Sprite(JOYSTICK_KNOB_TXTR)
 
     var isTouched = false // "нажат" ли стик
 

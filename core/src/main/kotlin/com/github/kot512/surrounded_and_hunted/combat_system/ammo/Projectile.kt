@@ -1,10 +1,10 @@
-package com.github.kot512.surrounded_and_hunted.objects.combat_system.ammo
+package com.github.kot512.surrounded_and_hunted.combat_system.ammo
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
-import com.github.kot512.surrounded_and_hunted.objects.combat_system.weapons.ProjectileManager
+import com.github.kot512.surrounded_and_hunted.combat_system.weapons.ProjectileManager
 import com.github.kot512.surrounded_and_hunted.screen.GameScreen
 import com.github.kot512.surrounded_and_hunted.screen.GameScreen.Companion.ENEMY_LIST
 import com.github.kot512.surrounded_and_hunted.tools.CircleBounds
@@ -15,22 +15,23 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 abstract class Projectile(
-    private val manager: ProjectileManager, // менеджер, к которому привязан снаряд
+//    private val manager: ProjectileManager, // менеджер, к которому привязан снаряд
     private val directionAngle: Float, // направление движения в виде угла
     private val projectileSpeed: Float,
     private val projMaxDistance: Float,// макс. расстояние для снаряда, после которого тот удалится
     private val projDamage: Float,
     spawnPoint: Point, // место спавна снаряда
-//    private val index: Int, // позиция в списке запущенных снарядов
     texture: Texture = Texture("graphics/test_image/joystick_knob.png") // текстура снаряда
 ) : Sprite(texture) {
     protected open val rotationAngle = 0f // угол для корректной отрисовки спрайта
     private var passedDistance: Float = 0f
     private var collisionBounds: CircleBounds
 
-    val originBasedX
+    var disposable: Boolean = false
+
+    private val originBasedX
         get() = x + originX
-    val originBasedY
+    private val originBasedY
         get() = y + originY
 
 //    автоматическая настройка параметров снаряда
@@ -54,32 +55,32 @@ abstract class Projectile(
         super.draw(batch)
     }
 
-    fun update(delta: Float) {
+    private fun update(delta: Float) {
         checkEnemyHit()
         move(delta)
     }
 
-    fun move(delta: Float) {
-        val dX = delta * sin(directionAngle) * projectileSpeed
-        val dY = delta * cos(directionAngle) * projectileSpeed
+    private fun move(delta: Float) {
+        val dX = - delta * projectileSpeed * sin(directionAngle / 60)
+        val dY = delta * projectileSpeed * cos(directionAngle / 60)
         x += dX
         y += dY
 
         passedDistance += sqrt(dX.pow(2) + dY.pow(2))
-        if (passedDistance >= projMaxDistance) dispose()
+        if (passedDistance >= projMaxDistance) disposable = true
+        println("${directionAngle} x - ${sin(directionAngle)}  y - ${cos(directionAngle)}")
     }
 
-    fun dispose() {
-//        texture.dispose()
+//    private fun dispose() {
+////        texture.dispose()
 //        manager.disposeProjAtIndex(index)
-        manager.disposeProj(this)
-    }
+//    }
 
-    fun checkEnemyHit() {
+    private fun checkEnemyHit() {
         ENEMY_LIST.forEach { enemy ->
             if (enemy.collisionBounds.overlapsWith(collisionBounds)) {
                 enemy.receiveDamage(projDamage)
-                dispose()
+                disposable = true
             }
         }
     }

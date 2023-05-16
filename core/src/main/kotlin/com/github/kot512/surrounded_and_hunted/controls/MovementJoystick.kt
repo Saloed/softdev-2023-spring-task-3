@@ -4,10 +4,8 @@ import com.badlogic.gdx.graphics.Texture
 import com.github.kot512.surrounded_and_hunted.tools.Point
 
 class MovementJoystick(
-    baseTexture: Texture,
-    knobTexture: Texture,
     position: Point
-) : JoystickBase(baseTexture, knobTexture, position) {
+) : JoystickBase(position) {
     val knobDeviation = Point(0f, 0f)
 
     override fun resetKnobPosition() {

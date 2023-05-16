@@ -6,10 +6,8 @@ import com.github.kot512.surrounded_and_hunted.tools.Point
 import kotlin.math.atan2
 
 class AimJoystick(
-    baseTexture: Texture,
-    knobTexture: Texture,
     position: Point
-) : JoystickBase(baseTexture, knobTexture, position) {
+) : JoystickBase(position) {
     var radAngle: Float = atan2(0f, 0f)
     var degreeAngle = -radAngle * radiansToDegrees
 

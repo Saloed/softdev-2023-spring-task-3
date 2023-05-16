@@ -10,11 +10,13 @@ import kotlin.math.sin
 class EnemyEntity(
     enemyTexture: Texture,
     spawnPosition: Point,
-    val player: Player
+    val player: Player,
 ) : BaseEntity(enemyTexture, spawnPosition) {
     override var health: Float = 100f
     override val damage: Float = 10f
     override val movementSpeed: Float = 150f
+
+    var disposable: Boolean = false
 
     private val vectorToPlayer: Float
     get() = atan2(
@@ -52,9 +54,10 @@ class EnemyEntity(
 
     override fun receiveDamage(damage: Float) {
         health -= damage
+        if (health <= 0) die()
     }
 
     override fun die() {
-        TODO("Not yet implemented")
+        disposable = true
     }
 }
