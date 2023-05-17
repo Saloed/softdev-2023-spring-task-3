@@ -1,5 +1,5 @@
 
-Animations.png
+GameObj.png
 size: 1024, 32
 format: RGBA8888
 filter: Nearest, Nearest
@@ -74,128 +74,163 @@ S/S
   orig: 16, 16
   offset: 0, 0
   index: 1
-player/player
+exps/exps
   rotate: false
   xy: 320, 0
-  size: 16, 24
-  orig: 16, 24
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: 0
-player/player
+exps/exps
   rotate: false
   xy: 352, 0
-  size: 16, 24
-  orig: 16, 24
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+exps/exps
+  rotate: false
+  xy: 384, 0
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: 2
-player/player
+exps/exps
   rotate: false
-  xy: 352, 0
-  size: 16, 24
-  orig: 16, 24
+  xy: 416, 0
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
-  index: 16
-player/player
+  index: 3
+exps/exps
   rotate: false
-  xy: 384, 0
-  size: 16, 24
-  orig: 16, 24
+  xy: 448, 0
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: 4
-player/player
-  rotate: false
-  xy: 384, 0
-  size: 16, 24
-  orig: 16, 24
-  offset: 0, 0
-  index: 14
-player/player
-  rotate: false
-  xy: 416, 0
-  size: 16, 24
-  orig: 16, 24
-  offset: 0, 0
-  index: 7
-player/player
-  rotate: false
-  xy: 416, 0
-  size: 16, 24
-  orig: 16, 24
-  offset: 0, 0
-  index: 11
-player/player
-  rotate: false
-  xy: 448, 0
-  size: 16, 24
-  orig: 16, 24
-  offset: 0, 0
-  index: 8
-player/player
-  rotate: false
-  xy: 448, 0
-  size: 16, 24
-  orig: 16, 24
-  offset: 0, 0
-  index: 10
 player/player
   rotate: false
   xy: 480, 0
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
-  index: 9
+  index: 0
 player/player
   rotate: false
   xy: 512, 0
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 2
+player/player
+  rotate: false
+  xy: 512, 0
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 16
+player/player
+  rotate: false
+  xy: 544, 0
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 4
+player/player
+  rotate: false
+  xy: 544, 0
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 14
+player/player
+  rotate: false
+  xy: 576, 0
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 7
+player/player
+  rotate: false
+  xy: 576, 0
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 11
+player/player
+  rotate: false
+  xy: 608, 0
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 8
+player/player
+  rotate: false
+  xy: 608, 0
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 10
+player/player
+  rotate: false
+  xy: 640, 0
+  size: 16, 24
+  orig: 16, 24
+  offset: 0, 0
+  index: 9
+player/player
+  rotate: false
+  xy: 672, 0
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 12
 player/player
   rotate: false
-  xy: 512, 0
+  xy: 672, 0
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 6
 player/player
   rotate: false
-  xy: 544, 0
+  xy: 704, 0
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 13
 player/player
   rotate: false
-  xy: 544, 0
+  xy: 704, 0
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 5
 player/player
   rotate: false
-  xy: 576, 0
+  xy: 736, 0
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 15
 player/player
   rotate: false
-  xy: 576, 0
+  xy: 736, 0
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 3
 player/player
   rotate: false
-  xy: 608, 0
+  xy: 768, 0
   size: 16, 24
   orig: 16, 24
   offset: 0, 0
   index: 17
 player/player
   rotate: false
-  xy: 608, 0
+  xy: 768, 0
   size: 16, 24
   orig: 16, 24
   offset: 0, 0

@@ -14,4 +14,8 @@ class MLNK : KtxGame<KtxScreen>() {
         addScreen(GameScreen())
         setScreen<GameScreen>()
     }
+
+    companion object {
+        const val scale = 1/20f
+    }
 }

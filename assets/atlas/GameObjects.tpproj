@@ -25,7 +25,7 @@ stripWhitespaceY=false
 wrapX=ClampToEdge
 wrapY=ClampToEdge
 premultiplyAlpha=false
-grid=false
+grid=true
 square=false
 bleed=true
 limitMemory=true
@@ -34,7 +34,7 @@ prettyPrint=false
 legacyOutput=true
 
 scaleFactors=[{suffix:"",factor:1,resampling:bicubic}]
-inputFiles=[{path:../png/enemy-small.png,type:Input,regionName:null},{path:../png/player.png,type:Input,regionName:null},{path:../png/enemy-medium.png,type:Input,regionName:null},{path:../png/enemy-big.png,type:Input,regionName:null},{path:../png/power-up.png,type:Input,regionName:null},{path:../png/projectile.png,type:Input,regionName:null}]
+inputFiles=[{path:../../raw_assets/frames/exps,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../raw_assets/frames/B,type:Input,dirFilePrefix:null,recursive:true,flattenPaths:false},{path:../../raw_assets/frames/BP,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../raw_assets/frames/M,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../raw_assets/frames/player,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../raw_assets/frames/RP,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../../raw_assets/frames/S,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false}]
 keepInputFileExtensions=false
 
 
