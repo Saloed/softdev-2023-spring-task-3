@@ -2,23 +2,26 @@ package com.github.BeatusL.mlnk.system
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.EventListener
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.utils.Scaling
+import com.badlogic.gdx.utils.TimeUtils
 import com.github.BeatusL.mlnk.MLNK.Companion.scale
 import com.github.BeatusL.mlnk.component.AnimationComponent
 import com.github.BeatusL.mlnk.component.AnimationModel
 import com.github.BeatusL.mlnk.component.AnimationPlaymode
+import com.github.BeatusL.mlnk.component.CollisionComponent
 import com.github.BeatusL.mlnk.component.ImageComponent
 import com.github.BeatusL.mlnk.component.MoveComponent
 import com.github.BeatusL.mlnk.component.PhysicsComponent.Companion.physicCmpFromImage
 import com.github.BeatusL.mlnk.component.PlayerComponent
+import com.github.BeatusL.mlnk.component.ProjectileComponent
 import com.github.BeatusL.mlnk.component.SpawnComponent
 import com.github.BeatusL.mlnk.component.SpawnConfig
 import com.github.BeatusL.mlnk.event.MapChangeEvent
+import com.github.BeatusL.mlnk.event.ObjCreation
 import com.github.quillraven.fleks.AllOf
 import com.github.quillraven.fleks.ComponentMapper
 import com.github.quillraven.fleks.Entity
@@ -45,6 +48,7 @@ class EntitySpawnSystem(
         with(spawnCmps[entity]) {
             val config = spawmConfig(type)
             val relativeSize = size(config.model)
+            val collisionEnabled = type == "Player"
 
             world.entity {
                 val imageCmp = add<ImageComponent> {
@@ -59,22 +63,41 @@ class EntitySpawnSystem(
                     nextAnimation(config.model, config.animationMode)
                 }
 
-                physicCmpFromImage(oWorld, imageCmp.image, BodyDef.BodyType.DynamicBody){
+                physicCmpFromImage(oWorld, imageCmp.image, config.bodyType){
                     phCmp, width, height ->
                     box(width, height) {
-                        userData = "DEFAULT"
+                        userData = entity.id
                         //friction = 0f from 0 to 10
                         isSensor = false
-
                     }
+
                 }
+
+                add<CollisionComponent> {
+                    borderCollisionEnabled = collisionEnabled
+                }
+
 
                 if (config.speed > 0f) {
                     add<MoveComponent> {
                         speed = config.speed
+                        sin = when (type) {
+                            "BP" -> 1f
+                            "Player" -> 0f
+                            else -> -1f
+                        }
                     }
 
                     if (type == "Player") add<PlayerComponent>()
+
+                    if (type in listOf("Player", "B", "M", "S")) add<ProjectileComponent>()
+                    {
+                        prevTime = TimeUtils.nanoTime()
+                        prjType = when(type) {
+                            "Player" -> "BP"
+                            else -> "RP"
+                        }
+                    }
                 }
             }
         }
@@ -88,8 +111,9 @@ class EntitySpawnSystem(
             "M" -> SpawnConfig(AnimationModel.M, AnimationPlaymode.Loop, 4f)
             "S" -> SpawnConfig(AnimationModel.S, AnimationPlaymode.Loop, 4f)
             "exps" -> SpawnConfig(AnimationModel.exps, AnimationPlaymode.Normal, 0f)
-            "BP" -> SpawnConfig(AnimationModel.BP, AnimationPlaymode.Loop, 4f)
-            "RP" -> SpawnConfig(AnimationModel.RP, AnimationPlaymode.Loop, 5f)
+            "BP" -> SpawnConfig(AnimationModel.BP, AnimationPlaymode.Loop, 10f)
+            "RP" -> SpawnConfig(AnimationModel.RP, AnimationPlaymode.Loop, 8f)
+            //"bound" -> SpawnConfig() to be implemented
             else -> gdxError("$type has no spawn configuration!")
         }
     }
@@ -102,6 +126,7 @@ class EntitySpawnSystem(
             vec2(regions.first().originalWidth * scale, regions.first().originalHeight * scale)
         }
     }
+
 
     override fun handle(event: Event): Boolean {
         when (event) {
@@ -120,9 +145,25 @@ class EntitySpawnSystem(
                 }
                 return true
             }
+
+            is ObjCreation -> {
+                val type = event.type
+                val loc = event.location
+
+                world.entity {
+                    add<SpawnComponent> {
+                        this.type = type
+                        this.location.set(loc.x, loc.y)
+                    }
+                }
+                return true
+            }
+
         }
         return false
     }
+
+
 }
 
 

@@ -11,11 +11,13 @@ import ktx.box2d.BodyDefinition
 import ktx.box2d.body
 import ktx.math.vec2
 
-class PhysicsComponent {         // should`ve called it PhysicComponent tho :(
+class PhysicsComponent { // should`ve called it PhysicComponent tho :(
     val impulse = vec2()
     lateinit var body: Body
 
     companion object {
+
+
         fun EntityCreateCfg.physicCmpFromImage(
             world: World,
             image: Image,

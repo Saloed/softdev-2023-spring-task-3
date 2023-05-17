@@ -30,6 +30,7 @@ class AnimationComponent(
 ) {
     lateinit var animation: Animation<TextureRegionDrawable>
 
+
     var nextAnimation: String = ""
 
     fun nextAnimation(model: AnimationModel, mode: AnimationPlaymode) {
