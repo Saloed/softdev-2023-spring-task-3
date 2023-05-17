@@ -7,10 +7,15 @@ import com.badlogic.gdx.scenes.scene2d.EventListener
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.github.BeatusL.mlnk.component.ImageComponent
+import com.github.BeatusL.mlnk.component.PhysicsComponent
 import com.github.BeatusL.mlnk.event.MapChangeEvent
 import com.github.BeatusL.mlnk.event.fire
+import com.github.BeatusL.mlnk.input.KeyboardProcessor
 import com.github.BeatusL.mlnk.system.AnimationSystem
+import com.github.BeatusL.mlnk.system.DebugSystem
 import com.github.BeatusL.mlnk.system.EntitySpawnSystem
+import com.github.BeatusL.mlnk.system.MoveSystem
+import com.github.BeatusL.mlnk.system.PhysicsSystem
 import com.github.BeatusL.mlnk.system.RenderSystem
 import com.github.quillraven.fleks.World
 import ktx.app.KtxScreen
@@ -24,20 +29,26 @@ class GameScreen: KtxScreen {
     private val background: Texture = Texture("png/background.png")
     private val textureAtlas = TextureAtlas("assets/atlas/GameObj.atlas")
 
-    private val oWorld = createWorld(gravity = vec2()).apply {
+    private val oWorld = createWorld(gravity = vec2(0f, 0f)).apply {  // physic (object) world
         autoClearForces = false
+
     }
 
-    private val rWorld: World = World {
+    private val rWorld: World = World { // world for render objects
         entityCapacity = 64
         inject(stage)
         inject(textureAtlas)
-        //inject(oWorld)
-        componentListener<ImageComponent.Companion.ImageComponentListener>()
+        inject(oWorld)
 
+        componentListener<ImageComponent.Companion.ImageComponentListener>()
+        componentListener<PhysicsComponent.Companion.PhysicsComponentListener>()
+
+        system<MoveSystem>()
+        system<PhysicsSystem>()
         system<EntitySpawnSystem>()
         system<AnimationSystem>()
         system<RenderSystem>()
+        system<DebugSystem>()
     }
     override fun show() {
         rWorld.systems.forEach { system ->
@@ -48,8 +59,7 @@ class GameScreen: KtxScreen {
         val map = TmxMapLoader().load("map/map.tmx")
         stage.fire(MapChangeEvent(map))
 
-
-
+        KeyboardProcessor(rWorld, rWorld.mapper())
 
         log.debug { "GameScreen shown" }
     }
@@ -60,7 +70,7 @@ class GameScreen: KtxScreen {
     }
 
     override fun render(delta: Float) {
-        rWorld.update(delta)
+        rWorld.update(delta.coerceAtMost(1/4f)) // delta cap needed to avoid stuttering
     }
 
     override fun dispose() {

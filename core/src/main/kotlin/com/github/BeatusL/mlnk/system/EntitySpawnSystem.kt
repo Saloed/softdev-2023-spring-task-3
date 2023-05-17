@@ -2,6 +2,8 @@ package com.github.BeatusL.mlnk.system
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.BodyDef
+import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.EventListener
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -11,6 +13,9 @@ import com.github.BeatusL.mlnk.component.AnimationComponent
 import com.github.BeatusL.mlnk.component.AnimationModel
 import com.github.BeatusL.mlnk.component.AnimationPlaymode
 import com.github.BeatusL.mlnk.component.ImageComponent
+import com.github.BeatusL.mlnk.component.MoveComponent
+import com.github.BeatusL.mlnk.component.PhysicsComponent.Companion.physicCmpFromImage
+import com.github.BeatusL.mlnk.component.PlayerComponent
 import com.github.BeatusL.mlnk.component.SpawnComponent
 import com.github.BeatusL.mlnk.component.SpawnConfig
 import com.github.BeatusL.mlnk.event.MapChangeEvent
@@ -19,6 +24,7 @@ import com.github.quillraven.fleks.ComponentMapper
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import ktx.app.gdxError
+import ktx.box2d.box
 import ktx.math.vec2
 import ktx.tiled.layer
 import ktx.tiled.type
@@ -28,6 +34,7 @@ import ktx.tiled.y
 
 @AllOf([SpawnComponent::class])
 class EntitySpawnSystem(
+    private val oWorld: World,
     private val atlas: TextureAtlas,
     private val spawnCmps: ComponentMapper<SpawnComponent>,
 ): EventListener, IteratingSystem() {
@@ -40,7 +47,7 @@ class EntitySpawnSystem(
             val relativeSize = size(config.model)
 
             world.entity {
-                add<ImageComponent> {
+                val imageCmp = add<ImageComponent> {
                     image = Image().apply {
                         setPosition(location.x, location.y)
                         setSize(relativeSize.x, relativeSize.y)
@@ -51,6 +58,24 @@ class EntitySpawnSystem(
                 add<AnimationComponent> {
                     nextAnimation(config.model, config.animationMode)
                 }
+
+                physicCmpFromImage(oWorld, imageCmp.image, BodyDef.BodyType.DynamicBody){
+                    phCmp, width, height ->
+                    box(width, height) {
+                        userData = "DEFAULT"
+                        //friction = 0f from 0 to 10
+                        isSensor = false
+
+                    }
+                }
+
+                if (config.speed > 0f) {
+                    add<MoveComponent> {
+                        speed = config.speed
+                    }
+
+                    if (type == "Player") add<PlayerComponent>()
+                }
             }
         }
         world.remove(entity)
@@ -58,13 +83,13 @@ class EntitySpawnSystem(
 
     private fun spawmConfig(type: String): SpawnConfig = cachedCfgs.getOrPut(type) {
         when (type) {
-            "Player" -> SpawnConfig(AnimationModel.player, AnimationPlaymode.Loop)
-            "B" -> SpawnConfig(AnimationModel.B, AnimationPlaymode.Loop)
-            "M" -> SpawnConfig(AnimationModel.M, AnimationPlaymode.Loop)
-            "S" -> SpawnConfig(AnimationModel.S, AnimationPlaymode.Loop)
-            "exps" -> SpawnConfig(AnimationModel.exps, AnimationPlaymode.Loop)
-            "BP" -> SpawnConfig(AnimationModel.BP, AnimationPlaymode.Loop)
-            "RP" -> SpawnConfig(AnimationModel.RP, AnimationPlaymode.Loop)
+            "Player" -> SpawnConfig(AnimationModel.player, AnimationPlaymode.Loop, 7f)
+            "B" -> SpawnConfig(AnimationModel.B, AnimationPlaymode.Loop, 5f)
+            "M" -> SpawnConfig(AnimationModel.M, AnimationPlaymode.Loop, 4f)
+            "S" -> SpawnConfig(AnimationModel.S, AnimationPlaymode.Loop, 4f)
+            "exps" -> SpawnConfig(AnimationModel.exps, AnimationPlaymode.Normal, 0f)
+            "BP" -> SpawnConfig(AnimationModel.BP, AnimationPlaymode.Loop, 4f)
+            "RP" -> SpawnConfig(AnimationModel.RP, AnimationPlaymode.Loop, 5f)
             else -> gdxError("$type has no spawn configuration!")
         }
     }

@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import ktx.math.vec2
 
 data class SpawnConfig(
-    val model:AnimationModel, val animationMode: AnimationPlaymode
+    val model: AnimationModel, val animationMode: AnimationPlaymode, val speed: Float
 )
 
 
