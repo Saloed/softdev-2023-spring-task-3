@@ -1,6 +1,5 @@
 package com.github.kot512.surrounded_and_hunted.controls
 
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.scenes.scene2d.Actor
@@ -8,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.JOYSTICK_BASE_TXTR
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.JOYSTICK_KNOB_TXTR
-import com.github.kot512.surrounded_and_hunted.screen.GameScreen
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_HEIGHT
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -21,8 +20,8 @@ abstract class JoystickBase(
 
     private fun setup(listener: JoystickListener, position: Point) {
         setPosition(position.x, position.y)
-        this.width = GameScreen.SCREEN_HEIGHT / 2.8f
-        this.height = GameScreen.SCREEN_HEIGHT / 2.8f
+        this.width = SCREEN_HEIGHT / 2.8f
+        this.height = SCREEN_HEIGHT / 2.8f
         addListener(listener)
     }
 

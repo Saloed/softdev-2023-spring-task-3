@@ -3,10 +3,12 @@ package com.github.kot512.surrounded_and_hunted.combat_system.weapons
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.github.kot512.surrounded_and_hunted.combat_system.ammo.Projectile
+import com.github.kot512.surrounded_and_hunted.screen.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 
 // TODO(Перекинуть создание шаров на менеджер, перекинуть параметры сюда)
 abstract class ProjectileManager(
+    protected val screen: BaseLocationScreen,
     protected var directionAngle: Float, // передается угол, куда смотрит сущность
     protected val shootPoint: Point, // место вылета снарядов
 ) {
@@ -16,7 +18,7 @@ abstract class ProjectileManager(
     abstract var projDamage: Float
 
 //    параметры менеджера
-    private var launchedProjs: MutableList<Projectile> = mutableListOf() // список запущенных снарядов
+var launchedProjs: MutableList<Projectile> = mutableListOf() // список запущенных снарядов
 
     protected abstract val cooldown: Float // время перерыва между выстрелами
     private var currentCooldown: Float = 0f // время до следующего выстрела
@@ -87,6 +89,5 @@ abstract class ProjectileManager(
     }
     private fun updateDirectionAngle(newAngle: Float) {
         directionAngle = newAngle
-        println(newAngle)
     }
 }

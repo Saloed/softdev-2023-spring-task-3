@@ -6,20 +6,23 @@ import com.github.kot512.surrounded_and_hunted.controls.AimJoystick
 import com.github.kot512.surrounded_and_hunted.controls.MovementJoystick
 import com.github.kot512.surrounded_and_hunted.combat_system.weapons.ProjectileManager
 import com.github.kot512.surrounded_and_hunted.combat_system.weapons.SemiAutomaticBalls
+import com.github.kot512.surrounded_and_hunted.screen.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
+import ktx.app.KtxScreen
 
 class Player(
+    screen: BaseLocationScreen,
     characterTexture: Texture,
     spawnPosition: Point,
     private val movementController: MovementJoystick,
-    private val aimController: AimJoystick
-) : BaseEntity(characterTexture, spawnPosition) {
+    private val aimController: AimJoystick,
+) : BaseEntity(screen, characterTexture, spawnPosition) {
     override var movementSpeed = 500f
     override var health = 100f
     override var damage = 10f
 
     private val combatManager: ProjectileManager =
-        SemiAutomaticBalls(viewAngle, Point(originBasedX, originBasedY))
+        SemiAutomaticBalls(screen, viewAngle, Point(originBasedX, originBasedY))
 
     override fun draw(batch: Batch) {
         super.draw(batch)

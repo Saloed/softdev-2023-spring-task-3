@@ -4,9 +4,8 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
-import com.github.kot512.surrounded_and_hunted.combat_system.weapons.ProjectileManager
-import com.github.kot512.surrounded_and_hunted.screen.GameScreen
-import com.github.kot512.surrounded_and_hunted.screen.GameScreen.Companion.ENEMY_LIST
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_HEIGHT
+import com.github.kot512.surrounded_and_hunted.screen.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.CircleBounds
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import kotlin.math.cos
@@ -15,17 +14,17 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 abstract class Projectile(
-//    private val manager: ProjectileManager, // менеджер, к которому привязан снаряд
+    private val screen: BaseLocationScreen,     // менеджер, к которому привязан снаряд
     private val directionAngle: Float, // направление движения в виде угла
     private val projectileSpeed: Float,
     private val projMaxDistance: Float,// макс. расстояние для снаряда, после которого тот удалится
-    private val projDamage: Float,
+    val projDamage: Float,
     spawnPoint: Point, // место спавна снаряда
     texture: Texture = Texture("graphics/test_image/joystick_knob.png") // текстура снаряда
 ) : Sprite(texture) {
     protected open val rotationAngle = 0f // угол для корректной отрисовки спрайта
     private var passedDistance: Float = 0f
-    private var collisionBounds: CircleBounds
+    var collisionBounds: CircleBounds
 
     var disposable: Boolean = false
 
@@ -36,7 +35,7 @@ abstract class Projectile(
 
 //    автоматическая настройка параметров снаряда
     private fun setup(spawnPosition: Point) {
-        setSize(GameScreen.SCREEN_HEIGHT / 16, GameScreen.SCREEN_HEIGHT / 16)
+        setSize(SCREEN_HEIGHT / 16, SCREEN_HEIGHT / 16)
         setOrigin(width / 2, height / 2) // определяет центр объекта модели
         setPosition(spawnPosition.x, spawnPosition.y) // определяет позицию объекта в пространстве
         setCenter(spawnPosition.x, spawnPosition.y)
@@ -66,9 +65,10 @@ abstract class Projectile(
         x += dX
         y += dY
 
+        collisionBounds.set(originBasedX, originBasedY)
+
         passedDistance += sqrt(dX.pow(2) + dY.pow(2))
         if (passedDistance >= projMaxDistance) disposable = true
-        println("${directionAngle} x - ${sin(directionAngle)}  y - ${cos(directionAngle)}")
     }
 
 //    private fun dispose() {
@@ -77,10 +77,11 @@ abstract class Projectile(
 //    }
 
     private fun checkEnemyHit() {
-        ENEMY_LIST.forEach { enemy ->
+        screen.enemyManager.launchedEnemies.forEach { enemy ->
             if (enemy.collisionBounds.overlapsWith(collisionBounds)) {
                 enemy.receiveDamage(projDamage)
                 disposable = true
+                println("hit___")
             }
         }
     }

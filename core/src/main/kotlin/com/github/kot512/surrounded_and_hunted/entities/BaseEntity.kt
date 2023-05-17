@@ -4,13 +4,13 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
-import com.github.kot512.surrounded_and_hunted.screen.GameScreen
-import com.github.kot512.surrounded_and_hunted.screen.GameScreen.Companion.BOUNDS_X
-import com.github.kot512.surrounded_and_hunted.screen.GameScreen.Companion.BOUNDS_Y
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_HEIGHT
+import com.github.kot512.surrounded_and_hunted.screen.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.CircleBounds
 import com.github.kot512.surrounded_and_hunted.tools.Point
 
 abstract class BaseEntity(
+    val screen: BaseLocationScreen,
     entityTexture: Texture,
     spawnPosition: Point,
     collisionCoeff: Float = 1f // коэффициент рамера коллизии (0..1)
@@ -29,7 +29,7 @@ abstract class BaseEntity(
 
     //    автоматическая настройка спрайта сущности
     fun setup(spawnPosition: Point) {
-        setSize(GameScreen.SCREEN_HEIGHT / 8, GameScreen.SCREEN_HEIGHT / 8)
+        setSize(SCREEN_HEIGHT / 8, SCREEN_HEIGHT / 8)
         setOrigin(width / 2, height / 2) // определяет центр объекта модели
         setPosition(spawnPosition.x, spawnPosition.y) // определяет позицию объекта в пространстве
         setCenter(spawnPosition.x, spawnPosition.y)
@@ -45,9 +45,9 @@ abstract class BaseEntity(
 
     //    базовые функции спрайта-сущности
     protected fun allowedToMoveX(newX: Float): Boolean =
-        newX in BOUNDS_X && newX + width in BOUNDS_X
+        newX in (0f..screen.locationWidth) && newX + width in (0f..screen.locationWidth)
     protected fun allowedToMoveY(newY: Float) =
-        newY in BOUNDS_Y && newY + width in BOUNDS_Y
+        newY in (0f..screen.locationHeight) && newY + width in (0f..screen.locationHeight)
 
     override fun draw(batch: Batch) {
         update(Gdx.graphics.deltaTime)

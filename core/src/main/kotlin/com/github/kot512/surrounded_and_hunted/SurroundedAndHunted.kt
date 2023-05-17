@@ -2,7 +2,6 @@ package com.github.kot512.surrounded_and_hunted
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
-import com.github.kot512.surrounded_and_hunted.screen.GameScreen
 import com.github.kot512.surrounded_and_hunted.screen.TestScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import ktx.app.KtxGame
@@ -33,7 +32,7 @@ class SurroundedAndHunted : KtxGame<KtxScreen>() {
         SCREEN_HEIGHT = Gdx.graphics.height.toFloat()
         PLAYER_POS.setPoint(Point(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
         L_JOYSTICK_POS.setPoint(Point(150f, 95f))
-        R_JOYSTICK_POS.set(Point(GameScreen.SCREEN_WIDTH - 550f, 95f))
+        R_JOYSTICK_POS.set(Point(SCREEN_WIDTH - 550f, 95f))
 
         JOYSTICK_KNOB_TXTR = Texture("graphics/test_image/joystick_knob.png")
         JOYSTICK_BASE_TXTR = Texture("graphics/test_image/joystick_base.png")

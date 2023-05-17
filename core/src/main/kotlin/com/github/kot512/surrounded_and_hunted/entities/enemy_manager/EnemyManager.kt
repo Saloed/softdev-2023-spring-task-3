@@ -1,19 +1,21 @@
 package com.github.kot512.surrounded_and_hunted.entities.enemy_manager
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.BALL_ENEMY_TXTR
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.RED_BALL
 import com.github.kot512.surrounded_and_hunted.entities.EnemyEntity
 import com.github.kot512.surrounded_and_hunted.entities.Player
+import com.github.kot512.surrounded_and_hunted.screen.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
+import ktx.app.KtxScreen
 import ktx.math.random
 import kotlin.math.min
 import kotlin.random.Random
 
 class EnemyManager(
-    private val boundsX: ClosedFloatingPointRange<Float>,
-    private val boundsY: ClosedFloatingPointRange<Float>,
+    private val screen: BaseLocationScreen,
     private val player: Player
 ) {
 
@@ -21,7 +23,7 @@ class EnemyManager(
         NORMAL, GIANT
     }
 
-    private var launchedEnemies: MutableList<EnemyEntity> = mutableListOf()
+    var launchedEnemies: MutableList<EnemyEntity> = mutableListOf()
 
 //    количественные параметры
     private val enemiesAtOnce: Int
@@ -66,6 +68,7 @@ class EnemyManager(
         if (type == EnemyType.NORMAL) {
             repeat(amount) {
                 launchedEnemies += EnemyEntity( //TODO(отдельный класс врага)
+                    screen,
                     BALL_ENEMY_TXTR,
                     randomiseSpawn(),
                     player
@@ -78,23 +81,22 @@ class EnemyManager(
         val spawnX: Float
         val spawnY: Float
 
-        val side = Random.nextInt(1, 5)
-        when (side) {
+        when (Random.nextInt(1, 5)) {
             1 -> { // у левой границы
-                spawnX = boundsX.start - 200f // TODO(лучше подобрать значение)
-                spawnY = boundsY.random()
+                spawnX = 0f - 200f // TODO(лучше подобрать значение)
+                spawnY = (0f..screen.locationHeight).random()
             }
             2 -> { // у верхней границы
-                spawnX = boundsX.random()
-                spawnY = boundsY.endInclusive + 200f
+                spawnX = (0f..screen.locationWidth).random()
+                spawnY = screen.locationHeight + 200f
             }
             3 -> { // у правой стены
-                spawnX = boundsX.endInclusive + 200f // TODO(лучше подобрать значение)
-                spawnY = boundsY.random()
+                spawnX = screen.locationHeight + 200f // TODO(лучше подобрать значение)
+                spawnY = (0f..screen.locationHeight).random()
             }
             4 -> { // у нижней границы
-                spawnX = boundsX.random()
-                spawnY = boundsY.start + 200f
+                spawnX = (0f..screen.locationWidth).random()
+                spawnY = 0f + 200f
             }
             else -> {
                 spawnX = 0f

@@ -31,11 +31,8 @@ abstract class BaseLocationScreen(
     abstract val locationWidth: Float
     abstract val locationHeight: Float
 
-    private val boundsX: ClosedFloatingPointRange<Float> = 0f..locationWidth
-    private val boundsY: ClosedFloatingPointRange<Float> = 0f..locationHeight
-
     open val playerSpawnPoint =
-        Point(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        Point(locationWidth / 2, locationHeight / 2)
 
 //    для экрана
     private val camera: Camera = OrthographicCamera(SCREEN_WIDTH, SCREEN_HEIGHT) // камера
@@ -55,14 +52,15 @@ abstract class BaseLocationScreen(
 //    игровые сущности
     private val player: Player =
         Player(
+            this,
             PLAYER_TXTR,
             PLAYER_POS,
             movJoystick,
             aimJoystick
         )
 
-    private val enemyManager: EnemyManager = EnemyManager( // TODO(сделать абстрактным и для уник. скрина уник. менеджер)
-        boundsX, boundsY, player
+    val enemyManager: EnemyManager = EnemyManager( // TODO(сделать абстрактным и для уник. скрина уник. менеджер)
+        this, player
     )
 
     init {
