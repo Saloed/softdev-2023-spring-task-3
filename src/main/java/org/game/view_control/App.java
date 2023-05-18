@@ -15,7 +15,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("game_scene.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("start.fxml"));
         Parent root = loader.load();
         root.setStyle("-fx-font-family: " + myFont.getFamily() + ";");
         Scene scene = new Scene(root);

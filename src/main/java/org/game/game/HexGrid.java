@@ -7,19 +7,28 @@ public class HexGrid {
     private final int[][] grid;
 
     public HexGrid() {
-        this.grid = new int[COUNT_TILES_Q][COUNT_TILES_R];
+        this.grid = new int[ARRAY_SIDE][ARRAY_SIDE];
+        filling();
 
-        for (int q = 0; q < COUNT_TILES_Q; q++) {
-            for (int r = 0; r < COUNT_TILES_Q; r++) {
-                this.grid[q][r] = 0;
+    }
+
+    private void filling() {
+        int i = SIDE_LENGTH - 1;
+        int j = SIDE_LENGTH - 1;
+        for (int q = 0; q < i; q++) {
+            for (int r = 0; r < j; r++) {
+                this.grid[q][r] = -1;
             }
+            j--;
         }
-        this.grid[0][0] = -1;
-        this.grid[0][1] = -1;
-        this.grid[1][0] = -1;
-        this.grid[3][4] = -1;
-        this.grid[4][3] = -1;
-        this.grid[4][4] = -1;
+        i = SIDE_LENGTH - 1;
+        j = SIDE_LENGTH - 1;
+        for (int q = ARRAY_SIDE - 1; q > i; q--) {
+            for (int r = ARRAY_SIDE - 1; r > j; r--) {
+                this.grid[q][r] = -1;
+            }
+            j++;
+        }
     }
 
     public int getState(int q, int r) {
@@ -39,15 +48,15 @@ public class HexGrid {
     }
 
     public int[] getColumn(int r) {
-        int[] ret = new int[COUNT_TILES_Q];
-        for(int q = 0; q < COUNT_TILES_Q; q++) {
+        int[] ret = new int[ARRAY_SIDE];
+        for(int q = 0; q < ARRAY_SIDE; q++) {
             ret[q] = grid[q][r];
         }
         return ret;
     }
 
     public void setColumn(int r, int[] newColumn) {
-        for (int q = 0; q < COUNT_TILES_Q; q++) {
+        for (int q = 0; q < ARRAY_SIDE; q++) {
             grid[q][r] = newColumn[q];
         }
     }
@@ -62,8 +71,8 @@ public class HexGrid {
     }
 
     public int[] getLowerDiagonal(int q) {
-        int[] ret = new int[COUNT_TILES_Q-q];
-        int r = COUNT_TILES_R-1;
+        int[] ret = new int[ARRAY_SIDE-q];
+        int r = ARRAY_SIDE - 1;
         for (int i = 0; i < ret.length; i++) {
             ret[i] = grid[q][r];
             q++; r--;
@@ -72,7 +81,7 @@ public class HexGrid {
     }
 
     public void setLowerDiagonal(int q, int[] newDiagonal) {
-        int r = COUNT_TILES_R-1;
+        int r = ARRAY_SIDE - 1;
         for (int j : newDiagonal) {
             grid[q][r] = j;
             q++; r--;

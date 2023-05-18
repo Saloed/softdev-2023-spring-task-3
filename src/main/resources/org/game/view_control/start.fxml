@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.game.view_control.Controller">
+   <children>
+      <Label layoutX="80.0" layoutY="125.0" text="введите размер стороны " />
+      <TextField fx:id="sideLength" layoutX="126.0" layoutY="150.0" prefHeight="25.0" prefWidth="24.0" promptText="3" />
+      <Button layoutX="150.0" layoutY="150.0" mnemonicParsing="false" onMouseClicked="#inputSideLength" text="OK" />
+      <Button layoutX="130.0" layoutY="188.0" mnemonicParsing="false" onMouseClicked="#openGameWindow" text="Start" />
+   </children>
+</Pane>

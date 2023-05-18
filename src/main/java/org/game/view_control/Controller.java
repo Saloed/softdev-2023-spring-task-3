@@ -1,14 +1,21 @@
 package org.game.view_control;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import org.game.game.Constants;
 import org.game.game.MainLogic;
+
+import java.util.Objects;
 
 public class Controller {
 
@@ -64,6 +71,13 @@ public class Controller {
     private Label scoreLabel;
     public static Boolean win = false;
     public TextField[][] gameField;
+    @FXML
+    public TextField sideLength;
+
+    @FXML
+    public void inputSideLength() {
+        Constants.SIDE_LENGTH = Integer.parseInt(sideLength.getText());
+    }
 
     @FXML
     public void keyPressed(KeyEvent key) {
@@ -92,8 +106,8 @@ public class Controller {
     }
 
     public void updateUi() {
-        for (int q = 0; q < Constants.COUNT_TILES_Q; q++) {
-            for (int r = 0; r < Constants.COUNT_TILES_R; r++) {
+        for (int q = 0; q < Constants.ARRAY_SIDE; q++) {
+            for (int r = 0; r < Constants.ARRAY_SIDE; r++) {
                 if(gameField[q][r] != null) {
                     int valOfTile = MainLogic.grid.getState(q, r);
                     String style = "-fx-background-color: " + Colors.colors.get(valOfTile) +
@@ -112,10 +126,10 @@ public class Controller {
 
     public void start() {
         MainLogic.init();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < Constants.COUNT_INITIAL_TILES; i++) {
             MainLogic.generateNewTile();
         }
-        gameField = new TextField[Constants.COUNT_TILES_Q][Constants.COUNT_TILES_R];
+        gameField = new TextField[Constants.ARRAY_SIDE][Constants.ARRAY_SIDE];
         gameField[0][2] = tile1;
         gameField[0][3] = tile2;
         gameField[0][4] = tile3;
@@ -143,6 +157,21 @@ public class Controller {
     public void restart() {
         failPane.setVisible(false);
         start();
+    }
+
+    @FXML
+    public void openGameWindow() throws Exception {
+        Stage gameStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("game_scene.fxml"));
+        Parent root = loader.load();
+        root.setStyle("-fx-font-family: " + App.myFont.getFamily() + ";");
+        Scene scene = new Scene(root);
+        scene.getRoot().requestFocus();
+        gameStage.setResizable(false);
+        gameStage.setScene(scene);
+        gameStage.setTitle("16384");
+        gameStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.jpg"))));
+        gameStage.show();
     }
 
 //    public void spawnAnimation(int q, int r) {

@@ -21,8 +21,8 @@ public class MainLogic {
 
     public static boolean isItEnd() {
         HexGrid save = new HexGrid();
-        for (int q = 0; q < COUNT_TILES_Q; q++) {
-            for (int r = 0; r < COUNT_TILES_R; r++) {
+        for (int q = 0; q < ARRAY_SIDE; q++) {
+            for (int r = 0; r < ARRAY_SIDE; r++) {
                 save.setState(q, r, grid.getState(q, r));
             }
         }
@@ -94,7 +94,7 @@ public class MainLogic {
         switch (direction) {
             case UP_RIGHT:
             case DOWN_LEFT:
-                for(int q = COUNT_TILES_Q-1; q > 1; q--) {
+                for(int q = ARRAY_SIDE - 1; q > 1; q--) {
                     int[] oldRow = grid.getUpperDiagonal(q);
                     if(direction == Direction.UP_RIGHT) {
                         oldRow = reverse(oldRow);
@@ -121,7 +121,7 @@ public class MainLogic {
                 break;
             case UP_LEFT:
             case DOWN_RIGHT:
-                for (int q = 0; q < COUNT_TILES_Q; q++) {
+                for (int q = 0; q < ARRAY_SIDE; q++) {
                     int[] oldRow = grid.getColumn(q);
                     if(direction == Direction.DOWN_RIGHT) {
                         oldRow = reverse(oldRow);
@@ -136,7 +136,7 @@ public class MainLogic {
                 break;
             case LEFT:
             case RIGHT:
-                for (int q = 0; q < COUNT_TILES_Q; q++) {
+                for (int q = 0; q < ARRAY_SIDE; q++) {
                     int[] oldRow = grid.getLine(q);
                     if(direction == Direction.RIGHT) {
                         oldRow = reverse(oldRow);
@@ -223,10 +223,10 @@ public class MainLogic {
 
         int randQ, randR;
 
-        randQ = new Random().nextInt(COUNT_TILES_Q);
+        randQ = new Random().nextInt(ARRAY_SIDE);
         int curQ = randQ;
 
-        randR = new Random().nextInt(COUNT_TILES_R);
+        randR = new Random().nextInt(ARRAY_SIDE);
         int curR = randR;
 
         boolean placed = false;
@@ -235,11 +235,11 @@ public class MainLogic {
                 grid.setState(curQ, curR, state);
                 placed = true;
             } else {
-                if(curQ+1 < COUNT_TILES_Q) {
+                if(curQ+1 < ARRAY_SIDE) {
                     curQ++;
                 } else {
                     curQ = 0;
-                    if(curR+1 < COUNT_TILES_R) {
+                    if(curR+1 < ARRAY_SIDE) {
                         curR++;
                     } else {
                         curR = 0;

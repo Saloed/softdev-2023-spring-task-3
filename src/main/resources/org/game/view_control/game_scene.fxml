@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<StackPane fx:id="papa" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#keyPressed" prefHeight="700.0" prefWidth="700.0" style="-fx-font-family: Harp-seal;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.game.view_control.Controller">
+<StackPane fx:id="papa" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#keyPressed" prefHeight="700.0" prefWidth="700.0" style="-fx-font-family: Harpseal;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.game.view_control.Controller">
    <children>
       <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #fddfbd; -fx-font-family: inherit;">
          <top>
@@ -273,7 +273,7 @@
             <Label opacity="0.4" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #f5ca1f;" />
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" style="-fx-font-family: inherit; -fx-font-size: 27.0;" text="You won!" textAlignment="CENTER">
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="154.0" prefHeight="449.0" prefWidth="585.0" style="-fx-font-family: inherit; -fx-font-size: 27.0;" text="PRESS ANY BUTTON TO CONTINUE" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="154.0" prefHeight="449.0" prefWidth="585.0" style="-fx-font-family: inherit; -fx-font-size: 15;" text="PRESS ANY BUTTON TO CONTINUE" textAlignment="CENTER">
             </Label>
          </children>
       </Pane>
