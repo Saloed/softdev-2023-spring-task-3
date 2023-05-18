@@ -1,6 +1,5 @@
 package com.github.BeatusL.mlnk.screen
 
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Vector2
@@ -15,9 +14,12 @@ import com.github.BeatusL.mlnk.event.ObjCreation
 import com.github.BeatusL.mlnk.event.fire
 import com.github.BeatusL.mlnk.input.KeyboardProcessor
 import com.github.BeatusL.mlnk.system.AnimationSystem
+import com.github.BeatusL.mlnk.system.AttackSystem
 import com.github.BeatusL.mlnk.system.CollisionSpawnSystem
+import com.github.BeatusL.mlnk.system.DeadSystem
 import com.github.BeatusL.mlnk.system.DebugSystem
 import com.github.BeatusL.mlnk.system.EntitySpawnSystem
+import com.github.BeatusL.mlnk.system.LifeSystem
 import com.github.BeatusL.mlnk.system.MoveSystem
 import com.github.BeatusL.mlnk.system.PhysicsSystem
 import com.github.BeatusL.mlnk.system.ProjectileSystem
@@ -32,7 +34,6 @@ import kotlin.random.Random
 
 class GameScreen: KtxScreen {
     private val stage: Stage = Stage(ExtendViewport(9f, 16f))
-    private val background: Texture = Texture("png/background.png")
     private val textureAtlas = TextureAtlas("assets/atlas/GameObj.atlas")
     private var lastSpawnTime: Long = 0
 
@@ -57,7 +58,10 @@ class GameScreen: KtxScreen {
         system<RenderSystem>()
         system<ProjectileSystem>()
         system<CollisionSpawnSystem>()
-        system<DebugSystem>()
+        system<LifeSystem>()
+        system<AttackSystem>()
+        system<DeadSystem>()
+        //system<DebugSystem>()
     }
     override fun show() {
 
@@ -81,12 +85,12 @@ class GameScreen: KtxScreen {
 
     override fun render(delta: Float) {
         rWorld.update(delta.coerceAtMost(1/4f)) // delta cap needed to avoid stuttering
-        if (TimeUtils.nanoTime() - lastSpawnTime > 2000000000) spawnEnemy()
+        if (TimeUtils.nanoTime() - lastSpawnTime > 500000000) spawnEnemy()
+        log.debug { "${rWorld.numEntities.toString()} active entities" }
     }
 
     override fun dispose() {
         stage.disposeSafely()
-        background.disposeSafely()
         textureAtlas.disposeSafely()
         rWorld.dispose()
         oWorld.dispose()
@@ -107,8 +111,9 @@ class GameScreen: KtxScreen {
     }
 
 
+
+
     companion object {
         private val log = logger<GameScreen>()
-
     }
 }

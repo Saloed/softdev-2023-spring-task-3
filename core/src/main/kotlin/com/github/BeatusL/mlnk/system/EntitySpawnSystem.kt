@@ -12,8 +12,10 @@ import com.github.BeatusL.mlnk.MLNK.Companion.scale
 import com.github.BeatusL.mlnk.component.AnimationComponent
 import com.github.BeatusL.mlnk.component.AnimationModel
 import com.github.BeatusL.mlnk.component.AnimationPlaymode
+import com.github.BeatusL.mlnk.component.AttackComponent
 import com.github.BeatusL.mlnk.component.CollisionComponent
 import com.github.BeatusL.mlnk.component.ImageComponent
+import com.github.BeatusL.mlnk.component.LifeComponent
 import com.github.BeatusL.mlnk.component.MoveComponent
 import com.github.BeatusL.mlnk.component.PhysicsComponent.Companion.physicCmpFromImage
 import com.github.BeatusL.mlnk.component.PlayerComponent
@@ -22,12 +24,14 @@ import com.github.BeatusL.mlnk.component.SpawnComponent
 import com.github.BeatusL.mlnk.component.SpawnConfig
 import com.github.BeatusL.mlnk.event.MapChangeEvent
 import com.github.BeatusL.mlnk.event.ObjCreation
+import com.github.BeatusL.mlnk.screen.GameScreen
 import com.github.quillraven.fleks.AllOf
 import com.github.quillraven.fleks.ComponentMapper
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import ktx.app.gdxError
 import ktx.box2d.box
+import ktx.log.logger
 import ktx.math.vec2
 import ktx.tiled.layer
 import ktx.tiled.type
@@ -48,7 +52,9 @@ class EntitySpawnSystem(
         with(spawnCmps[entity]) {
             val config = spawmConfig(type)
             val relativeSize = size(config.model)
-            val collisionEnabled = type == "Player"
+            val isPlayer = type == "Player"
+            val isShip = type in listOf("Player", "B", "M", "S")
+
 
             world.entity {
                 val imageCmp = add<ImageComponent> {
@@ -63,18 +69,22 @@ class EntitySpawnSystem(
                     nextAnimation(config.model, config.animationMode)
                 }
 
-                physicCmpFromImage(oWorld, imageCmp.image, config.bodyType){
-                    phCmp, width, height ->
+                physicCmpFromImage(
+                    oWorld,
+                    imageCmp.image,
+                    config.bodyType
+                ) { phCmp, width, height ->
                     box(width, height) {
-                        userData = entity.id
+                        if (isShip) userData = HITBOX
                         //friction = 0f from 0 to 10
                         isSensor = false
+                        phCmp.size.set(width, height)
                     }
 
                 }
 
                 add<CollisionComponent> {
-                    borderCollisionEnabled = collisionEnabled
+                    borderCollisionEnabled = isPlayer
                 }
 
 
@@ -88,18 +98,23 @@ class EntitySpawnSystem(
                         }
                     }
 
-                    if (type == "Player") add<PlayerComponent>()
+                    if (isPlayer) add<PlayerComponent>()
 
-                    if (type in listOf("Player", "B", "M", "S")) add<ProjectileComponent>()
+
+                    if (isShip) add<ProjectileComponent>()
                     {
                         prevTime = TimeUtils.nanoTime()
-                        prjType = when(type) {
+                        prjType = when (type) {
                             "Player" -> "BP"
                             else -> "RP"
                         }
                     }
+                    add<LifeComponent>()
+                    if (type == "Player" || type == "BP") add<AttackComponent>() {friendly = true}
+                    else add<AttackComponent>()
                 }
             }
+
         }
         world.remove(entity)
     }
@@ -163,6 +178,10 @@ class EntitySpawnSystem(
         return false
     }
 
+    companion object {
+        private val log = logger<GameScreen>()
+        const val HITBOX = "HITBOX"
+    }
 
 }
 

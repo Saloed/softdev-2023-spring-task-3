@@ -14,6 +14,7 @@ import ktx.math.vec2
 class PhysicsComponent { // should`ve called it PhysicComponent tho :(
     val impulse = vec2()
     lateinit var body: Body
+    val size = vec2()
 
     companion object {
 

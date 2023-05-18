@@ -34,7 +34,7 @@ class ProjectileSystem(
                     this.location.set(x, y)
                 }
             }
-            log.debug { "projectile created at $x:$y" }
+            //log.debug { "projectile created at $x:$y" }
         }
     }
 

@@ -20,6 +20,9 @@ import ktx.log.logger
 import ktx.math.component1
 import ktx.math.component2
 
+val Fixture.entity: Entity
+    get() = this.body.userData as Entity
+
 @AllOf([PhysicsComponent::class, ImageComponent::class])
 class PhysicsSystem(
     private val oWorld: World,
@@ -80,9 +83,6 @@ class PhysicsSystem(
     private fun isStatic(body: Body) = body.type == BodyDef.BodyType.StaticBody
     private fun isDynamic(body: Body) = body.type == BodyDef.BodyType.DynamicBody
     private fun isKinematic(body: Body) = body.type == BodyDef.BodyType.KinematicBody
-    private val Fixture.entity:Entity
-        get() = this.body.userData as Entity
-
 
     override fun postSolve(contact: Contact?, impulse: ContactImpulse?) = Unit
 
