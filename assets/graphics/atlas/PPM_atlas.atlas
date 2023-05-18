@@ -1,0 +1,195 @@
+
+PPM_atlas.png
+size: 4096, 4096
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+entity_enemy_basic
+  rotate: false
+  xy: 2, 1324
+  size: 898, 745
+  orig: 898, 745
+  offset: 0, 0
+  index: -1
+entity_enemy_big
+  rotate: false
+  xy: 2, 2071
+  size: 1083, 1097
+  orig: 1083, 1097
+  offset: 0, 0
+  index: -1
+entity_enemy_fast
+  rotate: false
+  xy: 2, 643
+  size: 783, 679
+  orig: 783, 679
+  offset: 0, 0
+  index: -1
+entity_player
+  rotate: false
+  xy: 3205, 1851
+  size: 388, 388
+  orig: 388, 388
+  offset: 0, 0
+  index: -1
+hud_choose_upgrade_base
+  rotate: false
+  xy: 2, 3170
+  size: 1896, 820
+  orig: 1896, 820
+  offset: 0, 0
+  index: -1
+hud_continue_button
+  rotate: false
+  xy: 3205, 2633
+  size: 476, 427
+  orig: 476, 427
+  offset: 0, 0
+  index: -1
+hud_health_bar
+  rotate: false
+  xy: 1087, 3108
+  size: 525, 60
+  orig: 525, 60
+  offset: 0, 0
+  index: -1
+hud_health_bar_base
+  rotate: false
+  xy: 902, 1377
+  size: 590, 133
+  orig: 590, 133
+  offset: 0, 0
+  index: -1
+hud_joystick_base
+  rotate: false
+  xy: 3205, 2241
+  size: 389, 390
+  orig: 389, 390
+  offset: 0, 0
+  index: -1
+hud_joystick_knob
+  rotate: false
+  xy: 3020, 1602
+  size: 243, 218
+  orig: 243, 218
+  offset: 0, 0
+  index: -1
+hud_pause_button
+  rotate: false
+  xy: 2, 214
+  size: 476, 427
+  orig: 476, 427
+  offset: 0, 0
+  index: -1
+hud_score_base
+  rotate: false
+  xy: 2, 2
+  size: 369, 210
+  orig: 369, 210
+  offset: 0, 0
+  index: -1
+menu_begin_button
+  rotate: false
+  xy: 1087, 2442
+  size: 2116, 308
+  orig: 2116, 308
+  offset: 0, 0
+  index: -1
+menu_begin_button_pressed
+  rotate: false
+  xy: 1087, 2752
+  size: 2116, 308
+  orig: 2116, 308
+  offset: 0, 0
+  index: -1
+menu_dead_return
+  rotate: false
+  xy: 1087, 2132
+  size: 2116, 308
+  orig: 2116, 308
+  offset: 0, 0
+  index: -1
+menu_dead_return_pressed
+  rotate: false
+  xy: 1900, 3062
+  size: 2116, 308
+  orig: 2116, 308
+  offset: 0, 0
+  index: -1
+menu_slide_button
+  rotate: false
+  xy: 1900, 3682
+  size: 2116, 308
+  orig: 2116, 308
+  offset: 0, 0
+  index: -1
+menu_slide_button_pressed
+  rotate: false
+  xy: 902, 1512
+  size: 2116, 308
+  orig: 2116, 308
+  offset: 0, 0
+  index: -1
+menu_upgrades_button
+  rotate: false
+  xy: 1087, 1822
+  size: 2116, 308
+  orig: 2116, 308
+  offset: 0, 0
+  index: -1
+menu_upgrades_button_pressed
+  rotate: false
+  xy: 1900, 3372
+  size: 2116, 308
+  orig: 2116, 308
+  offset: 0, 0
+  index: -1
+projectile_main
+  rotate: false
+  xy: 902, 1903
+  size: 166, 166
+  orig: 166, 166
+  offset: 0, 0
+  index: -1
+upgrade_gunfire
+  rotate: false
+  xy: 2264, 1130
+  size: 382, 380
+  orig: 382, 380
+  offset: 0, 0
+  index: -1
+upgrade_gunfire_pressed
+  rotate: false
+  xy: 2648, 1129
+  size: 382, 381
+  orig: 382, 381
+  offset: 0, 0
+  index: -1
+upgrade_health
+  rotate: false
+  xy: 1879, 1130
+  size: 383, 380
+  orig: 383, 380
+  offset: 0, 0
+  index: -1
+upgrade_health_pressed
+  rotate: false
+  xy: 3683, 2679
+  size: 383, 381
+  orig: 383, 381
+  offset: 0, 0
+  index: -1
+upgrade_movement_speed
+  rotate: false
+  xy: 1494, 1130
+  size: 383, 380
+  orig: 383, 380
+  offset: 0, 0
+  index: -1
+upgrade_movement_speed_pressed
+  rotate: false
+  xy: 480, 260
+  size: 383, 381
+  orig: 383, 381
+  offset: 0, 0
+  index: -1

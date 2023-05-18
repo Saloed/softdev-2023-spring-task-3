@@ -1,7 +1,7 @@
 package com.github.kot512.surrounded_and_hunted.entities
 
-import com.badlogic.gdx.graphics.Texture
-import com.github.kot512.surrounded_and_hunted.screen.BaseLocationScreen
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -10,9 +10,9 @@ import kotlin.math.sin
 
 class EnemyEntity(
     screen: BaseLocationScreen,
-    enemyTexture: Texture,
+    enemyTexture: TextureRegion,
     spawnPosition: Point,
-    val player: Player,
+    private val player: Player,
 ) : BaseEntity(screen, enemyTexture, spawnPosition) {
     override var health: Float = 100f
     override val damage: Float = 10f

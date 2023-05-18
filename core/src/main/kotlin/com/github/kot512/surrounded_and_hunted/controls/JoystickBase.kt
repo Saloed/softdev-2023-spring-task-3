@@ -15,13 +15,12 @@ import kotlin.math.sqrt
 abstract class JoystickBase(
     position: Point
 ) : Actor() {
-
     private val listener = JoystickListener()
 
     private fun setup(listener: JoystickListener, position: Point) {
         setPosition(position.x, position.y)
-        this.width = SCREEN_HEIGHT / 2.8f
-        this.height = SCREEN_HEIGHT / 2.8f
+        this.width = 350f
+        this.height = 350f
         addListener(listener)
     }
 
@@ -32,8 +31,8 @@ abstract class JoystickBase(
     protected val baseRadius = this.width / 2
     private val knobRadius = baseRadius / 2
 
-    protected val basePosition = Point(this.x, this.y)
-    protected val knobPosition = Point(
+    private val basePosition = Point(this.x, this.y)
+    private val knobPosition = Point(
         basePosition.x + 2 * knobRadius - baseRadius,
         basePosition.y + 2 * knobRadius - baseRadius
     )

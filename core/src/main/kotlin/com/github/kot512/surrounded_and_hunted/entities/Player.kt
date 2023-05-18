@@ -2,21 +2,23 @@ package com.github.kot512.surrounded_and_hunted.entities
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.github.kot512.surrounded_and_hunted.controls.AimJoystick
 import com.github.kot512.surrounded_and_hunted.controls.MovementJoystick
 import com.github.kot512.surrounded_and_hunted.combat_system.weapons.ProjectileManager
 import com.github.kot512.surrounded_and_hunted.combat_system.weapons.SemiAutomaticBalls
-import com.github.kot512.surrounded_and_hunted.screen.BaseLocationScreen
+import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
-import ktx.app.KtxScreen
 
 class Player(
     screen: BaseLocationScreen,
-    characterTexture: Texture,
-    spawnPosition: Point,
+    characterTexture: TextureRegion,
     private val movementController: MovementJoystick,
     private val aimController: AimJoystick,
-) : BaseEntity(screen, characterTexture, spawnPosition) {
+) : BaseEntity(
+    screen, characterTexture,
+    Point(100f, 100f)
+) {
     override var movementSpeed = 500f
     override var health = 100f
     override var damage = 10f

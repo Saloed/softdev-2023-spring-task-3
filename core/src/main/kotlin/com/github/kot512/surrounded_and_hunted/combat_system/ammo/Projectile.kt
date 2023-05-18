@@ -4,8 +4,11 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_HEIGHT
-import com.github.kot512.surrounded_and_hunted.screen.BaseLocationScreen
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.JOYSTICK_KNOB_TXTR
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.PROJECTILE_BASE_TXTR
+import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.CircleBounds
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import kotlin.math.cos
@@ -20,7 +23,7 @@ abstract class Projectile(
     private val projMaxDistance: Float,// макс. расстояние для снаряда, после которого тот удалится
     val projDamage: Float,
     spawnPoint: Point, // место спавна снаряда
-    texture: Texture = Texture("graphics/test_image/joystick_knob.png") // текстура снаряда
+    texture: TextureRegion = PROJECTILE_BASE_TXTR // текстура снаряда
 ) : Sprite(texture) {
     protected open val rotationAngle = 0f // угол для корректной отрисовки спрайта
     private var passedDistance: Float = 0f
@@ -35,7 +38,7 @@ abstract class Projectile(
 
 //    автоматическая настройка параметров снаряда
     private fun setup(spawnPosition: Point) {
-        setSize(SCREEN_HEIGHT / 16, SCREEN_HEIGHT / 16)
+        setSize(60f, 60f)
         setOrigin(width / 2, height / 2) // определяет центр объекта модели
         setPosition(spawnPosition.x, spawnPosition.y) // определяет позицию объекта в пространстве
         setCenter(spawnPosition.x, spawnPosition.y)
@@ -66,9 +69,15 @@ abstract class Projectile(
         y += dY
 
         collisionBounds.set(originBasedX, originBasedY)
-
         passedDistance += sqrt(dX.pow(2) + dY.pow(2))
-        if (passedDistance >= projMaxDistance) disposable = true
+
+//        проверка, пора ли уничтожать снаряд
+        if (
+            passedDistance >= projMaxDistance ||
+            originBasedX !in (0f..screen.locationWidth) ||
+            originBasedY !in (0f..screen.locationHeight)
+        )
+            disposable = true
     }
 
 //    private fun dispose() {
