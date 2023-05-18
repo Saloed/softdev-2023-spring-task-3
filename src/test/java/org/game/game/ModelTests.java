@@ -12,6 +12,8 @@ public class ModelTests {
 
     @Test
     public void shiftTest() {
+        Constants.SIDE_LENGTH = 3;
+        Constants.ARRAY_SIDE = 2 * Constants.SIDE_LENGTH - 1;
         MainLogic.initForTests();
         MainLogic.getGrid().setState(0,4, 2);
         MainLogic.getGrid().setState(4, 0, 2);
@@ -51,6 +53,8 @@ public class ModelTests {
 
     @Test
     public void winTest() {
+        Constants.SIDE_LENGTH = 3;
+        Constants.ARRAY_SIDE = 2 * Constants.SIDE_LENGTH - 1;
         MainLogic.initForTests();
         MainLogic.getGrid().setState(0,4, 8192);
         MainLogic.getGrid().setState(4, 0, 8192);
@@ -60,6 +64,8 @@ public class ModelTests {
 
     @Test
     public void failTest() {
+        Constants.SIDE_LENGTH = 3;
+        Constants.ARRAY_SIDE = 2 * Constants.SIDE_LENGTH - 1;
         MainLogic.initForTests();
         MainLogic.getGrid().setState(0, 2, 2);
         MainLogic.getGrid().setState(0, 3, 4);
