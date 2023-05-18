@@ -30,74 +30,68 @@ public class Controller {
     @FXML
     public Pane startPane;
     @FXML
-    public TextField tile1;
-    @FXML
-    public TextField tile2;
-    @FXML
-    public TextField tile3;
-    @FXML
-    public TextField tile4;
-    @FXML
-    public TextField tile5;
-    @FXML
-    public TextField tile6;
-    @FXML
-    public TextField tile7;
-    @FXML
-    public TextField tile8;
-    @FXML
-    public TextField tile9;
-    @FXML
-    public TextField tile10;
-    @FXML
-    public TextField tile11;
-    @FXML
-    public TextField tile12;
-    @FXML
-    public TextField tile13;
-    @FXML
-    public TextField tile14;
-    @FXML
-    public TextField tile15;
-    @FXML
-    public TextField tile16;
-    @FXML
-    public TextField tile17;
-    @FXML
-    public TextField tile18;
-    @FXML
-    public TextField tile19;
-    @FXML
     private Label scoreLabel;
     public static Boolean win = false;
     public TextField[][] gameField;
     @FXML
     public TextField sideLength;
+    @FXML
+    public Pane fieldPane;
+
+
+    public void getSide() {
+        Constants.SIDE_LENGTH = Integer.parseInt(sideLength.getText());
+        Constants.ARRAY_SIDE = 2 * Constants.SIDE_LENGTH - 1;
+    }
 
     @FXML
-    public void inputSideLength() {
-        Constants.SIDE_LENGTH = Integer.parseInt(sideLength.getText());
+    public void drawTheField() {
+        getSide();
+        start();
+        gameField = new TextField[Constants.ARRAY_SIDE][Constants.ARRAY_SIDE];
+
+        double x = 150.0;
+        double y = 0.0;
+        for (int q = 0; q < Constants.ARRAY_SIDE; q++) {
+            int c = 0;
+            for (int r = 0; r < Constants.ARRAY_SIDE; r++) {
+                if(MainLogic.getGrid().getState(q, r) != -1) {
+                    TextField tile = new TextField();
+                    tile.setPrefSize(100., 100.);
+                    tile.setEditable(false);
+                    tile.setLayoutX(x);
+                    tile.setLayoutY(y);
+                    tile.setStyle("-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-border-color: black; -fx-border-size: 2; -fx-border-radius: 50%;");
+                    fieldPane.getChildren().add(tile);
+                    x += 100.;
+                    gameField[q][r] = tile;
+                    c++;
+                }
+            }
+            y += Math.sin(Math.PI/3) * 100.0;
+            if(q < Constants.ARRAY_SIDE/2) x = x - c * 100 - 50;
+            else x = x - c * 100 + 50;
+        }
+        updateField();
+        papa.setOnKeyPressed(this::keyPressed);
     }
 
     @FXML
     public void keyPressed(KeyEvent key) {
-        if(startPane.isVisible()) {
-            start();
-        } else if(!winPane.isVisible() & !failPane.isVisible()){
+        if (!winPane.isVisible() & !failPane.isVisible()) {
             MainLogic.input(key.getCode().toString());
-            if(MainLogic.move()) {
-                updateUi();
+            if (MainLogic.move()) {
+                updateField();
                 scoreLabel.setText(String.valueOf(MainLogic.score));
-                if(win) {
+                if (win) {
                     winPane.setVisible(true);
                 }
-            }
-            else {
-                if(MainLogic.isItEnd()) {
+            } else {
+                if (MainLogic.isItEnd()) {
                     failPane.setVisible(true);
                 }
             }
-        } else if(winPane.isVisible()) {
+        } else if (winPane.isVisible()) {
             winPane.setVisible(false);
             win = false;
         } else if(failPane.isVisible()) {
@@ -105,18 +99,17 @@ public class Controller {
         }
     }
 
-    public void updateUi() {
+    public void updateField() {
         for (int q = 0; q < Constants.ARRAY_SIDE; q++) {
             for (int r = 0; r < Constants.ARRAY_SIDE; r++) {
                 if(gameField[q][r] != null) {
-                    int valOfTile = MainLogic.grid.getState(q, r);
+                    int valOfTile = MainLogic.getGrid().getState(q, r);
                     String style = "-fx-background-color: " + Colors.colors.get(valOfTile) +
                             "; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: #fafafa; " +
-                            "-fx-font-family: " + App.myFont.getFamily() + "; -fx-font-size: 27.0";
+                            "-fx-font-family: Harpseal; -fx-font-size: 27.0";
                     gameField[q][r].setStyle(style);
                     if(valOfTile != 0) {
-                        if(gameField[q][r].getText().equals("")) gameField[q][r].setText(String.valueOf(valOfTile));
-                        else gameField[q][r].setText(String.valueOf(valOfTile));
+                        gameField[q][r].setText(String.valueOf(valOfTile));
                     }
                     else gameField[q][r].setText("");
                 }
@@ -129,49 +122,13 @@ public class Controller {
         for (int i = 0; i < Constants.COUNT_INITIAL_TILES; i++) {
             MainLogic.generateNewTile();
         }
-        gameField = new TextField[Constants.ARRAY_SIDE][Constants.ARRAY_SIDE];
-        gameField[0][2] = tile1;
-        gameField[0][3] = tile2;
-        gameField[0][4] = tile3;
-        gameField[1][1] = tile4;
-        gameField[1][2] = tile5;
-        gameField[1][3] = tile6;
-        gameField[1][4] = tile7;
-        gameField[2][0] = tile8;
-        gameField[2][1] = tile9;
-        gameField[2][2] = tile10;
-        gameField[2][3] = tile11;
-        gameField[2][4] = tile12;
-        gameField[3][0] = tile13;
-        gameField[3][1] = tile14;
-        gameField[3][2] = tile15;
-        gameField[3][3] = tile16;
-        gameField[4][0] = tile17;
-        gameField[4][1] = tile18;
-        gameField[4][2] = tile19;
-        if(startPane.isVisible()) startPane.setVisible(false);
-        updateUi();
+        startPane.setVisible(false);
     }
 
     @FXML
     public void restart() {
         failPane.setVisible(false);
-        start();
-    }
-
-    @FXML
-    public void openGameWindow() throws Exception {
-        Stage gameStage = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("game_scene.fxml"));
-        Parent root = loader.load();
-        root.setStyle("-fx-font-family: " + App.myFont.getFamily() + ";");
-        Scene scene = new Scene(root);
-        scene.getRoot().requestFocus();
-        gameStage.setResizable(false);
-        gameStage.setScene(scene);
-        gameStage.setTitle("16384");
-        gameStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.jpg"))));
-        gameStage.show();
+        drawTheField();
     }
 
 //    public void spawnAnimation(int q, int r) {

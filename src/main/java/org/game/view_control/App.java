@@ -11,16 +11,12 @@ import java.util.Objects;
 
 public class App extends Application {
 
-    public static Font myFont = Font.loadFont(App.class.getResource("Harpseal.ttf").toExternalForm(), 10);
-
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("start.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("game_scene.fxml"));
         Parent root = loader.load();
-        root.setStyle("-fx-font-family: " + myFont.getFamily() + ";");
         Scene scene = new Scene(root);
         scene.getRoot().requestFocus();
-        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.setTitle("16384");
         primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.jpg"))));

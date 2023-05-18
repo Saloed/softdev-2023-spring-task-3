@@ -9,7 +9,6 @@ public class HexGrid {
     public HexGrid() {
         this.grid = new int[ARRAY_SIDE][ARRAY_SIDE];
         filling();
-
     }
 
     private void filling() {

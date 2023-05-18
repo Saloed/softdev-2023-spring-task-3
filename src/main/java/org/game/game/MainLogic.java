@@ -9,10 +9,14 @@ import static org.game.game.Constants.*;
 public class MainLogic {
 
     public static int score;
-    public static boolean endOfGame;
+    private static boolean endOfGame;
     public static boolean isThere16384;
-    public static Direction direction;
-    public static HexGrid grid;
+    private static Direction direction;
+    private static HexGrid grid;
+
+    public static HexGrid getGrid(){
+        return grid;
+    }
 
     private static void merged16384() {
         isThere16384 = true;
@@ -106,7 +110,7 @@ public class MainLogic {
                     grid.setUpperDiagonal(q, result.shiftedRow);
                     ret = ret || result.didItMoved;
                 }
-                for(int q = 1; q < 3; q++) {
+                for(int q = 1; q < ARRAY_SIDE; q++) {
                     int[] oldRow = grid.getLowerDiagonal(q);
                     if(direction == Direction.DOWN_LEFT) {
                         oldRow = reverse(oldRow);
