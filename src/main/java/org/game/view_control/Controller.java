@@ -44,11 +44,11 @@ public class Controller {
 
     @FXML
     public void drawTheField() {
-        if (Integer.parseInt(sideLength.getText()) > 15) {
+        getSide();
+        if (Constants.SIDE_LENGTH > 15 || Constants.SIDE_LENGTH < 3) {
             warningLabel.setVisible(true);
             return;
         }
-        getSide();
         start();
         gameField = new Label[Constants.ARRAY_SIDE][Constants.ARRAY_SIDE];
 
