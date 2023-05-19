@@ -5,8 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
 import java.util.Objects;
 
 public class App extends Application {
@@ -18,6 +18,7 @@ public class App extends Application {
         Scene scene = new Scene(root);
         scene.getRoot().requestFocus();
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.setTitle("16384");
         primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.jpg"))));
         primaryStage.show();

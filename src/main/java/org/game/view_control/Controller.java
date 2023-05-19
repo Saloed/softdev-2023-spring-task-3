@@ -1,21 +1,16 @@
 package org.game.view_control;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import org.game.game.Constants;
 import org.game.game.MainLogic;
-
-import java.util.Objects;
 
 public class Controller {
 
@@ -32,45 +27,52 @@ public class Controller {
     @FXML
     private Label scoreLabel;
     public static Boolean win = false;
-    public TextField[][] gameField;
+    public Label[][] gameField;
     @FXML
     public TextField sideLength;
     @FXML
     public Pane fieldPane;
+    @FXML
+    public Label warningLabel;
 
 
     public void getSide() {
         Constants.SIDE_LENGTH = Integer.parseInt(sideLength.getText());
         Constants.ARRAY_SIDE = 2 * Constants.SIDE_LENGTH - 1;
+        Constants.DIAMETER = 700.0 / Constants.ARRAY_SIDE * 0.7;
     }
 
     @FXML
     public void drawTheField() {
+        if (Integer.parseInt(sideLength.getText()) > 15) {
+            warningLabel.setVisible(true);
+            return;
+        }
         getSide();
         start();
-        gameField = new TextField[Constants.ARRAY_SIDE][Constants.ARRAY_SIDE];
+        gameField = new Label[Constants.ARRAY_SIDE][Constants.ARRAY_SIDE];
 
-        double x = 150.0;
-        double y = 0.0;
+        double x = Constants.DIAMETER * (Constants.ARRAY_SIDE / 2);
+        double y = 230.0 - Constants.DIAMETER * Math.sin(Math.PI/3) * (Constants.ARRAY_SIDE / 2);
         for (int q = 0; q < Constants.ARRAY_SIDE; q++) {
             int c = 0;
             for (int r = 0; r < Constants.ARRAY_SIDE; r++) {
                 if(MainLogic.getGrid().getState(q, r) != -1) {
-                    TextField tile = new TextField();
-                    tile.setPrefSize(100., 100.);
-                    tile.setEditable(false);
+                    Label tile = new Label();
+                    tile.setPrefSize(Constants.DIAMETER, Constants.DIAMETER);
                     tile.setLayoutX(x);
                     tile.setLayoutY(y);
                     tile.setStyle("-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-border-color: black; -fx-border-size: 2; -fx-border-radius: 50%;");
+                    tile.setAlignment(Pos.CENTER);
                     fieldPane.getChildren().add(tile);
-                    x += 100.;
+                    x += Constants.DIAMETER;
                     gameField[q][r] = tile;
                     c++;
                 }
             }
-            y += Math.sin(Math.PI/3) * 100.0;
-            if(q < Constants.ARRAY_SIDE/2) x = x - c * 100 - 50;
-            else x = x - c * 100 + 50;
+            y += Math.sin(Math.PI/3) * Constants.DIAMETER;
+            if(q < Constants.ARRAY_SIDE / 2) x = x - c * Constants.DIAMETER - Constants.DIAMETER / 2;
+            else x = x - c * Constants.DIAMETER + Constants.DIAMETER / 2;
         }
         updateField();
         papa.setOnKeyPressed(this::keyPressed);
@@ -105,8 +107,9 @@ public class Controller {
                 if(gameField[q][r] != null) {
                     int valOfTile = MainLogic.getGrid().getState(q, r);
                     String style = "-fx-background-color: " + Colors.colors.get(valOfTile) +
-                            "; -fx-background-radius: 50%; -fx-padding: 4; -fx-text-fill: #fafafa; " +
-                            "-fx-font-family: Harpseal; -fx-font-size: 27.0";
+                            "; -fx-background-radius: 50%; -fx-text-fill: #fafafa; " +
+                            "-fx-font-family: Harpseal; -fx-font-size: " + Constants.DIAMETER * 0.27 + "; -fx-border-color: black;" +
+                            "-fx-border-radius: 50%; -fx-border-size: 2;";
                     gameField[q][r].setStyle(style);
                     if(valOfTile != 0) {
                         gameField[q][r].setText(String.valueOf(valOfTile));
@@ -128,6 +131,7 @@ public class Controller {
     @FXML
     public void restart() {
         failPane.setVisible(false);
+        scoreLabel.setText("0");
         drawTheField();
     }
 
