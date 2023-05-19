@@ -21,7 +21,7 @@ import ktx.app.KtxScreen
 class MainMenuImageScreen : BaseImageScreen(
     Texture("graphics/screen_backgrounds/main_menu.png")
 ) {
-//    грузим текстуры для кнопок
+//    загрузка текстур для кнопок
     private val startButtonTexture = TextureRegion(
         SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_begin_button")
     )
@@ -42,7 +42,7 @@ class MainMenuImageScreen : BaseImageScreen(
     )
 
 
-//    создаем кнопки:
+//    создание кнопок
 //    кнопка старта игры
     private val startButtonStyle = TextButtonStyle().apply {
         font = BitmapFont()
@@ -57,6 +57,7 @@ class MainMenuImageScreen : BaseImageScreen(
                     (Gdx.app.applicationListener as KtxGame<KtxScreen>).apply {
                         addScreen(TestLocationScreen())
                         setScreen<TestLocationScreen>()
+                        removeScreen<MainMenuImageScreen>()
                     }
                     this@MainMenuImageScreen.dispose()
                 }
@@ -80,6 +81,7 @@ class MainMenuImageScreen : BaseImageScreen(
                     (Gdx.app.applicationListener as KtxGame<KtxScreen>).apply {
                         addScreen(SlidesMenuImageScreen())
                         setScreen<SlidesMenuImageScreen>()
+                        removeScreen<MainMenuImageScreen>()
                     }
                         this@MainMenuImageScreen.dispose()
                 }
@@ -103,6 +105,7 @@ class MainMenuImageScreen : BaseImageScreen(
                     (Gdx.app.applicationListener as KtxGame<KtxScreen>).apply {
                         addScreen(SlidesMenuImageScreen())
                         setScreen<SlidesMenuImageScreen>()
+                        removeScreen<MainMenuImageScreen>()
                     }
                     this@MainMenuImageScreen.dispose()
                 }

@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.github.kot512.surrounded_and_hunted.screen.image_screens.MainMenuImageScreen
+import com.github.kot512.surrounded_and_hunted.screen.image_screens.SlidesMenuImageScreen
+import com.github.kot512.surrounded_and_hunted.screen.image_screens.UpgradesMenuImageScreen
 import com.github.kot512.surrounded_and_hunted.screen.playable_screens.TestLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import ktx.app.KtxGame
@@ -64,7 +66,6 @@ class SurroundedAndHunted : KtxGame<KtxScreen>() {
 //        активируем экран главного меню
 //        addScreen(TestLocationScreen())
 //        setScreen<TestLocationScreen>()
-
         addScreen(MainMenuImageScreen())
         setScreen<MainMenuImageScreen>()
     }

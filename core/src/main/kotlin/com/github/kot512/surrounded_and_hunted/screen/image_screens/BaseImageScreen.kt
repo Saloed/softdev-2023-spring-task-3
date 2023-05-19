@@ -23,7 +23,7 @@ import java.lang.Float.max
 
 
 open class BaseImageScreen(
-    private val backgroundTexture: Texture,
+    protected val backgroundTexture: Texture,
     protected val backgroundPosition: Point = Point(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2),
 ) : KtxScreen {
 //    для экрана и графики
