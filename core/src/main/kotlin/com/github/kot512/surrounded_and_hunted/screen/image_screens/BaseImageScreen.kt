@@ -15,15 +15,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_HEIGHT
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_WIDTH
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import ktx.app.KtxScreen
+import java.lang.Float.max
 
 
 open class BaseImageScreen(
     private val backgroundTexture: Texture,
-    private val width: Float,
-    private val height: Float,
-    protected val backgroundPosition: Point = Point(0f, 0f),
+    protected val backgroundPosition: Point = Point(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2),
 ) : KtxScreen {
 //    для экрана и графики
     private val batch: SpriteBatch = SpriteBatch()
@@ -38,8 +39,23 @@ open class BaseImageScreen(
     )
     var stage: Stage = Stage(viewport, batch)
 
+//    масштабирование фона
+    val scaleCoeff: Float
+    var scaledWidth: Float = backgroundTexture.width.toFloat()
+    var scaledHeight: Float = backgroundTexture.height.toFloat()
+
     init {
         Gdx.input.inputProcessor = stage
+
+//        определяем масштабирование фона
+        val widthDiff = SCREEN_WIDTH - scaledWidth
+        val heightDiff = SCREEN_HEIGHT - scaledHeight
+        scaleCoeff =
+            if (widthDiff > heightDiff) SCREEN_WIDTH / scaledWidth
+            else SCREEN_HEIGHT / scaledHeight
+
+        scaledWidth *= scaleCoeff
+        scaledHeight *= scaleCoeff
     }
 
 //    в метод show необходимо добавить кнопки и их слушатели
@@ -49,7 +65,10 @@ open class BaseImageScreen(
 
         batch.begin()
         batch.draw(
-            backgroundTexture, backgroundPosition.x, backgroundPosition.y, width, height
+            backgroundTexture,
+            backgroundPosition.x - scaledWidth / 2,
+            backgroundPosition.y - scaledHeight / 2,
+            scaledWidth, scaledHeight
         )
         batch.end()
 
