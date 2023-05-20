@@ -36,7 +36,7 @@ class AttackSystem (
             if (y !in -1f..17f) lifeCmps[entity].takeDamage += attackCmp.damage
 
 
-            rect.set(x - width/4f, y - height/4f, x + width/4f, y + height/4f) // hitboxes are meant to be smaller than actual models
+            rect.set(x - width/2f, y - height/2f, x + width/2f, y + height/2f)
 
             oWorld.query(rect.x, rect.y, rect.width, rect.height) {fixture ->
                 if (fixture.userData != HITBOX) {

@@ -27,8 +27,8 @@ class PhysicsComponent { // should`ve called it PhysicComponent tho :(
         ) :PhysicsComponent {
             val x = image.x
             val y = image.y
-            val w = image.width
-            val h = image.height
+            val w = image.width / 1.5f
+            val h = image.height / 1.5f
 
             return add<PhysicsComponent> {
                 body = world.body(bodyType) {
