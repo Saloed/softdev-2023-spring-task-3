@@ -1,41 +1,61 @@
 package com.go;
 
-
-interface IBoard {
-    void addStone(Stone stone);
-    void removeStone(Stone stone);
-    void clearBoard();
-}
-
 public class Board implements IBoard {
 
+    public final static int BOARD_SIZE = 13;
+    public final ICheckSurvivalGroupRule checkLiberties;
+    public final ICheckSurvivalGroupRule checkSameColor;
     public Stone[][] positions;
 
-    public Board(int boardSize) {
+    public Board(ICheckSurvivalGroupRule checkLiberties,
+                 ICheckSurvivalGroupRule checkSameColor,
+                 int boardSize) {
+        this.checkLiberties = checkLiberties;
+        this.checkSameColor = checkSameColor;
         positions = new Stone[boardSize][boardSize];
     }
 
-    public void addStone(Stone stone) {
-        int x = stone.x();
-        int y = stone.y();
-        positions[x][y] = stone;
+    public void addStone(Stone stone, Game game) {
+
+        if (checkSameColor.check(stone, this) || checkLiberties.check(stone,this)) {
+            positions[stone.x()][stone.y()] = stone;
+        } else {
+            game.move();
+            removeStone(stone);
+        }
+
     }
 
     @Override
     public void removeStone(Stone stone) {
-        int x = stone.x();
-        int y = stone.y();
-        if (positions[x][y] == stone) {
-            positions[x][y] = null;
-        }
+        positions[stone.x()][stone.y()] = null;
     }
 
     @Override
     public void clearBoard() {
-        positions = new Stone[13][13];
+        positions = new Stone[BOARD_SIZE][BOARD_SIZE];
     }
 
     public Stone getPosition(int x, int y) {
         return positions[x][y];
+    }
+
+    @Override
+    public boolean isEmptyPosition(int x, int y) {
+        return getPosition(x, y) == null;
+    }
+
+    @Override
+    public boolean isNotEmptyPosition(int x, int y) {
+        return !isEmptyPosition(x, y);
+    }
+
+    @Override
+    public boolean isValidXBoundary(int x) {
+        return x > 0 && x < positions.length - 1;
+    }
+
+    public boolean isValidYBoundary(int y) {
+        return y > 0 && y < positions.length - 1;
     }
 }

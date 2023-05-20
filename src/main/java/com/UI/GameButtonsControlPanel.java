@@ -16,6 +16,7 @@ class GameButtonsControlPanel extends JPanel {
     interface RemoveStoneListener {
         void onRemoveStoneClick();
     }
+
     interface PassMoveListener {
         void onPassMoveClick();
     }

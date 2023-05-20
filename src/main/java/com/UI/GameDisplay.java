@@ -1,23 +1,25 @@
 package com.UI;
 
-import com.go.Board;
-import com.go.Game;
+import com.go.*;
 
 import javax.swing.*;
 import java.awt.*;
 
+import static com.go.Board.BOARD_SIZE;
+
 public class GameDisplay {
 
-    private final static int BOARD_SIZE = 13;
 
-    public static void main(String[] args) {
-        Board board = new Board(BOARD_SIZE); // Создает игровое поле
+    public GameDisplay() {
+        ICheckSurvivalGroupRule checkLibertiesGroup = new LibertiesSurvivalRule();
+        ICheckSurvivalGroupRule checkSameColor = new SameColorSurvivalRule();
+        Board board = new Board(checkLibertiesGroup, checkSameColor, BOARD_SIZE); // Создает игровое поле
         Game game = new Game(board); // Создает игру
 
         // Создает фрейм
         JFrame frame = new JFrame("StrateGO");
         JLabel background = new JLabel();
-        background.setIcon(new ImageIcon(new ImageIcon("fon.jpg").getImage()));
+        background.setIcon(new ImageIcon(new ImageIcon("fon7.jpeg").getImage()));
         background.setLayout(new BorderLayout());
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -30,7 +32,7 @@ public class GameDisplay {
         GamePanel gamePanel = new GamePanel(board, game);
         gamePanel.setOpaque(false);
         background.add(gamePanel);
-        GameButtonsControlPanel buttons = new GameButtonsControlPanel(new GridLayout(2, 3, 3, 0));
+        GameButtonsControlPanel buttons = new GameButtonsControlPanel(new GridLayout(6, 1, 1, 0));
         buttons.setOpaque(false);
         buttons.addNewGameListener(gamePanel);
         buttons.addRemoveStoneListener(new RemoveStoneListener(game, board, gamePanel));
@@ -41,7 +43,7 @@ public class GameDisplay {
 
         GameButtonsControlContainerPanel buttonsContainer = new GameButtonsControlContainerPanel(new FlowLayout(FlowLayout.CENTER), buttons);
         buttonsContainer.setOpaque(false);
-        background.add(buttonsContainer, BorderLayout.NORTH);
+        background.add(buttonsContainer, BorderLayout.WEST);
 
         frame.add(background);
 

@@ -3,23 +3,10 @@ package com.go;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
-interface IGame {
-    void newGame();
-    void saveGame();
-    void move();
-    void returnGame();
-}
-
-interface IBoardController {
-    void initBoard();
-}
+import static com.go.Board.BOARD_SIZE;
 
 public class Game implements IGame {
-    //private static final double KOMI = 6.5; // Фора, то бишь количество компенсации белым
     private final Board board; // Состояние доски
     private Color currentPlayer;
     public Stone previousPlayer;
@@ -40,8 +27,7 @@ public class Game implements IGame {
     // Метод, который сохраняет игру
     @Override
     public void saveGame() {
-        int numberOfGames = 0;
-        saveArrayToFile(board.positions, numberOfGames);
+        saveArrayToFile(board.positions);
     }
 
     // Метод, который возвращает сохраненную игру
@@ -50,47 +36,56 @@ public class Game implements IGame {
         board.positions = loadArrayFromFile();
     }
 
+    // Метод, который меняет текущего игрока после хода
     @Override
     public void move() {
         currentPlayer = (currentPlayer == Color.BLACK) ? Color.WHITE : Color.BLACK;
     }
 
+    // Метод, который возвращает текущего игрока
     public Color getCurrentPlayer() {
         return currentPlayer;
     }
 
+    // Метод, который возвращает предыдущего игрока
     public Stone getPreviousPlayer() {
         return previousPlayer;
     }
 
     // Метод, который сохраняет игру в файл
-    private void saveArrayToFile(Stone[][] arr, int numberOfGames) {
-        try {
-            StringBuilder sb = new StringBuilder();
-            sb.append(arr.length).append('\n');
-            sb.append(arr[0].length).append('\n');
+    private void saveArrayToFile(Stone[][] arr) {
+        JFileChooser fileChooser = new JFileChooser("./Save games");
+        int result = fileChooser.showSaveDialog(null);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        File selectedFile = fileChooser.getSelectedFile();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(selectedFile))) {
+            bw.write(String.valueOf(arr.length));
+            bw.newLine();
+            bw.write(String.valueOf(arr[0].length));
+            bw.newLine();
             for (Stone[] stones : arr) {
                 for (int j = 0; j < arr[0].length; j++) {
                     if (stones[j] != null) {
-                        sb.append(stones[j].color().toString()).append('\n');
+                        bw.write(stones[j].color().getRGB() + " ");
                     } else {
-                        sb.append("null").append('\n');
+                        bw.write("null ");
                     }
                 }
+                bw.newLine();
             }
-            Files.writeString(Path.of(String.format("SaveGame %d", numberOfGames)),
-                    sb.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    //Считывает сохраненную игру из файла
     private Stone[][] loadArrayFromFile() {
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser("./Save games");
         int result = fileChooser.showOpenDialog(null);
         if (result != JFileChooser.APPROVE_OPTION) {
-            return new Stone[13][13];
+            return board.positions;
         }
 
         File selectedFile = fileChooser.getSelectedFile();
@@ -105,15 +100,15 @@ public class Game implements IGame {
                     if (cell.equals("null")) {
                         savePositions[i][j] = null;
                     } else {
-                        Color color = Color.decode(cell);
-                        savePositions[i][j] = new Stone(color, i, j);
+                        int rgb = Integer.parseInt(cell);
+                        savePositions[i][j] = new Stone(new Color(rgb), i, j);
                     }
                 }
             }
             return savePositions;
         } catch (IOException e) {
             e.printStackTrace();
-            return new Stone[13][13];
+            return new Stone[BOARD_SIZE][BOARD_SIZE];
         }
     }
 }

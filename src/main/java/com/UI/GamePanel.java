@@ -8,9 +8,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
+import static com.go.Board.BOARD_SIZE;
+
 class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListener {
 
-    private final static int BOARD_SIZE = 13;
+    private final static int sizeConstant = 30;
 
     private final Board board;
     private final Game game;
@@ -32,11 +34,11 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
     }
 
     // Отрисовка игрового поля
-    private void drawBoard (Graphics g) {
+    private void drawBoard(Graphics g) {
         int boardSize = BOARD_SIZE - 1;
-        int cellSize = Math.min((getWidth() - 30 * 2) / boardSize, (getHeight() - 30 * 2) / boardSize);
-        int xIndent = 30 + (getWidth() - 30 * 2 - cellSize * boardSize) / 2;
-        int yIndent = 30 + (getHeight() - 30 * 2 - cellSize * boardSize) / 2;
+        int cellSize = Math.min((getWidth() - sizeConstant * 2) / boardSize, (getHeight() - sizeConstant * 2) / boardSize);
+        int xIndent = sizeConstant + (getWidth() - sizeConstant * 2 - cellSize * boardSize) / 2;
+        int yIndent = sizeConstant + (getHeight() - sizeConstant * 2 - cellSize * boardSize) / 2;
         g.setColor(DisplayConfig.GRID_COLOR);
         for (int i = 0; i <= boardSize; i++) {
             g.drawLine(xIndent + i * cellSize, yIndent, xIndent + i * cellSize, getHeight() - yIndent);
@@ -45,11 +47,12 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
     }
 
     // Отрисовка камней
-    private void drawStones (Graphics g) {
+    private void drawStones(Graphics g) {
         int boardSize = BOARD_SIZE;
-        int cellSize = Math.min((getWidth() - 30 * 2) / (boardSize - 1), (getHeight() - 30 * 2) / (boardSize - 1));
-        int xIndent = 30 + (getWidth() - 30 * 2 - cellSize * (boardSize - 1)) / 2;
-        int yIndent = 30 + (getHeight() - 30 * 2 - cellSize * (boardSize - 1)) / 2;
+        int cellSize = Math.min((getWidth() - sizeConstant * 2) / (boardSize - 1),
+                (getHeight() - sizeConstant * 2) / (boardSize - 1));
+        int xIndent = sizeConstant + (getWidth() - sizeConstant * 2 - cellSize * (boardSize - 1)) / 2;
+        int yIndent = sizeConstant + (getHeight() - sizeConstant * 2 - cellSize * (boardSize - 1)) / 2;
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
                 Stone stone = board.getPosition(i, j);
@@ -71,9 +74,11 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
 
             //определение координат клика
             int boardSize = BOARD_SIZE - 1;
-            int cellSize = Math.min((getWidth() - 30 * 2) / boardSize, (getHeight() - 30 * 2) / boardSize);
-            int xIndent = 30 + (getWidth() - 30 * 2 - cellSize * boardSize) / 2;
-            int yIndent = 30 + (getHeight() - 30 * 2 - cellSize * boardSize) / 2;
+
+            int cellSize = Math.min((getWidth() - sizeConstant * 2) /
+                    boardSize, (getHeight() - sizeConstant * 2) / boardSize);
+            int xIndent = sizeConstant + (getWidth() - sizeConstant * 2 - cellSize * boardSize) / 2;
+            int yIndent = sizeConstant + (getHeight() - sizeConstant * 2 - cellSize * boardSize) / 2;
             if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
                 int x = mouseEvent.getX();
                 int y = mouseEvent.getY();
@@ -83,14 +88,16 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
 
                     // Добавление камня в массив и его отрисовка на игровой доске
                     Stone stone = new Stone(game.getCurrentPlayer(), i, j);
-                    if (board.getPosition(i, j) == null) game.move();
                     if (board.positions[i][j] != null)
-                        JOptionPane.showMessageDialog(null, "Занято, не угадал!", "Опачки!", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Занято, не угадал!",
+                                "Опачки!", JOptionPane.ERROR_MESSAGE);
                     else {
-                        board.addStone(stone);
+                        board.addStone(stone, game);
                         game.previousPlayer = stone;
+                        game.move();
                     }
-                    this.repaint(xIndent + i * cellSize - cellSize / 2, yIndent + j * cellSize - cellSize / 2, cellSize, cellSize);
+                    this.repaint(xIndent + i * cellSize - cellSize / 2,
+                            yIndent + j * cellSize - cellSize / 2, cellSize, cellSize);
                 }
             }
         }
