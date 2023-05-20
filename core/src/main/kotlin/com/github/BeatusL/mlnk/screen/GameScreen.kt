@@ -14,6 +14,7 @@ import com.github.BeatusL.mlnk.event.MapChangeEvent
 import com.github.BeatusL.mlnk.event.ObjCreation
 import com.github.BeatusL.mlnk.event.fire
 import com.github.BeatusL.mlnk.input.KeyboardProcessor
+import com.github.BeatusL.mlnk.input.TouchProcessor
 import com.github.BeatusL.mlnk.system.AnimationSystem
 import com.github.BeatusL.mlnk.system.AttackSystem
 import com.github.BeatusL.mlnk.system.CollisionSpawnSystem
@@ -35,7 +36,7 @@ import kotlin.random.Random
 
 class GameScreen: KtxScreen {
     private val stage: Stage = Stage(ExtendViewport(9f, 16f))
-    private val textureAtlas = TextureAtlas("assets/atlas/GameObj.atlas")
+    private val textureAtlas = TextureAtlas("atlas/GameObj.atlas")
     private var lastSpawnTime: Long = 0
 
     private val oWorld = createWorld(gravity = vec2(0f, 0f)).apply {  // physic (object) world
@@ -75,6 +76,7 @@ class GameScreen: KtxScreen {
         stage.fire(MapChangeEvent(map))
 
         KeyboardProcessor(rWorld, rWorld.mapper())
+        TouchProcessor(rWorld, rWorld.mapper())
         spawnEnemy()
         log.debug { "GameScreen shown" }
     }

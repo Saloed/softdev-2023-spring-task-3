@@ -24,14 +24,12 @@ import com.github.BeatusL.mlnk.component.SpawnComponent
 import com.github.BeatusL.mlnk.component.SpawnConfig
 import com.github.BeatusL.mlnk.event.MapChangeEvent
 import com.github.BeatusL.mlnk.event.ObjCreation
-import com.github.BeatusL.mlnk.screen.GameScreen
 import com.github.quillraven.fleks.AllOf
 import com.github.quillraven.fleks.ComponentMapper
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
 import ktx.app.gdxError
 import ktx.box2d.box
-import ktx.log.logger
 import ktx.math.vec2
 import ktx.tiled.layer
 import ktx.tiled.type
@@ -98,7 +96,10 @@ class EntitySpawnSystem(
                         }
                     }
 
-                    if (isPlayer) add<PlayerComponent>()
+                    if (isPlayer) add<PlayerComponent>() {
+                        x = location.x
+                        y = location.y
+                    }
 
 
                     if (isShip) add<ProjectileComponent>()
@@ -179,7 +180,6 @@ class EntitySpawnSystem(
     }
 
     companion object {
-        private val log = logger<GameScreen>()
         const val HITBOX = "HITBOX"
     }
 

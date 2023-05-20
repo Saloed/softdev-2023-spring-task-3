@@ -1,4 +1,6 @@
 package com.github.BeatusL.mlnk.component
 
-class PlayerComponent {
-}
+data class PlayerComponent (
+    var x: Float = 0f,
+    var y: Float = 0f
+    )

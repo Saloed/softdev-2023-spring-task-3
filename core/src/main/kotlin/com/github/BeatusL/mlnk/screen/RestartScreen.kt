@@ -11,9 +11,9 @@ import ktx.log.logger
 
 class RestartScreen: KtxScreen {
     private val stage: Stage = Stage(ExtendViewport(9f, 16f))
-    private val background: Texture = Texture("assets/png/background.png")
-    private val cloud: Texture = Texture("assets/png/clouds.png")
-    private val label: Texture = Texture("assets/png/restart.png")
+    private val background: Texture = Texture("png/background.png")
+    private val cloud: Texture = Texture("png/clouds.png")
+    private val label: Texture = Texture("png/restart.png")
 
     override fun show() {
         log.debug { "GameScreen shown" }
