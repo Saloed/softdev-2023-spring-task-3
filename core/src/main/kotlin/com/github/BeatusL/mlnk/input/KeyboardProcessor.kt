@@ -14,7 +14,7 @@ import ktx.app.KtxInputAdapter
 
 class KeyboardProcessor(
     world: World,
-    private val moveCmp: ComponentMapper<MoveComponent>
+    private val moveCmps: ComponentMapper<MoveComponent>
 ): KtxInputAdapter {
     private var sinus = 0f
     private var cosinus = 0f
@@ -26,7 +26,7 @@ class KeyboardProcessor(
 
     private fun updatePlayerMovement() {
         player.forEach { player ->
-            with(moveCmp[player]) {
+            with(moveCmps[player]) {
                 sin = sinus
                 cos = cosinus
             }

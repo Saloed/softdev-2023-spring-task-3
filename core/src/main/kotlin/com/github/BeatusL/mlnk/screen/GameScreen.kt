@@ -14,6 +14,7 @@ import com.github.BeatusL.mlnk.event.MapChangeEvent
 import com.github.BeatusL.mlnk.event.ObjCreation
 import com.github.BeatusL.mlnk.event.fire
 import com.github.BeatusL.mlnk.input.KeyboardProcessor
+import com.github.BeatusL.mlnk.input.TouchProcessor
 import com.github.BeatusL.mlnk.system.AnimationSystem
 import com.github.BeatusL.mlnk.system.AttackSystem
 import com.github.BeatusL.mlnk.system.CollisionSpawnSystem
@@ -75,7 +76,7 @@ class GameScreen: KtxScreen {
         stage.fire(MapChangeEvent(map))
 
         KeyboardProcessor(rWorld, rWorld.mapper())
-        //TouchProcessor(rWorld, rWorld.mapper())
+        TouchProcessor(rWorld, rWorld.mapper(), rWorld.mapper(), rWorld.mapper())
         spawnEnemy()
         log.debug { "GameScreen shown" }
     }
@@ -87,8 +88,10 @@ class GameScreen: KtxScreen {
 
     override fun render(delta: Float) {
         rWorld.update(delta.coerceAtMost(1/4f)) // delta cap needed to avoid stuttering
-        if (TimeUtils.nanoTime() - lastSpawnTime > 500000000) spawnEnemy()
-        log.debug { "${rWorld.numEntities.toString()} active entities" }
+        if (TimeUtils.nanoTime() - lastSpawnTime > 500000000) {
+            spawnEnemy()
+            log.debug { "${rWorld.numEntities.toString()} active entities" }
+        }
     }
 
     override fun dispose() {

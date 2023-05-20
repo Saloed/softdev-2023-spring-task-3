@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.World
 import com.github.BeatusL.mlnk.component.CollisionComponent
 import com.github.BeatusL.mlnk.component.ImageComponent
 import com.github.BeatusL.mlnk.component.PhysicsComponent
+import com.github.BeatusL.mlnk.component.PlayerComponent
 import com.github.quillraven.fleks.AllOf
 import com.github.quillraven.fleks.ComponentMapper
 import com.github.quillraven.fleks.Entity
@@ -28,7 +29,8 @@ class PhysicsSystem(
     private val oWorld: World,
     private val imageCmps: ComponentMapper<ImageComponent>,
     private val physCmps: ComponentMapper<PhysicsComponent>,
-    private val colCmps: ComponentMapper<CollisionComponent>
+    private val colCmps: ComponentMapper<CollisionComponent>,
+    private val playerCmps: ComponentMapper<PlayerComponent>
 ): ContactListener, IteratingSystem(interval = Fixed(1/60f)) { // fixed timestep`s good for optimization
 
     init {
@@ -60,7 +62,13 @@ class PhysicsSystem(
         val (x, y) = physCmp.body.position
         imageCmp.image.run {
             setPosition(x - width * 0.5f, y - height * 0.5f)
+            if (entity in playerCmps) {
+                playerCmps[entity].x = x - width * 0.5f
+                playerCmps[entity].y = y - height * 0.5f
+            }
         }
+
+
     }
 
 
