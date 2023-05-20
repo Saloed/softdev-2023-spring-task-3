@@ -3,7 +3,6 @@ package org.game.view_control;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -65,12 +64,12 @@ public class Controller {
                     tile.setStyle("-fx-background-color: #ccb69f; -fx-background-radius: 50%;");
                     tile.setAlignment(Pos.CENTER);
                     fieldPane.getChildren().add(tile);
-                    x += Constants.DIAMETER;
+                    x = x + Constants.DIAMETER;
                     gameField[q][r] = tile;
                     c++;
                 }
             }
-            y += Math.sin(Math.PI/3) * Constants.DIAMETER;
+            y = y + Math.sin(Math.PI/3) * Constants.DIAMETER;
             if(q < Constants.ARRAY_SIDE / 2) x = x - c * Constants.DIAMETER - Constants.DIAMETER / 2;
             else x = x - c * Constants.DIAMETER + Constants.DIAMETER / 2;
         }
