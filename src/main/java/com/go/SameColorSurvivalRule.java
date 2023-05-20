@@ -51,7 +51,7 @@ public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
             return;
         }
 
-        // Добавляет камня в группу и его координаты в список посещенных
+        // Добавляет камень в группу и его координаты в список посещенных
         visitedPositions.add(position);
         stoneGroup.add(position);
 
