@@ -44,7 +44,7 @@ public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
     private void findConnectedStones(int x, int y, List<Stone> stoneGroup, Color colorGroup, Board board) {
         Stone position = board.getPosition(x, y);
 
-        // Если текущая позиция не существует, уже посещена, имеет другой цвет или
+        // Если текущая позиция пустая, уже посещена, имеет другой цвет или
         // уже присутствует в группе, выходим из цикла
         if (position == null || visitedPositions.contains(position) ||
                 position.color() != colorGroup || stoneGroup.contains(position)) {
@@ -79,3 +79,5 @@ public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
     }
 }
 
+// Нахуя из геймдисплея передавать классы
+// как заставить этот ебанный класс работать

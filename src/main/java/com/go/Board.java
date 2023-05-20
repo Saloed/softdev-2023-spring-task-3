@@ -5,6 +5,7 @@ public class Board implements IBoard {
     public final static int BOARD_SIZE = 13;
     public final ICheckSurvivalGroupRule checkLiberties;
     public final ICheckSurvivalGroupRule checkSameColor;
+
     public Stone[][] positions;
 
     public Board(ICheckSurvivalGroupRule checkLiberties,
@@ -36,6 +37,11 @@ public class Board implements IBoard {
         positions = new Stone[BOARD_SIZE][BOARD_SIZE];
     }
 
+    public Stone[][] getPositions() {
+        return positions;
+    }
+
+    @Override
     public Stone getPosition(int x, int y) {
         return positions[x][y];
     }
@@ -46,15 +52,11 @@ public class Board implements IBoard {
     }
 
     @Override
-    public boolean isNotEmptyPosition(int x, int y) {
-        return !isEmptyPosition(x, y);
-    }
-
-    @Override
     public boolean isValidXBoundary(int x) {
         return x > 0 && x < positions.length - 1;
     }
 
+    @Override
     public boolean isValidYBoundary(int y) {
         return y > 0 && y < positions.length - 1;
     }

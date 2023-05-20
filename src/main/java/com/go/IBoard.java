@@ -11,8 +11,6 @@ interface IBoard {
 
     boolean isEmptyPosition(int x, int y);
 
-    boolean isNotEmptyPosition(int x, int y);
-
     boolean isValidXBoundary(int x);
 
     boolean isValidYBoundary(int y);
