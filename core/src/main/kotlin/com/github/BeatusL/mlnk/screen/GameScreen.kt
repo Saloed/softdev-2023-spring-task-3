@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.utils.viewport.ExtendViewport
+import com.github.BeatusL.mlnk.MLNK.Companion.debug
 import com.github.BeatusL.mlnk.component.ImageComponent
 import com.github.BeatusL.mlnk.component.PhysicsComponent
 import com.github.BeatusL.mlnk.event.MapChangeEvent
@@ -61,7 +62,7 @@ class GameScreen: KtxScreen {
         system<LifeSystem>()
         system<AttackSystem>()
         system<DeadSystem>()
-        //system<DebugSystem>()
+        if (debug) system<DebugSystem>()
     }
     override fun show() {
 

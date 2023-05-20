@@ -39,5 +39,6 @@ class MLNK : KtxGame<KtxScreen>() {
     companion object {
         const val scale = 1/20f
         var playerAlive = true
+        val debug = true
     }
 }

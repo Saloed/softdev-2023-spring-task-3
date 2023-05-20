@@ -81,8 +81,6 @@ class PhysicsSystem(
     }
 
     private fun isStatic(body: Body) = body.type == BodyDef.BodyType.StaticBody
-    private fun isDynamic(body: Body) = body.type == BodyDef.BodyType.DynamicBody
-    private fun isKinematic(body: Body) = body.type == BodyDef.BodyType.KinematicBody
 
     override fun postSolve(contact: Contact?, impulse: ContactImpulse?) = Unit
 
