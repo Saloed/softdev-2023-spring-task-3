@@ -12,24 +12,29 @@ import kotlin.math.sqrt
 
 class TouchProcessor (
     world: World,
-    private val moveCmp: ComponentMapper<MoveComponent>
+    private val moveCmps: ComponentMapper<MoveComponent>,
+    private val playerCMPS: ComponentMapper<PlayerComponent>
 ): KtxInputAdapter {
     private var touchX = 0f
     private var touchY = 0f
     private var hyp = 0f
-    private val player = world.family(allOf = arrayOf(PlayerComponent::class))
+    private val players = world.family(allOf = arrayOf(PlayerComponent::class))
 
     init {
         Gdx.input.inputProcessor = InputMultiplexer(this)
     }
 
     private fun updatePlayerMovement() {
-        player.forEach { player ->
-            if (touchX != 0f && touchY != 0f)
-            with(moveCmp[player]) {
-                hyp = sqrt(touchX * touchX + touchY * touchY)
-                sin = touchY / hyp
-                cos = touchX / hyp
+        players.forEach {
+            val player = playerCMPS[it]
+            if (touchX != 0f && touchY != 0f) {
+                with(moveCmps[it]) {
+                    val deltaX = player.x
+                    val deltaY = player.y
+                    hyp = sqrt(deltaX * deltaX + deltaY * deltaY)
+                    sin = (touchY - deltaY) / hyp
+                    cos = (touchX - deltaX) / hyp
+                }
             }
         }
     }
