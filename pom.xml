@@ -6,8 +6,8 @@
 
     <groupId>org.game</groupId>
     <artifactId>game</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <name>game</name>
+    <version>ALPHA-VERSION</version>
+    <name>Hexagonal 16384</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

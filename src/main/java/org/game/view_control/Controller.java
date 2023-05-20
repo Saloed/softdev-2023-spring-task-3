@@ -62,7 +62,7 @@ public class Controller {
                     tile.setPrefSize(Constants.DIAMETER, Constants.DIAMETER);
                     tile.setLayoutX(x);
                     tile.setLayoutY(y);
-                    tile.setStyle("-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-border-color: black; -fx-border-size: 2; -fx-border-radius: 50%;");
+                    tile.setStyle("-fx-background-color: #ccb69f; -fx-background-radius: 50%;");
                     tile.setAlignment(Pos.CENTER);
                     fieldPane.getChildren().add(tile);
                     x += Constants.DIAMETER;
@@ -108,8 +108,7 @@ public class Controller {
                     int valOfTile = MainLogic.getGrid().getState(q, r);
                     String style = "-fx-background-color: " + Colors.colors.get(valOfTile) +
                             "; -fx-background-radius: 50%; -fx-text-fill: #fafafa; " +
-                            "-fx-font-family: Harpseal; -fx-font-size: " + Constants.DIAMETER * 0.27 + "; -fx-border-color: black;" +
-                            "-fx-border-radius: 50%; -fx-border-size: 2;";
+                            "-fx-font-family: Harpseal; -fx-font-size: " + Constants.DIAMETER * 0.27;
                     gameField[q][r].setStyle(style);
                     if(valOfTile != 0) {
                         gameField[q][r].setText(String.valueOf(valOfTile));
