@@ -7,6 +7,7 @@ enum class AnimationModel {
     player, S, M, B, RP, BP, exps, Default;
 
     val atlasKey: String = this.toString()
+
 }
 
 /*         На будущее
@@ -18,7 +19,7 @@ enum class AnimationType {
 */
 
 enum class AnimationPlaymode {
-    Loop, Normal, Reversed;
+    Loop, Normal;
 
     val key: String = this.toString()
 }
