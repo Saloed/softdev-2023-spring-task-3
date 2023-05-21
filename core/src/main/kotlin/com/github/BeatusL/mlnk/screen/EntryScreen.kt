@@ -35,7 +35,7 @@ class EntryScreen: KtxScreen {
 
         stage.addActor(
             Image(label).apply {
-                setPosition(2f, 9f)
+                setPosition(2.2f, 9f)
                 setSize(4f, 2f)
                 setScaling(Scaling.fill)
             }
