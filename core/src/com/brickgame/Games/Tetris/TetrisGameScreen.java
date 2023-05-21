@@ -22,6 +22,7 @@ public class TetrisGameScreen implements Screen {
     Stage stage;
     Texture gameGrid;
     static Tetromino currentTetromino;
+    public static boolean gameOver;
 
     public TetrisGameScreen(BrickGame gam) {
         game = gam;
@@ -31,7 +32,7 @@ public class TetrisGameScreen implements Screen {
         currentTetromino = new Tetromino(batch, new Piece(MathUtils.random(4, 6), 18), MathUtils.random(6));
         for (Piece p : currentTetromino.tetromino) {
             if (board.board[(int) p.x][(int) p.y] != null) {
-                gameOver();
+                gameOver = true;
                 break;
             }
         }
@@ -43,6 +44,8 @@ public class TetrisGameScreen implements Screen {
         batch = new SpriteBatch();
         board = new Board(batch);
 
+
+        gameOver = false;
         sidePanel = new SidePanel(batch, game);
         Gdx.input.setInputProcessor(stage);
         gameGrid = new Texture(Gdx.files.internal("background.png"));
@@ -69,6 +72,11 @@ public class TetrisGameScreen implements Screen {
         batch.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) game.changeScreen(0); // принудительный выход из игры
+
+        if (gameOver) {
+            game.changeScreen(6);
+            game.endGameSceen.beforeGameScreen = 5;
+        }
     }
 
     @Override
@@ -99,10 +107,7 @@ public class TetrisGameScreen implements Screen {
         gameGrid.dispose();
     }
 
-    public static void gameOver() {
-        game.changeScreen(6);
-        game.endGameSceen.beforeGameScreen = 5;
-    }
+
 }
 
 
