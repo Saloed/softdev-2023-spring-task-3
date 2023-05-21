@@ -1,5 +1,7 @@
 package com.github.BeatusL.mlnk.screen
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Vector2
@@ -75,10 +77,13 @@ class GameScreen: KtxScreen {
         val map = TmxMapLoader().load("map/map.tmx")
         stage.fire(MapChangeEvent(map))
 
-        KeyboardProcessor(rWorld, rWorld.mapper())
-        TouchProcessor(rWorld, rWorld.mapper(), rWorld.mapper(), rWorld.mapper())
+
         spawnEnemy()
         log.debug { "GameScreen shown" }
+
+        Gdx.input.inputProcessor =
+            InputMultiplexer(KeyboardProcessor(rWorld, rWorld.mapper()),
+                TouchProcessor(rWorld, rWorld.mapper(), rWorld.mapper(), rWorld.mapper()))
     }
 
     override fun resize(width: Int, height: Int) {
@@ -114,7 +119,6 @@ class GameScreen: KtxScreen {
         lastSpawnTime = TimeUtils.nanoTime()
         log.debug { "enemy spawned at $x:$y" }
     }
-
 
 
 

@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input.Keys.DOWN
 import com.badlogic.gdx.Input.Keys.LEFT
 import com.badlogic.gdx.Input.Keys.RIGHT
 import com.badlogic.gdx.Input.Keys.UP
-import com.badlogic.gdx.InputMultiplexer
 import com.github.quillraven.fleks.World
 import com.github.BeatusL.mlnk.component.MoveComponent
 import com.github.BeatusL.mlnk.component.PlayerComponent
@@ -20,9 +19,6 @@ class KeyboardProcessor(
     private var cosinus = 0f
     private val player = world.family(allOf = arrayOf(PlayerComponent::class))
 
-    init {
-        Gdx.input.inputProcessor = InputMultiplexer(this)
-    }
 
     private fun updatePlayerMovement() {
         player.forEach { player ->
@@ -64,5 +60,6 @@ class KeyboardProcessor(
         }
        return false
     }
+
 
 }

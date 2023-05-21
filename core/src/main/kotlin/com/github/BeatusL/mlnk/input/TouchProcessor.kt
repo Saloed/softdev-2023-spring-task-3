@@ -1,7 +1,6 @@
 package com.github.BeatusL.mlnk.input
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.InputMultiplexer
+
 import com.github.BeatusL.mlnk.component.ImageComponent
 import com.github.BeatusL.mlnk.component.MoveComponent
 import com.github.BeatusL.mlnk.component.PlayerComponent
@@ -23,9 +22,6 @@ class TouchProcessor (
     private var hyp = 0f
     private val players = world.family(allOf = arrayOf(PlayerComponent::class))
 
-    init {
-        Gdx.input.inputProcessor = InputMultiplexer(this)
-    }
 
     private fun updatePlayerMovement() {
         players.forEach {

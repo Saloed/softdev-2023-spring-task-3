@@ -21,7 +21,7 @@ class MLNK : KtxGame<KtxScreen>() {
     }
 
     override fun render() {
-        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isTouched) &&
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.justTouched()) &&
             (screen == "E" || screen == "R")) {
             addScreen(GameScreen())
             setScreen<GameScreen>()
