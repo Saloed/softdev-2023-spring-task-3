@@ -14,13 +14,22 @@ import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.PLA
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.R_JOYSTICK_POS
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_HEIGHT
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_WIDTH
-import com.github.kot512.surrounded_and_hunted.controls.AimJoystick
-import com.github.kot512.surrounded_and_hunted.controls.MovementJoystick
+import com.github.kot512.surrounded_and_hunted.hud.controls.AimJoystick
+import com.github.kot512.surrounded_and_hunted.hud.controls.MovementJoystick
 import com.github.kot512.surrounded_and_hunted.entities.Player
 import com.github.kot512.surrounded_and_hunted.entities.enemy_manager.EnemyManager
 import ktx.app.KtxScreen
+import ktx.assets.disposeSafely
 
 abstract class BaseLocationScreen : KtxScreen {
+//    настройка кнопок и состояния паузы
+    enum class ScreenState {
+        PAUSED, PLAYING
+    }
+
+
+    //    параметры экрана
+    var state: ScreenState = ScreenState.PLAYING
 //    параметры локации
     abstract val locationTexture: Texture
     abstract val locationWidth: Float
@@ -35,14 +44,15 @@ abstract class BaseLocationScreen : KtxScreen {
     private val batch: SpriteBatch = SpriteBatch()
 
 //    интерфейс
-    private val stage: Stage = Stage(viewport) // сцена, ответственная за рендер UI
+
+    val stage: Stage = Stage(viewport) // сцена, ответственная за рендер UI
     private val movJoystick: MovementJoystick =
         MovementJoystick(L_JOYSTICK_POS)
     private val aimJoystick: AimJoystick =
         AimJoystick(R_JOYSTICK_POS)
 
 //    игровые сущности
-    private val player: Player =
+    val player: Player =
         Player(
             this,
             PLAYER_TXTR,
@@ -50,7 +60,7 @@ abstract class BaseLocationScreen : KtxScreen {
             aimJoystick
         )
 
-    val enemyManager: EnemyManager = EnemyManager( // TODO(сделать абстрактным и для уник. скрина уник. менеджер)
+    val enemyManager: EnemyManager = EnemyManager(
         this, player
     )
 
@@ -82,6 +92,7 @@ abstract class BaseLocationScreen : KtxScreen {
 
     override fun dispose() {
         locationTexture.dispose()
+        stage.disposeSafely()
     }
 
     override fun resume() {

@@ -24,7 +24,7 @@ import java.lang.Float.max
 
 open class BaseImageScreen(
     protected val backgroundTexture: Texture,
-    protected val backgroundPosition: Point = Point(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2),
+    protected val backgroundPosition: Point = Point(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 ) : KtxScreen {
 //    для экрана и графики
     private val batch: SpriteBatch = SpriteBatch()
@@ -60,8 +60,8 @@ open class BaseImageScreen(
 
 //    в метод show необходимо добавить кнопки и их слушатели
     override fun render(delta: Float) {
-        Gdx.gl.glClearColor(.1f, .12f, .16f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0.82353f, 0.27843f, 0.14902f, 1f)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         batch.begin()
         batch.draw(
@@ -78,5 +78,6 @@ open class BaseImageScreen(
 
     override fun dispose() {
         backgroundTexture.dispose()
+        stage.dispose()
     }
 }

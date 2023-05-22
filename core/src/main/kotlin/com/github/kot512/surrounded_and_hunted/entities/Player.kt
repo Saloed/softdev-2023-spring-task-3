@@ -1,14 +1,20 @@
 package com.github.kot512.surrounded_and_hunted.entities
 
-import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.github.kot512.surrounded_and_hunted.controls.AimJoystick
-import com.github.kot512.surrounded_and_hunted.controls.MovementJoystick
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.PLAYER_HP
+import com.github.kot512.surrounded_and_hunted.hud.controls.AimJoystick
+import com.github.kot512.surrounded_and_hunted.hud.controls.MovementJoystick
 import com.github.kot512.surrounded_and_hunted.combat_system.weapons.ProjectileManager
 import com.github.kot512.surrounded_and_hunted.combat_system.weapons.SemiAutomaticBalls
+import com.github.kot512.surrounded_and_hunted.screen.image_screens.DeathImageScreen
+import com.github.kot512.surrounded_and_hunted.screen.image_screens.MainMenuImageScreen
 import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
+import com.github.kot512.surrounded_and_hunted.screen.playable_screens.MainLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
+import ktx.app.KtxGame
+import ktx.app.KtxScreen
 
 class Player(
     screen: BaseLocationScreen,
@@ -19,8 +25,9 @@ class Player(
     screen, characterTexture,
     Point(100f, 100f)
 ) {
+    var maxHealth = PLAYER_HP
+    override var health = maxHealth
     override var movementSpeed = 500f
-    override var health = 100f
     override var damage = 10f
 
     private val combatManager: ProjectileManager =
@@ -39,6 +46,8 @@ class Player(
             originBasedX, originBasedY,
             viewAngle
         )
+
+        if (health <= 0) die()
     }
 
     override fun move(delta: Float) {
@@ -76,15 +85,16 @@ class Player(
         changeViewDirection(delta)
     }
 
-    override fun attack() {
-        TODO("Not yet implemented")
-    }
-
     override fun receiveDamage(damage: Float) {
         health -= damage
     }
 
     override fun die() {
-        TODO("Not yet implemented")
+        (Gdx.app.applicationListener as KtxGame<KtxScreen>).apply {
+            addScreen(DeathImageScreen())
+            setScreen<DeathImageScreen>()
+            removeScreen<MainLocationScreen>()
+        }
+        screen.dispose()
     }
 }

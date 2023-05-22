@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_WIDTH
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.TestLocationScreen
+import com.github.kot512.surrounded_and_hunted.screen.playable_screens.MainLocationScreen
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 

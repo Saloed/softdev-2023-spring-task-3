@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_HEIGHT
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_WIDTH
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.TestLocationScreen
-import com.github.kot512.surrounded_and_hunted.tools.Point
+import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
+import com.github.kot512.surrounded_and_hunted.screen.playable_screens.MainLocationScreen
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 
@@ -27,12 +27,6 @@ class MainMenuImageScreen : BaseImageScreen(
     )
     private val startButtonPressedTexture = TextureRegion(
         SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_begin_button_pressed")
-    )
-    private val slidesButtonTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_slide_button")
-    )
-    private val slidesButtonPressedTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_slide_button_pressed")
     )
     private val upgradeButtonTexture = TextureRegion(
         SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_upgrades_button")
@@ -55,8 +49,8 @@ class MainMenuImageScreen : BaseImageScreen(
             object : ClickListener() {
                 override fun clicked(event: InputEvent, x: Float, y: Float) {
                     (Gdx.app.applicationListener as KtxGame<KtxScreen>).apply {
-                        addScreen(TestLocationScreen())
-                        setScreen<TestLocationScreen>()
+                        addScreen(MainLocationScreen())
+                        setScreen<MainLocationScreen>()
                         removeScreen<MainMenuImageScreen>()
                     }
                     this@MainMenuImageScreen.dispose()
@@ -66,30 +60,6 @@ class MainMenuImageScreen : BaseImageScreen(
         setSize(this.width * 0.3f * scaleCoeff, this.height * 0.3f * scaleCoeff)
         setPosition(SCREEN_WIDTH / 2 - width / 2, SCREEN_HEIGHT / 2 - height / 2)
     }
-
-//    кнопка для перехода на экран смены уровня/слайда
-    private val slidesButtonStyle = TextButtonStyle().apply {
-        font = BitmapFont()
-        up = TextureRegionDrawable(slidesButtonTexture)
-        down = TextureRegionDrawable(slidesButtonPressedTexture)
-        checked = TextureRegionDrawable(slidesButtonPressedTexture)
-    }
-    private val slidesButton: TextButton = TextButton(null, slidesButtonStyle).apply {
-        addListener(
-            object : ClickListener() {
-                override fun clicked(event: InputEvent, x: Float, y: Float) {
-                    (Gdx.app.applicationListener as KtxGame<KtxScreen>).apply {
-                        addScreen(SlidesMenuImageScreen())
-                        setScreen<SlidesMenuImageScreen>()
-                        removeScreen<MainMenuImageScreen>()
-                    }
-                        this@MainMenuImageScreen.dispose()
-                }
-            }
-        )
-            setSize(this.width * 0.3f * scaleCoeff, this.height * 0.3f * scaleCoeff)
-            setPosition(SCREEN_WIDTH / 2 - width / 2, SCREEN_HEIGHT / 2 - 1.5f * height)
-        }
 
 //    кнопка для перехода на экран перманентной прокачки
     private val upgradesButtonStyle = TextButtonStyle().apply {
@@ -103,8 +73,8 @@ class MainMenuImageScreen : BaseImageScreen(
             object : ClickListener() {
                 override fun clicked(event: InputEvent, x: Float, y: Float) {
                     (Gdx.app.applicationListener as KtxGame<KtxScreen>).apply {
-                        addScreen(SlidesMenuImageScreen())
-                        setScreen<SlidesMenuImageScreen>()
+                        addScreen(UpgradesMenuImageScreen())
+                        setScreen<UpgradesMenuImageScreen>()
                         removeScreen<MainMenuImageScreen>()
                     }
                     this@MainMenuImageScreen.dispose()
@@ -112,11 +82,11 @@ class MainMenuImageScreen : BaseImageScreen(
             }
         )
         setSize(this.width * 0.3f * scaleCoeff, this.height * 0.3f * scaleCoeff)
-        setPosition(SCREEN_WIDTH / 2 - width / 2, SCREEN_HEIGHT / 2 - 2.5f * height)
+        setPosition(SCREEN_WIDTH / 2 - width / 2, SCREEN_HEIGHT / 2 - 1.5f * height)
     }
+
     override fun show() {
         stage.addActor(startButton)
-        stage.addActor(slidesButton)
         stage.addActor(upgradesButton)
     }
 }

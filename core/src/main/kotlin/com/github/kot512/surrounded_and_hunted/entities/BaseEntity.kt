@@ -15,7 +15,7 @@ abstract class BaseEntity(
     spawnPosition: Point,
     collisionCoeff: Float = 1f // коэффициент рамера коллизии (0..1)
     ) : Sprite(entityTexture) {
-    protected abstract var health: Float
+    abstract var health: Float
     protected abstract val damage: Float
     protected abstract val movementSpeed: Float
 
@@ -59,7 +59,6 @@ abstract class BaseEntity(
     //    геймплейные функции сущности
     protected abstract fun move(delta: Float)
     protected abstract fun changeViewDirection(delta: Float)
-    protected abstract fun attack()
     abstract fun receiveDamage(damage: Float)
     protected abstract fun die()
 }

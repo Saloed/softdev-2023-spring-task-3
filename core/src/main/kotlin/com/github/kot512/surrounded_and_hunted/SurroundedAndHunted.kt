@@ -1,13 +1,11 @@
 package com.github.kot512.surrounded_and_hunted
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.github.kot512.surrounded_and_hunted.screen.image_screens.MainMenuImageScreen
-import com.github.kot512.surrounded_and_hunted.screen.image_screens.SlidesMenuImageScreen
-import com.github.kot512.surrounded_and_hunted.screen.image_screens.UpgradesMenuImageScreen
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.TestLocationScreen
+import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
+import com.github.kot512.surrounded_and_hunted.screen.playable_screens.MainLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
@@ -31,6 +29,10 @@ class SurroundedAndHunted : KtxGame<KtxScreen>() {
         lateinit var PROJECTILE_BASE_TXTR: TextureRegion
         lateinit var PLAYER_TXTR: TextureRegion
         lateinit var BASIC_ENEMY_TXTR: TextureRegion
+
+        var RECORD_SCORE = 0f
+        var CURRENT_SCORE = 0f
+        var PLAYER_HP = 100f
     }
 
     override fun create() {
@@ -64,8 +66,6 @@ class SurroundedAndHunted : KtxGame<KtxScreen>() {
             )
 
 //        активируем экран главного меню
-//        addScreen(TestLocationScreen())
-//        setScreen<TestLocationScreen>()
         addScreen(MainMenuImageScreen())
         setScreen<MainMenuImageScreen>()
     }

@@ -15,7 +15,7 @@ class EnemyEntity(
     private val player: Player,
 ) : BaseEntity(screen, enemyTexture, spawnPosition) {
     override var health: Float = 100f
-    override val damage: Float = 10f
+    override val damage: Float = 0.5f
     override val movementSpeed: Float = 150f
 
     var disposable: Boolean = false
@@ -28,6 +28,7 @@ class EnemyEntity(
 
     override fun update(delta: Float) {
         move(delta)
+        attack()
     }
 
 //    private fun checkIfHit() {
@@ -60,8 +61,9 @@ class EnemyEntity(
         TODO("Not yet implemented")
     }
 
-    override fun attack() {
-        TODO("Not yet implemented")
+    fun attack() {
+        if (player.collisionBounds.overlapsWith(collisionBounds))
+            player.receiveDamage(damage)
     }
 
     override fun receiveDamage(damage: Float) {
