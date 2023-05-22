@@ -99,7 +99,7 @@ public class ShootGameScreen implements Screen {
 
         // проигрыш
         for (Enemy enemy : enemies) {
-            if (enemy.enemy[3].y <= 0) {
+            if (enemy.enemy[3].getY() <= 0) {
                 game.changeScreen(6);
                 game.endGameSceen.beforeGameScreen = 2;
             }

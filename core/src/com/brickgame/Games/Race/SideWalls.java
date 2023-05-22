@@ -33,8 +33,8 @@ public class SideWalls {
         timeUpdatePosition += Gdx.graphics.getDeltaTime();
         if (timeUpdatePosition >= timeUpdatePositionLimit) {
             for (Piece piece : sideWalls) {
-                piece.y--;
-                if (piece.y < 0) piece.y = 20;
+                piece.setY(piece.getY() - 1);
+                if (piece.getY() < 0) piece.setY(20);
             }
             timeUpdatePosition = 0;
         }

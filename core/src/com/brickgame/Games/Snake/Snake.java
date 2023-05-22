@@ -33,37 +33,32 @@ public class Snake {
         if (timeUpdatePosition >= timeUpdatePositionLimit) {
             // Движение тела змеи
             for (int i = snake.size() - 1; i > 0; i--) {
-                snake.get(i).x = snake.get(i - 1).x;
-                snake.get(i).y = snake.get(i - 1).y;
+                snake.get(i).setX(snake.get(i - 1).getX());
+                snake.get(i).setY(snake.get(i - 1).getY());
             }
 
             // Движение головы змеи
             switch (direction) {
                 case 0:
-                    if (snake.get(0).y < 19) snake.get(0).y++;
-                    else snake.get(0).y = 0;
+                    if (snake.get(0).getY() < 19) snake.get(0).setY(snake.get(0).getY() + 1);
+                    else snake.get(0).setY(0);
                     break;
                 case 1:
-                    if (snake.get(0).x < 9) snake.get(0).x++;
-                    else snake.get(0).x = 0;
+                    if (snake.get(0).getX() < 9) snake.get(0).setX(snake.get(0).getX() + 1);
+                    else snake.get(0).setX(0);
                     break;
                 case 2:
-                    if (snake.get(0).y > 0) snake.get(0).y--;
-                    else snake.get(0).y = 19;
+                    if (snake.get(0).getY() > 0) snake.get(0).setY(snake.get(0).getY() - 1);
+                    else snake.get(0).setY(19);
                     break;
                 case 3:
-                    if (snake.get(0).x > 0) snake.get(0).x--;
-                    else snake.get(0).x = 9;
+                    if (snake.get(0).getX() > 0) snake.get(0).setX(snake.get(0).getX() - 1);
+                    else snake.get(0).setX(9);
                     break;
             }
-            float endX = snake.get(snake.size() - 1).x;
-            float endY = snake.get(snake.size() - 1).y;
-
             // Проверка столкновения головы с яблоком
-            if (snake.get(0).x == apple.apple.x && snake.get(0).y == apple.apple.y) {
-                Piece newPiece = new Piece(endX, endY);
-                newPiece.changeTexture();
-                snake.add(newPiece);
+            if (snake.get(0).getX() == apple.apple.getX() && snake.get(0).getY() == apple.apple.getY()) {
+                snake.add(new Piece(snake.get(snake.size() - 1).getX(), snake.get(snake.size() - 1).getY()));
                 apple.spawnApple();
                 SnakeGameScreen.sidePanel.score.increaseScore();
                 SnakeGameScreen.game.hit.play();
@@ -75,7 +70,7 @@ public class Snake {
     public boolean checkSelfCollision() {
         //проверка на столкновение головы змеи с телом змеи
         for (int i = 1; i < snake.size(); i++) {
-            if (snake.get(0).x == snake.get(i).x && snake.get(0).y == snake.get(i).y) {
+            if (snake.get(0).getX() == snake.get(i).getX() && snake.get(0).getY() == snake.get(i).getY()) {
                 return true;
             }
         }

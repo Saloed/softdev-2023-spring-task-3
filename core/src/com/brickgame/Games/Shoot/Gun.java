@@ -26,11 +26,11 @@ public class Gun {
     public void updatePosition() {
         timeMove += Gdx.graphics.getDeltaTime();
         if (timeMove >= timeMoveLimit) {
-            if (gun.get(gun.size() - 1).x + 1 <= 8 && Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                for (Piece piece : gun) piece.x++;
+            if (gun.get(gun.size() - 1).getX() + 1 <= 8 && Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                for (Piece piece : gun) piece.setX(piece.getX() + 1);
             }
-            if (gun.get(0).x - 1 >= 0 && Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                for (Piece piece : gun) piece.x--;
+            if (gun.get(0).getX() - 1 >= 0 && Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                for (Piece piece : gun) piece.setX(piece.getX() - 1);
             }
             timeMove = 0;
         }
@@ -57,14 +57,14 @@ public class Gun {
     public void iskillEnemy(Enemy enemy) {
         for (Piece e : enemy.enemy) {
             for (Bullet b : bullets) {
-                if (b.bullet.x == e.x && b.bullet.y == e.y) {
+                if (b.bullet.getX() == e.getX() && b.bullet.getY() == e.getY()) {
                     enemy.hp--;
                     ShootGameScreen.game.broke.play();
                     if (enemy.hp == 0) {
                         ShootGameScreen.sidePanel.score.increaseScore();
                         enemy.killed = true;
                     }
-                    b.bullet.y = 30;
+                    b.bullet.setY(30);
                     break;
                 }
             }

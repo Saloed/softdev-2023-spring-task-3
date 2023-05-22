@@ -15,7 +15,7 @@ public class Bullet {
     Bullet(SpriteBatch batch, Gun parent) {
         this.batch = batch;
         this.parent = parent;
-        bullet = new Piece(parent.gun.get(1).x, 2);
+        bullet = new Piece(parent.gun.get(1).getX(), 2);
         needToDelete = false;
     }
 
@@ -23,8 +23,8 @@ public class Bullet {
         timeUpdatePosition += Gdx.graphics.getDeltaTime();
         if (timeUpdatePosition >= timeUpdatePositionLimit) {
             for (Bullet bullet : parent.bullets) {
-                bullet.bullet.y++;
-                if (bullet.bullet.y >= 20) bullet.needToDelete = true;
+                bullet.bullet.setY(bullet.bullet.getY() + 1);
+                if (bullet.bullet.getY() >= 20) bullet.needToDelete = true;
             }
             timeUpdatePosition = 0;
         }

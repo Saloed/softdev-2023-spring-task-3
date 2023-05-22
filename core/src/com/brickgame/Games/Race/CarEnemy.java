@@ -21,14 +21,13 @@ public class CarEnemy {
                 new Piece(centerCar, 23), new Piece(centerCar, 22), new Piece(centerCar, 21),
                 new Piece(centerCar - 1, 22), new Piece(centerCar + 1, 22),
                 new Piece(centerCar - 1, 20), new Piece(centerCar + 1, 20)};
-        for (Piece piece : car) piece.changeTexture();
     }
 
     public void updatePosition() {
         timeUpdatePosition += Gdx.graphics.getDeltaTime();
         if (timeUpdatePosition >= timeUpdatePositionLimit) {
             for (Piece piece : car) {
-                piece.y--;
+                piece.setY(piece.getY() - 1);
             }
             timeUpdatePosition = 0;
         }

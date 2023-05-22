@@ -9,23 +9,41 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Piece {
-    public float x, y;
-    public Texture onTexture = new Texture(Gdx.files.internal("D:\\BrickSim\\assets\\BrickOn.png"));
-    public Texture texturePiece;
+    private float x, y;
+    private  final Texture texturePiece = new Texture(Gdx.files.internal("BrickOn.png"));
 
     public List<Direction> directions;
-    public int distance;
+    private int distance;
 
     public static float SIZE = 32f;
 
     public Piece(float x, float y) {
         this.x = x;
         this.y = y;
-        texturePiece = onTexture;
     }
 
-    public void changeTexture() {
-       texturePiece = onTexture;
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 
     public void setDirection(Direction... directions) {

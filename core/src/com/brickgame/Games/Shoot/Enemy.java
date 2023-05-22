@@ -11,8 +11,8 @@ public class Enemy {
     SpriteBatch batch;
     float timeUpdatePosition, timeUpdatePositionLimit = 0.4f;
     boolean killed;
-    Piece[] enemy; // враг состоит из массива piece
-    int centerX, hp; // центр врага по координате x
+    Piece[] enemy;
+    int centerX, hp;
 
     public Enemy(SpriteBatch batch, int level) {
         this.batch = batch;
@@ -27,34 +27,34 @@ public class Enemy {
         timeUpdatePosition += Gdx.graphics.getDeltaTime();
         if (timeUpdatePosition >= timeUpdatePositionLimit) {
             for (Piece piece : enemy) {
-                piece.y--;
+                piece.setY(piece.getY() - 1);
             }
             // враг рандомно решает, двигаться ли ему в сторону - 1 да, 0 -  нет
-            if (MathUtils.random(1) == 1 && enemy[0].x >= 1 && enemy[1].x <= 8) {
+            if (MathUtils.random(1) == 1 && enemy[0].getX() >= 1 && enemy[1].getX() <= 8) {
                 //если враг не у границы экрана, то он рандомно выбирает сторону движения
                 if (MathUtils.random(1) == 1) {
                     for (Piece piece : enemy) {
-                        piece.x++;
+                        piece.setX(piece.getX() + 1);
                     }
                 } else {
                     for (Piece piece : enemy) {
-                        piece.x--;
+                        piece.setX(piece.getX() - 1);
                     }
                 }
             }
-            if (enemy[0].x < 1) {
-                centerX = 1;
-                enemy[0].x = 0;
-                enemy[1].x = centerX + 1;
-                enemy[2].x = centerX;
-                enemy[3].x = centerX;
+            if (enemy[0].getX() < 1) {
+                centerX = 2;
+                enemy[0].setX(centerX - 1);
+                enemy[1].setX(centerX + 1);
+                enemy[2].setX(centerX);
+                enemy[3].setX(centerX);
             }
-            if (enemy[1].x > 8) {
-                centerX = 8;
-                enemy[0].x = centerX - 1;
-                enemy[1].x = centerX + 1;
-                enemy[2].x = centerX;
-                enemy[3].x = centerX;
+            if (enemy[1].getX() > 8) {
+                centerX = 7;
+                enemy[0].setX(centerX - 1);
+                enemy[1].setX(centerX + 1);
+                enemy[2].setX(centerX);
+                enemy[3].setX(centerX);
             }
             timeUpdatePosition = 0;
         }

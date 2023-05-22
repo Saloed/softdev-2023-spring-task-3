@@ -29,13 +29,13 @@ public class Apple {
             y = MathUtils.random(0, 19);
         } while (isAppleOnSnake(x, y));
 
-        apple.y = y;
-        apple.x = x;
+        apple.setY(y);
+        apple.setX(x);
     }
 
     private boolean isAppleOnSnake(int x, int y) {
         for (Piece piece : snake.snake) {
-            if (piece.x == x && piece.y == y) {
+            if (piece.getX() == x && piece.getY() == y) {
                 return true;
             }
         }

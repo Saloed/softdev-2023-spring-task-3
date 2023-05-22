@@ -10,6 +10,7 @@ public class Ball {
     Piece ball;
     SpriteBatch batch;
     float timeUpdatePosition, timeUpdatePositionLimit = 0.2f;
+
     Ball(SpriteBatch batch, float x, float y, float dx, float dy) {
         ball = new Piece(x, y);
         this.batch = batch;
@@ -20,28 +21,28 @@ public class Ball {
     public void updatePosition(Platform platform) {
         timeUpdatePosition += Gdx.graphics.getDeltaTime();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
-            ball.y = 1;
+            ball.setY(1);
             dy = 1;
-            ball.x = platform.platform[platform.platform.length / 2].x;
+            ball.setX(platform.platform[platform.platform.length / 2].getX());
         }
         if (timeUpdatePosition >= timeUpdatePositionLimit) {
-            ball.x += dx;
-            ball.y += dy;
+            ball.setX(ball.getX() + dx);
+            ball.setY(ball.getY() + dy);
 
             // Проверяем столкновение с границами экрана
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
                 timeUpdatePositionLimit = 1 / 30f;
             } else timeUpdatePositionLimit = 0.2f;
-            if (ball.x <= 0 || ball.x >= 9) {
+            if (ball.getX() <= 0 || ball.getX() >= 9) {
                 dx = -dx;
                 ArcanoidGameScreen.game.hit.play();
-                if (ball.x < 0) ball.x = 0;
-                else if (ball.x > 9) ball.x = 9;
+                if (ball.getX() < 0) ball.setX(0);
+                else if (ball.getX() > 9) ball.setX(9);
             }
-            if (ball.y >= 19) {
+            if (ball.getY() >= 19) {
                 dy = -dy;
                 ArcanoidGameScreen.game.hit.play();
-                ball.y = 19;
+                ball.setY(19);
             }
             checkCollisionPlatform(platform);
             timeUpdatePosition = 0;
@@ -55,20 +56,20 @@ public class Ball {
 
     public void checkCollisionPlatform(Platform platform) {
         for (Piece piece : platform.platform) {
-            if (ball.y == 1 && piece.x == ball.x && dy < 0) {
+            if (ball.getY() == 1 && piece.getX() == ball.getX() && dy < 0) {
                 dy = -dy;
                 ArcanoidGameScreen.game.hit.play();
                 break;
             }
             //проверяем падения шарика на правый уголок платформы
-            if (ball.y == 1 && ball.x + 1 == platform.platform[0].x && dy < 0 && dx > 0) {
+            if (ball.getY() == 1 && ball.getX() + 1 == platform.platform[0].getX() && dy < 0 && dx > 0) {
                 dy = -dy;
                 dx = -dx;
                 ArcanoidGameScreen.game.hit.play();
                 break;
             }
             // проверяем падения шарика на левый уголок платформы
-            if (ball.y == 1 && ball.x - 1 == platform.platform[platform.platform.length - 1].x && dy < 0 && dx < 0) {
+            if (ball.getY() == 1 && ball.getX() - 1 == platform.platform[platform.platform.length - 1].getX() && dy < 0 && dx < 0) {
                 dy = -dy;
                 dx = -dx;
                 ArcanoidGameScreen.game.hit.play();
@@ -82,10 +83,10 @@ public class Ball {
 
         // проверка столкновений сверху/снизу/справа/слева
         for (Piece block : blocks.blocks) {
-            if ((ball.y + 1 == block.y || ball.y - 1 == block.y) && block.x == ball.x) {
+            if ((ball.getY() + 1 == block.getY() || ball.getY() - 1 == block.getY()) && block.getX() == ball.getX()) {
                 dy = -dy;
                 flag = true;
-            } else if ((ball.x + 1 == block.x || ball.x - 1 == block.x) && block.y == ball.y) {
+            } else if ((ball.getX() + 1 == block.getX() || ball.getX() - 1 == block.getX()) && block.getY() == ball.getY()) {
                 dx = -dx;
                 flag = true;
             }
@@ -99,7 +100,7 @@ public class Ball {
         // проверка столкновений по диагонали
         if (!flag) {
             for (Piece block : blocks.blocks) {
-                if (ball.y + dy == block.y && ball.x + dx == block.x) {
+                if (ball.getY() + dy == block.getY() && ball.getX() + dx == block.getX()) {
                     dx = -dx;
                     dy = -dy;
                     ArcanoidGameScreen.game.broke.play();

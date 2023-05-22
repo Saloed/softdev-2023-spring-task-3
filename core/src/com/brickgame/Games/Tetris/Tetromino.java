@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Tetromino {
 
     Piece centerTetromino;
-    static float TIME_MOVE, TIME_MOVE_LIMIT = 0.5f;
+    static float TIME_MOVE, TIME_MOVE_LIMIT = 0.6f;
 
     ArrayList<Piece> tetromino;
     int type;
@@ -18,7 +18,7 @@ public class Tetromino {
     public SpriteBatch batch;
 /*
 
-
+// Цифра - индекс ячейки в фигуре, 0 - центральная.
 T:
 102
  3
@@ -82,11 +82,11 @@ Z:
         tetromino.add(centerTetromino);
         this.centerTetromino = centerTetromino;
         for (int i = 0; i < directions[type].length; i++) {
-            int x = (int) (centerTetromino.x + directions[type][i].x * distances[type][i]);
-            int y = (int) (centerTetromino.y + directions[type][i].y * distances[type][i]);
+            int x = (int) (centerTetromino.getX() + directions[type][i].x * distances[type][i]);
+            int y = (int) (centerTetromino.getY() + directions[type][i].y * distances[type][i]);
             Piece piece = new Piece(x, y);
             piece.setDirection(directions[type][i]);
-            piece.distance = distances[type][i];
+            piece.setDistance(distances[type][i]);
             tetromino.add(piece);
         }
     }
@@ -94,15 +94,15 @@ Z:
     public void move() {
         TIME_MOVE += Gdx.graphics.getDeltaTime();
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && canMoveLeft()) {
-            centerTetromino.x--;
+            centerTetromino.setX(centerTetromino.getX() - 1);
             updateTetrimino();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && canMoveRight()) {
-            centerTetromino.x++;
+            centerTetromino.setX(centerTetromino.getX() + 1);
             updateTetrimino();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && canMoveDown()) {
-            centerTetromino.y--;
+            centerTetromino.setY(centerTetromino.getY() - 1);
             updateTetrimino();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
@@ -111,7 +111,7 @@ Z:
         if (TIME_MOVE >= TIME_MOVE_LIMIT) {
             if (canMoveDown()) {
                 for (Piece piece : tetromino) {
-                    piece.y--;
+                    piece.setY(piece.getY() - 1);
                 }
                 updateTetrimino();
             } else {
@@ -127,7 +127,7 @@ Z:
 
     private boolean canMoveLeft() {
         for (Piece piece : tetromino) {
-            if (piece.x - 1 < 0 || TetrisGameScreen.board.board[(int) piece.x - 1][(int) piece.y] != null) {
+            if (piece.getX() - 1 < 0 || TetrisGameScreen.board.board[(int) piece.getX() - 1][(int) piece.getY()] != null) {
                 return false; // Не может двигаться влево, если достигнута левая граница экрана или есть другая фигура
             }
         }
@@ -137,7 +137,7 @@ Z:
 
     private boolean canMoveRight() {
         for (Piece piece : tetromino) {
-            if (piece.x + 1 >= 10 || TetrisGameScreen.board.board[(int) piece.x + 1][(int) piece.y] != null) {
+            if (piece.getX() + 1 > 9 || TetrisGameScreen.board.board[(int) piece.getX() + 1][(int) piece.getY()] != null) {
                 return false; // Не может двигаться вправо, если достигнута правая граница экрана
             }
         }
@@ -146,7 +146,7 @@ Z:
 
     private boolean canMoveDown() {
         for (Piece piece : tetromino) {
-            if (piece.y - 1 < 0 || TetrisGameScreen.board.board[(int) piece.x ][(int) piece.y - 1] != null) {
+            if (piece.getY() - 1 < 0 || TetrisGameScreen.board.board[(int) piece.getX()][(int) piece.getY() - 1] != null) {
                 return false; // Не может двигаться вниз, если достигнута нижняя граница экрана
             }
         }
@@ -165,7 +165,7 @@ Z:
         boolean canRotate = true;
         for (Piece piece : tempTetromino.tetromino) {
 
-            if (piece.x < 0 || piece.x >= 9 || piece.y < 0 || TetrisGameScreen.board.board[(int) piece.x][(int) piece.y] != null) {
+            if (piece.getX() < 0 || piece.getX() >= 9 || piece.getY() < 0 || TetrisGameScreen.board.board[(int) piece.getX()][(int) piece.getY()] != null) {
                 canRotate = false;
                 break;
             }
@@ -186,11 +186,11 @@ Z:
             int dx = 0, dy = 0;
 
             for (Direction d : tetromino.get(i).directions) {
-                dx += tetromino.get(i).distance * d.x;
-                dy += tetromino.get(i).distance * d.y;
+                dx += tetromino.get(i).getDistance() * d.x;
+                dy += tetromino.get(i).getDistance() * d.y;
             }
-            tetromino.get(i).x = centerTetromino.x + dx;
-            tetromino.get(i).y = centerTetromino.y + dy;
+            tetromino.get(i).setX(centerTetromino.getX() + dx);
+            tetromino.get(i).setY(centerTetromino.getY() + dy);
         }
     }
 

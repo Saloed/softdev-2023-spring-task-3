@@ -31,7 +31,7 @@ public class TetrisGameScreen implements Screen {
     public static void createNewTetromino() {
         currentTetromino = new Tetromino(batch, new Piece(MathUtils.random(4, 6), 18), MathUtils.random(6));
         for (Piece p : currentTetromino.tetromino) {
-            if (board.board[(int) p.x][(int) p.y] != null) {
+            if (board.board[(int) p.getX()][(int) p.getY()] != null) {
                 gameOver = true;
                 break;
             }

@@ -16,7 +16,7 @@ public class Board {
 
     public void setTetromino(Tetromino tetromino) {
         for (Piece piece : tetromino.tetromino) {
-            board[(int) piece.x][(int) piece.y] = new Piece(piece.x, piece.y);
+            board[(int) piece.getX()][(int) piece.getY()] = new Piece(piece.getX(), piece.getY());
         }
     }
 
@@ -25,7 +25,7 @@ public class Board {
             for (int x = 0; x < 10; x++) {
                 board[x][y] = board[x][y + 1];
                 if (board[x][y] != null) {
-                    board[x][y].y--; // Обновляем координату y объекта Piece после перемещения
+                    board[x][y].setY(board[x][y].getY()- 1); // Обновляем координату y объекта Piece после перемещения
                 }
             }
         }

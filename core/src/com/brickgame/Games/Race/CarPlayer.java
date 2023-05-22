@@ -25,21 +25,21 @@ public class CarPlayer {
     }
 
     public void updatePosition() {
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && car[0].x == 6) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && car[0].getX() == 6) {
             for (Piece piece : car) {
-                piece.x -= 3;
+                piece.setX(piece.getX() - 3);
             }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && car[0].x == 3) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && car[0].getX() == 3) {
             for (Piece piece : car) {
-                piece.x += 3;
+                piece.setX(piece.getX() + 3);
             }
         }
     }
 
     public boolean checkCrash(ArrayList<CarEnemy> carEnemies) {
         for (CarEnemy carEnemy : carEnemies) {
-            if (carEnemy.car[0].x == car[0].x && carEnemy.car[6].y <= car[0].y) {
+            if (carEnemy.car[0].getX() == car[0].getX() && carEnemy.car[6].getY() <= car[0].getY()) {
                 return true;
             }
         }
@@ -48,7 +48,7 @@ public class CarPlayer {
 
     public void deleteCarEnemy(ArrayList<CarEnemy> carEnemies) {
         for (int i = carEnemies.size() - 1; i >= 0; --i) {
-            if (carEnemies.get(i).car[0].y < 0) {
+            if (carEnemies.get(i).car[0].getY() < 0) {
                 carEnemies.remove(i);
                 RaceGameScreen.game.hit.play();
                 RaceGameScreen.sidePanel.score.increaseScore();

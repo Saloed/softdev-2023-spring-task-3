@@ -28,14 +28,13 @@ public class ArcanoidGameScreen implements Screen {
 
     @Override
     public void show() {
+        batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
-        batch = new SpriteBatch();
-
         gameGrid = new Texture(Gdx.files.internal("background.png"));
         blocks = new Blocks(batch);
         platform = new Platform(batch, 4, 0, 3);
-        ball = new Ball(batch, platform.platform[platform.platform.length / 2].x, 1, 1, 1);
+        ball = new Ball(batch, platform.platform[platform.platform.length / 2].getX(), 1, 1, 1);
         sidePanel = new SidePanel(batch, game);
 
         stage.addActor(sidePanel.musicButton);
@@ -67,13 +66,13 @@ public class ArcanoidGameScreen implements Screen {
         // переход на следующий уровень
         if (blocks.blocks.size() == 0) {
             platform = new Platform(batch, 4, 0, 3);
-            ball = new Ball(batch, platform.platform[platform.platform.length / 2].x, 1, 1, 1);
+            ball = new Ball(batch, platform.platform[platform.platform.length / 2].getX(), 1, 1, 1);
             blocks.changeLevel();
             sidePanel.levelLabel.setText(("Level: " + blocks.level));
         }
 
         // проигрыш
-        if (ball.ball.y < 0) {
+        if (ball.ball.getY() < 0) {
             game.changeScreen(6);
             game.endGameSceen.beforeGameScreen = 1;
         }

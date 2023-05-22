@@ -25,16 +25,16 @@ public class Platform {
         timeStep += Gdx.graphics.getDeltaTime();
         if (timeStep >= 0.1f) {
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                if (platform[platform.length - 1].x + 1 <= 9) {
+                if (platform[platform.length - 1].getX() + 1 <= 9) {
                     for (Piece piece : platform) {
-                        piece.x++;
+                        piece.setX(piece.getX() + 1);
                     }
                 }
             }
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                if (platform[0].x - 1 >= 0) {
+                if (platform[0].getX() - 1 >= 0) {
                     for (Piece piece : platform) {
-                        piece.x--;
+                        piece.setX(piece.getX() - 1);
                     }
                 }
             }

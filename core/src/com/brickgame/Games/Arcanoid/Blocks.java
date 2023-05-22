@@ -9,7 +9,6 @@ import java.util.Arrays;
 
 public class Blocks {
     SpriteBatch batch;
-
     ArrayList<Piece> blocks;
     public int level;
     ArrayList<Piece> heart = new ArrayList<>(
