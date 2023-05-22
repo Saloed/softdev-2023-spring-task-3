@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.jetbrains:annotations:20.1.0'
+
+    // Use JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'UI.Window'
+}
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+jar {
+    manifest {
+        attributes(
+                "Main-Class": application.mainClass
+        )
+    }
+}
+
+task createJar(type: Jar) {
+    baseName = 'my-app'
+    version = '1.0'
+    manifest {
+        attributes 'Main-Class': application.mainClass
+    }
+
+    from {
+        configurations.compileClasspath.filter { it.exists() }.collect {
+            zipTree(it)
+        } + sourceSets.main.output
+    }
+}
