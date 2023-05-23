@@ -1,8 +1,7 @@
 package com.brickgame.Games.Arcanoid;
 
 import com.brickgame.Games.Piece;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Ball {

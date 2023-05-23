@@ -4,8 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.brickgame.Games.Piece;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class Blocks {
     SpriteBatch batch;

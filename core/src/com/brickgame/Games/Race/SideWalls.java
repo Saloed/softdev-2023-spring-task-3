@@ -4,8 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.brickgame.Games.Piece;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class SideWalls {
     SpriteBatch batch;

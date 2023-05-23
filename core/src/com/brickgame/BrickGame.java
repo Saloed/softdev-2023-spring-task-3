@@ -5,11 +5,12 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.brickgame.Games.Arcanoid.ArcanoidGameScreen;
 import com.badlogic.gdx.Game;
-import com.brickgame.Games.EndGameSceen;
+import com.brickgame.Games.*;
 import com.brickgame.Games.Race.RaceGameScreen;
-import com.brickgame.Games.Snake.SnakeGameScreen;
 import com.brickgame.Games.Shoot.ShootGameScreen;
+import com.brickgame.Games.Snake.SnakeGameScreen;
 import com.brickgame.Games.Tetris.TetrisGameScreen;
+
 
 public class BrickGame  extends Game {
 

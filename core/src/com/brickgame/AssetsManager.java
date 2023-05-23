@@ -1,9 +1,8 @@
 package com.brickgame;
 
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.*;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class AssetsManager {

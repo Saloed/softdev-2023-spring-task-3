@@ -1,6 +1,5 @@
 package com.brickgame.Games;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.brickgame.Games.Tetris.Direction;
@@ -10,7 +9,7 @@ import java.util.List;
 
 public class Piece {
     private float x, y;
-    private  final Texture texturePiece = new Texture(Gdx.files.internal("BrickOn.png"));
+    private final Texture texturePiece;
 
     public List<Direction> directions;
     private int distance;
@@ -20,6 +19,7 @@ public class Piece {
     public Piece(float x, float y) {
         this.x = x;
         this.y = y;
+        texturePiece = new Texture("BrickOn.png");
     }
 
     public float getX() {

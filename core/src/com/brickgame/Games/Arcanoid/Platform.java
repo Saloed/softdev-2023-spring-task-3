@@ -1,8 +1,7 @@
 package com.brickgame.Games.Arcanoid;
 
 import com.brickgame.Games.Piece;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Platform {
@@ -12,7 +11,7 @@ public class Platform {
     // x, y - координаты первой слева ячейки, она - начало отсчета для платформы(ячейка начала)
     // width - ширина платформы - кол-во ячеек от начала, включая ячейку начала
 
-    Platform(SpriteBatch batch, int x, int y, int width) {
+    public Platform(SpriteBatch batch, int x, int y, int width) {
         platform = new Piece[width];
         for (int i = 0; i < width; i++) {
             Piece piece = new Piece(i + x, y);
