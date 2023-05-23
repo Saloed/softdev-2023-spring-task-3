@@ -1,9 +1,23 @@
 package tools;
 
+
+import com.mokiat.data.front.parser.OBJTexCoord;
+import com.mokiat.data.front.parser.OBJVertex;
+
 public class Vertex {
     double x; double y; double z;
 
-    public Vertex() {};
+    public Vertex() {}
+    public Vertex(OBJTexCoord texCoord){
+        this.x = texCoord.u;
+        this.y = texCoord.v;
+        this.z = texCoord.w;
+    }
+    public Vertex(OBJVertex vertex){
+        this.x = vertex.x;
+        this.y = vertex.y;
+        this.z = vertex.z;
+    }
 
     public Vertex(double x, double y, double z){
         this.x = x;
@@ -36,8 +50,7 @@ public class Vertex {
         double[][] array = {{cosines, -sinus, 0.0}, {sinus, cosines, 0.0}, {0.0, 0.0, 1.0}};
         Matrix transformation = new Matrix(array);
         Matrix res = oldVer.getMatrix().multiply(transformation);
-        Vertex newVer = new Vertex(res);
-        return newVer;
+        return new Vertex(res);
 
     }
     public Vertex transformationXZ(Vertex oldVer, double angle){
@@ -47,8 +60,7 @@ public class Vertex {
         double[][] array = {{cosines, 0, -sinus}, {0, 1.0, 0}, {sinus, 0, cosines}};
         Matrix transformation = new Matrix(array);
         Matrix res = oldVer.getMatrix().multiply(transformation);
-        Vertex newVer = new Vertex(res);
-        return newVer;
+        return new Vertex(res);
     }
 
     public Vertex transformationYZ(Vertex oldVer, double angle){
@@ -58,8 +70,7 @@ public class Vertex {
         double[][] array = {{1, 0, 0}, {0, cosines, sinus}, {0, -sinus, cosines}};
         Matrix transformation = new Matrix(array);
         Matrix res = oldVer.getMatrix().multiply(transformation);
-        Vertex newVer = new Vertex(res);
-        return newVer;
+        return new Vertex(res);
     }
     @Override
     public boolean equals(Object o){
@@ -71,5 +82,9 @@ public class Vertex {
         }
         Vertex vertex = (Vertex) o;
         return this.x == vertex.x && this.y == vertex.y && this.z == vertex.z;
+    }
+    @Override
+    public int hashCode() {
+        return (int) (31 * x + 31* y + 31 * z);
     }
 }

@@ -1,13 +1,13 @@
-package ModelThings;
+package modelThings;
 
-import org.lwjgl.util.vector.Vector3f;
 import tools.Vertex;
+import com.mokiat.data.front.parser.OBJNormal;
 
 
 public class Face {
     public Vertex vertex;
-    public Vector3f normals;
-    public Face(Vertex vertex, Vector3f normals){
+    public  OBJNormal normals;
+    public Face(Vertex vertex, OBJNormal normals){
         this.normals = normals;
         this.vertex = vertex;
     }
@@ -21,6 +21,10 @@ public class Face {
         }
         Face f = (Face) o;
         return f.vertex == this.vertex && f.normals == this.normals;
+    }
+    @Override
+    public int hashCode() {
+        return 31 * vertex.hashCode() + 31 * normals.hashCode();
     }
 
 }

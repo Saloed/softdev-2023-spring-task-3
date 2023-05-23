@@ -1,4 +1,4 @@
-package Light;
+package lightThings;
 
 public class Ray {
     double angle;
