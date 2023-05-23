@@ -25,7 +25,6 @@ public class GameDisplay {
         frame.setMinimumSize(DisplayConfig.MIN_WINDOW_SIZE);
 
 
-
         // Создает панель с кнопками
         GamePanel gamePanel = new GamePanel(board, game);
         gamePanel.setOpaque(false);
@@ -35,7 +34,7 @@ public class GameDisplay {
         buttons.addNewGameListener(gamePanel);
         buttons.addRemoveStoneListener(new RemoveStoneListener(game, board, gamePanel));
         buttons.addSaveGameListener(new SaveGameListener(game));
-        buttons.addPassMoveListener(new PassMoveListener(game));
+        buttons.addPassMoveListener(new PassMoveListener(game, board));
         buttons.addLoveButtonListener(new LoveButtonListener());
         buttons.addOpenGameListener(new OpenGameListener(game, gamePanel));
 

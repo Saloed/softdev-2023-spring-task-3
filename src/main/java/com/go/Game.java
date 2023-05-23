@@ -9,7 +9,8 @@ public class Game implements IGame {
 
     private final Board board; // Состояние доски
     private Color currentPlayer; // Текущий игрок
-    public Stone lastFixedStone; // Предыдущий игрок
+    private Color previousPlayer; // Предыдущий игрок
+    public Stone lastFixedStone; // Предыдущий установленный камень
 
     public Game(Board board) {
         this.board = board;
@@ -38,6 +39,7 @@ public class Game implements IGame {
     // Меняет цвет текущего игрока
     @Override
     public void turn() {
+        previousPlayer = currentPlayer;
         currentPlayer = (currentPlayer == Color.BLACK) ? Color.WHITE : Color.BLACK;
     }
 
@@ -69,6 +71,11 @@ public class Game implements IGame {
     // Метод, который возвращает текущего игрока
     public Color getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    @Override
+    public Color getPreviousPlayer() {
+        return previousPlayer;
     }
 
     // Метод, который сохраняет игру в файл

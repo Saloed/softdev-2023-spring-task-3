@@ -14,5 +14,4 @@ interface IGame {
     Stone[][] getBoardContent(Board board);
 
     int getBoardSize();
-
 }
