@@ -1,8 +1,7 @@
 package com.go;
 
 interface IBoard {
-    void addStone(Stone stone, Game game);
-
+    boolean addStone(Stone stone);
     void removeStone(Stone stone);
 
     void clearBoard();
@@ -15,4 +14,7 @@ interface IBoard {
 
     boolean isValidYBoundary(int y);
 
+    void setPositions(Stone[][] positions);
+
+    Stone[][] getPositions();
 }

@@ -4,14 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 
-import static com.go.Board.BOARD_SIZE;
 
 public class Game implements IGame {
-    private final Board board; // Состояние доски
-    private Color currentPlayer;
-    public Stone previousPlayer;
 
-    // Конструктор
+    private final Board board; // Состояние доски
+    private Color currentPlayer; // Текущий игрок
+    public Stone lastFixedStone; // Предыдущий игрок
+
     public Game(Board board) {
         this.board = board;
         currentPlayer = Color.BLACK;
@@ -24,32 +23,52 @@ public class Game implements IGame {
         currentPlayer = Color.BLACK;
     }
 
+    // Метод, который добавляет камень на доску
+    @Override
+    public boolean addStoneByCords(int x, int y) {
+        Stone stone = new Stone(currentPlayer, x, y);
+        if (board.addStone(stone)) {
+            lastFixedStone = stone;
+            turn();
+            return true;
+        }
+        return false;
+    }
+
+    // Меняет цвет текущего игрока
+    @Override
+    public void turn() {
+        currentPlayer = (currentPlayer == Color.BLACK) ? Color.WHITE : Color.BLACK;
+    }
+
+    // Возвращает состояние игровой доски
+    @Override
+    public Stone[][] getBoardContent(Board board) {
+        return board.getPositions();
+    }
+
+    // Возвращает размер доски
+    @Override
+    public int getBoardSize() {
+        return Board.BOARD_SIZE;
+    }
+
     // Метод, который сохраняет игру
     @Override
     public void saveGame() {
-        saveArrayToFile(board.positions);
+        saveArrayToFile(board.getPositions());
     }
 
     // Метод, который возвращает сохраненную игру
     @Override
     public void returnGame() {
-        board.positions = loadArrayFromFile();
-    }
-
-    // Метод, который меняет текущего игрока после хода
-    @Override
-    public void move() {
-        currentPlayer = (currentPlayer == Color.BLACK) ? Color.WHITE : Color.BLACK;
+        Stone[][] loadedStones = loadArrayFromFile();
+        board.setPositions(loadedStones);
     }
 
     // Метод, который возвращает текущего игрока
     public Color getCurrentPlayer() {
         return currentPlayer;
-    }
-
-    // Метод, который возвращает предыдущего игрока
-    public Stone getPreviousPlayer() {
-        return previousPlayer;
     }
 
     // Метод, который сохраняет игру в файл
@@ -81,11 +100,12 @@ public class Game implements IGame {
         }
     }
 
+    // Метод, который возвращает игру из файла
     private Stone[][] loadArrayFromFile() {
         JFileChooser fileChooser = new JFileChooser("./Save games");
         int result = fileChooser.showOpenDialog(null);
         if (result != JFileChooser.APPROVE_OPTION) {
-            return board.positions;
+            return board.getPositions();
         }
 
         File selectedFile = fileChooser.getSelectedFile();
@@ -108,7 +128,7 @@ public class Game implements IGame {
             return savePositions;
         } catch (IOException e) {
             e.printStackTrace();
-            return new Stone[BOARD_SIZE][BOARD_SIZE];
+            return new Stone[getBoardSize()][getBoardSize()];
         }
     }
 }

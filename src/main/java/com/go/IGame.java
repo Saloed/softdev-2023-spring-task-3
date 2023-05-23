@@ -5,7 +5,14 @@ interface IGame {
 
     void saveGame();
 
-    void move();
-
     void returnGame();
+
+    boolean addStoneByCords(int x, int y);
+
+    void turn();
+
+    Stone[][] getBoardContent(Board board);
+
+    int getBoardSize();
+
 }

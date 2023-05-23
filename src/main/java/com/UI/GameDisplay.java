@@ -5,21 +5,19 @@ import com.go.*;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.go.Board.BOARD_SIZE;
+import static com.UI.DisplayConfig.FON;
 
 public class GameDisplay {
 
 
     public GameDisplay() {
-        ICheckSurvivalGroupRule checkLibertiesGroup = new LibertiesSurvivalRule();
-        ICheckSurvivalGroupRule checkSameColor = new SameColorSurvivalRule();
-        Board board = new Board(checkLibertiesGroup, checkSameColor, BOARD_SIZE); // Создает игровое поле
+        Board board = new Board(); // Создает игровое поле
         Game game = new Game(board); // Создает игру
 
         // Создает фрейм
         JFrame frame = new JFrame("StrateGO");
         JLabel background = new JLabel();
-        background.setIcon(new ImageIcon(new ImageIcon("fon7.jpeg").getImage()));
+        background.setIcon(FON);
         background.setLayout(new BorderLayout());
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

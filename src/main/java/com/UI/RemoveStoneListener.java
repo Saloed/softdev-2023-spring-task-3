@@ -9,7 +9,7 @@ class RemoveStoneListener implements GameButtonsControlPanel.RemoveStoneListener
     private final Game game;
     private final GamePanel gamePanel;
 
-    RemoveStoneListener(Game game, Board board, GamePanel gamePanel) {
+    public RemoveStoneListener(Game game, Board board, GamePanel gamePanel) {
         this.board = board;
         this.game = game;
         this.gamePanel = gamePanel;
@@ -17,8 +17,8 @@ class RemoveStoneListener implements GameButtonsControlPanel.RemoveStoneListener
 
     @Override
     public void onRemoveStoneClick() {
-        board.removeStone(game.getPreviousPlayer());
+        board.removeStone(game.lastFixedStone);
         gamePanel.repaint();
-        game.move();
+        game.turn();
     }
 }

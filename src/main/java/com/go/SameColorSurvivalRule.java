@@ -7,47 +7,38 @@ import java.util.List;
 import java.util.Set;
 
 public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
-    private Set<Stone> visitedPositions;
+
+    private final Set<Stone> visitedPositions = new HashSet<>();
+    private final List<Stone> stoneGroup = new ArrayList<>();
+    private Color colorGroup;
 
     @Override
     public boolean check(Stone stone, Board board) {
+        colorGroup = stone.color();
         // Находит группу камней, к которой принадлежит переданный stone
         List<Stone> stoneGroup = findStoneGroup(stone, board);
         LibertiesSurvivalRule libertiesSurvivalRule = new LibertiesSurvivalRule();
-
-        // Проверяет, имеет ли группа камней хотя бы одну свободу с помощью правила LibertiesSurvivalRule
-        boolean hasSameColor = stoneGroup.stream().anyMatch(groupStone -> libertiesSurvivalRule.check(groupStone, board));
-
-        // Если группа не имеет свободы, удаляем все камни группы с игрового поля
-        if (!hasSameColor) {
-            removeStones(stoneGroup, board);
-        }
-
-        // Возвращает результат: имеет ли группа камней хотя бы одну свободу
-        return hasSameColor;
+        /*Проверяет, имеет ли группа камней хотя бы одну свободу с помощью правила LibertiesSurvivalRule и
+        возвращает результат: имеет ли группа камней хотя бы одну свободу*/
+        return stoneGroup.stream().anyMatch(groupStone -> libertiesSurvivalRule.check(groupStone, board));
     }
 
     // Поиск группы камней
     private List<Stone> findStoneGroup(Stone stone, Board board) {
-        visitedPositions = new HashSet<>();
-        List<Stone> stoneGroup = new ArrayList<>();
-        Color colorGroup = stone.color();
 
         // Находит все связанные камни в группе
-        findConnectedStones(stone.x(), stone.y(), stoneGroup, colorGroup, board);
-
+        findConnectedStones(stone.x(), stone.y(), board);
         // Возвращает список камней, принадлежащих группе
         return stoneGroup;
     }
 
     // Рекурсивно ищет все связанные в группу камни
-    private void findConnectedStones(int x, int y, List<Stone> stoneGroup, Color colorGroup, Board board) {
+    private void findConnectedStones(int x, int y, Board board) {
         Stone position = board.getPosition(x, y);
 
-        // Если текущая позиция пустая, уже посещена, имеет другой цвет или
-        // уже присутствует в группе, выходим из цикла
+        // Если текущая позиция пустая, уже посещена или имеет другой цвет выходим из цикла
         if (position == null || visitedPositions.contains(position) ||
-                position.color() != colorGroup || stoneGroup.contains(position)) {
+                position.color() != colorGroup) {
             return;
         }
 
@@ -57,27 +48,16 @@ public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
 
         // Рекурсивно ищет соседей
         if (board.isValidXBoundary(x - 1)) {
-            findConnectedStones(x - 1, y, stoneGroup, colorGroup, board);
+            findConnectedStones(x - 1, y, board);
         }
         if (board.isValidXBoundary(x + 1)) {
-            findConnectedStones(x + 1, y, stoneGroup, colorGroup, board);
+            findConnectedStones(x + 1, y, board);
         }
         if (board.isValidYBoundary(y - 1)) {
-            findConnectedStones(x, y - 1, stoneGroup, colorGroup, board);
+            findConnectedStones(x, y - 1, board);
         }
         if (board.isValidYBoundary(y + 1)) {
-            findConnectedStones(x, y + 1, stoneGroup, colorGroup, board);
-        }
-    }
-    // Метод осуществляющий удаление группы камней
-    private void removeStones(List<Stone> stoneGroup, Board board) {
-        List<Stone> stonesToRemove = new ArrayList<>(stoneGroup);
-
-        for (Stone stone : stonesToRemove) {
-            board.removeStone(stone);
+            findConnectedStones(x, y + 1, board);
         }
     }
 }
-
-// Нахуя из геймдисплея передавать классы
-// как заставить этот ебанный класс работать

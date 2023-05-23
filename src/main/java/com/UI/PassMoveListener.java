@@ -18,9 +18,9 @@ class PassMoveListener implements GameButtonsControlPanel.PassMoveListener {
     public void onPassMoveClick() {
         Color currentPlayer = game.getCurrentPlayer();
         k++;
-        game.move();
+        game.turn();
 
-        if (currentPlayer != game.getPreviousPlayer().color()) {
+        if (currentPlayer != game.lastFixedStone.color()) {
             k = 0;
         }
 

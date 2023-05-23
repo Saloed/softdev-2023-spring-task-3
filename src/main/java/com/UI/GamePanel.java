@@ -7,9 +7,6 @@ import com.go.Stone;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.Queue;
-
-import static com.go.Board.BOARD_SIZE;
 
 class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListener {
 
@@ -18,13 +15,11 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
 
     private final Board board;
     private final Game game;
-    private final NewGame newGame;
-    
+
     public GamePanel(Board board, Game game) {
 
         this.board = board;
         this.game = game;
-        this.newGame = new NewGame(board);
         enableEvents(AWTEvent.MOUSE_EVENT_MASK); //Считывает мышь
     }
 
@@ -38,7 +33,7 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
 
     // Отрисовка игрового поля
     private void drawBoard(Graphics g) {
-        int boardSize = BOARD_SIZE - 1;
+        int boardSize = game.getBoardSize() - 1;
         int cellSize = Math.min((getWidth() - SCALE_FACTOR * 2) / boardSize, (getHeight() - SCALE_FACTOR * 2) / boardSize);
         int xIndent = SCALE_FACTOR + (getWidth() - SCALE_FACTOR * 2 - cellSize * boardSize) / 2;
         int yIndent = SCALE_FACTOR + (getHeight() - SCALE_FACTOR * 2 - cellSize * boardSize) / 2;
@@ -50,14 +45,14 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
     }
 
     private int getCellSize() {
-        int boardSize = newGame.getBoardSize();
+        int boardSize = game.getBoardSize();
         int widthSize = (getWidth() - SCALE_FACTOR * 2) / (boardSize - 1);
         int heightSize = (getHeight() - SCALE_FACTOR * 2) / (boardSize - 1);
         return Math.min(widthSize, heightSize);
     }
 
     private int getIndent(int measureSize) {
-        int boardSize = newGame.getBoardSize();
+        int boardSize = game.getBoardSize();
         return SCALE_FACTOR + (measureSize - SCALE_FACTOR * 2 - getCellSize() * (boardSize - 1)) / 2;
     }
 
@@ -69,12 +64,12 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
         return indent + cord * getCellSize() - getStoneSize() / 2;
     }
 
-    // Отрисовка камне
+    // Отрисовка камней
     private void drawStones(Graphics g) {
         int xIndent = getIndent(getWidth());
         int yIndent = getIndent(getHeight());
 
-        final Stone[][] boardContent = newGame.getBoardContent();
+        final Stone[][] boardContent = game.getBoardContent(board);
         for (Stone[] stones : boardContent) {
             for (Stone stone : stones) {
                 if (stone != null) {
@@ -86,42 +81,34 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
         }
     }
 
-    private int mouseCordToStone(int cord, int indent) {
-       return (cord - indent + getCellSize() / 2) / getCellSize();
+    private int mouseCordToStoneCord(int cord, int indent) {
+        return (cord - indent + getCellSize() / 2) / getCellSize();
+    }
+
+    private void showErrorMessageDialog(String title, String message) {
+        JOptionPane.showMessageDialog(null, message, title,
+                JOptionPane.ERROR_MESSAGE);
     }
 
     // Считывает клики мыши и добавляет камень в массив
     @Override
     protected void processMouseEvent(MouseEvent mouseEvent) {
         super.processMouseEvent(mouseEvent);
-        if (mouseEvent.getID() == MouseEvent.MOUSE_PRESSED) {
+        if (mouseEvent.getID() == MouseEvent.MOUSE_PRESSED && mouseEvent.getButton() == MouseEvent.BUTTON1) {
 
-            int cellSize = getCellSize();
+            int x = mouseCordToStoneCord(mouseEvent.getX(), getIndent(getWidth()));
+            int y = mouseCordToStoneCord(mouseEvent.getY(), getIndent(getHeight()));
 
-            int xIndent = getIndent(getWidth());
-            int yIndent = getIndent(getHeight());
+            if (x >= 0 && x < game.getBoardSize() && y >= 0 && y < game.getBoardSize()) {
 
+                boolean isStoneAdd = game.addStoneByCords(x, y);
 
-            if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
-                int i = mouseCordToStone(mouseEvent.getX(), xIndent);
-                int j = mouseCordToStone(mouseEvent.getY(), yIndent);
-
-                if (i >= 0 && i < newGame.getBoardSize() && j >= 0 && j < newGame.getBoardSize()) {
-
-
-                    // Добавление камня в массив и его отрисовка на игровой доске
-                    Stone stone = new Stone(game.getCurrentPlayer(), i, j);
-                    if (board.positions[i][j] != null)
-                        JOptionPane.showMessageDialog(null, "Занято, не угадал!",
-                                "Опачки!", JOptionPane.ERROR_MESSAGE);
-                    else {
-                        board.addStone(stone, game);
-                        game.previousPlayer = stone;
-                        game.move();
-                    }
-                    this.repaint(xIndent + i * cellSize - cellSize / 2,
-                            yIndent + j * cellSize - cellSize / 2, cellSize, cellSize);
+                if (!isStoneAdd) {
+                    showErrorMessageDialog("Опачки!", "Занято, не угадал!");
                 }
+
+                this.repaint(getIndent(getWidth()) + x * getCellSize() - getCellSize() / 2,
+                        getIndent(getHeight()) + y * getCellSize() - getCellSize() / 2, getCellSize(), getCellSize());
             }
         }
     }
@@ -130,31 +117,5 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
     public void onNewGameClick() {
         game.newGame();
         this.repaint();
-    }
-}
-
-
-class NewGame {
-    private Color currentPlayer;
-    private final Board board;
-    private Queue<Stone> moves;
-
-    public NewGame(Board board) {
-        this.board = board;
-    }
-
-    public boolean addStoneByCords(int x, int y) {
-        Stone stone = new Stone(currentPlayer, x, y);
-        //board.addStone(stone);
-        //
-        return true;
-    }
-
-    public Stone[][] getBoardContent() {
-        return this.board.getPositions();
-    }
-    
-    public int getBoardSize() {
-        return Board.BOARD_SIZE;
     }
 }
