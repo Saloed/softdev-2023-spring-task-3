@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <StackPane fx:id="papa" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.game.view_control.Controller">
@@ -30,6 +31,15 @@
                         </ImageView>
                      </graphic>
                   </Button>
+                  <Button fx:id="retButton" layoutX="601.0" layoutY="23.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#returnPrevious" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #f18b06; -fx-background-radius: 50%;">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0">
+                           <image>
+                              <Image url="@return.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </Pane>
          </top>
@@ -38,6 +48,15 @@
                <children>
                   <Text layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Harpseal; -fx-font-size: 24.0;" text="CONTROLS: W, E, A, D, Z, X">
                   </Text>
+                  <Button layoutX="646.0" layoutY="7.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#returnToMenu" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #f18b06;">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0">
+                           <image>
+                              <Image url="@exit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </Pane>
          </bottom>
@@ -57,9 +76,15 @@
             <Label opacity="0.4" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #f5ca1f;" />
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" style="-fx-font-family: Harpseal; -fx-font-size: 27.0;" text="ENTER SIDE SIZE" textAlignment="CENTER">
             </Label>
-            <TextField fx:id="sideLength" alignment="CENTER" layoutX="311.0" layoutY="375.0" prefHeight="25.0" prefWidth="79.0" promptText="3" style="-fx-font-family: harpseal;" />
-            <Button layoutX="326.0" layoutY="407.0" mnemonicParsing="false" onMouseClicked="#drawTheField" text="START" />
-            <Label fx:id="warningLabel" layoutX="264.0" layoutY="440.0" prefHeight="58.0" prefWidth="173.0" style="-fx-font-family: harpseal;" text="Invalid size! Recommended: 2 &lt; n &lt; 16" textAlignment="CENTER" visible="false" wrapText="true" />
+            <TextField fx:id="sideLength" alignment="CENTER" layoutX="311.0" layoutY="375.0" prefHeight="25.0" prefWidth="79.0" promptText="3" style="-fx-background-color: #d3a376; -fx-text-fill: #fafafa; -fx-prompt-text-fill: #eaeaea; -fx-border-color: #4f2d12; -fx-border-radius: 3%;">
+               <font>
+                  <Font name="Harpseal" size="12.0" />
+               </font></TextField>
+            <Button layoutX="321.0" layoutY="408.0" mnemonicParsing="false" onMouseClicked="#drawTheField" style="-fx-background-color: #f77411;" text="START" textFill="#fafafa">
+               <font>
+                  <Font name="Harpseal" size="12.0" />
+               </font></Button>
+            <Label fx:id="warningLabel" layoutX="264.0" layoutY="440.0" prefHeight="58.0" prefWidth="173.0" style="-fx-font-family: harpseal;" text="Invalid size! Recommended: 2 &lt; n &lt; 11" textAlignment="CENTER" visible="false" wrapText="true" />
          </children>
          <StackPane.margin>
             <Insets />

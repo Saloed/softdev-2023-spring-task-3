@@ -13,6 +13,8 @@ public class MainLogic {
     public static boolean isThere16384;
     private static Direction direction;
     private static HexGrid grid;
+    private static HexGrid previous;
+    private static int preScore;
 
     public static HexGrid getGrid(){
         return grid;
@@ -25,11 +27,7 @@ public class MainLogic {
 
     public static boolean isItEnd() {
         HexGrid save = new HexGrid();
-        for (int q = 0; q < ARRAY_SIDE; q++) {
-            for (int r = 0; r < ARRAY_SIDE; r++) {
-                save.setState(q, r, grid.getState(q, r));
-            }
-        }
+        grid.copyTo(save);
         if(shift(Direction.DOWN_RIGHT)) {
             grid = save;
             return false;
@@ -59,14 +57,25 @@ public class MainLogic {
         isThere16384 = false;
         direction = Direction.AWAITING;
         grid = new HexGrid();
+        previous = new HexGrid();
+    }
+
+    public static void returnPrevious() {
+        previous.copyTo(grid);
+        score = preScore;
     }
 
     public static boolean move() {
         boolean wasMoved = false;
         if(direction != Direction.AWAITING) {
+            HexGrid t = new HexGrid();
+            grid.copyTo(t);
+            int tS = score;
             if(shift(direction)) {
                 generateNewTile();
                 wasMoved = true;
+                t.copyTo(previous);
+                preScore = tS;
             }
             direction = Direction.AWAITING;
         }

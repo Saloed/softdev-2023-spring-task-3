@@ -1,5 +1,7 @@
 package org.game.game;
 
+import java.util.Arrays;
+
 import static org.game.game.Constants.*;
 
 public class HexGrid {
@@ -94,8 +96,23 @@ public class HexGrid {
         }
     }
 
-    protected int[][] getArray() {
+    public int[][] getArray() {
         return grid;
+    }
+
+    public void copyTo(HexGrid copy) {
+        for (int q = 0; q < ARRAY_SIDE; q++) {
+            for (int r = 0; r < ARRAY_SIDE; r++) {
+                copy.setState(q, r, this.getState(q, r));
+            }
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof HexGrid)) return false;
+        HexGrid o = (HexGrid) obj;
+        return Arrays.deepEquals(getArray(), o.getArray());
     }
 }
 

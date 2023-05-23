@@ -26,13 +26,14 @@ public class Controller {
     @FXML
     private Label scoreLabel;
     public static Boolean win = false;
-    public Label[][] gameField;
+    private Label[][] gameField;
     @FXML
-    public TextField sideLength;
+    private TextField sideLength;
     @FXML
-    public Pane fieldPane;
+    private Pane fieldPane;
     @FXML
-    public Label warningLabel;
+    private Label warningLabel;
+    private Boolean wasTheFirstMove;
 
 
     public void getSide() {
@@ -44,7 +45,7 @@ public class Controller {
     @FXML
     public void drawTheField() {
         getSide();
-        if (Constants.SIDE_LENGTH > 15 || Constants.SIDE_LENGTH < 3) {
+        if (Constants.SIDE_LENGTH > 10 || Constants.SIDE_LENGTH < 3) {
             warningLabel.setVisible(true);
             return;
         }
@@ -61,7 +62,8 @@ public class Controller {
                     tile.setPrefSize(Constants.DIAMETER, Constants.DIAMETER);
                     tile.setLayoutX(x);
                     tile.setLayoutY(y);
-                    tile.setStyle("-fx-background-color: #ccb69f; -fx-background-radius: 50%;");
+                    tile.setStyle("-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-border-size: "
+                                    + Constants.DIAMETER * 0.02 + "; -fx-border-color:  #331b09; -fx-border-radius: 50%");
                     tile.setAlignment(Pos.CENTER);
                     fieldPane.getChildren().add(tile);
                     x = x + Constants.DIAMETER;
@@ -75,6 +77,7 @@ public class Controller {
         }
         updateField();
         papa.setOnKeyPressed(this::keyPressed);
+        papa.requestFocus();
     }
 
     @FXML
@@ -82,6 +85,7 @@ public class Controller {
         if (!winPane.isVisible() & !failPane.isVisible()) {
             MainLogic.input(key.getCode().toString());
             if (MainLogic.move()) {
+                wasTheFirstMove = true;
                 updateField();
                 scoreLabel.setText(String.valueOf(MainLogic.score));
                 if (win) {
@@ -107,7 +111,8 @@ public class Controller {
                     int valOfTile = MainLogic.getGrid().getState(q, r);
                     String style = "-fx-background-color: " + Colors.colors.get(valOfTile) +
                             "; -fx-background-radius: 50%; -fx-text-fill: #fafafa; " +
-                            "-fx-font-family: Harpseal; -fx-font-size: " + Constants.DIAMETER * 0.27;
+                            "-fx-font-family: Harpseal; -fx-font-size: " + Constants.DIAMETER * 0.27 +
+                            "; -fx-border-size: " + Constants.DIAMETER * 0.02 + "; -fx-border-color:  #331b09; -fx-border-radius: 50%";
                     gameField[q][r].setStyle(style);
                     if(valOfTile != 0) {
                         gameField[q][r].setText(String.valueOf(valOfTile));
@@ -124,13 +129,33 @@ public class Controller {
             MainLogic.generateNewTile();
         }
         startPane.setVisible(false);
+        wasTheFirstMove = false;
     }
 
     @FXML
     public void restart() {
+        wasTheFirstMove = false;
         failPane.setVisible(false);
         scoreLabel.setText("0");
         drawTheField();
+    }
+
+    @FXML
+    public void returnToMenu() {
+        wasTheFirstMove = false;
+        fieldPane.getChildren().clear();
+        startPane.setVisible(true);
+        sideLength.requestFocus();
+        scoreLabel.setText("0");
+        warningLabel.setVisible(false);
+    }
+
+    @FXML
+    public void returnPrevious() {
+        if(!wasTheFirstMove) return;
+        MainLogic.returnPrevious();
+        scoreLabel.setText(String.valueOf(MainLogic.score));
+        updateField();
     }
 
 //    public void spawnAnimation(int q, int r) {

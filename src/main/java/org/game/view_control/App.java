@@ -16,7 +16,6 @@ public class App extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("game_scene.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
-        scene.getRoot().requestFocus();
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setTitle("16384");
