@@ -8,9 +8,8 @@ import static org.game.game.Constants.*;
 
 public class MainLogic {
 
-    public static int score;
-    private static boolean endOfGame;
-    public static boolean isThere16384;
+    private static int score;
+    protected static boolean isThere16384;
     private static Direction direction;
     private static HexGrid grid;
     private static HexGrid previous;
@@ -47,13 +46,11 @@ public class MainLogic {
             grid = save;
             return false;
         }
-        endOfGame = true;
         return true;
     }
 
     public static void init(){
         score = 0;
-        endOfGame = false;
         isThere16384 = false;
         direction = Direction.AWAITING;
         grid = new HexGrid();
@@ -265,9 +262,12 @@ public class MainLogic {
         }
     }
 
+    public static int getScore() {
+        return score;
+    }
+
     protected static void initForTests() {
         score = 0;
-        endOfGame = false;
         isThere16384 = false;
         direction = Direction.AWAITING;
         grid = new HexGrid();

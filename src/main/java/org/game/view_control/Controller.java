@@ -87,7 +87,7 @@ public class Controller {
             if (MainLogic.move()) {
                 wasTheFirstMove = true;
                 updateField();
-                scoreLabel.setText(String.valueOf(MainLogic.score));
+                scoreLabel.setText(String.valueOf(MainLogic.getScore()));
                 if (win) {
                     winPane.setVisible(true);
                 }
@@ -97,6 +97,7 @@ public class Controller {
                 }
             }
         } else if (winPane.isVisible()) {
+            restart();
             winPane.setVisible(false);
             win = false;
         } else if(failPane.isVisible()) {
@@ -109,7 +110,7 @@ public class Controller {
             for (int r = 0; r < Constants.ARRAY_SIDE; r++) {
                 if(gameField[q][r] != null) {
                     int valOfTile = MainLogic.getGrid().getState(q, r);
-                    String style = "-fx-background-color: " + Colors.colors.get(valOfTile) +
+                    String style = "-fx-background-color: " + Colors.valueOf("TILE" + valOfTile).getColor() +
                             "; -fx-background-radius: 50%; -fx-text-fill: #fafafa; " +
                             "-fx-font-family: Harpseal; -fx-font-size: " + Constants.DIAMETER * 0.27 +
                             "; -fx-border-size: " + Constants.DIAMETER * 0.02 + "; -fx-border-color:  #331b09; -fx-border-radius: 50%";
@@ -154,7 +155,7 @@ public class Controller {
     public void returnPrevious() {
         if(!wasTheFirstMove) return;
         MainLogic.returnPrevious();
-        scoreLabel.setText(String.valueOf(MainLogic.score));
+        scoreLabel.setText(String.valueOf(MainLogic.getScore()));
         updateField();
     }
 

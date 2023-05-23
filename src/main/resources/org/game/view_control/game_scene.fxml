@@ -104,7 +104,7 @@
             <Label opacity="0.4" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #f5ca1f;" />
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" style="-fx-font-family: Harpseal; -fx-font-size: 27.0;" text="You won!" textAlignment="CENTER">
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="154.0" prefHeight="449.0" prefWidth="585.0" style="-fx-font-family: Harpseal; -fx-font-size: 15;" text="PRESS ANY BUTTON TO CONTINUE" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="154.0" prefHeight="449.0" prefWidth="585.0" style="-fx-font-family: Harpseal; -fx-font-size: 15;" text="PRESS ANY BUTTON TO RESTART" textAlignment="CENTER">
             </Label>
          </children>
       </Pane>
