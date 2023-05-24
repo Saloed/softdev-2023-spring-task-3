@@ -9,23 +9,23 @@ public class HexGrid {
     private final int[][] grid;
 
     public HexGrid() {
-        this.grid = new int[ARRAY_SIDE][ARRAY_SIDE];
+        this.grid = new int[Constants.getArraySide()][Constants.getArraySide()];
         filling();
     }
 
     private void filling() {
-        int i = SIDE_LENGTH - 1;
-        int j = SIDE_LENGTH - 1;
+        int i = Constants.getSideLength() - 1;
+        int j = Constants.getSideLength() - 1;
         for (int q = 0; q < i; q++) {
             for (int r = 0; r < j; r++) {
                 this.grid[q][r] = -1;
             }
             j--;
         }
-        i = SIDE_LENGTH - 1;
-        j = SIDE_LENGTH - 1;
-        for (int q = ARRAY_SIDE - 1; q > i; q--) {
-            for (int r = ARRAY_SIDE - 1; r > j; r--) {
+        i = Constants.getSideLength() - 1;
+        j = Constants.getSideLength() - 1;
+        for (int q = Constants.getArraySide() - 1; q > i; q--) {
+            for (int r = Constants.getArraySide() - 1; r > j; r--) {
                 this.grid[q][r] = -1;
             }
             j++;
@@ -49,15 +49,15 @@ public class HexGrid {
     }
 
     public int[] getColumn(int r) {
-        int[] ret = new int[ARRAY_SIDE];
-        for(int q = 0; q < ARRAY_SIDE; q++) {
+        int[] ret = new int[Constants.getArraySide()];
+        for(int q = 0; q < Constants.getArraySide(); q++) {
             ret[q] = grid[q][r];
         }
         return ret;
     }
 
     public void setColumn(int r, int[] newColumn) {
-        for (int q = 0; q < ARRAY_SIDE; q++) {
+        for (int q = 0; q < Constants.getArraySide(); q++) {
             grid[q][r] = newColumn[q];
         }
     }
@@ -72,8 +72,8 @@ public class HexGrid {
     }
 
     public int[] getLowerDiagonal(int q) {
-        int[] ret = new int[ARRAY_SIDE-q];
-        int r = ARRAY_SIDE - 1;
+        int[] ret = new int[Constants.getArraySide() - q];
+        int r = Constants.getArraySide() - 1;
         for (int i = 0; i < ret.length; i++) {
             ret[i] = grid[q][r];
             q++; r--;
@@ -82,7 +82,7 @@ public class HexGrid {
     }
 
     public void setLowerDiagonal(int q, int[] newDiagonal) {
-        int r = ARRAY_SIDE - 1;
+        int r = Constants.getArraySide() - 1;
         for (int j : newDiagonal) {
             grid[q][r] = j;
             q++; r--;
@@ -101,8 +101,8 @@ public class HexGrid {
     }
 
     public void copyTo(HexGrid copy) {
-        for (int q = 0; q < ARRAY_SIDE; q++) {
-            for (int r = 0; r < ARRAY_SIDE; r++) {
+        for (int q = 0; q < Constants.getArraySide(); q++) {
+            for (int r = 0; r < Constants.getArraySide(); r++) {
                 copy.setState(q, r, this.getState(q, r));
             }
         }

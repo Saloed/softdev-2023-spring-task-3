@@ -4,27 +4,27 @@ import org.game.view_control.Controller;
 
 import java.util.Random;
 
-import static org.game.game.Constants.*;
+import org.game.game.Constants.*;
 
 public class MainLogic {
 
-    private static int score;
-    protected static boolean isThere16384;
-    private static Direction direction;
-    private static HexGrid grid;
-    private static HexGrid previous;
-    private static int preScore;
+    private int score;
+    protected boolean isThere16384;
+    private Direction direction;
+    private HexGrid grid;
+    private HexGrid previous;
+    private int preScore;
 
-    public static HexGrid getGrid(){
+    public HexGrid getGrid(){
         return grid;
     }
 
-    private static void merged16384() {
+    private void merged16384() {
         isThere16384 = true;
         Controller.win = true;
     }
 
-    public static boolean isItEnd() {
+    public boolean isItEnd() {
         HexGrid save = new HexGrid();
         grid.copyTo(save);
         if(shift(Direction.DOWN_RIGHT)) {
@@ -49,7 +49,7 @@ public class MainLogic {
         return true;
     }
 
-    public static void init(){
+    public void init(){
         score = 0;
         isThere16384 = false;
         direction = Direction.AWAITING;
@@ -57,12 +57,12 @@ public class MainLogic {
         previous = new HexGrid();
     }
 
-    public static void returnPrevious() {
+    public void returnPrevious() {
         previous.copyTo(grid);
         score = preScore;
     }
 
-    public static boolean move() {
+    public boolean move() {
         boolean wasMoved = false;
         if(direction != Direction.AWAITING) {
             HexGrid t = new HexGrid();
@@ -79,7 +79,7 @@ public class MainLogic {
         return wasMoved;
     }
 
-    public static void input(String key){
+    public void input(String key){
         switch (key) {
             case "W" -> direction = Direction.UP_LEFT;
             case "E" -> direction = Direction.UP_RIGHT;
@@ -91,7 +91,7 @@ public class MainLogic {
         }
     }
 
-    private static int[] reverse(int[] toReverse) {
+    private int[] reverse(int[] toReverse) {
         int[] ret = new int[toReverse.length];
         for (int i = 0; i < toReverse.length; i++) {
             ret[i] = toReverse[toReverse.length-i-1];
@@ -99,12 +99,12 @@ public class MainLogic {
         return ret;
     }
 
-    protected static boolean shift(Direction direction) {
+    protected boolean shift(Direction direction) {
         boolean ret = false;
         switch (direction) {
             case UP_RIGHT:
             case DOWN_LEFT:
-                for(int q = ARRAY_SIDE - 1; q > 1; q--) {
+                for(int q = Constants.getArraySide() - 1; q > 1; q--) {
                     int[] oldRow = grid.getUpperDiagonal(q);
                     if(direction == Direction.UP_RIGHT) {
                         oldRow = reverse(oldRow);
@@ -116,7 +116,7 @@ public class MainLogic {
                     grid.setUpperDiagonal(q, result.shiftedRow);
                     ret = ret || result.didItMoved;
                 }
-                for(int q = 1; q < ARRAY_SIDE; q++) {
+                for(int q = 1; q < Constants.getArraySide(); q++) {
                     int[] oldRow = grid.getLowerDiagonal(q);
                     if(direction == Direction.DOWN_LEFT) {
                         oldRow = reverse(oldRow);
@@ -131,7 +131,7 @@ public class MainLogic {
                 break;
             case UP_LEFT:
             case DOWN_RIGHT:
-                for (int q = 0; q < ARRAY_SIDE; q++) {
+                for (int q = 0; q < Constants.getArraySide(); q++) {
                     int[] oldRow = grid.getColumn(q);
                     if(direction == Direction.DOWN_RIGHT) {
                         oldRow = reverse(oldRow);
@@ -146,7 +146,7 @@ public class MainLogic {
                 break;
             case LEFT:
             case RIGHT:
-                for (int q = 0; q < ARRAY_SIDE; q++) {
+                for (int q = 0; q < Constants.getArraySide(); q++) {
                     int[] oldRow = grid.getLine(q);
                     if(direction == Direction.RIGHT) {
                         oldRow = reverse(oldRow);
@@ -171,7 +171,7 @@ public class MainLogic {
         int[] shiftedRow;
     }
 
-    private static ShiftRowResult shiftRow(int[] oldRow){
+    private ShiftRowResult shiftRow(int[] oldRow){
         ShiftRowResult ret = new ShiftRowResult();
 
         int[] oldRowWithoutZeros = new int[oldRow.length]; // without intervening zeros*
@@ -226,17 +226,17 @@ public class MainLogic {
 
     }
 
-    public static void generateNewTile(){
-        int state = (new Random().nextInt(100) <= CHANCE_OF_LUCKY_SPAWN)
-                ? LUCKY_INITIAL_TILE_STATE
-                : INITIAL_TILE_STATE;
+    public void generateNewTile(){
+        int state = (new Random().nextInt(100) <= Constants.CHANCE_OF_LUCKY_SPAWN)
+                ? Constants.LUCKY_INITIAL_TILE_STATE
+                : Constants.INITIAL_TILE_STATE;
 
         int randQ, randR;
 
-        randQ = new Random().nextInt(ARRAY_SIDE);
+        randQ = new Random().nextInt(Constants.getArraySide());
         int curQ = randQ;
 
-        randR = new Random().nextInt(ARRAY_SIDE);
+        randR = new Random().nextInt(Constants.getArraySide());
         int curR = randR;
 
         boolean placed = false;
@@ -245,11 +245,11 @@ public class MainLogic {
                 grid.setState(curQ, curR, state);
                 placed = true;
             } else {
-                if(curQ+1 < ARRAY_SIDE) {
+                if(curQ+1 < Constants.getArraySide()) {
                     curQ++;
                 } else {
                     curQ = 0;
-                    if(curR+1 < ARRAY_SIDE) {
+                    if(curR+1 < Constants.getArraySide()) {
                         curR++;
                     } else {
                         curR = 0;
@@ -262,15 +262,8 @@ public class MainLogic {
         }
     }
 
-    public static int getScore() {
+    public int getScore() {
         return score;
-    }
-
-    protected static void initForTests() {
-        score = 0;
-        isThere16384 = false;
-        direction = Direction.AWAITING;
-        grid = new HexGrid();
     }
 
 }

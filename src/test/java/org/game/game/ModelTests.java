@@ -12,37 +12,38 @@ public class ModelTests {
 
     @Test
     public void shiftTest() {
-        Constants.SIDE_LENGTH = 3;
-        Constants.ARRAY_SIDE = 2 * Constants.SIDE_LENGTH - 1;
-        MainLogic.initForTests();
-        MainLogic.getGrid().setState(0,4, 2);
-        MainLogic.getGrid().setState(4, 0, 2);
-        MainLogic.shift(Direction.UP_RIGHT);
-        Assertions.assertArrayEquals(MainLogic.getGrid().getArray(), new int[][]{
+        Constants.setSideLength(3);
+        Constants.setArraySide( 2 * Constants.getSideLength() - 1);
+        MainLogic logic = new MainLogic();
+        logic.init();
+        logic.getGrid().setState(0,4, 2);
+        logic.getGrid().setState(4, 0, 2);
+        logic.shift(Direction.UP_RIGHT);
+        Assertions.assertArrayEquals(logic.getGrid().getArray(), new int[][]{
                 {-1, -1, 0, 0, 4},
                 {-1, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0},
                 {0, 0, 0, 0, -1},
                 {0, 0, 0, -1, -1}
         });
-        MainLogic.shift(Direction.RIGHT);
-        Assertions.assertArrayEquals(MainLogic.getGrid().getArray(), new int[][]{
+        logic.shift(Direction.RIGHT);
+        Assertions.assertArrayEquals(logic.getGrid().getArray(), new int[][]{
                 {-1, -1, 0, 0, 4},
                 {-1, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0},
                 {0, 0, 0, 0, -1},
                 {0, 0, 0, -1, -1}
         });
-        MainLogic.shift(Direction.LEFT);
-        Assertions.assertArrayEquals(MainLogic.getGrid().getArray(), new int[][]{
+        logic.shift(Direction.LEFT);
+        Assertions.assertArrayEquals(logic.getGrid().getArray(), new int[][]{
                 {-1, -1, 4, 0, 0},
                 {-1, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0},
                 {0, 0, 0, 0, -1},
                 {0, 0, 0, -1, -1}
         });
-        MainLogic.shift(Direction.DOWN_LEFT);
-        Assertions.assertArrayEquals(MainLogic.getGrid().getArray(), new int[][]{
+        logic.shift(Direction.DOWN_LEFT);
+        Assertions.assertArrayEquals(logic.getGrid().getArray(), new int[][]{
                 {-1, -1, 0, 0, 0},
                 {-1, 0, 0, 0, 0},
                 {4, 0, 0, 0, 0},
@@ -53,42 +54,44 @@ public class ModelTests {
 
     @Test
     public void winTest() {
-        Constants.SIDE_LENGTH = 3;
-        Constants.ARRAY_SIDE = 2 * Constants.SIDE_LENGTH - 1;
-        MainLogic.initForTests();
-        MainLogic.getGrid().setState(0,4, 8192);
-        MainLogic.getGrid().setState(4, 0, 8192);
-        MainLogic.shift(Direction.UP_RIGHT);
-        Assertions.assertTrue(MainLogic.isThere16384);
+        Constants.setSideLength(3);
+        Constants.setArraySide(2 * Constants.getSideLength() - 1);
+        MainLogic logic = new MainLogic();
+        logic.init();
+        logic.getGrid().setState(0,4, 8192);
+        logic.getGrid().setState(4, 0, 8192);
+        logic.shift(Direction.UP_RIGHT);
+        Assertions.assertTrue(logic.isThere16384);
     }
 
     @Test
     public void failTest() {
-        Constants.SIDE_LENGTH = 3;
-        Constants.ARRAY_SIDE = 2 * Constants.SIDE_LENGTH - 1;
-        MainLogic.initForTests();
-        MainLogic.getGrid().setState(0, 2, 2);
-        MainLogic.getGrid().setState(0, 3, 4);
-        MainLogic.getGrid().setState(0, 4, 8);
-        MainLogic.getGrid().setState(1, 1, 16);
-        MainLogic.getGrid().setState(1, 2, 32);
-        MainLogic.getGrid().setState(1, 3, 64);
-        MainLogic.getGrid().setState(1, 4, 128);
-        MainLogic.getGrid().setState(2, 0, 256);
-        MainLogic.getGrid().setState(2, 1, 512);
-        MainLogic.getGrid().setState(2, 2, 1024);
-        MainLogic.getGrid().setState(2, 3, 2048);
-        MainLogic.getGrid().setState(2, 4, 4096);
-        MainLogic.getGrid().setState(3, 0, 8192);
-        MainLogic.getGrid().setState(3, 1, 16384);
-        MainLogic.getGrid().setState(3, 2, 2);
-        MainLogic.getGrid().setState(3, 3, 4);
-        MainLogic.getGrid().setState(4, 0, 8);
-        MainLogic.getGrid().setState(4, 1, 16);
-        MainLogic.getGrid().setState(4, 2, 32);
-        Assertions.assertTrue(MainLogic.isItEnd());
-        MainLogic.getGrid().setState(4, 2, 16);
-        Assertions.assertFalse(MainLogic.isItEnd());
+        Constants.setSideLength(3);
+        Constants.setArraySide(2 * Constants.getSideLength() - 1);
+        MainLogic logic = new MainLogic();
+        logic.init();
+        logic.getGrid().setState(0, 2, 2);
+        logic.getGrid().setState(0, 3, 4);
+        logic.getGrid().setState(0, 4, 8);
+        logic.getGrid().setState(1, 1, 16);
+        logic.getGrid().setState(1, 2, 32);
+        logic.getGrid().setState(1, 3, 64);
+        logic.getGrid().setState(1, 4, 128);
+        logic.getGrid().setState(2, 0, 256);
+        logic.getGrid().setState(2, 1, 512);
+        logic.getGrid().setState(2, 2, 1024);
+        logic.getGrid().setState(2, 3, 2048);
+        logic.getGrid().setState(2, 4, 4096);
+        logic.getGrid().setState(3, 0, 8192);
+        logic.getGrid().setState(3, 1, 16384);
+        logic.getGrid().setState(3, 2, 2);
+        logic.getGrid().setState(3, 3, 4);
+        logic.getGrid().setState(4, 0, 8);
+        logic.getGrid().setState(4, 1, 16);
+        logic.getGrid().setState(4, 2, 32);
+        Assertions.assertTrue(logic.isItEnd());
+        logic.getGrid().setState(4, 2, 16);
+        Assertions.assertFalse(logic.isItEnd());
     }
 
 }

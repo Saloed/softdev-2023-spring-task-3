@@ -34,46 +34,47 @@ public class Controller {
     @FXML
     private Label warningLabel;
     private Boolean wasTheFirstMove;
+    private MainLogic logic;
 
 
     public void getSide() {
-        Constants.SIDE_LENGTH = Integer.parseInt(sideLength.getText());
-        Constants.ARRAY_SIDE = 2 * Constants.SIDE_LENGTH - 1;
-        Constants.DIAMETER = 700.0 / Constants.ARRAY_SIDE * 0.7;
+        Constants.setSideLength(Integer.parseInt(sideLength.getText()));
+        Constants.setArraySide(2 * Constants.getSideLength() - 1);
+        Constants.setDiameter(700.0 / Constants.getArraySide() * 0.7);
     }
 
     @FXML
     public void drawTheField() {
         getSide();
-        if (Constants.SIDE_LENGTH > 10 || Constants.SIDE_LENGTH < 3) {
+        if (Constants.getSideLength() > 10 || Constants.getSideLength() < 3) {
             warningLabel.setVisible(true);
             return;
         }
         start();
-        gameField = new Label[Constants.ARRAY_SIDE][Constants.ARRAY_SIDE];
+        gameField = new Label[Constants.getArraySide()][Constants.getArraySide()];
 
-        double x = Constants.DIAMETER * (Constants.ARRAY_SIDE / 2);
-        double y = 230.0 - Constants.DIAMETER * Math.sin(Math.PI/3) * (Constants.ARRAY_SIDE / 2);
-        for (int q = 0; q < Constants.ARRAY_SIDE; q++) {
+        double x = Constants.getDiameter() * (Constants.getArraySide() / 2);
+        double y = 230.0 - Constants.getDiameter() * Math.sin(Math.PI/3) * (Constants.getArraySide() / 2);
+        for (int q = 0; q < Constants.getArraySide(); q++) {
             int c = 0;
-            for (int r = 0; r < Constants.ARRAY_SIDE; r++) {
-                if(MainLogic.getGrid().getState(q, r) != -1) {
+            for (int r = 0; r < Constants.getArraySide(); r++) {
+                if(logic.getGrid().getState(q, r) != -1) {
                     Label tile = new Label();
-                    tile.setPrefSize(Constants.DIAMETER, Constants.DIAMETER);
+                    tile.setPrefSize(Constants.getDiameter(), Constants.getDiameter());
                     tile.setLayoutX(x);
                     tile.setLayoutY(y);
                     tile.setStyle("-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-border-size: "
-                                    + Constants.DIAMETER * 0.02 + "; -fx-border-color:  #331b09; -fx-border-radius: 50%");
+                                    + Constants.getDiameter() * 0.02 + "; -fx-border-color:  #331b09; -fx-border-radius: 50%");
                     tile.setAlignment(Pos.CENTER);
                     fieldPane.getChildren().add(tile);
-                    x = x + Constants.DIAMETER;
+                    x = x + Constants.getDiameter();
                     gameField[q][r] = tile;
                     c++;
                 }
             }
-            y = y + Math.sin(Math.PI/3) * Constants.DIAMETER;
-            if(q < Constants.ARRAY_SIDE / 2) x = x - c * Constants.DIAMETER - Constants.DIAMETER / 2;
-            else x = x - c * Constants.DIAMETER + Constants.DIAMETER / 2;
+            y = y + Math.sin(Math.PI/3) * Constants.getDiameter();
+            if(q < Constants.getArraySide() / 2) x = x - c * Constants.getDiameter() - Constants.getDiameter() / 2;
+            else x = x - c * Constants.getDiameter() + Constants.getDiameter() / 2;
         }
         updateField();
         papa.setOnKeyPressed(this::keyPressed);
@@ -83,16 +84,16 @@ public class Controller {
     @FXML
     public void keyPressed(KeyEvent key) {
         if (!winPane.isVisible() & !failPane.isVisible()) {
-            MainLogic.input(key.getCode().toString());
-            if (MainLogic.move()) {
+            logic.input(key.getCode().toString());
+            if (logic.move()) {
                 wasTheFirstMove = true;
                 updateField();
-                scoreLabel.setText(String.valueOf(MainLogic.getScore()));
+                scoreLabel.setText(String.valueOf(logic.getScore()));
                 if (win) {
                     winPane.setVisible(true);
                 }
             } else {
-                if (MainLogic.isItEnd()) {
+                if (logic.isItEnd()) {
                     failPane.setVisible(true);
                 }
             }
@@ -106,14 +107,14 @@ public class Controller {
     }
 
     public void updateField() {
-        for (int q = 0; q < Constants.ARRAY_SIDE; q++) {
-            for (int r = 0; r < Constants.ARRAY_SIDE; r++) {
+        for (int q = 0; q < Constants.getArraySide(); q++) {
+            for (int r = 0; r < Constants.getArraySide(); r++) {
                 if(gameField[q][r] != null) {
-                    int valOfTile = MainLogic.getGrid().getState(q, r);
+                    int valOfTile = logic.getGrid().getState(q, r);
                     String style = "-fx-background-color: " + Colors.valueOf("TILE" + valOfTile).getColor() +
                             "; -fx-background-radius: 50%; -fx-text-fill: #fafafa; " +
-                            "-fx-font-family: Harpseal; -fx-font-size: " + Constants.DIAMETER * 0.27 +
-                            "; -fx-border-size: " + Constants.DIAMETER * 0.02 + "; -fx-border-color:  #331b09; -fx-border-radius: 50%";
+                            "-fx-font-family: Harpseal; -fx-font-size: " + Constants.getDiameter() * 0.27 +
+                            "; -fx-border-size: " + Constants.getDiameter() * 0.02 + "; -fx-border-color:  #331b09; -fx-border-radius: 50%";
                     gameField[q][r].setStyle(style);
                     if(valOfTile != 0) {
                         gameField[q][r].setText(String.valueOf(valOfTile));
@@ -125,9 +126,10 @@ public class Controller {
     }
 
     public void start() {
-        MainLogic.init();
+        logic = new MainLogic();
+        logic.init();
         for (int i = 0; i < Constants.COUNT_INITIAL_TILES; i++) {
-            MainLogic.generateNewTile();
+            logic.generateNewTile();
         }
         startPane.setVisible(false);
         wasTheFirstMove = false;
@@ -154,8 +156,8 @@ public class Controller {
     @FXML
     public void returnPrevious() {
         if(!wasTheFirstMove) return;
-        MainLogic.returnPrevious();
-        scoreLabel.setText(String.valueOf(MainLogic.getScore()));
+        logic.returnPrevious();
+        scoreLabel.setText(String.valueOf(logic.getScore()));
         updateField();
     }
 
