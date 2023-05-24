@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1017916982603",
+    "firebase_url": "https://dacha-app-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "dacha-app",
+    "storage_bucket": "dacha-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017916982603:android:2831c59b3e696241b554ce",
+        "android_client_info": {
+          "package_name": "com.example.dacha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1017916982603-e5ka8fhvavop38u6bliioi5upfk8sq8g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dacha",
+            "certificate_hash": "58bf154c5d7e29597b29c9a13f41f9b96ec9656c"
+          }
+        },
+        {
+          "client_id": "1017916982603-0lmrj8hic5upvlehtouaggak3elnsrui.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIAV5IYJyqqkGlwxf20Wh1jdNK4ipAgXE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017916982603-0lmrj8hic5upvlehtouaggak3elnsrui.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

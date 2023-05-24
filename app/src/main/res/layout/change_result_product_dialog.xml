@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="32dp">
+
+        <TextView
+            android:id="@+id/tv_product_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Покупка"
+            android:textAppearance="@style/TitleStyle"
+            android:textSize="34sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/change_result_dialog_et"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/second_bg"
+            android:hint="Введите цену"
+            android:imeOptions="actionSend"
+            android:inputType="numberDecimal"
+            android:textAppearance="@style/SubTitleStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_top" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/delete_result_dialog_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/new_colorSecondary"
+            android:text="Удалить из покупок"
+            android:textAllCaps="false"
+            android:textSize="14sp"
+            android:textAppearance="@style/SubTitleStyle"
+            app:elevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/change_result_dialog_et" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/change_result_dialog_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/new_colorPrimaryVariant"
+            android:text="Изменить цену"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TitleStyle"
+            android:textColor="@color/new_colorSubSecondary"
+            android:textSize="12sp"
+            app:elevation="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/delete_result_dialog_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/delete_result_dialog_btn" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

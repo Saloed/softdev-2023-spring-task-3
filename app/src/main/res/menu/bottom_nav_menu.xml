@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/ic_gallery"
+        android:title="@string/title_galery" />
+    <item
+        android:id="@+id/navigation_products"
+        android:icon="@drawable/ic_products"
+        android:title="@string/products" />
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_house"
+        android:title="@string/title_dacha" />
+    <item
+        android:id="@+id/navigation_debts"
+        android:icon="@drawable/ic_debts"
+        android:title="@string/debts" />
+    <item
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/ic_people"
+        android:title="@string/people_rus" />
+
+</menu>
