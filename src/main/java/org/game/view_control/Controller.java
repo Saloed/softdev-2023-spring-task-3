@@ -54,12 +54,18 @@ public class Controller {
     }
 
     public void getSide() {
-        if(!sideLength.getText().matches("[0-9]")) {
-            warningAnimation();
+        if(sideLength.getText().equals("")) {
+            Constants.setSideLength(Integer.parseInt(sideLength.getPromptText()));
+            Constants.setArraySide(2 * Constants.getSideLength() - 1);
+            Constants.setDiameter(700.0 / Constants.getArraySide() * 0.7);
         } else {
-        Constants.setSideLength(Integer.parseInt(sideLength.getText()));
-        Constants.setArraySide(2 * Constants.getSideLength() - 1);
-        Constants.setDiameter(700.0 / Constants.getArraySide() * 0.7);
+            if (!sideLength.getText().matches("[0-9]")) {
+                warningAnimation();
+            } else {
+                Constants.setSideLength(Integer.parseInt(sideLength.getText()));
+                Constants.setArraySide(2 * Constants.getSideLength() - 1);
+                Constants.setDiameter(700.0 / Constants.getArraySide() * 0.7);
+            }
         }
     }
 
@@ -202,10 +208,10 @@ public class Controller {
     }
 
     public void spawnAnimation(int q, int r) {
-        ScaleTransition anim = new ScaleTransition(Duration.millis(300), gameField[q][r]);
-        anim.setFromX(.1);
+        ScaleTransition anim = new ScaleTransition(Duration.millis(200), gameField[q][r]);
+        anim.setFromX(.3);
         anim.setToX(1.0);
-        anim.setFromY(.1);
+        anim.setFromY(.3);
         anim.setToY(1.0);
         anim.play();
     }
