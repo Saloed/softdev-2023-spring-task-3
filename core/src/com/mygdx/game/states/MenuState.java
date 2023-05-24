@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.IndieGame;
+import com.mygdx.game.characters.MainHero;
 
 import java.awt.*;
 
@@ -38,7 +39,7 @@ public class MenuState extends State {
         currentMusicTexture = musicTrueTexture;
         versionNumberTexture = new Texture("menu/versionNumber.png");
         backgroundTexture = new Texture("menu/menuBackground.png");
-        startButtonTexture = new Texture("flatTheme/UI_Flat_Button_Large_Lock_01a1.png");
+        startButtonTexture = new Texture("menu/buttonLarge.png");
         startTexture = new Texture("menu/startString.png");
         gameNameTexture = new Texture("menu/gameName.png");
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("backgroundMusic.mp3"));
@@ -50,7 +51,8 @@ public class MenuState extends State {
     protected void handleInput() {
         if (Gdx.input.justTouched() &&
                 startButton.contains(new Point(Gdx.input.getX(), IndieGame.HEIGHT - Gdx.input.getY())))
-            stateManager.set(new PlayState(stateManager));
+            stateManager.set(new PlayState(stateManager, true, 0,
+                    new MainHero(50, 50, 100, 15)));
         if (Gdx.input.justTouched()
                 && musicButton.contains(new Point(Gdx.input.getX(), IndieGame.HEIGHT - Gdx.input.getY()))) {
             if (currentMusicTexture == musicTrueTexture) {

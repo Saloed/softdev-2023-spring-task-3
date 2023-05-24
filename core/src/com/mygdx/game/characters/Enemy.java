@@ -35,8 +35,21 @@ public class Enemy {
     public Texture getTexture() {
         return currentTexture;
     }
-    public Integer getHealthMax(){return healthMax;}
-    public Integer getHealth(){return health;}
-    public Integer getAttack(){return attack;}
-    public void setHealth(int newHealth){this.health = newHealth;}
+
+    public Integer getHealthMax() {
+        return healthMax;
+    }
+
+    public Integer getHealth() {
+        return health;
+    }
+
+    public Integer getAttack() {
+        return attack;
+    }
+
+    public void setHealth(int newHealth) {
+        this.health = newHealth;
+    }
+
 }
