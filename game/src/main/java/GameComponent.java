@@ -122,8 +122,7 @@ public class GameComponent extends JComponent implements MouseListener {
                 }
             }
 
-
-            Tester.newGame.startGame();
+           Tester.newGame.startGame();
         }
 
     }

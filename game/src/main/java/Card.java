@@ -36,12 +36,15 @@ public class Card {
         int imgWidth = 950;
         int imgHeight = 392;
 
-        BufferedImage[][] cardPictures = new BufferedImage[4][13];
+        int suits = 4;
+        int ranks = 13;
+
+        BufferedImage[][] cardPictures = new BufferedImage[suits][ranks];
         BufferedImage backOfACard = ImageIO.read(new File("images/backsideOfACard.jpg"));
 
-        for (int c = 0; c < 4; c++) {
+        for (int s = 0; s < 4; s++) {
             for (int r = 0; r < 13; r++) {
-                cardPictures[c][r] = deckImg.getSubimage(r*imgWidth/13, c*imgHeight/4, imgWidth/13, imgHeight/4);
+                cardPictures[s][r] = deckImg.getSubimage(r*imgWidth/13, s *imgHeight/4, imgWidth/13, imgHeight/4);
             }
         }
 

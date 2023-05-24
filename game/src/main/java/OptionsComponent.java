@@ -55,10 +55,8 @@ public class OptionsComponent extends JComponent implements ActionListener{
             System.exit(0);
         }
         else if(selectedButton == btnPlay) {
-            Tester.currentState = Tester.STATE.GAME;
-            Tester.menuFrame.dispose();
-            Tester.gameRefreshThread.start();
-            Tester.gameCheckThread.start();
+            Tester tester = new Tester();
+            tester.btnPlay();
         }
     }
 

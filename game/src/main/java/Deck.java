@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Deck {
 
-    private final ArrayList<Card> deck;
+    private final List<Card> deck;
 
     public Deck() {
-        deck = new ArrayList<Card>();
+        deck = new ArrayList<>();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 13; j++) {

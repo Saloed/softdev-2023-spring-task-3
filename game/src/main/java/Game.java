@@ -63,7 +63,7 @@ public class Game {
 
         btnExit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "You have left the casino with " +  Tester.currentBalance + ".");
+                JOptionPane.showMessageDialog(frame, "Better luck next time, but always remember to gamble responsibly!");
                 System.exit(0);
             }
         });

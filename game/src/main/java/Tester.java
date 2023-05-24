@@ -2,13 +2,13 @@ import javax.swing.*;
 
 public class Tester {
 
-    public static JFrame menuFrame = new JFrame();
+    public final JFrame menuFrame = new JFrame();
     public static JFrame gameFrame = new JFrame();
-    private static int playerScore = 0;
-    private static int dealerScore = 0;
-    public static int currentBalance = 100;
+    private int playerScore = 0;
+    private int dealerScore = 0;
+    public int currentBalance = 100;
     public static Game newGame = new Game(gameFrame);
-    private static boolean isFirstTime = true;
+    private boolean isFirstTime = true;
 
     public static enum STATE{
         MENU,
@@ -18,12 +18,14 @@ public class Tester {
     public static STATE currentState = STATE.MENU;
 
     public static void main(String[] args) throws InterruptedException {
+        Tester tester = new Tester();
         if(currentState == STATE.MENU) {
-            openMenu();
+            tester.openMenu();
         }
+
     }
 
-    public static void openMenu() {
+    public void openMenu() {
         menuFrame.setTitle("BLACKJACK");
         menuFrame.setSize(1130, 665);
         menuFrame.setLocationRelativeTo(null);
@@ -35,15 +37,23 @@ public class Tester {
         menuFrame.setVisible(true);
     }
 
-    public static Thread gameRefreshThread = new Thread () {
+    public void btnPlay() {
+        currentState = Tester.STATE.GAME;
+        menuFrame.dispose();
+        gameRefreshThread.start();
+        gameCheckThread.start();
+    }
+
+    public Thread gameRefreshThread = new Thread () {
         public void run () {
             while(true){
+                Tester.
                 newGame.atmosphereComponent.refresh(currentBalance, playerScore, dealerScore-1, newGame.faceDown);
             }
         }
     };
 
-    public static Thread gameCheckThread = new Thread () {
+    public Thread gameCheckThread = new Thread () {
         public void run () {
             while(true) {
                 if (isFirstTime||newGame.roundOver) {
