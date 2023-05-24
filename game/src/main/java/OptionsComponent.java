@@ -47,7 +47,6 @@ public class OptionsComponent extends JComponent implements ActionListener{
         super.add(btnPlay);
         super.add(btnExit);
     }
-
     public void actionPerformed(ActionEvent e) {
         JButton selectedButton = (JButton)e.getSource();
 

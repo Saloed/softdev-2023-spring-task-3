@@ -1,7 +1,6 @@
 import javax.swing.*;
 
 public class Tester {
-
     public final JFrame menuFrame = new JFrame();
     public static JFrame gameFrame = new JFrame();
     private int playerScore = 0;

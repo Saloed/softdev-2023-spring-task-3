@@ -124,7 +124,6 @@ public class GameComponent extends JComponent implements MouseListener {
 
            Tester.newGame.startGame();
         }
-
     }
     public void mouseExited(MouseEvent e) {
 

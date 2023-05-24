@@ -110,7 +110,6 @@ public class Game {
                 JOptionPane.showMessageDialog(frame, "The probability of drawing the desired card:" + decision(playerHand, dealerHand));
             }
         });
-
         btnStand.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 while (getSumOfHand(dealerHand)<17) {
