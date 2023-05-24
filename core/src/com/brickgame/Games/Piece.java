@@ -14,7 +14,7 @@ public class Piece {
     public List<Direction> directions;
     private int distance;
 
-    public static float SIZE = 32f;
+    public static final float SIZE = 32f;
 
     public Piece(float x, float y) {
         this.x = x;

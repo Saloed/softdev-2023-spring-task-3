@@ -11,14 +11,14 @@ import com.brickgame.BrickGame;
 import com.brickgame.Games.SidePanel;
 
 public class ArcanoidGameScreen implements Screen {
-    static BrickGame game;
-    SpriteBatch batch;
-    static SidePanel sidePanel;
-    Stage stage;
-    Ball ball;
-    Platform platform;
-    Blocks blocks;
-    Texture gameGrid;
+    private final BrickGame game;
+    private SpriteBatch batch;
+    private SidePanel sidePanel;
+    private Stage stage;
+    private Ball ball;
+    private Platform platform;
+    private Blocks blocks;
+    private Texture gameGrid;
 
     public ArcanoidGameScreen(BrickGame gam) {
         game = gam;
@@ -29,9 +29,10 @@ public class ArcanoidGameScreen implements Screen {
         batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+
         gameGrid = new Texture(Gdx.files.internal("background.png"));
         blocks = new Blocks(batch);
-        platform = new Platform(batch, 4, 0, 3);
+        platform = new Platform(batch, BrickGame.GRID_WIDTH / 2, 0, 3);
         ball = new Ball(batch, platform.platform[platform.platform.length / 2].getX(), 1, 1, 1);
         sidePanel = new SidePanel(batch, game);
 
@@ -48,9 +49,14 @@ public class ArcanoidGameScreen implements Screen {
         ball.updatePosition(platform);
         ball.collidesWithBlocks(blocks);
 
+        // Если нужно, то проигрываются соответсвующее звуки
+        if (ball.isNeedIncreaseScore) sidePanel.score.increaseScore();
+        if (ball.isNeedPlayHit) game.hit.play();
+        if (ball.isNeedPlayBroke) game.broke.play();
+
         // отрисовка элементов игры
         batch.begin();
-        batch.draw(gameGrid, 0, 0, 10 * Piece.SIZE, 20 * Piece.SIZE);
+        batch.draw(gameGrid, 0, 0, BrickGame.GRID_WIDTH * Piece.SIZE, BrickGame.GRID_HEIGHT * Piece.SIZE);
         blocks.draw();
         platform.draw();
         ball.draw();
@@ -58,12 +64,13 @@ public class ArcanoidGameScreen implements Screen {
         stage.draw();
         batch.end();
 
-        // принудительный выход из игры
+
+        // принудительный выход из игры, нажатием клавиши Escape
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) game.changeScreen(0);
 
         // переход на следующий уровень
         if (blocks.blocks.size() == 0) {
-            platform = new Platform(batch, 4, 0, 3);
+            platform = new Platform(batch, BrickGame.GRID_WIDTH / 2, 0, 3);
             ball = new Ball(batch, platform.platform[platform.platform.length / 2].getX(), 1, 1, 1);
             blocks.changeLevel();
             sidePanel.levelLabel.setText(("Level: " + blocks.level));
@@ -72,7 +79,7 @@ public class ArcanoidGameScreen implements Screen {
         // проигрыш
         if (ball.ball.getY() < 0) {
             game.changeScreen(6);
-            game.endGameSceen.beforeGameScreen = 1;
+            game.endGameScreen.beforeGameScreen = 1;
         }
     }
 

@@ -8,14 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.brickgame.BrickGame;
 
-public class EndGameSceen implements Screen {
+public class EndGameScreen implements Screen {
     private Stage stage;
     private final BrickGame game;
     public int beforeGameScreen;
 
-    public EndGameSceen(BrickGame game, int beforegame) {
+    public EndGameScreen(BrickGame game, int beforeGame) {
         this.game = game;
-        beforeGameScreen = beforegame;
+        beforeGameScreen = beforeGame;
         stage = new Stage(new ScreenViewport());
     }
 

@@ -11,7 +11,7 @@ public enum Direction {
     RIGHT_UP(1,-1),
     RIGHT_DOWN(1,1);
 
-    final int x, y;
+    public final int x, y;
 
     Direction(int x, int y) {
         this.x = x;
@@ -37,13 +37,11 @@ public enum Direction {
                 return RIGHT_UP;
         }
 
-
         int nextIndex = ordinal() + 1;
 
         if (nextIndex == Direction.values().length) {
             nextIndex = 0;
         }
-
         return Direction.values()[nextIndex];
     }
 }

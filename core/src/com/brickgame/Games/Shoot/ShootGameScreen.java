@@ -9,29 +9,30 @@ import com.brickgame.BrickGame;
 import com.brickgame.Games.Piece;
 import com.brickgame.Games.SidePanel;
 
+
 import java.util.ArrayList;
 
 
 public class ShootGameScreen implements Screen {
-    public static BrickGame game;
-    Stage stage;
+    private final BrickGame game;
+    private Stage stage;
     private SpriteBatch batch;
-    Texture gameGrid;
-    ArrayList<Enemy> enemies;
-    float timeSpawn;
-    Gun gun;
-    static SidePanel sidePanel;
+    private Texture gameGrid;
+    private ArrayList<Enemy> enemies;
+    private float timeSpawn;
+   private Gun gun;
+    private SidePanel sidePanel;
 
     public ShootGameScreen(BrickGame gam) {
         game = gam;
-        stage = new Stage(new ScreenViewport());
     }
 
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
+        stage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(stage);
         sidePanel = new SidePanel(batch, game);
         gameGrid = new Texture(Gdx.files.internal("background.png"));
         enemies = new ArrayList<>();
@@ -68,16 +69,18 @@ public class ShootGameScreen implements Screen {
         }
         for (Enemy enemy : enemies) {
             enemy.updatePosition();
-            gun.iskillEnemy(enemy);
+            gun.isKillEnemy(enemy);
+            if(gun.isNeedPlayBroke) game.broke.play();
+            if(gun.isNeedIncreaseScore) sidePanel.score.increaseScore();
         }
-
+        if(gun.isNeedPlayHit) game.hit.play();
 
         timeSpawn += Gdx.graphics.getDeltaTime();
 
         // отрисовка игровых объектов
         batch.begin();
         sidePanel.draw();
-        batch.draw(gameGrid, 0, 0, 10 * Piece.SIZE, 20 * Piece.SIZE);
+        batch.draw(gameGrid, 0, 0, BrickGame.GRID_WIDTH * Piece.SIZE, BrickGame.GRID_HEIGHT * Piece.SIZE);
         gun.draw();
         stage.draw();
         for (Enemy enemy : enemies) enemy.draw();
@@ -98,7 +101,7 @@ public class ShootGameScreen implements Screen {
         for (Enemy enemy : enemies) {
             if (enemy.enemy[3].getY() <= 0) {
                 game.changeScreen(6);
-                game.endGameSceen.beforeGameScreen = 2;
+                game.endGameScreen.beforeGameScreen = 2;
             }
         }
     }
@@ -109,14 +112,10 @@ public class ShootGameScreen implements Screen {
     }
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
     public void hide() {

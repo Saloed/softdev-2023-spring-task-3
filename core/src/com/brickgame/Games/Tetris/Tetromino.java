@@ -2,22 +2,26 @@ package com.brickgame.Games.Tetris;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.brickgame.BrickGame;
 import com.brickgame.Games.Piece;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Tetromino {
 
     Piece centerTetromino;
     static float TIME_MOVE, TIME_MOVE_LIMIT = 0.6f;
 
-    ArrayList<Piece> tetromino;
+    public final List<Piece> tetromino;
     int type;
 
     public SpriteBatch batch;
+    public boolean isNewTetromino;
+    private final Board board;
 /*
+// Цифра - индекс ячейки в фигуре, 0 - центральная, вокруг которой происходит вращение.
 
-// Цифра - индекс ячейки в фигуре, 0 - центральная.
 T:
 102
  3
@@ -41,8 +45,6 @@ L:
 O:
 23
 01
-
-
 
 S:
  03
@@ -74,7 +76,8 @@ Z:
     };
 
 
-    public Tetromino(SpriteBatch batch, Piece centerTetromino, int type) {
+    public Tetromino(SpriteBatch batch, Piece centerTetromino, int type, Board board) {
+        this.board = board;
         this.batch = batch;
         this.type = type;
         tetromino = new ArrayList<>();
@@ -91,18 +94,19 @@ Z:
     }
 
     public void move() {
+        isNewTetromino = false;
         TIME_MOVE += Gdx.graphics.getDeltaTime();
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && canMoveLeft()) {
             centerTetromino.setX(centerTetromino.getX() - 1);
-            updateTetrimino();
+            updateTetromino();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && canMoveRight()) {
             centerTetromino.setX(centerTetromino.getX() + 1);
-            updateTetrimino();
+            updateTetromino();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && canMoveDown()) {
             centerTetromino.setY(centerTetromino.getY() - 1);
-            updateTetrimino();
+            updateTetromino();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             rotate();
@@ -112,13 +116,10 @@ Z:
                 for (Piece piece : tetromino) {
                     piece.setY(piece.getY() - 1);
                 }
-                updateTetrimino();
+                updateTetromino();
             } else {
-                // Если нижнее перемещение невозможно, создайте новую фигуру и сделайте ее активной
-                TetrisGameScreen.board.setTetromino(TetrisGameScreen.currentTetromino);
-                TetrisGameScreen.board.clearRows();
-                TetrisGameScreen.game.hit.play();
-                TetrisGameScreen.createNewTetromino();
+                // Если перемещение вниз невозможно, создается новая фигура и становится активной
+                isNewTetromino = true;
             }
             TIME_MOVE = 0;
         }
@@ -126,7 +127,7 @@ Z:
 
     private boolean canMoveLeft() {
         for (Piece piece : tetromino) {
-            if (piece.getX() - 1 < 0 || TetrisGameScreen.board.board[(int) piece.getX() - 1][(int) piece.getY()] != null) {
+            if (piece.getX() - 1 < 0 || board.board[(int) piece.getX() - 1][(int) piece.getY()] != null) {
                 return false; // Не может двигаться влево, если достигнута левая граница экрана или есть другая фигура
             }
         }
@@ -136,7 +137,7 @@ Z:
 
     private boolean canMoveRight() {
         for (Piece piece : tetromino) {
-            if (piece.getX() + 1 > 9 || TetrisGameScreen.board.board[(int) piece.getX() + 1][(int) piece.getY()] != null) {
+            if (piece.getX() + 1 > BrickGame.GRID_WIDTH - 1 || board.board[(int) piece.getX() + 1][(int) piece.getY()] != null) {
                 return false; // Не может двигаться вправо, если достигнута правая граница экрана
             }
         }
@@ -145,7 +146,7 @@ Z:
 
     private boolean canMoveDown() {
         for (Piece piece : tetromino) {
-            if (piece.getY() - 1 < 0 || TetrisGameScreen.board.board[(int) piece.getX()][(int) piece.getY() - 1] != null) {
+            if (piece.getY() - 1 < 0 || board.board[(int) piece.getX()][(int) piece.getY() - 1] != null) {
                 return false; // Не может двигаться вниз, если достигнута нижняя граница экрана
             }
         }
@@ -154,17 +155,17 @@ Z:
 
 
     public void rotate() {
-        Tetromino tempTetromino = new Tetromino(this.batch, this.centerTetromino, this.type);
+        Tetromino tempTetromino = new Tetromino(this.batch, this.centerTetromino, this.type, this.board);
         for (int i = 1; i < tempTetromino.tetromino.size(); i++) {
             for (int j = 0; j < tempTetromino.tetromino.get(i).directions.size(); j++) {
                 tempTetromino.tetromino.get(i).directions.set(j, tempTetromino.tetromino.get(i).directions.get(j).next());
             }
         }
-        tempTetromino.updateTetrimino();
+        tempTetromino.updateTetromino();
+        //проверка на возможность сделать вращение
         boolean canRotate = true;
         for (Piece piece : tempTetromino.tetromino) {
-
-            if (piece.getX() < 0 || piece.getX() >= 9 || piece.getY() < 0 || TetrisGameScreen.board.board[(int) piece.getX()][(int) piece.getY()] != null) {
+            if (piece.getX() < 0 || piece.getX() >= BrickGame.GRID_WIDTH || piece.getY() < 0|| board.board[(int) piece.getX()][(int) piece.getY()] != null) {
                 canRotate = false;
                 break;
             }
@@ -175,12 +176,12 @@ Z:
                     tetromino.get(i).directions.set(j, tetromino.get(i).directions.get(j).next());
                 }
             }
-            updateTetrimino();
+            updateTetromino();
         }
     }
 
 
-    public void updateTetrimino() {
+    private void updateTetromino() {
         for (int i = 1; i < tetromino.size(); i++) {
             int dx = 0, dy = 0;
 

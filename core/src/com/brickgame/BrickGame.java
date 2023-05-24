@@ -12,11 +12,15 @@ import com.brickgame.Games.Snake.SnakeGameScreen;
 import com.brickgame.Games.Tetris.TetrisGameScreen;
 
 
+
 public class BrickGame  extends Game {
+
+    public final static int GRID_WIDTH = 10;
+    public final static int GRID_HEIGHT = 20;
 
     public final static int MENU = 0;
     public final static int ARCANOID = 1;
-    public final static int SPACEINVANDERS = 2;
+    public final static int SHOOT = 2;
     public final static int RACE = 3;
     public final static int SNAKE = 4;
     public final static int TETRIS = 5;
@@ -30,7 +34,7 @@ public class BrickGame  extends Game {
     public TetrisGameScreen tetrisGameScreen;
 
 
-    public EndGameSceen endGameSceen;
+    public EndGameScreen endGameScreen;
     public AssetsManager assetsManager;
     public Sound hit, broke, achives;
     public Music music;
@@ -39,8 +43,9 @@ public class BrickGame  extends Game {
 
     @Override
     public void create() {
-        mainMenuScreen = new MainMenuScreen(this);
+//        GdxNativesLoader.load();
         assetsManager = new AssetsManager();
+        mainMenuScreen = new MainMenuScreen(this);
         setScreen(mainMenuScreen);
         assetsManager.queueAddSounds();
         assetsManager.queueAddMusic();
@@ -54,6 +59,7 @@ public class BrickGame  extends Game {
         music.setLooping(true);
         music.setVolume(0.5f);
         music.play();
+
     }
     @Override
     public void render(){
@@ -70,7 +76,7 @@ public class BrickGame  extends Game {
                 if (arcanoidGameScreen == null) arcanoidGameScreen = new ArcanoidGameScreen(this);
                 this.setScreen(arcanoidGameScreen);
                 break;
-            case SPACEINVANDERS:
+            case SHOOT:
                 if ( shootGameScreen == null) shootGameScreen = new ShootGameScreen(this);
                 this.setScreen(shootGameScreen);
                 break;
@@ -87,8 +93,8 @@ public class BrickGame  extends Game {
                 this.setScreen(tetrisGameScreen);
                 break;
             case ENDGAME:
-                if ( endGameSceen== null) endGameSceen = new EndGameSceen(this,-1);
-                this.setScreen(endGameSceen);
+                if ( endGameScreen == null) endGameScreen = new EndGameScreen(this,-1);
+                this.setScreen(endGameScreen);
                 break;
         }
     }

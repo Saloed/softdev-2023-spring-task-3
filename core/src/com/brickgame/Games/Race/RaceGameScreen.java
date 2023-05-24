@@ -12,15 +12,15 @@ import com.brickgame.Games.SidePanel;
 import java.util.ArrayList;
 
 public class RaceGameScreen implements Screen {
-    static SidePanel sidePanel;
-    static BrickGame game;
-    Stage stage;
-    Texture gameGrid;
-    SpriteBatch batch;
-    SideWalls sideWalls;
-    CarPlayer carPlayer;
-    ArrayList<CarEnemy> carsEnemy;
-    float timeSpawnCarEnemy, timeSpawnCarEnemyLimit = 3.6f;
+    private SidePanel sidePanel;
+    private final BrickGame game;
+    private Stage stage;
+    private  Texture gameGrid;
+    private SpriteBatch batch;
+    private SideWalls sideWalls;
+    private CarPlayer carPlayer;
+    private ArrayList<CarEnemy> carsEnemy;
+    private float timeSpawnCarEnemy, timeSpawnCarEnemyLimit = 3.6f;
 
     public RaceGameScreen(BrickGame gam) {
         game = gam;
@@ -47,7 +47,7 @@ public class RaceGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         timeSpawnCarEnemy += Gdx.graphics.getDeltaTime();
 
-        // спавн вражеских машин
+        // появление вражеских машин
         if (timeSpawnCarEnemy >= timeSpawnCarEnemyLimit) {
             carsEnemy.add(new CarEnemy(batch));
             timeSpawnCarEnemy = 0;
@@ -57,10 +57,12 @@ public class RaceGameScreen implements Screen {
         carPlayer.updatePosition();
         for (CarEnemy car : carsEnemy) car.updatePosition();
         carPlayer.deleteCarEnemy(carsEnemy); //удаление машин, ушедших за экран
+        if(carPlayer.isNeedIncreaseScore) sidePanel.score.increaseScore();
+        if(carPlayer.isNeedPlayHit) game.hit.play();
 
         // отрисовка объектов игры
         batch.begin();
-        batch.draw(gameGrid, 0, 0, 10 * Piece.SIZE, 20 * Piece.SIZE);
+        batch.draw(gameGrid, 0, 0, BrickGame.GRID_WIDTH * Piece.SIZE, BrickGame.GRID_HEIGHT * Piece.SIZE);
         sideWalls.draw();
         carPlayer.draw();
         for (CarEnemy car : carsEnemy) car.draw();
@@ -78,7 +80,7 @@ public class RaceGameScreen implements Screen {
         // проигрыш
         if (carPlayer.checkCrash(carsEnemy)) {
             game.changeScreen(6);
-            game.endGameSceen.beforeGameScreen = 3;
+            game.endGameScreen.beforeGameScreen = 3;
         }
 
         // принудительный выход из игры

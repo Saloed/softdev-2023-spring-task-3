@@ -2,16 +2,17 @@ package com.brickgame.Games.Race;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.brickgame.BrickGame;
 import com.brickgame.Games.Piece;
 
 import java.util.*;
 
 public class SideWalls {
-    SpriteBatch batch;
-    float timeUpdatePosition = 0;
-    static float timeUpdatePositionLimit = 0.4f;
+    private final SpriteBatch batch;
+    private float timeUpdatePosition = 0;
+    public static float timeUpdatePositionLimit = 0.4f;
 
-    ArrayList<Piece> sideWalls;
+    private final ArrayList<Piece> sideWalls;
 
     public SideWalls(SpriteBatch batch) {
         this.batch = batch;
@@ -33,7 +34,7 @@ public class SideWalls {
         if (timeUpdatePosition >= timeUpdatePositionLimit) {
             for (Piece piece : sideWalls) {
                 piece.setY(piece.getY() - 1);
-                if (piece.getY() < 0) piece.setY(20);
+                if (piece.getY() < 0) piece.setY(BrickGame.GRID_HEIGHT);
             }
             timeUpdatePosition = 0;
         }

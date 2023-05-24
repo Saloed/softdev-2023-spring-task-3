@@ -3,21 +3,21 @@ package com.brickgame.Games;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.brickgame.BrickGame;
 
 
 public class Score {
     public int score;
-
-    public final Label label;
-    SpriteBatch batch;
+    private final Label label;
+    private final SpriteBatch batch;
 
     public Score(SpriteBatch batch) {
         score = 0;
         this.batch = batch;
-        Skin skin = new Skin(Gdx.files.internal("D:\\BrickSim\\assets\\skin\\uiskin.json"));
+        Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         label = new Label("Score: " + score, skin);
         label.setWrap(true);
-        label.setPosition(11 * Piece.SIZE, 18 * Piece.SIZE);
+        label.setPosition((BrickGame.GRID_WIDTH + 1) * Piece.SIZE, (BrickGame.GRID_HEIGHT - 2) * Piece.SIZE);
     }
 
     public void increaseScore() {

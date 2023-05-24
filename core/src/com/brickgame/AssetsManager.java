@@ -7,15 +7,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class AssetsManager {
     public final AssetManager manager = new AssetManager();
-    public final String skin = "skin/uiskin.json";
+    private final String skin = "skin/uiskin.json";
 
     //Sound
-    public final String hitSound = "Sounds/hit.mp3";
-    public final String brickBrokeSound = "Sounds/brickIsbroke.mp3";
-    public final String achivesSonud = "Sounds/achives.mp3";
+    private final String hitSound = "Sounds/hit.mp3";
+    private final String brickBrokeSound = "Sounds/brickIsbroke.mp3";
+    private final String achivesSonud = "Sounds/achives.mp3";
 
     // Music
-    public final String music = "Sounds/backgroundMusic.mp3";
+    private final String music = "Sounds/backgroundMusic.mp3";
 
     public void queueAddMusic() {
         manager.load(music, Music.class);

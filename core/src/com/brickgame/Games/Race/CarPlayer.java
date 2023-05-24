@@ -8,9 +8,9 @@ import com.brickgame.Games.Piece;
 import java.util.ArrayList;
 
 public class CarPlayer {
-    SpriteBatch batch;
-
-    Piece[] car;
+    private final SpriteBatch batch;
+    private final Piece[] car;
+    public boolean isNeedPlayHit, isNeedIncreaseScore;
 
     public CarPlayer(SpriteBatch batch) {
         this.batch = batch;
@@ -46,11 +46,13 @@ public class CarPlayer {
     }
 
     public void deleteCarEnemy(ArrayList<CarEnemy> carEnemies) {
+        isNeedPlayHit = false;
+        isNeedIncreaseScore = false;
         for (int i = carEnemies.size() - 1; i >= 0; --i) {
             if (carEnemies.get(i).car[0].getY() < 0) {
                 carEnemies.remove(i);
-                RaceGameScreen.game.hit.play();
-                RaceGameScreen.sidePanel.score.increaseScore();
+                isNeedPlayHit = true;
+                isNeedIncreaseScore = true;
             }
         }
     }

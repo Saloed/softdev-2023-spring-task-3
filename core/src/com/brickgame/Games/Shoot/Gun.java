@@ -2,30 +2,29 @@ package com.brickgame.Games.Shoot;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.brickgame.BrickGame;
 import com.brickgame.Games.Piece;
-import com.brickgame.Games.Score;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Gun {
-    ArrayList<Piece> gun;
-    ArrayList<Bullet> bullets;
-    SpriteBatch batch;
-    Score score;
-    float timeStepShoot, timeMove, timeShootLimit = 1f, timeMoveLimit = 0.1f;
+    public ArrayList<Piece> gun;
+    public ArrayList<Bullet> bullets;
+    private final SpriteBatch batch;
+    public float timeStepShoot, timeMove, timeShootLimit = 1f, timeMoveLimit = 0.1f;
+    public boolean isNeedPlayHit, isNeedPlayBroke, isNeedIncreaseScore;
 
     public Gun(SpriteBatch batch) {
         this.batch = batch;
-        score = new Score(batch);
-        gun = new ArrayList<>(Arrays.asList(new Piece(4, 0), new Piece(5, 0), new Piece(6, 0), new Piece(5, 1)));
+        gun = new ArrayList<>(Arrays.asList(new Piece((float)(BrickGame.GRID_WIDTH /2 -1), 0), new Piece((float)(BrickGame.GRID_WIDTH / 2), 0), new Piece((float)(BrickGame.GRID_WIDTH / 2) + 1, 0), new Piece((float)(BrickGame.GRID_WIDTH / 2), 1)));
         bullets = new ArrayList<>();
     }
 
     public void updatePosition() {
         timeMove += Gdx.graphics.getDeltaTime();
         if (timeMove >= timeMoveLimit) {
-            if (gun.get(gun.size() - 1).getX() + 1 <= 8 && Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            if (gun.get(gun.size() - 1).getX() + 1 <= BrickGame.GRID_WIDTH - 2 && Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 for (Piece piece : gun) piece.setX(piece.getX() + 1);
             }
             if (gun.get(0).getX() - 1 >= 0 && Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -36,11 +35,12 @@ public class Gun {
     }
 
     public void shoot() {
+        isNeedPlayHit = false;
         timeStepShoot += Gdx.graphics.getDeltaTime();
         if (timeStepShoot >= timeShootLimit) {
             bullets.add(new Bullet(batch, this));
             timeStepShoot = 0;
-            ShootGameScreen.game.hit.play();
+            isNeedPlayHit = true;
         }
     }
 
@@ -53,17 +53,19 @@ public class Gun {
     }
 
     //проверка столкновения пули и врага
-    public void iskillEnemy(Enemy enemy) {
+    public void isKillEnemy(Enemy enemy) {
+        isNeedIncreaseScore = false;
+        isNeedPlayBroke = false;
         for (Piece e : enemy.enemy) {
             for (Bullet b : bullets) {
                 if (b.bullet.getX() == e.getX() && b.bullet.getY() == e.getY()) {
                     enemy.hp--;
-                    ShootGameScreen.game.broke.play();
+                    isNeedPlayBroke = true;
                     if (enemy.hp == 0) {
-                        ShootGameScreen.sidePanel.score.increaseScore();
+                        isNeedIncreaseScore = true;
                         enemy.killed = true;
                     }
-                    b.bullet.setY(30);
+                    b.bullet.setY(BrickGame.GRID_HEIGHT + 5);
                     break;
                 }
             }

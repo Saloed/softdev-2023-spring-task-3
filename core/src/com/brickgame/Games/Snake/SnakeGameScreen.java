@@ -10,14 +10,13 @@ import com.brickgame.Games.SidePanel;
 
 public class SnakeGameScreen implements Screen {
 
-    static BrickGame game;
-    static SidePanel sidePanel;
-    SpriteBatch batch;
-    Texture gameGrid;
-    Apple apple;
-
-    Snake snake;
-    Stage stage;
+    private final BrickGame game;
+    private SidePanel sidePanel;
+    private SpriteBatch batch;
+    private Texture gameGrid;
+    private Apple apple;
+    private Snake snake;
+    private Stage stage;
 
     public SnakeGameScreen(BrickGame gam) {
         game = gam;
@@ -44,10 +43,12 @@ public class SnakeGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         snake.updatePosition(apple);
+        if(snake.isNeedIncreaseScore) sidePanel.score.increaseScore();
+        if(snake.isNeedHitPlay) game.hit.play();
 
         // отрисовка элементов игры
         batch.begin();
-        batch.draw(gameGrid, 0, 0, 10 * Piece.SIZE, 20 * Piece.SIZE);
+        batch.draw(gameGrid, 0, 0, BrickGame.GRID_WIDTH * Piece.SIZE, BrickGame.GRID_HEIGHT * Piece.SIZE);
         snake.draw();
         apple.draw();
         sidePanel.draw();
@@ -63,7 +64,7 @@ public class SnakeGameScreen implements Screen {
         // проигрыш
         if (snake.checkSelfCollision()) {
             game.changeScreen(6);
-            game.endGameSceen.beforeGameScreen = 4;
+            game.endGameScreen.beforeGameScreen = 4;
         }
     }
 
@@ -73,14 +74,10 @@ public class SnakeGameScreen implements Screen {
     }
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
     public void hide() {

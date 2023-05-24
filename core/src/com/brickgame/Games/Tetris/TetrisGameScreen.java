@@ -9,24 +9,32 @@ import com.brickgame.BrickGame;
 import com.brickgame.Games.Piece;
 import com.brickgame.Games.SidePanel;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 
 public class TetrisGameScreen implements Screen {
-    static BrickGame game;
-    static Board board;
-    static SpriteBatch batch;
-
-    static SidePanel sidePanel;
-    Stage stage;
-    Texture gameGrid;
-    static Tetromino currentTetromino;
-    public static boolean gameOver;
-
+    private final BrickGame game;
+    private Board board;
+    private SpriteBatch batch;
+    private SidePanel sidePanel;
+    private Stage stage;
+    private Texture gameGrid;
+    private Tetromino currentTetromino;
+    private static boolean gameOver;
+    private static final ArrayList<Integer> types = new ArrayList<>();
     public TetrisGameScreen(BrickGame gam) {
         game = gam;
     }
 
-    public static void createNewTetromino() {
-        currentTetromino = new Tetromino(batch, new Piece(MathUtils.random(4, 6), 18), MathUtils.random(6));
+    public void createNewTetromino() {
+        if (types.isEmpty()) {
+            Collections.addAll(types, 0, 1, 2, 3, 4, 5, 6);
+            Collections.shuffle(types);
+        }
+        int currenttype = types.get(0);
+        types.remove(0);
+        currentTetromino = new Tetromino(batch, new Piece(MathUtils.random(BrickGame.GRID_WIDTH/2 - 1, BrickGame.GRID_WIDTH/2 + 1), BrickGame.GRID_HEIGHT - 2), currenttype, board);
         for (Piece p : currentTetromino.tetromino) {
             if (board.board[(int) p.getX()][(int) p.getY()] != null) {
                 gameOver = true;
@@ -41,7 +49,6 @@ public class TetrisGameScreen implements Screen {
         batch = new SpriteBatch();
         board = new Board(batch);
 
-
         gameOver = false;
         sidePanel = new SidePanel(batch, game);
         Gdx.input.setInputProcessor(stage);
@@ -54,14 +61,30 @@ public class TetrisGameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(66f / 255f, 66f / 255f, 231f / 255f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         currentTetromino.move();
+
+        if (currentTetromino.isNewTetromino) {
+            board.setTetromino(currentTetromino);
+            board.clearRows();
+            game.hit.play();
+            createNewTetromino();
+        }
+
+        if (board.isNeedPlayAchives) {
+            game.achives.play();
+            board.isNeedPlayAchives = false;
+        }
+
+        if (board.isNeedIncreaseScore) {
+            sidePanel.score.increaseScore();
+            board.isNeedIncreaseScore = false;
+        }
         // переход на следующий уровень
         if (sidePanel.isNextLevel() && Tetromino.TIME_MOVE_LIMIT > 0.05f) Tetromino.TIME_MOVE_LIMIT -= 0.05f;
 
         // отрисовка элементов игры
         batch.begin();
-        batch.draw(gameGrid, 0, 0, 10 * Piece.SIZE, 20 * Piece.SIZE);
+        batch.draw(gameGrid, 0, 0, BrickGame.GRID_WIDTH * Piece.SIZE, BrickGame.GRID_HEIGHT * Piece.SIZE);
         board.draw();
         sidePanel.draw();
         currentTetromino.draw();
@@ -72,7 +95,7 @@ public class TetrisGameScreen implements Screen {
 
         if (gameOver) {
             game.changeScreen(6);
-            game.endGameSceen.beforeGameScreen = 5;
+            game.endGameScreen.beforeGameScreen = 5;
         }
     }
 
@@ -82,14 +105,10 @@ public class TetrisGameScreen implements Screen {
     }
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
     public void hide() {
@@ -103,8 +122,6 @@ public class TetrisGameScreen implements Screen {
         batch.dispose();
         gameGrid.dispose();
     }
-
-
 }
 
 

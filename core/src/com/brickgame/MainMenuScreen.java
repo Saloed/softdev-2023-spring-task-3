@@ -10,31 +10,26 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenuScreen implements Screen {
     private final BrickGame brickGame;
-    Stage stage;
+    private final Stage stage;
 
     public MainMenuScreen(BrickGame game) {
         brickGame = game;
-
-        // create stage and set it as input processor
         stage = new Stage(new ScreenViewport());
-
     }
 
     @Override
     public void show() {
-        // Create a table that fills the screen. Everything else will go inside this table.
         Gdx.input.setInputProcessor(stage);
         Table table = new Table();
         table.setFillParent(true);
         table.setDebug(false);
         stage.addActor(table);
 
-        // temporary until we have asset manager in
         brickGame.assetsManager.queueAddSkin();
         brickGame.assetsManager.manager.finishLoading();
         Skin skin = brickGame.assetsManager.manager.get("skin/uiskin.json");
 
-        //create buttons
+        //создание кнопок
         TextButton shoot = new TextButton("Shoot", skin);
         TextButton race = new TextButton("Race", skin);
         TextButton snake = new TextButton("Snake", skin);
@@ -42,7 +37,8 @@ public class MainMenuScreen implements Screen {
         TextButton arcanoid = new TextButton("Arcanoid", skin);
         TextButton exit = new TextButton("Exit", skin);
         final Button musicButton = new Button(null, skin, "music");
-        //add buttons to table
+
+        //добавление кнопок в таблицу
         table.add(arcanoid).fillX().uniformX();
         table.row().pad(10, 0, 10, 0);
         table.add(shoot).fillX().uniformX();
@@ -57,7 +53,7 @@ public class MainMenuScreen implements Screen {
         table.row().pad(0, 0, 0, 0);
         table.add(musicButton).center();
 
-        // create button listeners
+        // создание листенеров для кнопок
         shoot.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -106,34 +102,26 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // clear the screen ready for next set of images to be drawn
         Gdx.gl.glClearColor(66f / 255f, 66f / 255f, 231f / 255f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // tell our stage to do actions and draw itself
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        // change the stage's viewport when teh screen size is changed
         stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
 
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() {}
 
     @Override
     public void dispose() {
