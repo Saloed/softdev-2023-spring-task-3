@@ -22,8 +22,8 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun  provideProductsRepository(database: FirebaseDatabase, shPref: SharedPreferences): ProductRepository {
-        return ProductRepositoryImpl(database, shPref)
+    fun  provideProductsRepository(database: FirebaseDatabase, shPref: SharedPreferences, storageReference: StorageReference): ProductRepository {
+        return ProductRepositoryImpl(database, shPref, storageReference)
     }
 
     @Singleton

@@ -1,5 +1,6 @@
 package com.example.dacha.data.repository
 
+import android.net.Uri
 import com.example.dacha.data.model.EventModel
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.data.model.PlanProductModel
@@ -23,4 +24,5 @@ interface ProductRepository {
     fun updatePurchase(event: String, purchase: PurchaseModel, result: (UiState<Pair<PurchaseModel, String>>) -> Unit)
     fun deletePurchase(event: String, purchase: PurchaseModel, result: (UiState<Pair<PurchaseModel, String>>) -> Unit)
     fun getPurchase(event: String, result: (UiState<List<PurchaseModel>>) -> Unit)
+    suspend fun uploadCheck(fileUri: Uri, onResult: (UiState<Pair<Uri, String>>) -> Unit)
 }

@@ -2,8 +2,8 @@ package com.example.dacha.ui.products
 
 import android.content.Context
 import android.content.DialogInterface
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +12,11 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.viewModels
+import com.esafirm.imagepicker.features.ImagePickerConfig
+import com.esafirm.imagepicker.features.ImagePickerMode
+import com.esafirm.imagepicker.features.ReturnMode
+import com.esafirm.imagepicker.features.registerImagePicker
 import com.example.dacha.R
 import com.example.dacha.data.model.*
 import com.example.dacha.databinding.PurchaseBottomSheetBinding
@@ -39,7 +42,10 @@ class PurchaseBottomFragment(
     var resultProducts = mutableMapOf<String, ResultProductModel>()
     var planProducts = mutableMapOf<String, PlanProductModel>()
     var payer = purchase?.purchaseInfo?.paid
-    val resultMap = mutableMapOf<String, String>()
+
+    private val launcher = registerImagePicker { images ->
+        if (images.isNotEmpty()) uploadImages(images[0].uri)
+    }
 
     private val pProdToDelete = mutableMapOf<String, PlanProductModel>()
     val pProdToAdd = mutableMapOf<String, PlanProductModel>()
@@ -60,8 +66,6 @@ class PurchaseBottomFragment(
                 )
             )
 
-
-
         listOfPP.forEach {
             planProducts[it.pProduct.toString()] = it
         }
@@ -71,19 +75,23 @@ class PurchaseBottomFragment(
 
 
         val fullList = resultProducts.keys.toList() + planProducts.keys.toList()
-
-
         val lvAdapter = ArrayAdapter(
             this.requireContext(),
             android.R.layout.simple_list_item_multiple_choice,
             fullList
         )
-
-        val tvMarket = binding.etPurchaseMarket
-        if (purchase == null) tvMarket.hint = "Магазин"
-        else tvMarket.hint = purchase.purchaseInfo?.market
-        val lvProducts = binding.resultProductsPicker
         val payerPicker = binding.personFilledExposed
+        val tvMarket = binding.etPurchaseMarket
+        if (purchase == null) {
+            tvMarket.hint = "Магазин"
+            payerPicker.hint = "Кто оплатил"
+        }
+        else {
+            tvMarket.hint = purchase.purchaseInfo?.market
+            payerPicker.hint = purchase.purchaseInfo?.paid?.name
+        }
+        val lvProducts = binding.resultProductsPicker
+
         val mapOfPeople = mutableMapOf<String, SimplePersonModel>()
         people.forEach {
             mapOfPeople[it.name.toString()] = it
@@ -113,7 +121,7 @@ class PurchaseBottomFragment(
                 lvProducts.setItemChecked(fullList.indexOf(it), true)
             } else lvProducts.setItemChecked(fullList.indexOf(it), false)
         }
-        lvProducts.setOnItemClickListener { adapterView, view, i, l ->
+        lvProducts.setOnItemClickListener { _, _, i, _ ->
             if (fullList[i] !in resultProducts.keys) {
                 showAddResultDialog(lvProducts, fullList, i)
             } else {
@@ -134,6 +142,17 @@ class PurchaseBottomFragment(
 
         binding.btnDeletePurchase.setOnClickListener {
             viewModel.deletePurchase(eventId, getPurchases())
+        }
+
+        binding.btnAddCheck.setOnClickListener {
+            launcher.launch(ImagePickerConfig {
+                mode = ImagePickerMode.SINGLE
+                returnMode = ReturnMode.ALL
+                arrowColor = R.color.new_status_bar
+                imageTitle = "Выберите фото"
+                doneButtonText = "Готово"
+            }
+            )
         }
 
         binding.purchaseDoneBtn.setOnClickListener {
@@ -204,6 +223,24 @@ class PurchaseBottomFragment(
                     }
                     updatePlans(pProdToDelete.values.toList(), pProdToAdd.values.toList())
                     this.dismiss()
+                }
+            }
+        }
+    }
+
+    private fun uploadImages(image: Uri) {
+        viewModel.onUploadCheck(image) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    binding.progressBar.show()
+                }
+                is UiState.Failure -> {
+                    binding.progressBar.hide()
+                    toast(state.error)
+                }
+                is UiState.Success -> {
+                    binding.progressBar.hide()
+                    purchase?.purchaseInfo?.photo = state.data.second
                 }
             }
         }
@@ -307,7 +344,7 @@ class PurchaseBottomFragment(
         resultProducts.forEach { (_, product) ->
             result[product.rKey.toString()] = product
         }
-        return PurchaseModel(PurchaseInfo(purchase?.purchaseInfo?.key, market, null, paid), result)
+        return PurchaseModel(PurchaseInfo(purchase?.purchaseInfo?.key, market, purchase?.purchaseInfo?.photo, paid), result)
     }
 
     fun setDismissListener(function: ((Boolean) -> Unit)?) {

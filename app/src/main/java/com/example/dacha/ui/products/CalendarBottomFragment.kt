@@ -1,15 +1,12 @@
 package com.example.dacha.ui.products
 
-import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -31,7 +28,6 @@ import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
-import com.kizitonwose.calendar.view.CalendarView
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
@@ -40,9 +36,6 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
-import java.util.*
-
 class EventsAdapter(var chosenEventSent: EventModel?, val onClick: (EventModel, View) -> Unit) :
     RecyclerView.Adapter<EventsAdapter.EventsViewHolder>() {
 
@@ -154,7 +147,6 @@ class CalendarBottomFragment(private val rawEvents: List<EventModel>, private va
             } else {
                 titleFormatter.format(it.yearMonth)
             }
-            // Select the first day of the visible month.
             selectDate(it.yearMonth.atDay(1))
         }
 
@@ -170,7 +162,6 @@ class CalendarBottomFragment(private val rawEvents: List<EventModel>, private va
         }
 
         if (savedInstanceState == null) {
-            // Show today's events initially.
             binding.calendarView.post { selectDate(today) }
         }
 
@@ -233,7 +224,7 @@ class CalendarBottomFragment(private val rawEvents: List<EventModel>, private va
 
     private fun configureBinders(daysOfWeek: List<DayOfWeek>) {
         class DayViewContainer(view: View) : ViewContainer(view) {
-            lateinit var day: CalendarDay // Will be set when this container is bound.
+            lateinit var day: CalendarDay
             val binding = CalendarDayBinding.bind(view)
 
             init {
@@ -286,7 +277,6 @@ class CalendarBottomFragment(private val rawEvents: List<EventModel>, private va
             object : MonthHeaderFooterBinder<MonthViewContainer> {
                 override fun create(view: View) = MonthViewContainer(view)
                 override fun bind(container: MonthViewContainer, data: CalendarMonth) {
-                    // Setup each header day text if we have not done that already.
                     if (container.legendLayout.tag == null) {
                         container.legendLayout.tag = data.yearMonth
                         container.legendLayout.children.map { it as TextView }

@@ -2,7 +2,6 @@ package com.example.dacha.ui.products
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,21 +26,22 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.time.YearMonth
 
 @AndroidEntryPoint
-class EventBottomFragment(private val event: EventModel?, private val toDelete: Boolean, val people: List<SimplePersonModel>) : BottomSheetDialogFragment() {
+class EventBottomFragment(
+    private val event: EventModel?,
+    private val toDelete: Boolean,
+    val people: List<SimplePersonModel>
+) : BottomSheetDialogFragment() {
 
     lateinit var binding: EventChangeBottomSheetBinding
     val viewModel: ProductsViewModel by viewModels()
     var closeFunction: ((Boolean) -> Unit)? = null
     var isSuccessAddTask: Boolean = false
 
-
-//    private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
     private var date: String = "00.00.2000"
 
     var day = "00"
     var month = "00"
     var year = "2000"
-
 
 
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
@@ -53,7 +53,12 @@ class EventBottomFragment(private val event: EventModel?, private val toDelete: 
         savedInstanceState: Bundle?
     ): View {
         binding =
-            EventChangeBottomSheetBinding.bind(inflater.inflate(R.layout.event_change_bottom_sheet, container))
+            EventChangeBottomSheetBinding.bind(
+                inflater.inflate(
+                    R.layout.event_change_bottom_sheet,
+                    container
+                )
+            )
         val tvTop: TextView = binding.tvEventTop
         val tfName: TextInputLayout = binding.tvNameEvent
         val eventDatePicker: ConstraintLayout = binding.eventDatePicker
@@ -82,7 +87,7 @@ class EventBottomFragment(private val event: EventModel?, private val toDelete: 
         months[10] = "Ноябрь"
         months[11] = "Декабрь"
         val years = mutableListOf<Int>()
-        for (i in 2023..2043) years.add(i)
+        for (i in 2023..2033) years.add(i)
 
 
         if (toDelete) {
@@ -93,12 +98,15 @@ class EventBottomFragment(private val event: EventModel?, private val toDelete: 
             binding.tvEventPeople.visibility = View.GONE
             binding.eventAllPeopleBtn.visibility = View.GONE
             btnDone.text = "Удалить"
-        }
-        else {
+        } else {
             people.forEach {
                 listOfPeople.add(it.name.toString())
             }
-            val lvAdapter = ArrayAdapter(this.requireContext(), android.R.layout.simple_list_item_multiple_choice, listOfPeople)
+            val lvAdapter = ArrayAdapter(
+                this.requireContext(),
+                android.R.layout.simple_list_item_multiple_choice,
+                listOfPeople
+            )
             lvPeoplePicker.adapter = lvAdapter
             if (event == null) {
                 binding.etNameEvent.hint = "Поездка"
@@ -106,9 +114,7 @@ class EventBottomFragment(private val event: EventModel?, private val toDelete: 
                 binding.monthFilledExposed.hint = "Месяц"
                 binding.yearFilledExposed.hint = "Год"
                 tvTop.text = "Добавить"
-            }
-            else {
-
+            } else {
                 date = event.eInfo?.eDate.toString()
                 day = event.eInfo?.eDate.toString().split(".")[0]
                 month = event.eInfo?.eDate.toString().split(".")[1]
@@ -119,25 +125,24 @@ class EventBottomFragment(private val event: EventModel?, private val toDelete: 
                 binding.etNameEvent.hint = event.eInfo?.eName.toString()
                 tvTop.text = "Изменить данные"
                 event.ePeople?.forEach {
-                if (it.name in listOfPeople) lvPeoplePicker.setItemChecked(listOfPeople.indexOf(it.name), true)
-                else lvPeoplePicker.setItemChecked(listOfPeople.indexOf(it.name), false)
+                    if (it.name in listOfPeople) lvPeoplePicker.setItemChecked(
+                        listOfPeople.indexOf(
+                            it.name
+                        ), true
+                    )
+                    else lvPeoplePicker.setItemChecked(listOfPeople.indexOf(it.name), false)
                 }
-
             }
         }
-
-
-
-
-
-
-
-
 
         val daysAdapter = ArrayAdapter(this.requireContext(), R.layout.drop_down_item, days)
         dayPicker.setAdapter(daysAdapter)
 
-        val monthsAdapter = ArrayAdapter(this.requireContext(), R.layout.drop_down_item, months.values.toTypedArray())
+        val monthsAdapter = ArrayAdapter(
+            this.requireContext(),
+            R.layout.drop_down_item,
+            months.values.toTypedArray()
+        )
         monthPicker.setAdapter(monthsAdapter)
 
         val yearAdapter = ArrayAdapter(this.requireContext(), R.layout.drop_down_item, years)
@@ -154,17 +159,12 @@ class EventBottomFragment(private val event: EventModel?, private val toDelete: 
             year = years[i].toString()
         }
 
-
-
-
-
         binding.eventAllPeopleBtn.setOnClickListener {
             if (lvPeoplePicker.checkedItemCount != listOfPeople.size) {
                 for (i in listOfPeople.indices) {
                     lvPeoplePicker.setItemChecked(i, true)
                 }
-            }
-            else {
+            } else {
                 for (i in listOfPeople.indices) {
                     lvPeoplePicker.setItemChecked(i, false)
                 }
@@ -185,20 +185,17 @@ class EventBottomFragment(private val event: EventModel?, private val toDelete: 
                     if (event != null) {
                         viewModel.deleteEvent(event)
                     }
-                }
-                else {
+                } else {
                     if (validation(day, month, year)) viewModel.updateEvent(getEvent())
                 }
             }
             observer()
         }
-
-
     }
 
-    private fun observer(){
-        viewModel.addEvent.observe(viewLifecycleOwner) {state ->
-            when(state){
+    private fun observer() {
+        viewModel.addEvent.observe(viewLifecycleOwner) { state ->
+            when (state) {
                 is UiState.Loading -> {
                     binding.progressBar.show()
                 }
@@ -215,8 +212,8 @@ class EventBottomFragment(private val event: EventModel?, private val toDelete: 
                 }
             }
         }
-        viewModel.updateEvent.observe(viewLifecycleOwner) {state ->
-            when(state){
+        viewModel.updateEvent.observe(viewLifecycleOwner) { state ->
+            when (state) {
                 is UiState.Loading -> {
                     binding.progressBar.show()
                 }
@@ -226,7 +223,6 @@ class EventBottomFragment(private val event: EventModel?, private val toDelete: 
                 }
                 is UiState.Success -> {
                     isSuccessAddTask = true
-                    Log.e("EU", state.data.first.toString())
                     viewModel.chooseEvent(state.data.first)
                     binding.progressBar.hide()
                     toast(state.data.second)
@@ -234,8 +230,8 @@ class EventBottomFragment(private val event: EventModel?, private val toDelete: 
                 }
             }
         }
-        viewModel.deleteEvent.observe(viewLifecycleOwner) {state ->
-            when(state){
+        viewModel.deleteEvent.observe(viewLifecycleOwner) { state ->
+            when (state) {
                 is UiState.Loading -> {
                     binding.progressBar.show()
                 }
@@ -258,7 +254,7 @@ class EventBottomFragment(private val event: EventModel?, private val toDelete: 
         val thisDate: String = if (event?.eInfo?.eDate == null) {
             "$day.$month.$year"
         } else {
-            if (day != "00" || month != "00" || year != "2000"){
+            if (day != "00" || month != "00" || year != "2000") {
                 "$day.$month.$year"
             } else {
                 event.eInfo?.eDate.toString()
@@ -271,9 +267,12 @@ class EventBottomFragment(private val event: EventModel?, private val toDelete: 
                 chosenPeople.add(people[key])
             }
         }
-
-        Log.e("EBF", event?.ePlanProducts.toString())
-        return EventModel(EventInfo(eDate = thisDate, eKey = event?.eInfo?.eKey, eName = name) , ePeople = chosenPeople, event?.ePlanProducts, event?.ePurchases)
+        return EventModel(
+            EventInfo(eDate = thisDate, eKey = event?.eInfo?.eKey, eName = name),
+            ePeople = chosenPeople,
+            event?.ePlanProducts,
+            event?.ePurchases
+        )
     }
 
     fun setDismissListener(function: ((Boolean) -> Unit)?) {

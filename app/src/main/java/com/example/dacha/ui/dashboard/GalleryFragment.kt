@@ -1,20 +1,16 @@
 package com.example.dacha.ui.dashboard
 
-import android.app.Activity
-import android.content.ContentValues
 import android.net.Uri
-import android.nfc.Tag
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.esafirm.imagepicker.features.ImagePickerConfig
 import com.esafirm.imagepicker.features.registerImagePicker
+import com.example.dacha.R
 import com.example.dacha.data.model.AlbumModel
 import com.example.dacha.databinding.FragmentGalleryBinding
 import com.example.dacha.utils.UiState
@@ -32,14 +28,10 @@ class GalleryFragment : Fragment() {
     var imageUris: MutableList<String> = arrayListOf()
 
     val adapter by lazy {
-        GalleryAdapter(onDeleteClicked = {pos, photo -> onRemoveImage(pos, photo)})
+        GalleryAdapter(onDeleteClicked = { pos, photo -> onRemoveImage(pos, photo) })
     }
 
-    private val launcher = registerImagePicker {images ->
-//        images.forEach { image ->
-//            imageUris.add(image.uri)
-//        }
-        //adapter.updateList(imageUris)
+    private val launcher = registerImagePicker { images ->
         uploadImages(images.map { it.uri })
     }
 
@@ -64,18 +56,20 @@ class GalleryFragment : Fragment() {
 
         binding.btnAddPhoto.setOnClickListener {
             launcher.launch(ImagePickerConfig {
-                isFolderMode = true // set folder mode (false by default)
-                folderTitle = "Folder" // folder selection title
-                imageTitle = "Выберите фото" // image selection title
-                doneButtonText = "Готово" // done button text
+                isFolderMode = true
+                arrowColor = R.color.new_status_bar
+                folderTitle = "Галерея"
+                imageTitle = "Выберите фото"
+                doneButtonText = "Готово"
             }
             )
         }
 
         binding.tvAlbumTop.text = album?.name
     }
+
     private fun uploadImages(images: List<Uri>) {
-        viewModel.onUploadFiles(images){ state ->
+        viewModel.onUploadFiles(images) { state ->
             when (state) {
                 is UiState.Loading -> {
                     binding.progressBar.show()

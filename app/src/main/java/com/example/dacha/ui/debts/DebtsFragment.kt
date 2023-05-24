@@ -2,25 +2,17 @@ package com.example.dacha.ui.debts
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dacha.R
 import com.example.dacha.data.model.*
 import com.example.dacha.databinding.FragmentDebtsBinding
-import com.example.dacha.ui.products.PlanProductAdapter
-import com.example.dacha.ui.products.PlanProductBottomFragment
 import com.example.dacha.utils.*
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayoutMediator
@@ -35,9 +27,8 @@ class DebtsFragment : Fragment() {
     var events = listOf<EventModel>()
     var people = listOf<PersonModel>()
     var transfers = mutableMapOf<String, MutableList<DebtModel>>()
-    val boughtProducts = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
-    val paidProducts = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
-    var isSuccessAdd = false
+    private val boughtProducts = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
+    private val paidProducts = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
     val adapter by lazy {
         DebtsViewPagerAdapter(onDebtClicked = { pos, name ->
             onDebtClicked(
@@ -55,20 +46,6 @@ class DebtsFragment : Fragment() {
         viewModel.getPeople()
         viewModel.getEvents()
         viewModel.getTransactions()
-//        val adapter = DebtsViewPagerAdapter(mapOfInAll, mapOfProducts)
-//
-//
-//        binding.dViewPager.adapter = adapter
-//        TabLayoutMediator(binding.dTabLayout, binding.dViewPager) { tab, position ->
-//            tab.text = mapOfInAll.keys.toList()[position]
-//        }.attach()
-//        viewModel.updateAdapter(
-//            Pair(
-//                DebtsViewPagerAdapter(mapOfInAll, mapOfProducts),
-//                mapOfInAll.keys.toList()
-//            )
-//        )
-//        adapter.notifyDataSetChanged()
 
         return binding.root
     }
@@ -76,7 +53,6 @@ class DebtsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.dViewPager.adapter = adapter
-
         observer()
     }
 
@@ -315,7 +291,7 @@ class DebtsFragment : Fragment() {
             backMoney[event.key] = eventBackMoney
         }
         this.transfers = transfers
-        updateUI(transfers, paidProducts, boughtProducts, people, events)
+        updateUI(transfers, paidProducts, boughtProducts, people)
     }
 
     private fun updateUI(
@@ -323,7 +299,6 @@ class DebtsFragment : Fragment() {
         paidProducts: MutableMap<String, MutableMap<String, MutableList<String>>>,
         boughtProducts: MutableMap<String, MutableMap<String, MutableList<String>>>,
         people: List<PersonModel>,
-        events: List<EventModel>
     ) {
         val result = mutableListOf<DebtPresentation>()
         people.forEach {
@@ -358,7 +333,6 @@ class DebtsFragment : Fragment() {
             }
             result.add(DebtPresentation(name, itNeedToSend, itNeedToGet, itPaid, itBought))
         }
-        //binding.tvDebtTest.text = result.toString()
         TabLayoutMediator(binding.dTabLayout, binding.dViewPager) { tab, position ->
             tab.text = result[position].name
         }.attach()

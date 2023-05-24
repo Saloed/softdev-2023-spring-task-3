@@ -1,6 +1,5 @@
 package com.example.dacha.ui.debts
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +37,7 @@ class DebtsViewPagerAdapter(
 
             item.needToSend.forEach {
                 var toDelete = false
-                transactions.forEach {trans ->
+                transactions.forEach { trans ->
                     if (trans.from?.name == item.name && trans.to?.name == it.dPerson && trans.howMuch == it.dAmount.toInt()) {
                         toDelete = true
                         return@forEach
@@ -48,7 +47,7 @@ class DebtsViewPagerAdapter(
             }
             item.needToGet.forEach {
                 var toDelete = false
-                transactions.forEach {trans ->
+                transactions.forEach { trans ->
                     if (trans.to?.name == item.name && trans.from?.name == it.first && trans.howMuch == it.second.dAmount.toInt()) {
                         toDelete = true
                         return@forEach
@@ -69,11 +68,6 @@ class DebtsViewPagerAdapter(
                 }
                 bought.addAll(strings)
             }
-//            val lvYouDebtAdapter = ArrayAdapter(
-//                this.binding.root.context,
-//                android.R.layout.simple_list_item_1,
-//                youDebt
-//            )
             lvYouDebt.adapter = ArrayAdapter(
                 this.binding.root.context,
                 android.R.layout.simple_list_item_1,
@@ -119,6 +113,7 @@ class DebtsViewPagerAdapter(
         events = list
         notifyDataSetChanged()
     }
+
     fun updateTransactions(list: List<TransactionModel>) {
         transactions = list
         notifyDataSetChanged()

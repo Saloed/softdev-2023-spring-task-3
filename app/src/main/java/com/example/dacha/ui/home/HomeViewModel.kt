@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.data.repository.HomeRepository
-import com.example.dacha.data.repository.PersonRepository
 import com.example.dacha.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

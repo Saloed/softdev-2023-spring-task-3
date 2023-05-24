@@ -2,7 +2,6 @@ package com.example.dacha.ui.products
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -100,7 +99,7 @@ class ProductsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tbgChooseProducts.addOnButtonCheckedListener { group, checkedId, isChecked ->
+        binding.tbgChooseProducts.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
                 when (checkedId) {
                     R.id.btnPlanProducts -> {
@@ -185,27 +184,6 @@ class ProductsFragment : Fragment() {
                 is UiState.Success -> {
                     binding.progressBar.hide()
                     list = toSimplePerson(state.data.toMutableList())
-//                    list.forEach {
-//                        events.forEach { event ->
-//                            event.ePlanProducts?.values?.forEach { planProduct ->
-//                                planProduct.pWhose?.forEach { simplePerson ->
-//                                    if (it.id == simplePerson.id) simplePerson.name = it.name
-//                                }
-//                            }
-//                            event.ePurchases?.values?.forEach { purchase ->
-//                                if (purchase.purchaseInfo?.paid?.id == it.id) purchase.purchaseInfo?.paid?.name =
-//                                    it.name
-//                                purchase.resultProducts?.values?.forEach { resultProduct ->
-//                                    resultProduct.rWhose?.forEach {simplePerson ->
-//                                        if (it.id == simplePerson.id) simplePerson.name = it.name
-//                                    }
-//                                }
-//                            }
-//                            event.ePeople?.forEach {simplePerson ->
-//                                if (it.id == simplePerson.id) simplePerson.name = it.name
-//                            }
-//                        }
-//                    }
                 }
                 else -> {
                     binding.progressBar.show()
@@ -260,7 +238,6 @@ class ProductsFragment : Fragment() {
                 }
                 is UiState.Failure -> {
                     binding.progressBar.hide()
-                    Log.e("P", "ОШИБКА")
                     toast(state.error)
                 }
                 is UiState.Success -> {

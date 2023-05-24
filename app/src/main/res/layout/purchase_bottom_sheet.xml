@@ -20,6 +20,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/btnAddCheck"
+        style="@style/ToggleButtonWithIconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/baseline_add_a_photo"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_purchase_top"
+        app:layout_constraintEnd_toStartOf="@+id/tv_purchase_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_purchase_top" />
+
+    <Button
         android:id="@+id/btnDeletePurchase"
         style="@style/ToggleButtonWithIconOnly"
         android:layout_width="wrap_content"
@@ -73,7 +84,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Кто оплатил"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_purchase_market">

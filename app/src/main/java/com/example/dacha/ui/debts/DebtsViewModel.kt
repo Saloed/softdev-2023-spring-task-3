@@ -3,12 +3,10 @@ package com.example.dacha.ui.debts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.dacha.data.model.DebtModel
 import com.example.dacha.data.model.EventModel
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.data.model.TransactionModel
 import com.example.dacha.data.repository.DebtRepository
-import com.example.dacha.data.repository.ProductRepository
 import com.example.dacha.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

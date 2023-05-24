@@ -24,7 +24,7 @@ class DashboardRepositoryImpl(
         ref.get()
             .addOnSuccessListener {
                 val albums = arrayListOf<AlbumModel>()
-                for (item in it.children){
+                for (item in it.children) {
                     val album = item.getValue(AlbumModel::class.java)
                     if (album != null) albums.add(album)
                 }
@@ -46,7 +46,10 @@ class DashboardRepositoryImpl(
             }
     }
 
-    override fun updateAlbum(album: AlbumModel, result: (UiState<Pair<AlbumModel, String>>) -> Unit) {
+    override fun updateAlbum(
+        album: AlbumModel,
+        result: (UiState<Pair<AlbumModel, String>>) -> Unit
+    ) {
         val ref = database.reference.child(FireDatabase.GALLERY).child(album.key.toString())
         ref
             .setValue(album)
@@ -58,7 +61,10 @@ class DashboardRepositoryImpl(
             }
     }
 
-    override fun deleteAlbum(album: AlbumModel, result: (UiState<Pair<AlbumModel, String>>) -> Unit) {
+    override fun deleteAlbum(
+        album: AlbumModel,
+        result: (UiState<Pair<AlbumModel, String>>) -> Unit
+    ) {
         val ref = database.reference.child(FireDatabase.GALLERY).child(album.key.toString())
         ref
             .removeValue()
@@ -70,7 +76,10 @@ class DashboardRepositoryImpl(
             }
     }
 
-    override suspend fun uploadFiles(fileUri: List<Uri>, onResult: (UiState<Map<Uri, String>>) -> Unit) {
+    override suspend fun uploadFiles(
+        fileUri: List<Uri>,
+        onResult: (UiState<Map<Uri, String>>) -> Unit
+    ) {
         try {
             val urls = mutableMapOf<Uri, String>()
             val uri: List<Uri> = withContext(Dispatchers.IO) {
@@ -92,9 +101,9 @@ class DashboardRepositoryImpl(
             }
             onResult.invoke(UiState.Success(urls))
             Log.e("URLS", urls.toString())
-        } catch (e: FirebaseException){
+        } catch (e: FirebaseException) {
             onResult.invoke(UiState.Failure(e.message))
-        }catch (e: Exception){
+        } catch (e: Exception) {
             onResult.invoke(UiState.Failure(e.message))
         }
     }

@@ -2,7 +2,6 @@ package com.example.dacha.ui.people
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,12 +92,15 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
         super.onViewCreated(view, savedInstanceState)
 
         person?.let {
-            binding.tvDetailName.text = "Имя: ${it.name?.replaceFirstChar { it -> it.uppercaseChar() }}"
-            binding.tvDetailBank.text = if (!it.bank.isNullOrEmpty()) "Банк: ${it.bank}" else "Банк неизвестен"
+            binding.tvDetailName.text =
+                "Имя: ${it.name?.replaceFirstChar { it -> it.uppercaseChar() }}"
+            binding.tvDetailBank.text =
+                if (!it.bank.isNullOrEmpty()) "Банк: ${it.bank}" else "Банк неизвестен"
             binding.etNamePerson.hint = if (!it.name.isNullOrEmpty()) it.name else "Имя"
             binding.etBankPerson.hint = if (!it.bank.isNullOrEmpty()) it.bank else "Банк"
             binding.etNumberPerson.hint = if (!it.number.isNullOrEmpty()) it.number else "Номер"
-            binding.tvDetailNumber.text = if (!it.number.isNullOrEmpty()) "Номер: ${it.number}" else "Номер неизвестен"
+            binding.tvDetailNumber.text =
+                if (!it.number.isNullOrEmpty()) "Номер: ${it.number}" else "Номер неизвестен"
         }
 
         if (person == null) {
@@ -117,9 +119,9 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
         observer()
     }
 
-    private fun observer(){
-        viewModel.addPerson.observe(viewLifecycleOwner) {state ->
-            when(state){
+    private fun observer() {
+        viewModel.addPerson.observe(viewLifecycleOwner) { state ->
+            when (state) {
                 is UiState.Loading -> {
                     binding.progressBar.show()
                 }
@@ -135,8 +137,8 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
                 }
             }
         }
-        viewModel.updatePerson.observe(viewLifecycleOwner) {state ->
-            when(state){
+        viewModel.updatePerson.observe(viewLifecycleOwner) { state ->
+            when (state) {
                 is UiState.Loading -> {
                     binding.progressBar.show()
                 }
@@ -166,8 +168,7 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
     private fun getPerson(): PersonModel {
         val name = binding.etNamePerson.text.toString().ifEmpty { person?.name }
         val bank = binding.etBankPerson.text.toString().ifEmpty { person?.bank }
-        val number = binding.etNumberPerson.text.toString().ifEmpty {person?.number}
-
+        val number = binding.etNumberPerson.text.toString().ifEmpty { person?.number }
         return PersonModel(bank = bank, id = person?.id, name = name, number = number)
     }
 

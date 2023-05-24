@@ -2,13 +2,26 @@ package com.example.dacha.data.repository
 
 
 import android.content.SharedPreferences
+import android.net.Uri
+import android.util.Log
 import com.example.dacha.data.model.*
 import com.example.dacha.utils.FireDatabase
 import com.example.dacha.utils.SharedPrefConstants
 import com.example.dacha.utils.UiState
+import com.google.firebase.FirebaseException
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
-class ProductRepositoryImpl(val database: FirebaseDatabase, val shPref: SharedPreferences) :
+class ProductRepositoryImpl(
+    val database: FirebaseDatabase,
+    val shPref: SharedPreferences,
+    val storageReference: StorageReference
+) :
     ProductRepository {
     override fun addEvent(event: EventModel, result: (UiState<Pair<EventModel, String>>) -> Unit) {
         val ref = database.reference.child(FireDatabase.EVENTS).push()
@@ -247,6 +260,28 @@ class ProductRepositoryImpl(val database: FirebaseDatabase, val shPref: SharedPr
                 }
                 result.invoke(UiState.Success(purchases))
             }
+    }
+
+    override suspend fun uploadCheck(fileUri: Uri, onResult: (UiState<Pair<Uri, String>>) -> Unit) {
+        try {
+            var url = ""
+            val uri: Uri = withContext(Dispatchers.IO) {
+                storageReference
+                    .putFile(fileUri)
+                    .await()
+                    .storage
+                    .downloadUrl
+                    .addOnSuccessListener {
+                        url = it.toString()
+                    }
+                    .await()
+            }
+            onResult.invoke(UiState.Success(Pair(uri, url)))
+        } catch (e: FirebaseException) {
+            onResult.invoke(UiState.Failure(e.message))
+        } catch (e: Exception) {
+            onResult.invoke(UiState.Failure(e.message))
+        }
     }
 
 }

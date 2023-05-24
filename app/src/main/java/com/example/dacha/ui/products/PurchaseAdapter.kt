@@ -1,17 +1,17 @@
 package com.example.dacha.ui.products
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.dacha.R
 import com.example.dacha.data.model.PurchaseModel
 import com.example.dacha.databinding.PurchaseItemBinding
 import com.example.dacha.utils.hide
 import com.example.dacha.utils.show
+import com.squareup.picasso.Picasso
+import com.stfalcon.imageviewer.StfalconImageViewer
 
 
 class PurchaseAdapter(val onPurchaseClicked: ((Int, PurchaseModel) -> Unit)? = null) :
@@ -27,6 +27,7 @@ class PurchaseAdapter(val onPurchaseClicked: ((Int, PurchaseModel) -> Unit)? = n
         val binding = PurchaseItemBinding.bind(itemView)
         private val tvProduct = binding.tvPurchaseTop
         private val tvPayer = binding.tvPurchasePayerTop
+        private val btnCheck = binding.btnShowCheck
 
 
         private fun openProducts(isExpandable: Boolean) {
@@ -44,12 +45,22 @@ class PurchaseAdapter(val onPurchaseClicked: ((Int, PurchaseModel) -> Unit)? = n
             tvProduct.text = item.purchaseInfo?.market
             tvPayer.text = "Оплатил: ${item.purchaseInfo?.paid?.name}"
 
+            if (item.purchaseInfo?.photo == null) btnCheck.hide()
+            else {
+                btnCheck.show()
+                btnCheck.setOnClickListener {
+                    StfalconImageViewer.Builder<String>(binding.root.context, listOf(item.purchaseInfo?.photo)) { view, image ->
+                        Picasso.get().load(image).into(view)
+                    }.show()
+                }
+            }
+
             val childAdapter = ResultProductAdapter()
             item.resultProducts?.values?.let { childAdapter.updateList(it.toMutableList()) }
             binding.childRv.layoutManager = LinearLayoutManager(itemView.context)
             binding.childRv.setHasFixedSize(true)
             binding.childRv.adapter = childAdapter
-            binding.purchaseContainer .setOnClickListener {
+            binding.purchaseContainer.setOnClickListener {
                 onPurchaseClicked?.invoke(bindingAdapterPosition, item)
             }
             binding.arrowImageview.setOnClickListener {

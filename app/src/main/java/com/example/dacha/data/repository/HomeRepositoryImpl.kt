@@ -17,15 +17,18 @@ class HomeRepositoryImpl(val database: FirebaseDatabase, val shPref: SharedPrefe
         ref
             .setValue(person)
             .addOnSuccessListener {
-                savePerson(person) { result.invoke(it)}
+                savePerson(person) { result.invoke(it) }
             }
             .addOnFailureListener {
                 result.invoke(UiState.Failure(it.localizedMessage))
             }
     }
 
-    override fun choosePerson(person: PersonModel, result: (UiState<Pair<PersonModel, String>>) -> Unit) {
-        savePerson(person) { result.invoke(it)}
+    override fun choosePerson(
+        person: PersonModel,
+        result: (UiState<Pair<PersonModel, String>>) -> Unit
+    ) {
+        savePerson(person) { result.invoke(it) }
     }
 
     override fun getPeople(result: (UiState<List<PersonModel>>) -> Unit) {
@@ -41,7 +44,10 @@ class HomeRepositoryImpl(val database: FirebaseDatabase, val shPref: SharedPrefe
             }
     }
 
-    override fun savePerson(person: PersonModel, result: (UiState<Pair<PersonModel, String>>) -> Unit) {
+    override fun savePerson(
+        person: PersonModel,
+        result: (UiState<Pair<PersonModel, String>>) -> Unit
+    ) {
         shPref.edit().putString(SharedPrefConstants.NAME, person.name)
             .putString(SharedPrefConstants.ID, person.id).apply()
         result.invoke(UiState.Success(Pair(person, "Данные сохранены")))
@@ -54,11 +60,11 @@ class HomeRepositoryImpl(val database: FirebaseDatabase, val shPref: SharedPrefe
     }
 
     override fun getPerson(result: (UiState<PersonModel?>) -> Unit) {
-        val name = shPref.getString(SharedPrefConstants.NAME,null)
-        val id = shPref.getString(SharedPrefConstants.ID,null)
-        if (id == null){
+        val name = shPref.getString(SharedPrefConstants.NAME, null)
+        val id = shPref.getString(SharedPrefConstants.ID, null)
+        if (id == null) {
             result.invoke(UiState.Success(null))
-        }else{
+        } else {
             result.invoke(UiState.Success(PersonModel(null, id, name, null)))
         }
     }

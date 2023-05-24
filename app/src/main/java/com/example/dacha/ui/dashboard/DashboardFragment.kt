@@ -9,23 +9,13 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dacha.R
 import com.example.dacha.data.model.AlbumModel
 import com.example.dacha.databinding.FragmentDashboardBinding
-import com.example.dacha.databinding.FragmentGalleryBinding
-import com.example.dacha.databinding.FragmentPeopleBinding
-import com.example.dacha.ui.people.PeopleViewModel
 import com.example.dacha.utils.*
 import com.google.android.material.button.MaterialButton
-import com.vk.api.sdk.VK
-import com.vk.api.sdk.VKApiCallback
-import com.vk.dto.common.id.UserId
-import com.vk.sdk.api.photos.PhotosService
-import com.vk.sdk.api.photos.dto.PhotosGetAlbumsResponse
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,10 +23,6 @@ class DashboardFragment : Fragment() {
 
     private val viewModel: DashboardViewModel by viewModels()
     lateinit var binding: FragmentDashboardBinding
-
-    //val list = mutableListOf<Album>()
-//    lateinit var click: Click
-
 
     val adapter by lazy {
         AlbumAdapter(onAlbumClicked = { pos, album ->
@@ -46,21 +32,6 @@ class DashboardFragment : Fragment() {
         }, onAlbumLongClicked = {pos, album -> showUpdateAlbumDialog(album)})
     }
 
-
-//    override fun sendData(albumId: String) {
-//        val fragment = GalleryFragment()
-//        val bundle = Bundle()
-//        bundle.putString("AlbumID", albumId)
-//        fragment.arguments = bundle
-//        childFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragment_dashboard, fragment)
-//            .addToBackStack(null)
-//            .commit()
-//        bundle.getString("AlbumID")?.let { Log.e(TAG, it) }
-//    }
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -68,37 +39,6 @@ class DashboardFragment : Fragment() {
     ): View {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
         viewModel.getAlbums()
-//        click = this
-//
-//        VK.execute(PhotosService().photosGetAlbums(
-//            UserId(307517152), null, null, null, false,
-//            needCovers = true,
-//            photoSizes = false
-//        ), object :
-//            VKApiCallback<PhotosGetAlbumsResponse> {
-//            override fun success(result: PhotosGetAlbumsResponse) {
-//                for (i in 0 until result.count) {
-//                    list.add(
-//                        Album(
-//                            result.items[i].title,
-//                            result.items[i].id.toString(),
-//                            result.items[i].thumbSrc.toString()
-//                        )
-//                    )
-//                }
-//                binding.rcView.layoutManager = LinearLayoutManager(context)
-//                binding.rcView.adapter = AlbumAdapter(list, click)
-//                Log.e(TAG, list.toString())
-//
-//            }
-//            override fun fail(error: Exception) {
-//                Log.e(TAG, error.toString())
-//            }
-//        })
-//
-//        binding.apply {
-//            Log.e(TAG, list.toString())
-//        }
         return binding.root
     }
 
@@ -135,6 +75,7 @@ class DashboardFragment : Fragment() {
         val button = dialog.findViewById<MaterialButton>(R.id.name_dialog_btn)
         val editText = dialog.findViewById<EditText>(R.id.name_dialog_et)
         editText.hint = album.name.toString()
+        button.text = "Изменить"
         button.setOnClickListener {
             if (editText.text.toString().isNullOrEmpty()) {
                 toast("Введите название альбома")

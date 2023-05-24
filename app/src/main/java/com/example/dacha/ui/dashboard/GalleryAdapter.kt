@@ -1,13 +1,11 @@
 package com.example.dacha.ui.dashboard
 
-import android.net.Uri
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dacha.R
-import com.example.dacha.data.model.AlbumModel
 import com.example.dacha.databinding.GalleryItemBinding
 import com.squareup.picasso.Picasso
 

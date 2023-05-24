@@ -61,7 +61,7 @@ class PersonRepositoryImpl(val database: FirebaseDatabase) : PersonRepository {
         ref.get()
             .addOnSuccessListener {
                 val people = arrayListOf<PersonModel>()
-                for (item in it.children){
+                for (item in it.children) {
                     val person = item.getValue(PersonModel::class.java)
                     if (person != null) people.add(person)
                 }

@@ -1,9 +1,10 @@
 package com.example.dacha.ui.products
 
-import android.util.Log
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.dacha.data.model.EventModel
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.data.model.PlanProductModel
@@ -11,6 +12,7 @@ import com.example.dacha.data.model.PurchaseModel
 import com.example.dacha.data.repository.ProductRepository
 import com.example.dacha.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -135,4 +137,11 @@ class ProductsViewModel @Inject constructor(val repository: ProductRepository) :
         _purchases.value = UiState.Loading
         repository.getPurchase(event) {_purchases.value = it}
     }
+    fun onUploadCheck(fileUris: Uri, onResult: (UiState<Pair<Uri, String>>) -> Unit){
+        onResult.invoke(UiState.Loading)
+        viewModelScope.launch {
+            repository.uploadCheck(fileUris,onResult)
+        }
+    }
+
 }

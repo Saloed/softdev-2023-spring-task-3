@@ -25,12 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
-
     private val viewModel: HomeViewModel by viewModels()
-
-
-    val helloText = "Добро\nпожаловать\nна дачу!"
-
     private var list = mutableListOf<PersonModel>()
     private var person: PersonModel? = null
 
@@ -51,7 +46,6 @@ class HomeFragment : Fragment() {
 
         val btnAddName: Button = binding.addName
         val btnChooseName: Button = binding.chooseName
-        val textView: TextView = binding.textHome
         val iVGif: ImageView = binding.iVGif
         val iVPoster: ImageView = binding.iVPoster
         val btgLogin: MaterialButtonToggleGroup = binding.btgLogin
@@ -64,28 +58,23 @@ class HomeFragment : Fragment() {
 
 
 
-        textView.text = helloText
 
         btnAddName.setOnClickListener {
             showAddPersonDialog()
         }
 
         btnLogout.setOnClickListener {
-            person?.let {
-                    it1 -> viewModel.logout(it1)
-            updateUI("logout", "")}
+            person?.let { it1 ->
+                viewModel.logout(it1)
+                updateUI("logout", "")
+            }
         }
 
         btnChooseName.setOnClickListener {
             showChoosePersonDialog()
         }
-
         viewModel.getPeople()
-
-
         observer()
-
-
         Glide.with(this)
             .load(R.drawable.video_dacha)
             .into(iVGif)
@@ -99,7 +88,6 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
 
 
     private fun observer() {
@@ -122,7 +110,8 @@ class HomeFragment : Fragment() {
                         var name = person!!.name.toString()
                         if (list.isNotEmpty()) {
                             list.forEach {
-                                if (it.id.toString() == person!!.id.toString()) name = it.name.toString()
+                                if (it.id.toString() == person!!.id.toString()) name =
+                                    it.name.toString()
                             }
                         }
                         updateUI("add", name)
@@ -155,20 +144,20 @@ class HomeFragment : Fragment() {
     }
 
     private fun updateUI(state: String, data: String) {
-        when(state) {
+        when (state) {
             "add" -> {
                 binding.progressBar.hide()
-                    binding.btgLogin.visibility = View.GONE
-                    binding.tvGlobalName.visibility = View.VISIBLE
-                    binding.btnLogout.visibility = View.VISIBLE
-                    binding.tvGlobalName.text = data
+                binding.btgLogin.visibility = View.GONE
+                binding.tvGlobalName.visibility = View.VISIBLE
+                binding.btnLogout.visibility = View.VISIBLE
+                binding.tvGlobalName.text = data
             }
             "choose" -> {
-                    binding.progressBar.hide()
-                    binding.btgLogin.visibility = View.GONE
-                    binding.tvGlobalName.visibility = View.VISIBLE
-                    binding.btnLogout.visibility = View.VISIBLE
-                    binding.tvGlobalName.text = data
+                binding.progressBar.hide()
+                binding.btgLogin.visibility = View.GONE
+                binding.tvGlobalName.visibility = View.VISIBLE
+                binding.btnLogout.visibility = View.VISIBLE
+                binding.tvGlobalName.text = data
             }
             "logout" -> {
                 binding.progressBar.hide()
@@ -179,6 +168,7 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
     private fun updatePeople(list: List<PersonModel>) {
         this.list = list.toMutableList()
     }
@@ -206,14 +196,15 @@ class HomeFragment : Fragment() {
             keys[it.name.toString()] = it.id.toString()
         }
         var newPerson = list[0]
-        val dialog = MaterialAlertDialogBuilder(this.requireContext(), R.layout.choose_person_dialog)
-            .setSingleChoiceItems(keys.keys.toTypedArray(), 0) { _, i ->
-                list.forEach {
-                    if (it.id.toString() == keys.values.elementAt(i)) newPerson = it
+        val dialog =
+            MaterialAlertDialogBuilder(this.requireContext(), R.layout.choose_person_dialog)
+                .setSingleChoiceItems(keys.keys.toTypedArray(), 0) { _, i ->
+                    list.forEach {
+                        if (it.id.toString() == keys.values.elementAt(i)) newPerson = it
+                    }
                 }
-            }
-            .setView(R.layout.choose_person_dialog)
-            .create()
+                .setView(R.layout.choose_person_dialog)
+                .create()
         dialog.show()
         dialog.findViewById<MaterialButton>(R.id.name_dialog_btn)?.setOnClickListener {
             viewModel.choosePerson(newPerson)

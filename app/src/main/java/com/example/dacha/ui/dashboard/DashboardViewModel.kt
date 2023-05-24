@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dacha.data.model.AlbumModel
-import com.example.dacha.data.model.PersonModel
 import com.example.dacha.data.repository.DashboardRepository
-import com.example.dacha.data.repository.PersonRepository
 import com.example.dacha.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

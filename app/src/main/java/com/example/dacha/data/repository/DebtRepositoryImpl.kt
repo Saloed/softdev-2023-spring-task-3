@@ -56,7 +56,8 @@ class DebtRepositoryImpl(val database: FirebaseDatabase) : DebtRepository {
         transaction: TransactionModel,
         result: (UiState<Pair<TransactionModel, String>>) -> Unit
     ) {
-        val ref = database.reference.child(FireDatabase.TRANSACTIONS).child(transaction.key.toString())
+        val ref =
+            database.reference.child(FireDatabase.TRANSACTIONS).child(transaction.key.toString())
         ref
             .removeValue()
             .addOnSuccessListener {
@@ -72,7 +73,7 @@ class DebtRepositoryImpl(val database: FirebaseDatabase) : DebtRepository {
         ref.get()
             .addOnSuccessListener {
                 val transactions = arrayListOf<TransactionModel>()
-                for (item in it.children){
+                for (item in it.children) {
                     val transaction = item.getValue(TransactionModel::class.java)
                     if (transaction != null) transactions.add(transaction)
                 }

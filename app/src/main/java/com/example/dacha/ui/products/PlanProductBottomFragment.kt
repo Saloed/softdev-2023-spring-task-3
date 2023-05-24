@@ -2,26 +2,20 @@ package com.example.dacha.ui.products
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.FrameLayout
 import androidx.core.util.forEach
 import androidx.fragment.app.viewModels
 import com.example.dacha.R
-import com.example.dacha.data.model.PersonModel
 import com.example.dacha.data.model.PlanProductModel
 import com.example.dacha.data.model.SimplePersonModel
-import com.example.dacha.databinding.BottomSheetLayoutBinding
 import com.example.dacha.databinding.PlanProductBottomSheetLayoutBinding
-import com.example.dacha.ui.people.PeopleViewModel
 import com.example.dacha.utils.UiState
 import com.example.dacha.utils.hide
 import com.example.dacha.utils.show
 import com.example.dacha.utils.toast
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -204,7 +198,12 @@ class PlanProductBottomFragment(
                 chosenPeople.add(people[key])
             }
         }
-        return PlanProductModel(pProduct = name, pAmount = amount, pKey = product?.pKey, pWhose = chosenPeople)
+        return PlanProductModel(
+            pProduct = name,
+            pAmount = amount,
+            pKey = product?.pKey,
+            pWhose = chosenPeople
+        )
     }
 
     fun setDismissListener(function: ((Boolean) -> Unit)?) {

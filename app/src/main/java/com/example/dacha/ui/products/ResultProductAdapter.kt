@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dacha.R
-import com.example.dacha.data.model.PlanProductModel
 import com.example.dacha.data.model.ResultProductModel
 import com.example.dacha.databinding.ResultProductItemBinding
 
@@ -25,7 +24,7 @@ class ResultProductAdapter() :
             val amount = item.rAmount
             val price = item.pPrice?.toInt()
             var whose = ""
-            if (item.rWhose != null){
+            if (item.rWhose != null) {
                 if (item.rWhose?.size == 1) whose = item.rWhose!![0].name.toString()
                 else {
                     for (i in item.rWhose!!) {

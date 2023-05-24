@@ -44,7 +44,7 @@ class PlanProductAdapter(
             val name = item.pProduct
             val amount = item.pAmount
             var whose = ""
-            if (item.pWhose != null){
+            if (item.pWhose != null) {
                 if (item.pWhose?.size == 1) whose = item.pWhose!![0].name.toString()
                 else {
                     for (i in item.pWhose!!) {
@@ -54,7 +54,8 @@ class PlanProductAdapter(
             }
 
             tvProduct.text = name
-            tvAmount.text = if (amount.toString().last() == '0') amount?.toInt().toString() else amount.toString()
+            tvAmount.text = if (amount.toString().last() == '0') amount?.toInt()
+                .toString() else amount.toString()
             tvWhose.text = whose
             binding.planProductItem.setOnClickListener {
                 onProductClicked?.invoke(position, item)
