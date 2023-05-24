@@ -102,7 +102,7 @@ public class MainCharacter {
             speedY = -7.5f;
             y += speedY;
             state = JUMPING;
-            Clip jumpSound = Resource.getAudio("files/jump.wav");
+            Clip jumpSound = Resource.getAudio("files/1jumping.wav");
             jumpSound.start();
         }
     }

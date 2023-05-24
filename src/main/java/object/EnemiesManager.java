@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static UI.Screen.SCREEN_WIDTH;
+
 public class EnemiesManager {
     public double distanceBetweenEnemies = 600;
     private static final double DISTANCE_DEC = -0.1;
@@ -41,7 +43,7 @@ public class EnemiesManager {
             e.update();
             if (e.getBound().intersects(mainCharacter.getBoundBody()) || e.getBound().intersects(mainCharacter.getBoundHead())) {
                 mainCharacter.setAlive(false);
-                Clip deadSound = Resource.getAudio("files/dead.wav");
+                Clip deadSound = Resource.getAudio("files/1death.wav");
                 deadSound.start();
             }
         }
@@ -68,7 +70,7 @@ public class EnemiesManager {
     private void addRandomCactus() {
         Cactus cactus;
         cactus = new Cactus(mainCharacter);
-        cactus.setPosX(600);
+        cactus.setPosX(SCREEN_WIDTH);
         if (randomCactus.nextBoolean()) {
             cactus.setImage(imageCactus1);
         } else {
@@ -88,14 +90,14 @@ public class EnemiesManager {
 
     private void addRandomBird() {
         Bird bird = new Bird(mainCharacter);
-        bird.setPosX(600);
+        bird.setPosX(SCREEN_WIDTH);
         bird.setPosY(randomBird.nextInt(0,  110 - bird.getFlyingBird().getFrame().getHeight() + 1));
         enemyList.add(bird);
     }
 
     public boolean isSpaceAvailable() {
         for (Enemy enemy : enemyList) {
-            if (600 - (enemy.getPosX() + enemy.getWidth()) < distanceBetweenEnemies){
+            if (SCREEN_WIDTH - (enemy.getPosX() + enemy.getWidth()) < distanceBetweenEnemies){
                 return false;
             }
         }

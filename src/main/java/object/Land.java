@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 import static UI.Screen.GROUDNY;
+import static UI.Screen.SCREEN_WIDTH;
 
 public class Land {
 
@@ -26,7 +27,7 @@ public class Land {
         imageLand2 = Resource.getImage("files/land2.png");
         imageLand3 = Resource.getImage("files/land3.png");
         listImage = new ArrayList<>();
-        int numberOfLandTitle = 600 / imageLand1.getWidth() + 2;
+        int numberOfLandTitle = SCREEN_WIDTH / imageLand1.getWidth() + 2;
         for (int i = 0; i < numberOfLandTitle; i++) {
             ImageLand imageLand = new ImageLand();
             imageLand.posX = i * imageLand1.getWidth();

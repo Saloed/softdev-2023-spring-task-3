@@ -5,17 +5,14 @@ import Util.Resource;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.Random;
 
 public class Bird extends Enemy{
     private final Animation flyingBird;
     private final Rectangle rectangle;
     private int posX, posY;
     private final MainCharacter mainCharacter;
-    private Random random;
 
     public Bird(MainCharacter mainCharacter) {
-        random = new Random();
         this.mainCharacter = mainCharacter;
         flyingBird = new Animation(180);
         flyingBird.addFrame(Resource.getImage("files/bird-fly-1.png"));
@@ -37,7 +34,6 @@ public class Bird extends Enemy{
     @Override
     public void draw(@NotNull Graphics g) {
         g.drawImage(flyingBird.getFrame(), posX, posY, null);
-        g.drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
     }
 
     @Override

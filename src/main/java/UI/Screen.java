@@ -18,6 +18,8 @@ public class Screen extends JPanel implements Runnable, KeyListener {
     public static final int GAME_OVER_STATE = 2;
     public static final float GRAVITY = 0.5f;
     public static final float GROUDNY = 110;
+    public static final int SCREEN_WIDTH = 600;
+    private static final int timeToSleep = 20;
     private float score;
     private int highScore;
 
@@ -57,7 +59,7 @@ public class Screen extends JPanel implements Runnable, KeyListener {
             try {
                 update();
                 repaint();
-                Thread.sleep(20);
+                Thread.sleep(timeToSleep);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -79,7 +81,7 @@ public class Screen extends JPanel implements Runnable, KeyListener {
 
     public void plusScore() {
         score += 0.3f;
-        Clip scoreUpSound = Resource.getAudio("files/scoreup.wav");
+        Clip scoreUpSound = Resource.getAudio("files/1score_up.wav");
         if ((int) score % 100 == 0 && ((int) (score - 0.3f) != (int) score)) {
             scoreUpSound.start();
         }
@@ -99,7 +101,7 @@ public class Screen extends JPanel implements Runnable, KeyListener {
                 land.draw(g);
                 mainCharacter.draw(g);
                 enemiesManager.draw(g);
-                g.drawString("HI " + String.valueOf(highScore) + " " + String.valueOf((int) score), 500, 20);
+                g.drawString("HI " + highScore + " " + (int) score, 500, 20);
             }
             case GAME_OVER_STATE -> {
                 clouds.draw(g);

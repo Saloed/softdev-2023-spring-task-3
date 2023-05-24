@@ -6,16 +6,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
+import static UI.Screen.SCREEN_WIDTH;
 
 public class Clouds {
 
-    private Random random;
     private final BufferedImage cloudImage;
     public List<Cloud> cloudList;
 
     public Clouds() {
-        random = new Random();
         cloudImage = Resource.getImage("files/cloud.PNG");
         cloudList = new ArrayList<>();
 
@@ -40,7 +39,7 @@ public class Clouds {
         cloudList.add(cloud4);
 
         Cloud cloud5 = new Cloud();
-        cloud5.posX = 600;
+        cloud5.posX = SCREEN_WIDTH;
         cloud5.posY = 60;
         cloudList.add(cloud5);
     }
@@ -51,7 +50,7 @@ public class Clouds {
         }
         Cloud firstCloud = cloudList.get(0);
         if (firstCloud.posX + cloudImage.getWidth() < 0) {
-            firstCloud.posX = 600;
+            firstCloud.posX = SCREEN_WIDTH;
             cloudList.remove(firstCloud);
             cloudList.add(firstCloud);
         }

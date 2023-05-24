@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class Window extends JFrame {
 
-        private  Screen screen;
+        private final Screen screen;
 
         public Window() {
             super("Google Dino game");
