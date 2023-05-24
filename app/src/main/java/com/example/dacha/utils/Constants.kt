@@ -10,6 +10,7 @@ object FireDatabase {
     val ENAME = "ename"
     val EPEOPLE = "epeople"
     val TRANSACTIONS = "transactions"
+    val GALLERY = "gallery"
 }
 
 object SharedPrefConstants {
@@ -17,4 +18,8 @@ object SharedPrefConstants {
     val NAME = "name"
     val ID = "id"
     val EVENT_ID = "event_id"
+}
+
+object FirebaseStorageConstants {
+    val ROOT_DIRECTORY = "app"
 }

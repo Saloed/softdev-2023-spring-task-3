@@ -3,6 +3,7 @@ package com.example.dacha.di
 import android.content.SharedPreferences
 import com.example.dacha.data.repository.*
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.StorageReference
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,5 +36,11 @@ class RepositoryModule {
     @Provides
     fun provideDebtsRepository(database: FirebaseDatabase): DebtRepository {
         return DebtRepositoryImpl(database)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDashboardRepository(database: FirebaseDatabase, storageReference: StorageReference): DashboardRepository {
+        return DashboardRepositoryImpl(database, storageReference)
     }
 }

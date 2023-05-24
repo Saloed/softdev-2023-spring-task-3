@@ -11,7 +11,18 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.example.dacha.ui.dashboard.DashboardFragment"
         android:label="@string/title_galery"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard">
+
+        <action
+            android:id="@+id/action_dashboardFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="com.example.dacha.ui.dashboard.GalleryFragment"
+        android:label="fragment_gallery"
+        tools:layout="@layout/fragment_gallery" />
     <fragment
         android:id="@+id/navigation_products"
         android:name="com.example.dacha.ui.products.ProductsFragment"

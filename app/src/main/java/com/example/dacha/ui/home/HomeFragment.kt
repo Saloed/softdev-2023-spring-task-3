@@ -198,7 +198,6 @@ class HomeFragment : Fragment() {
             }
         }
         dialog.show()
-
     }
 
     private fun showChoosePersonDialog() {

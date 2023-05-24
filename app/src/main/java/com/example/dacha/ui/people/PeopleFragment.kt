@@ -29,7 +29,7 @@ import java.util.*
 @AndroidEntryPoint
 class PeopleFragment : Fragment() {
 
-    val viewModel: PeopleViewModel by viewModels()
+    private val viewModel: PeopleViewModel by viewModels()
     var deleteItemPos = -1
     lateinit var binding: FragmentPeopleBinding
     val adapter by lazy {

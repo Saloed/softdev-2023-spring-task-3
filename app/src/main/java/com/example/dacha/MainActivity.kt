@@ -17,16 +17,16 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val authLauncher = VK.login(this) { result : VKAuthenticationResult ->
-        when (result) {
-            is VKAuthenticationResult.Success -> {
-                // User passed authorization
-            }
-            is VKAuthenticationResult.Failed -> {
-                // User didn't pass authorization
-            }
-        }
-    }
+//    private val authLauncher = VK.login(this) { result : VKAuthenticationResult ->
+//        when (result) {
+//            is VKAuthenticationResult.Success -> {
+//                // User passed authorization
+//            }
+//            is VKAuthenticationResult.Failed -> {
+//                // User didn't pass authorization
+//            }
+//        }
+//    }
 
 
 
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        VK.addTokenExpiredHandler(tokenTracker)
+        //VK.addTokenExpiredHandler(tokenTracker)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -54,10 +54,10 @@ class MainActivity : AppCompatActivity() {
         )
         navView.setupWithNavController(navController)
     }
-    private val tokenTracker = object: VKTokenExpiredHandler {
-        override fun onTokenExpired() {
-            authLauncher.launch(arrayListOf(VKScope.VIDEO, VKScope.PHOTOS))
-        }
-    }
+//    private val tokenTracker = object: VKTokenExpiredHandler {
+//        override fun onTokenExpired() {
+//            authLauncher.launch(arrayListOf(VKScope.VIDEO, VKScope.PHOTOS))
+//        }
+//    }
 
 }

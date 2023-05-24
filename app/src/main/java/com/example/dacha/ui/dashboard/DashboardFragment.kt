@@ -6,41 +6,59 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dacha.R
+import com.example.dacha.data.model.AlbumModel
 import com.example.dacha.databinding.FragmentDashboardBinding
 import com.example.dacha.databinding.FragmentGalleryBinding
+import com.example.dacha.databinding.FragmentPeopleBinding
+import com.example.dacha.ui.people.PeopleViewModel
+import com.example.dacha.utils.*
+import com.google.android.material.button.MaterialButton
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.VKApiCallback
 import com.vk.dto.common.id.UserId
 import com.vk.sdk.api.photos.PhotosService
 import com.vk.sdk.api.photos.dto.PhotosGetAlbumsResponse
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class DashboardFragment : Fragment() {
+
+    private val viewModel: DashboardViewModel by viewModels()
+    lateinit var binding: FragmentDashboardBinding
+
+    //val list = mutableListOf<Album>()
+//    lateinit var click: Click
 
 
-class DashboardFragment : Fragment(), Click {
-
-    private var _binding: FragmentDashboardBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-    val list = mutableListOf<Album>()
-    lateinit var click: Click
-
-    override fun sendData(albumId: String) {
-        val fragment = GalleryFragment()
-        val bundle = Bundle()
-        bundle.putString("AlbumID", albumId)
-        fragment.arguments = bundle
-        childFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_dashboard, fragment)
-            .addToBackStack(null)
-            .commit()
-        bundle.getString("AlbumID")?.let { Log.e(TAG, it) }
+    val adapter by lazy {
+        AlbumAdapter(onAlbumClicked = { pos, album ->
+            findNavController().navigate(
+                R.id.action_dashboardFragment_to_galleryFragment ,
+                Bundle().apply { putParcelable("album", album) })
+        }, onAlbumLongClicked = {pos, album -> showUpdateAlbumDialog(album)})
     }
+
+
+//    override fun sendData(albumId: String) {
+//        val fragment = GalleryFragment()
+//        val bundle = Bundle()
+//        bundle.putString("AlbumID", albumId)
+//        fragment.arguments = bundle
+//        childFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.fragment_dashboard, fragment)
+//            .addToBackStack(null)
+//            .commit()
+//        bundle.getString("AlbumID")?.let { Log.e(TAG, it) }
+//    }
 
 
     override fun onCreateView(
@@ -48,67 +66,103 @@ class DashboardFragment : Fragment(), Click {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
-
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        click = this
-
-        VK.execute(PhotosService().photosGetAlbums(
-            UserId(307517152), null, null, null, false,
-            needCovers = true,
-            photoSizes = false
-        ), object :
-            VKApiCallback<PhotosGetAlbumsResponse> {
-            override fun success(result: PhotosGetAlbumsResponse) {
-                for (i in 0 until result.count) {
-                    list.add(
-                        Album(
-                            result.items[i].title,
-                            result.items[i].id.toString(),
-                            result.items[i].thumbSrc.toString()
-                        )
-                    )
-                }
-                binding.rcView.layoutManager = LinearLayoutManager(context)
-                binding.rcView.adapter = AlbumAdapter(list, click)
-                Log.e(TAG, list.toString())
-
-            }
-            override fun fail(error: Exception) {
-                Log.e(TAG, error.toString())
-            }
-        })
-
-        binding.apply {
-            Log.e(TAG, list.toString())
-        }
-
-
-
-            //init()
-
-
-            return root
-
-    }
-//    private fun init() {
+        binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        viewModel.getAlbums()
+//        click = this
+//
+//        VK.execute(PhotosService().photosGetAlbums(
+//            UserId(307517152), null, null, null, false,
+//            needCovers = true,
+//            photoSizes = false
+//        ), object :
+//            VKApiCallback<PhotosGetAlbumsResponse> {
+//            override fun success(result: PhotosGetAlbumsResponse) {
+//                for (i in 0 until result.count) {
+//                    list.add(
+//                        Album(
+//                            result.items[i].title,
+//                            result.items[i].id.toString(),
+//                            result.items[i].thumbSrc.toString()
+//                        )
+//                    )
+//                }
+//                binding.rcView.layoutManager = LinearLayoutManager(context)
+//                binding.rcView.adapter = AlbumAdapter(list, click)
+//                Log.e(TAG, list.toString())
+//
+//            }
+//            override fun fail(error: Exception) {
+//                Log.e(TAG, error.toString())
+//            }
+//        })
+//
 //        binding.apply {
-//          rcView.layoutManager = LinearLayoutManager(context)
-//          Log.e(TAG, list.toString())
-//          rcView.adapter = AlbumAdapter(list)
-//
-//
+//            Log.e(TAG, list.toString())
 //        }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.rcView.layoutManager = LinearLayoutManager(requireContext())
+        binding.rcView.adapter = adapter
+        binding.btnAddAlbum.setOnClickListener {
+            showAddAlbumDialog()
+        }
+        observer()
+    }
 
-    val html =
-        "https://api.vk.com/method/photos.getAlbums?owner_id=307517152&access_token=vk1.a.b55w9s4cdK1Ln-Hpdnad0SIqSxuZdg13WlE1clMp17563cUnIxz6my7ywl-obz_-7PhK4tjxB4i93y4x6cBpj32S-v2I3kKIoes7L4XWzYe7ReHhzy9CYYjfwNChzqnMPe7SxyoVSquVHnezAiXDdyqiMJHOxjFUUsF4VFjhH1BYnjXPsyrCueMrYvc1keVX&need_covers=1&v=5.131"
+    private fun showAddAlbumDialog() {
+        val dialog = requireContext().createDialog(R.layout.add_person_dialog, true)
+        val button = dialog.findViewById<MaterialButton>(R.id.name_dialog_btn)
+        val editText = dialog.findViewById<EditText>(R.id.name_dialog_et)
+        editText.hint = "Введите название альбома"
+        button.setOnClickListener {
+            if (editText.text.toString().isNullOrEmpty()) {
+                toast("Введите название альбома")
+            } else {
+                val text = editText.text.toString()
+                viewModel.addAlbum(AlbumModel(text, null, emptyList()))
+                viewModel.getAlbums()
+                dialog.dismiss()
+            }
+        }
+        dialog.show()
+    }
+
+    private fun showUpdateAlbumDialog(album: AlbumModel) {
+        val dialog = requireContext().createDialog(R.layout.add_person_dialog, true)
+        val button = dialog.findViewById<MaterialButton>(R.id.name_dialog_btn)
+        val editText = dialog.findViewById<EditText>(R.id.name_dialog_et)
+        editText.hint = album.name.toString()
+        button.setOnClickListener {
+            if (editText.text.toString().isNullOrEmpty()) {
+                toast("Введите название альбома")
+            } else {
+                val text = editText.text.toString()
+                viewModel.updateAlbum(AlbumModel(text, album.key, album.photos))
+                viewModel.getAlbums()
+                dialog.dismiss()
+            }
+        }
+        dialog.show()
+    }
+
+    private fun observer() {
+        viewModel.albums.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    binding.progressBar.show()
+                }
+                is UiState.Failure -> {
+                    binding.progressBar.hide()
+                    toast(state.error)
+                }
+                is UiState.Success -> {
+                    binding.progressBar.hide()
+                    adapter.updateList(state.data.toMutableList())
+                }
+            }
+        }
+    }
 }
