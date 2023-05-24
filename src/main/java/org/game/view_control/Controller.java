@@ -1,13 +1,18 @@
 package org.game.view_control;
 
+import javafx.animation.ScaleTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import org.game.game.Constants;
 import org.game.game.MainLogic;
 
@@ -35,19 +40,34 @@ public class Controller {
     private Label warningLabel;
     private Boolean wasTheFirstMove;
     private MainLogic logic;
+    private static int[][] anim;
 
+    public static void setAnim(int i, int j, int value) {
+        anim[i][j] = value;
+    }
+
+    @FXML
+    public void enterText(KeyEvent key) {
+        if(key.getCode().toString().equals("ENTER")) {
+            drawTheField();
+        }
+    }
 
     public void getSide() {
+        if(!sideLength.getText().matches("[0-9]")) {
+            warningAnimation();
+        } else {
         Constants.setSideLength(Integer.parseInt(sideLength.getText()));
         Constants.setArraySide(2 * Constants.getSideLength() - 1);
         Constants.setDiameter(700.0 / Constants.getArraySide() * 0.7);
+        }
     }
 
     @FXML
     public void drawTheField() {
         getSide();
-        if (Constants.getSideLength() > 10 || Constants.getSideLength() < 3) {
-            warningLabel.setVisible(true);
+        if (Constants.getSideLength() > 9 || Constants.getSideLength() < 3) {
+            warningAnimation();
             return;
         }
         start();
@@ -60,13 +80,17 @@ public class Controller {
             for (int r = 0; r < Constants.getArraySide(); r++) {
                 if(logic.getGrid().getState(q, r) != -1) {
                     Label tile = new Label();
+                    Pane tileCell = new StackPane();
+                    tileCell.setPrefSize(Constants.getDiameter(), Constants.getDiameter());
+                    tileCell.setLayoutX(x);
+                    tileCell.setLayoutY(y);
+                    tileCell.setStyle("-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-border-width: " +
+                            Constants.getDiameter() * 0.05 + "; -fx-border-color: #331b09; -fx-border-radius: 50%;");
                     tile.setPrefSize(Constants.getDiameter(), Constants.getDiameter());
-                    tile.setLayoutX(x);
-                    tile.setLayoutY(y);
-                    tile.setStyle("-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-border-size: "
-                                    + Constants.getDiameter() * 0.02 + "; -fx-border-color:  #331b09; -fx-border-radius: 50%");
+                    tile.setStyle("-fx-background-color: transparent; -fx-background-radius: 50%;");
                     tile.setAlignment(Pos.CENTER);
-                    fieldPane.getChildren().add(tile);
+                    tileCell.getChildren().add(tile);
+                    fieldPane.getChildren().add(tileCell);
                     x = x + Constants.getDiameter();
                     gameField[q][r] = tile;
                     c++;
@@ -77,8 +101,8 @@ public class Controller {
             else x = x - c * Constants.getDiameter() + Constants.getDiameter() / 2;
         }
         updateField();
-        papa.setOnKeyPressed(this::keyPressed);
-        papa.requestFocus();
+        fieldPane.setOnKeyPressed(this::keyPressed);
+        fieldPane.requestFocus();
     }
 
     @FXML
@@ -113,19 +137,23 @@ public class Controller {
                     int valOfTile = logic.getGrid().getState(q, r);
                     String style = "-fx-background-color: " + Colors.valueOf("TILE" + valOfTile).getColor() +
                             "; -fx-background-radius: 50%; -fx-text-fill: #fafafa; " +
-                            "-fx-font-family: Harpseal; -fx-font-size: " + Constants.getDiameter() * 0.27 +
-                            "; -fx-border-size: " + Constants.getDiameter() * 0.02 + "; -fx-border-color:  #331b09; -fx-border-radius: 50%";
+                            "-fx-font-family: Harpseal; -fx-font-size: " + Constants.getDiameter() * 0.27;
                     gameField[q][r].setStyle(style);
                     if(valOfTile != 0) {
                         gameField[q][r].setText(String.valueOf(valOfTile));
+                        if(anim[q][r] == 1) {
+                            spawnAnimation(q, r);
+                        }
                     }
                     else gameField[q][r].setText("");
                 }
             }
         }
+        anim = new int[Constants.getArraySide()][Constants.getArraySide()];
     }
 
     public void start() {
+        anim = new int[Constants.getArraySide()][Constants.getArraySide()];
         logic = new MainLogic();
         logic.init();
         for (int i = 0; i < Constants.COUNT_INITIAL_TILES; i++) {
@@ -151,6 +179,7 @@ public class Controller {
         sideLength.requestFocus();
         scoreLabel.setText("0");
         warningLabel.setVisible(false);
+        Constants.setSideLength(0);
     }
 
     @FXML
@@ -158,25 +187,27 @@ public class Controller {
         if(!wasTheFirstMove) return;
         logic.returnPrevious();
         scoreLabel.setText(String.valueOf(logic.getScore()));
+        fieldPane.requestFocus();
         updateField();
     }
 
-//    public void spawnAnimation(int q, int r) {
-//        ScaleTransition anim = new ScaleTransition(Duration.millis(300), gameField[q][r]);
-//        anim.setFromX(.1);
-//        anim.setToX(1.0);
-//        anim.setFromY(.1);
-//        anim.setToY(1.0);
-//        anim.play();
-//    }
+    public void warningAnimation() {
+        warningLabel.setVisible(true);
+        ScaleTransition anim = new ScaleTransition(Duration.millis(150), warningLabel);
+        anim.setFromY(.7);
+        anim.setFromX(.7);
+        anim.setToY(1.0);
+        anim.setToX(1.0);
+        anim.play();
+    }
 
-//    public void mergeAnimation(int q, int r) {
-//        ScaleTransition anim = new ScaleTransition(Duration.millis(300), gameField[q][r]);
-//        anim.setFromX(1.2);
-//        anim.setToX(1.0);
-//        anim.setFromY(1.2);
-//        anim.setToY(1.0);
-//        anim.play();
-//    }
+    public void spawnAnimation(int q, int r) {
+        ScaleTransition anim = new ScaleTransition(Duration.millis(300), gameField[q][r]);
+        anim.setFromX(.1);
+        anim.setToX(1.0);
+        anim.setFromY(.1);
+        anim.setToY(1.0);
+        anim.play();
+    }
 
 }

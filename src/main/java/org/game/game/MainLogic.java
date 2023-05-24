@@ -4,8 +4,6 @@ import org.game.view_control.Controller;
 
 import java.util.Random;
 
-import org.game.game.Constants.*;
-
 public class MainLogic {
 
     private int score;
@@ -243,6 +241,7 @@ public class MainLogic {
         while(!placed) {
             if(grid.getState(curQ, curR) == 0) {
                 grid.setState(curQ, curR, state);
+                Controller.setAnim(curQ, curR, 1);
                 placed = true;
             } else {
                 if(curQ+1 < Constants.getArraySide()) {
