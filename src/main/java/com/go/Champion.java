@@ -43,7 +43,7 @@ public class Champion {
     // Проверка позиций и построение территории
     private void visitedPosition(int x, int y, Territory territory, Board board, boolean[][] visited) {
 
-        if (!board.isValidBoundary(x, y) || visited[x][y]) {
+        if (visited[x][y]) {
             return;
         }
 
@@ -57,11 +57,13 @@ public class Champion {
             int nx = x + dx[i];
             int ny = y + dy[i];
 
-            if (board.getPosition(nx, ny) == null) {
-                territory.increaseSize();
-                visitedPosition(nx, ny, territory, board, visited);
-            } else {
-                territory.setColor(board.getPosition(x, y).color());
+            if (board.isValidBoundary(nx, ny)) {
+                if (board.isEmptyPosition(nx, ny)) {
+                    territory.increaseSize();
+                    visitedPosition(nx, ny, territory, board, visited);
+                } else {
+                    territory.setColor(board.getPosition(nx, ny).color());
+                }
             }
         }
     }
