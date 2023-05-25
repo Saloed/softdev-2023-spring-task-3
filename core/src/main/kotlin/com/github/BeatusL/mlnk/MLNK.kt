@@ -11,7 +11,6 @@ import ktx.app.KtxScreen
 
 
 class MLNK : KtxGame<KtxScreen>() {
-    private var screen = ScreenSelect.Entry
 
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
@@ -22,22 +21,16 @@ class MLNK : KtxGame<KtxScreen>() {
 
     override fun render() {
         if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.justTouched()) &&
-            (screen == ScreenSelect.Entry || screen == ScreenSelect.Restart)) {
+            !this.containsScreen<GameScreen>()) {
             addScreen(GameScreen())
             setScreen<GameScreen>()
-            screen = ScreenSelect.Game
-            playerAlive = true
-        }
-        else if (!playerAlive && screen != ScreenSelect.Restart) {
-            removeScreen<GameScreen>()
-            setScreen<RestartScreen>()
-            screen = ScreenSelect.Restart
         }
         super.render()
     }
 
-    enum class ScreenSelect {
-        Entry, Restart, Game
+    fun playerDead() {
+        this.setScreen<RestartScreen>()
+        this.removeScreen<GameScreen>()
     }
 
 
@@ -45,7 +38,8 @@ class MLNK : KtxGame<KtxScreen>() {
     companion object {
         const val scale = 1/20f
         const val entityCount = 64
-        var playerAlive = true
         val debug = false
     }
 }
+
+val game = MLNK()

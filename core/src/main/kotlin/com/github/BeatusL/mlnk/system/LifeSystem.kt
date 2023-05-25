@@ -1,9 +1,9 @@
 package com.github.BeatusL.mlnk.system
 
-import com.github.BeatusL.mlnk.MLNK.Companion.playerAlive
 import com.github.BeatusL.mlnk.component.DeadComponent
 import com.github.BeatusL.mlnk.component.LifeComponent
 import com.github.BeatusL.mlnk.component.PlayerComponent
+import com.github.BeatusL.mlnk.game
 import com.github.quillraven.fleks.AllOf
 import com.github.quillraven.fleks.ComponentMapper
 import com.github.quillraven.fleks.Entity
@@ -30,7 +30,7 @@ class LifeSystem(
         if (lifeCmp.isDead){
             configureEntity(entity) {
                 deadCmps.add(it)
-                if (it in playerCmps) playerAlive = false
+                if (it in playerCmps) game.playerDead()
             }
         }
     }
