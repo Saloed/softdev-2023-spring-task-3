@@ -11,7 +11,7 @@ public class CarEnemy {
     private final SpriteBatch batch;
     private float timeUpdatePosition = 0;
     public static float timeUpdatePositionLimit = 0.4f;
-     public Piece[] car;
+    public Piece[] car;
 
     public CarEnemy(SpriteBatch batch) {
         this.batch = batch;

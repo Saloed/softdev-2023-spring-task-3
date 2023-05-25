@@ -38,7 +38,7 @@ public class Ball {
                 dx = -dx;
                 isNeedPlayHit = true;
                 if (ball.getX() < 0) ball.setX(0);
-                else if (ball.getX() > BrickGame.GRID_WIDTH -1) ball.setX(BrickGame.GRID_WIDTH - 1);
+                else if (ball.getX() > BrickGame.GRID_WIDTH - 1) ball.setX(BrickGame.GRID_WIDTH - 1);
             }
             if (ball.getY() >= BrickGame.GRID_HEIGHT - 1) {
                 dy = -dy;

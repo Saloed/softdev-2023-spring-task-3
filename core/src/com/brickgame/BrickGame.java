@@ -1,7 +1,6 @@
 package com.brickgame;
 
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.brickgame.Games.Arcanoid.ArcanoidGameScreen;
 import com.badlogic.gdx.Game;
@@ -12,8 +11,7 @@ import com.brickgame.Games.Snake.SnakeGameScreen;
 import com.brickgame.Games.Tetris.TetrisGameScreen;
 
 
-
-public class BrickGame  extends Game {
+public class BrickGame extends Game {
 
     public final static int GRID_WIDTH = 10;
     public final static int GRID_HEIGHT = 20;
@@ -61,8 +59,9 @@ public class BrickGame  extends Game {
         music.play();
 
     }
+
     @Override
-    public void render(){
+    public void render() {
         super.render();
     }
 
@@ -77,30 +76,31 @@ public class BrickGame  extends Game {
                 this.setScreen(arcanoidGameScreen);
                 break;
             case SHOOT:
-                if ( shootGameScreen == null) shootGameScreen = new ShootGameScreen(this);
+                if (shootGameScreen == null) shootGameScreen = new ShootGameScreen(this);
                 this.setScreen(shootGameScreen);
                 break;
             case RACE:
-                if ( raceGameScreen== null) raceGameScreen = new RaceGameScreen(this);
+                if (raceGameScreen == null) raceGameScreen = new RaceGameScreen(this);
                 this.setScreen(raceGameScreen);
                 break;
             case SNAKE:
-                if ( snakeGameScreen == null) snakeGameScreen = new SnakeGameScreen(this);
+                if (snakeGameScreen == null) snakeGameScreen = new SnakeGameScreen(this);
                 this.setScreen(snakeGameScreen);
                 break;
             case TETRIS:
-                if ( tetrisGameScreen == null) tetrisGameScreen = new TetrisGameScreen(this);
+                if (tetrisGameScreen == null) tetrisGameScreen = new TetrisGameScreen(this);
                 this.setScreen(tetrisGameScreen);
                 break;
             case ENDGAME:
-                if ( endGameScreen == null) endGameScreen = new EndGameScreen(this,-1);
+                if (endGameScreen == null) endGameScreen = new EndGameScreen(this, -1);
                 this.setScreen(endGameScreen);
                 break;
         }
     }
+
     @Override
-    public void dispose(){
+    public void dispose() {
         music.dispose();
-       assetsManager.manager.dispose();
+        assetsManager.manager.dispose();
     }
 }

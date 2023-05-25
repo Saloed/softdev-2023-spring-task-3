@@ -23,6 +23,7 @@ public class TetrisGameScreen implements Screen {
     private Tetromino currentTetromino;
     private static boolean gameOver;
     private static final ArrayList<Integer> types = new ArrayList<>();
+
     public TetrisGameScreen(BrickGame gam) {
         game = gam;
     }
@@ -34,7 +35,7 @@ public class TetrisGameScreen implements Screen {
         }
         int currenttype = types.get(0);
         types.remove(0);
-        currentTetromino = new Tetromino(batch, new Piece(MathUtils.random(BrickGame.GRID_WIDTH/2 - 1, BrickGame.GRID_WIDTH/2 + 1), BrickGame.GRID_HEIGHT - 2), currenttype, board);
+        currentTetromino = new Tetromino(batch, new Piece(MathUtils.random(BrickGame.GRID_WIDTH / 2 - 1, BrickGame.GRID_WIDTH / 2 + 1), BrickGame.GRID_HEIGHT - 2), currenttype, board);
         for (Piece p : currentTetromino.tetromino) {
             if (board.board[(int) p.getX()][(int) p.getY()] != null) {
                 gameOver = true;
@@ -105,10 +106,12 @@ public class TetrisGameScreen implements Screen {
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
     public void hide() {

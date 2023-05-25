@@ -6,10 +6,10 @@ public enum Direction {
     RIGHT(1, 0),
     DOWN(0, 1),
     LEFT(-1, 0),
-    LEFT_UP(-1,-1),
-    LEFT_DOWN(-1,1),
-    RIGHT_UP(1,-1),
-    RIGHT_DOWN(1,1);
+    LEFT_UP(-1, -1),
+    LEFT_DOWN(-1, 1),
+    RIGHT_UP(1, -1),
+    RIGHT_DOWN(1, 1);
 
     public final int x, y;
 
@@ -17,8 +17,9 @@ public enum Direction {
         this.x = x;
         this.y = y;
     }
+
     public Direction next() {
-        switch (this){
+        switch (this) {
             case UP:
                 return RIGHT;
             case RIGHT:
@@ -35,13 +36,31 @@ public enum Direction {
                 return LEFT_UP;
             case LEFT_UP:
                 return RIGHT_UP;
+            default:
+                return null;
         }
+    }
 
-        int nextIndex = ordinal() + 1;
-
-        if (nextIndex == Direction.values().length) {
-            nextIndex = 0;
+    public Direction previous() {
+        switch (this) {
+            case RIGHT:
+                return UP;
+            case DOWN:
+                return RIGHT;
+            case LEFT:
+                return DOWN;
+            case UP:
+                return LEFT;
+            case RIGHT_DOWN:
+                return RIGHT_UP;
+            case LEFT_DOWN:
+                return RIGHT_DOWN;
+            case LEFT_UP:
+                return LEFT_DOWN;
+            case RIGHT_UP:
+                return LEFT_UP;
+            default:
+                return null;
         }
-        return Direction.values()[nextIndex];
     }
 }

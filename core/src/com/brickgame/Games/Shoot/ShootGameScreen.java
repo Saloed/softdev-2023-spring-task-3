@@ -20,7 +20,7 @@ public class ShootGameScreen implements Screen {
     private Texture gameGrid;
     private ArrayList<Enemy> enemies;
     private float timeSpawn;
-   private Gun gun;
+    private Gun gun;
     private SidePanel sidePanel;
 
     public ShootGameScreen(BrickGame gam) {
@@ -70,10 +70,10 @@ public class ShootGameScreen implements Screen {
         for (Enemy enemy : enemies) {
             enemy.updatePosition();
             gun.isKillEnemy(enemy);
-            if(gun.isNeedPlayBroke) game.broke.play();
-            if(gun.isNeedIncreaseScore) sidePanel.score.increaseScore();
+            if (gun.isNeedPlayBroke) game.broke.play();
+            if (gun.isNeedIncreaseScore) sidePanel.score.increaseScore();
         }
-        if(gun.isNeedPlayHit) game.hit.play();
+        if (gun.isNeedPlayHit) game.hit.play();
 
         timeSpawn += Gdx.graphics.getDeltaTime();
 
@@ -112,10 +112,12 @@ public class ShootGameScreen implements Screen {
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
     public void hide() {

@@ -17,7 +17,7 @@ public class Gun {
 
     public Gun(SpriteBatch batch) {
         this.batch = batch;
-        gun = new ArrayList<>(Arrays.asList(new Piece((float)(BrickGame.GRID_WIDTH /2 -1), 0), new Piece((float)(BrickGame.GRID_WIDTH / 2), 0), new Piece((float)(BrickGame.GRID_WIDTH / 2) + 1, 0), new Piece((float)(BrickGame.GRID_WIDTH / 2), 1)));
+        gun = new ArrayList<>(Arrays.asList(new Piece((float) (BrickGame.GRID_WIDTH / 2 - 1), 0), new Piece((float) (BrickGame.GRID_WIDTH / 2), 0), new Piece((float) (BrickGame.GRID_WIDTH / 2) + 1, 0), new Piece((float) (BrickGame.GRID_WIDTH / 2), 1)));
         bullets = new ArrayList<>();
     }
 

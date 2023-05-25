@@ -15,7 +15,7 @@ public class RaceGameScreen implements Screen {
     private SidePanel sidePanel;
     private final BrickGame game;
     private Stage stage;
-    private  Texture gameGrid;
+    private Texture gameGrid;
     private SpriteBatch batch;
     private SideWalls sideWalls;
     private CarPlayer carPlayer;
@@ -57,8 +57,8 @@ public class RaceGameScreen implements Screen {
         carPlayer.updatePosition();
         for (CarEnemy car : carsEnemy) car.updatePosition();
         carPlayer.deleteCarEnemy(carsEnemy); //удаление машин, ушедших за экран
-        if(carPlayer.isNeedIncreaseScore) sidePanel.score.increaseScore();
-        if(carPlayer.isNeedPlayHit) game.hit.play();
+        if (carPlayer.isNeedIncreaseScore) sidePanel.score.increaseScore();
+        if (carPlayer.isNeedPlayHit) game.hit.play();
 
         // отрисовка объектов игры
         batch.begin();

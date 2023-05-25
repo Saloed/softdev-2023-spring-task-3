@@ -8,6 +8,7 @@ public class Board {
 
     public Piece[][] board = new Piece[BrickGame.GRID_WIDTH][BrickGame.GRID_HEIGHT];
     private final SpriteBatch batch;
+
     public Board(SpriteBatch batch) {
         this.batch = batch;
     }
@@ -26,13 +27,13 @@ public class Board {
             for (int x = 0; x < BrickGame.GRID_WIDTH; x++) {
                 board[x][y] = board[x][y + 1];
                 if (board[x][y] != null) {
-                    board[x][y].setY(board[x][y].getY()- 1); // Обновляем координату y объекта Piece после перемещения
+                    board[x][y].setY(board[x][y].getY() - 1); // Обновляем координату y объекта Piece после перемещения
                 }
             }
         }
         // Очистка верхней строки
         for (int x = 0; x < BrickGame.GRID_WIDTH; x++) {
-            board[x][BrickGame.GRID_HEIGHT-1] = null;
+            board[x][BrickGame.GRID_HEIGHT - 1] = null;
         }
     }
 

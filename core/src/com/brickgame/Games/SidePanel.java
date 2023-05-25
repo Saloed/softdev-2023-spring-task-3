@@ -15,7 +15,6 @@ public class SidePanel {
     public int level;
 
 
-
     public SidePanel(SpriteBatch spriteBatch, BrickGame game) {
         this.batch = spriteBatch;
         this.game = game;

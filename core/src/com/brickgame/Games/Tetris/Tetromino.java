@@ -155,28 +155,30 @@ Z:
 
 
     public void rotate() {
-        Tetromino tempTetromino = new Tetromino(this.batch, this.centerTetromino, this.type, this.board);
-        for (int i = 1; i < tempTetromino.tetromino.size(); i++) {
-            for (int j = 0; j < tempTetromino.tetromino.get(i).directions.size(); j++) {
-                tempTetromino.tetromino.get(i).directions.set(j, tempTetromino.tetromino.get(i).directions.get(j).next());
+        //Поворачиваем фигуру
+        for (int i = 1; i < tetromino.size(); i++) {
+            for (int j = 0; j < tetromino.get(i).directions.size(); j++) {
+                tetromino.get(i).directions.set(j, tetromino.get(i).directions.get(j).next());
             }
         }
-        tempTetromino.updateTetromino();
+        this.updateTetromino();
+
         //проверка на возможность сделать вращение
         boolean canRotate = true;
-        for (Piece piece : tempTetromino.tetromino) {
-            if (piece.getX() < 0 || piece.getX() >= BrickGame.GRID_WIDTH || piece.getY() < 0|| board.board[(int) piece.getX()][(int) piece.getY()] != null) {
+        for (Piece piece : tetromino) {
+            if (piece.getX() < 0 || piece.getX() >= BrickGame.GRID_WIDTH || piece.getY() < 0 || board.board[(int) piece.getX()][(int) piece.getY()] != null) {
                 canRotate = false;
                 break;
             }
         }
-        if (canRotate) {
+        //Если поворот невозможен, поворачиваем фигуру обратно
+        if (!canRotate) {
             for (int i = 1; i < tetromino.size(); i++) {
                 for (int j = 0; j < tetromino.get(i).directions.size(); j++) {
-                    tetromino.get(i).directions.set(j, tetromino.get(i).directions.get(j).next());
+                    tetromino.get(i).directions.set(j, tetromino.get(i).directions.get(j).previous());
                 }
             }
-            updateTetromino();
+            this.updateTetromino();
         }
     }
 
