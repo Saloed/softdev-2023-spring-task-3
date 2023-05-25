@@ -33,11 +33,9 @@ public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
         visitedPositions.clear(); // Очищаем список посещенных позиций
         stoneGroup = new ArrayList<>(); // Создаем новый список для группы камней
 
-        // Находит все связанные камни в группе
-        findConnectedStones(stone.x(), stone.y(), board);
+        findConnectedStones(stone.x(), stone.y(), board);// Находит все связанные камни в группе
 
-        // Возвращает список камней, принадлежащих группе
-        return stoneGroup;
+        return stoneGroup;// Возвращает список камней, принадлежащих группе
     }
 
     private void findConnectedStones(int x, int y, Board board) {
@@ -51,20 +49,21 @@ public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
         stoneGroup.add(position);
         visitedPositions.add(position);
 
-        if (board.isValidXBoundary(x - 1)) {
-            findConnectedStones(x - 1, y, board);
-        }
-        if (board.isValidXBoundary(x + 1)) {
-            findConnectedStones(x + 1, y, board);
-        }
-        if (board.isValidYBoundary(y - 1)) {
-            findConnectedStones(x, y - 1, board);
-        }
-        if (board.isValidYBoundary(y + 1)) {
-            findConnectedStones(x, y + 1, board);
+        int[] dx = {-1, 1, 0, 0};  // Смещения по горизонтали для каждого направления
+        int[] dy = {0, 0, -1, 1};  // Смещения по вертикали для каждого направления
+
+        // Рекурсивный поиск соседей
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+
+            if (board.isValidBoundary(nx, ny)) {
+                findConnectedStones(nx, ny, board);
+            }
         }
     }
 
+    // Метод осуществляющий удаление группы с доски
     private void removeStoneGroup(List<Stone> stoneGroup, Board board) {
         for (Stone stone : stoneGroup) {
             if (stone.color() == Color.WHITE)
