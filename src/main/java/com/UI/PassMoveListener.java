@@ -2,6 +2,7 @@ package com.UI;
 
 import com.go.Board;
 import com.go.Game;
+import com.go.Champion;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +33,18 @@ public class PassMoveListener implements GameButtonsControlPanel.PassMoveListene
 
         if (consecutivePasses == 2) {
 
-            JOptionPane.showMessageDialog(null, " победили с большим отрывом...", "Игра завершена!", JOptionPane.INFORMATION_MESSAGE);
+            Champion winner = new Champion(board);
+            Color winnerColor = winner.getChampion();
+            String champion;
+            double score = winner.getScore();
+            if (winnerColor == Color.BLACK) {
+                champion = "Черные";
+            } else {
+                champion = "Белые";
+            }
+
+            JOptionPane.showMessageDialog(null, champion + " победили с отрывом в... \n" +
+                    score + " очков! Учитесь!", "Игра завершена!", JOptionPane.INFORMATION_MESSAGE);
             consecutivePasses = 0;
         }
         previousPlayer = currentPlayer;
