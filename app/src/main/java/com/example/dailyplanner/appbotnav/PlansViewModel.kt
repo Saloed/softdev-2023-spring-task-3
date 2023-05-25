@@ -1,45 +1,47 @@
 package com.example.dailyplanner.appbotnav
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.dailyplanner.Plan
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 
 class PlansViewModel : ViewModel() {
-    var planList = MutableStateFlow(
+    private var _planList = MutableStateFlow(
         mutableListOf(
-            Plan("24 May 2023", "10:00" to "sleep", true, false),
+            Plan("0", "25 May 2023", "10:00" to "sleep", true, mutableStateOf(false) ),
         )
     )
-
-    fun getPlans(): List<Plan> = planList.value
+    val planList: MutableList<Plan>
+        get() = _planList.value
 
 
     fun addPlan(plan: Plan) {
-        planList.value.add(plan)
+        planList.add(plan)
     }
 
-    fun planDone(plan: Plan) {
-        planList.value[planList.value.indexOf(plan)].planDone =
-            !planList.value[planList.value.indexOf(plan)].planDone
+    fun planIsDone(id: String, isChecked: Boolean) {
+        val updatedPlan = getPlanById(id)?.copy(planDone = mutableStateOf(isChecked))
+        val forUpdate = mutableListOf<Plan>()
+        planList.remove( getPlanById(id))
+        forUpdate.addAll(planList)
+        forUpdate.add(updatedPlan!!)
+        forUpdate.sortBy { it.id }
+        _planList= MutableStateFlow(forUpdate)
 
     }
 
-    fun getCurrentPlan(plan: Plan) = planList.value[planList.value.indexOf(plan)]
-    fun getCurrentDayPlans(date: String): List<Plan> = getPlans().filter { it.date == date }
+    fun getPlanById(id: String): Plan? = planList.find { it.id == id }
+
+
+    fun getCurrentPlan(plan: Plan) = planList[planList.indexOf(plan)]
+    fun getCurrentDayPlans(date: String): List<Plan> = planList.filter { it.date == date }
     fun daysCheckedPlans(day: String): Float =
-        (getCurrentDayPlans(day).filter { it.planDone }.size.toFloat() / getCurrentDayPlans(day).size.toFloat())
+        if (getCurrentDayPlans(day).size != 0) (getCurrentDayPlans(day).filter { it.planDone.value }.size.toFloat() / getCurrentDayPlans(
+            day
+        ).size.toFloat()) else 0f
 
-    fun HabbitCheckedPlans(day: String): Int =
-        (getCurrentDayPlans(day).filter { it.planDone && it.useful_habit }.size)
+    fun habbitCheckedPlans(day: String): Int =
+        (getCurrentDayPlans(day).filter { it.planDone.value && it.useful_habit }.size)
 
 }

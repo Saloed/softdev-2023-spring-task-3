@@ -1,11 +1,13 @@
 package com.example.dailyplanner.appbotnav
 
+import androidx.compose.runtime.mutableStateOf
 import com.example.dailyplanner.Plan
 
 val planList = arrayListOf(
-Plan("22 May 2023", "10:00" to "sleep",true, false),
+Plan("1","22 May 2023", "10:00" to "sleep",true, mutableStateOf(false)),
 )
 object PlanData {
+
     fun getPlan() = planList
     fun getCurrentPlan(plan: Plan) = planList[planList.indexOf(plan)]
     fun getCurrentDayPlans(date: String): List<Plan> = getPlan().filter{ it.date == date }
