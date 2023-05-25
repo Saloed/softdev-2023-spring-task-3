@@ -22,10 +22,7 @@ public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
         /*Проверяет, имеет ли группа камней хотя бы одну свободу с помощью правила LibertiesSurvivalRule и
         возвращает результат: имеет ли группа камней хотя бы одну свободу*/
         LibertiesSurvivalRule libertiesSurvivalRule = new LibertiesSurvivalRule();
-        boolean hasSameColor = stoneGroup.stream().anyMatch(groupStone -> libertiesSurvivalRule.check(groupStone, board));
-        if (!hasSameColor)
-            removeStoneGroup(stoneGroup, board);
-        return hasSameColor;
+        return stoneGroup.stream().anyMatch(groupStone -> libertiesSurvivalRule.check(groupStone, board));
     }
 
     // Поиск группы камней
@@ -63,15 +60,7 @@ public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
         }
     }
 
-    // Метод осуществляющий удаление группы с доски
-    private void removeStoneGroup(List<Stone> stoneGroup, Board board) {
-        for (Stone stone : stoneGroup) {
-            if (stone.color() == Color.WHITE)
-                board.capturedStonesWhite++;
-            else {
-                board.capturedStonesBlack++;
-            }
-            board.removeStone(stone);
-        }
+    public List<Stone> getStoneGroup() {
+        return stoneGroup;
     }
 }
