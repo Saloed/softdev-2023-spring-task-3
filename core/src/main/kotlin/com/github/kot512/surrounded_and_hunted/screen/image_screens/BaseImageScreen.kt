@@ -27,7 +27,7 @@ open class BaseImageScreen(
     protected val backgroundPosition: Point = Point(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 ) : KtxScreen {
 //    для экрана и графики
-    private val batch: SpriteBatch = SpriteBatch()
+    protected val batch: SpriteBatch = SpriteBatch()
     private val camera: Camera = OrthographicCamera(
         SurroundedAndHunted.SCREEN_WIDTH,
         SurroundedAndHunted.SCREEN_HEIGHT

@@ -1,11 +1,10 @@
 package com.github.kot512.surrounded_and_hunted
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.github.kot512.surrounded_and_hunted.screen.image_screens.MainMenuImageScreen
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.MainLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
@@ -13,7 +12,7 @@ import ktx.assets.disposeSafely
 
 /** [com.badlogic.gdx.ApplicationListener] implementation shared by all platforms. */
 class SurroundedAndHunted : KtxGame<KtxScreen>() {
-    //    предзагружаемые ресурсы
+//    предзагружаемые ресурсы
     companion object {
 //        константы
         var SCREEN_WIDTH = 0f
@@ -30,12 +29,33 @@ class SurroundedAndHunted : KtxGame<KtxScreen>() {
         lateinit var PLAYER_TXTR: TextureRegion
         lateinit var BASIC_ENEMY_TXTR: TextureRegion
 
-        var RECORD_SCORE = 0f
-        var CURRENT_SCORE = 0f
-        var PLAYER_HP = 100f
+//        выгрузка сохраненных переменных
+        lateinit var SAVE_DATA: Preferences
+
+        var RECORD_SCORE = 0
+        var CURRENT_SCORE = 0
+        var UPGRADE_POINTS = 0
     }
 
     override fun create() {
+//        загрузка сохраненных данных
+        SAVE_DATA = Gdx.app.getPreferences("data")
+
+        if (!SAVE_DATA.contains("record"))
+            SAVE_DATA.apply {
+                putInteger("record", 0)
+                flush()
+            }
+        else RECORD_SCORE = SAVE_DATA.getInteger("record")
+
+        if (!SAVE_DATA.contains("upgrade"))
+            SAVE_DATA.apply {
+                putInteger("upgrade", 0)
+                flush()
+            }
+        else UPGRADE_POINTS = SAVE_DATA.getInteger("upgrade")
+
+
 //        инициализируем константы
         SCREEN_WIDTH = Gdx.graphics.width.toFloat()
         SCREEN_HEIGHT = Gdx.graphics.height.toFloat()

@@ -9,15 +9,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.L_JOYSTICK_POS
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.PLAYER_TXTR
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.R_JOYSTICK_POS
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_HEIGHT
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_WIDTH
-import com.github.kot512.surrounded_and_hunted.hud.controls.AimJoystick
-import com.github.kot512.surrounded_and_hunted.hud.controls.MovementJoystick
 import com.github.kot512.surrounded_and_hunted.entities.Player
 import com.github.kot512.surrounded_and_hunted.entities.enemy_manager.EnemyManager
+import com.github.kot512.surrounded_and_hunted.hud.UIManager
 import ktx.app.KtxScreen
 import ktx.assets.disposeSafely
 
@@ -44,20 +41,20 @@ abstract class BaseLocationScreen : KtxScreen {
     private val batch: SpriteBatch = SpriteBatch()
 
 //    интерфейс
-
+    val uiManager: UIManager = UIManager(this)
     val stage: Stage = Stage(viewport) // сцена, ответственная за рендер UI
-    private val movJoystick: MovementJoystick =
-        MovementJoystick(L_JOYSTICK_POS)
-    private val aimJoystick: AimJoystick =
-        AimJoystick(R_JOYSTICK_POS)
+//    private val movJoystick: MovementJoystick =
+//        MovementJoystick(L_JOYSTICK_POS)
+//    private val aimJoystick: AimJoystick =
+//        AimJoystick(R_JOYSTICK_POS)
 
 //    игровые сущности
     val player: Player =
         Player(
             this,
             PLAYER_TXTR,
-            movJoystick,
-            aimJoystick
+            uiManager.movJoystick,
+            uiManager.aimJoystick
         )
 
     val enemyManager: EnemyManager = EnemyManager(
@@ -81,7 +78,6 @@ abstract class BaseLocationScreen : KtxScreen {
 
         batch.draw(locationTexture, 0f, 0f, locationWidth, locationHeight) // рендерим текстуру локации
         player.draw(batch)
-
         enemyManager.draw(batch)
 
         batch.end() // конец рендера
@@ -100,8 +96,7 @@ abstract class BaseLocationScreen : KtxScreen {
     }
 
     override fun show() {
-        stage.addActor(movJoystick)
-        stage.addActor(aimJoystick)
+        uiManager.setupActors()
     }
 
     override fun hide() {

@@ -1,6 +1,5 @@
 package com.github.kot512.surrounded_and_hunted.combat_system.ammo
 
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.JOYSTICK_KNOB_TXTR
 import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 
