@@ -2,6 +2,8 @@ package com.UI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 class GameButtonsControlPanel extends JPanel {
 
@@ -38,12 +40,12 @@ class GameButtonsControlPanel extends JPanel {
 
     public GameButtonsControlPanel(LayoutManager layoutManager) {
         super(layoutManager);
-        JButton newGame = new JButton("Новая игра");
-        JButton saveGame = new JButton("Сохранить игру");
-        JButton openGame = new JButton("Открыть игру");
-        JButton passButton = new JButton("Пасс");
-        JButton cancelButton = new JButton("Отменить ход");
-        JButton loveButton = new JButton("Разработчик топ");
+        JButton newGame = new JButton("Новая игра (N)");
+        JButton saveGame = new JButton("Сохранить игру (S)");
+        JButton openGame = new JButton("Открыть игру (O)");
+        JButton passButton = new JButton("Пасс (P)");
+        JButton cancelButton = new JButton("Отменить ход (R)");
+        JButton loveButton = new JButton("Разработчик топ (L)");
 
 
         newGame.addActionListener(e -> {
@@ -82,6 +84,47 @@ class GameButtonsControlPanel extends JPanel {
         add(passButton);
         add(cancelButton);
         add(loveButton);
+
+        this.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+                switch (keyCode) {
+                    case KeyEvent.VK_N:
+                        if (newGameListener != null)
+                            newGameListener.onNewGameClick();
+                        break;
+                    case KeyEvent.VK_S:
+                        if (saveGameListener != null)
+                            saveGameListener.onSaveGameClick();
+                        break;
+                    case KeyEvent.VK_O:
+                        if (openGameListener != null)
+                            openGameListener.onOpenGameClick();
+                        break;
+                    case KeyEvent.VK_P:
+                        if (passMoveListener != null)
+                            passMoveListener.onPassMoveClick();
+                        break;
+                    case KeyEvent.VK_R:
+                        if (removeStoneListener != null)
+                            removeStoneListener.onRemoveStoneClick();
+                        break;
+                    case KeyEvent.VK_L:
+                        if (loveButtonListener != null)
+                            loveButtonListener.onLoveButtonClick();
+                        break;
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+        });
+
+        this.setFocusable(true);
     }
 
     public void addNewGameListener(NewGameListener newGameListener) {

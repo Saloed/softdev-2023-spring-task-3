@@ -6,6 +6,10 @@ public class Board implements IBoard {
 
     private Stone[][] positions; // Хранит состояние игровой доски
 
+    public double capturedStonesWhite = 6.5;
+    public int capturedStonesBlack = 0;
+
+
     // Конструктор
     public Board() {
         positions = new Stone[BOARD_SIZE][BOARD_SIZE];
@@ -18,14 +22,32 @@ public class Board implements IBoard {
             return false;
         }
 
-        LibertiesSurvivalRule checkLiberties = new LibertiesSurvivalRule();
-        SameColorSurvivalRule checkSameColor = new SameColorSurvivalRule();
+        ICheckSurvivalGroupRule checkLiberties = new LibertiesSurvivalRule();
+        ICheckSurvivalGroupRule checkSameColor = new SameColorSurvivalRule();
+        positions[stone.x()][stone.y()] = stone;
 
-        if (checkLiberties.check(stone, this) || checkSameColor.check(stone, this)) {
-            positions[stone.x()][stone.y()] = stone;
-            return true;
+        if (!(checkLiberties.check(stone, this) || checkSameColor.check(stone, this))) {
+            positions[stone.x()][stone.y()] = null;
+            return false;
         }
-        return false;
+        int[] dx = {-1, 1, 0, 0};  // Смещения по горизонтали для каждого направления
+        int[] dy = {0, 0, -1, 1};  // Смещения по вертикали для каждого направления
+
+        for (int i = 0; i < 4; i++) {
+            int nx = stone.x() + dx[i];
+            int ny = stone.y() + dy[i];
+
+            if (isValidXBoundary(nx) && isValidYBoundary(ny)) {
+                Stone neighbor = getPosition(nx, ny);
+
+                if (neighbor != null && neighbor.color() != stone.color()) {
+                    boolean checkPosition = !(checkLiberties.check(neighbor, this) || checkSameColor.check(neighbor, this));
+                    System.out.println(capturedStonesBlack);
+                    System.out.println(capturedStonesWhite);
+                }
+            }
+        }
+        return true;
     }
 
     // Удаление камня с доски

@@ -2,7 +2,6 @@ package com.UI;
 
 import com.go.Board;
 import com.go.Game;
-import com.go.Stone;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,30 +30,9 @@ public class PassMoveListener implements GameButtonsControlPanel.PassMoveListene
             consecutivePasses = 0;
         }
 
-        if (consecutivePasses == 1) {
-            int blackCount = 0;
-            double whiteCount = 0.5;
+        if (consecutivePasses == 2) {
 
-            for (int x = 0; x < Board.BOARD_SIZE; x++) {
-                for (int y = 0; y < Board.BOARD_SIZE; y++) {
-                    Stone stone = board.getPosition(x, y);
-                    if (stone != null) {
-                        if (stone.color() == Color.BLACK) {
-                            blackCount++;
-                        } else if (stone.color() == Color.WHITE) {
-                            whiteCount++;
-                        }
-                    }
-                }
-            }
-            String winner = "";
-            if (blackCount > whiteCount) {
-                winner += "Черные";
-            } else {
-                winner += "Белые";
-            }
-
-            JOptionPane.showMessageDialog(null, winner + " победили с большим отрывом...", "Игра завершена!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, " победили с большим отрывом...", "Игра завершена!", JOptionPane.INFORMATION_MESSAGE);
             consecutivePasses = 0;
         }
         previousPlayer = currentPlayer;

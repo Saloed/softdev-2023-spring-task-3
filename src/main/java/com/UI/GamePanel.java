@@ -104,11 +104,10 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
                 boolean isStoneAdd = game.addStoneByCords(x, y);
 
                 if (!isStoneAdd) {
-                    showErrorMessageDialog("Опачки!", "Занято, не угадал!");
+                    showErrorMessageDialog("Опачки!", "Не угадал!");
                 }
 
-                this.repaint(getIndent(getWidth()) + x * getCellSize() - getCellSize() / 2,
-                        getIndent(getHeight()) + y * getCellSize() - getCellSize() / 2, getCellSize(), getCellSize());
+                repaint();
             }
         }
     }

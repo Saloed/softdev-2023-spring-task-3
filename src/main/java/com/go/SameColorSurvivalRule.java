@@ -9,44 +9,48 @@ import java.util.Set;
 public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
 
     private final Set<Stone> visitedPositions = new HashSet<>();
-    private final List<Stone> stoneGroup = new ArrayList<>();
+    private List<Stone> stoneGroup = new ArrayList<>();
     private Color colorGroup;
 
     @Override
     public boolean check(Stone stone, Board board) {
-        colorGroup = stone.color();
+        colorGroup = stone.color();// Установка цвета группы
+
         // Находит группу камней, к которой принадлежит переданный stone
-        List<Stone> stoneGroup = findStoneGroup(stone, board);
-        LibertiesSurvivalRule libertiesSurvivalRule = new LibertiesSurvivalRule();
+        stoneGroup = findStoneGroup(stone, board);
+
         /*Проверяет, имеет ли группа камней хотя бы одну свободу с помощью правила LibertiesSurvivalRule и
         возвращает результат: имеет ли группа камней хотя бы одну свободу*/
-        return stoneGroup.stream().anyMatch(groupStone -> libertiesSurvivalRule.check(groupStone, board));
+        LibertiesSurvivalRule libertiesSurvivalRule = new LibertiesSurvivalRule();
+        boolean hasSameColor = stoneGroup.stream().anyMatch(groupStone -> libertiesSurvivalRule.check(groupStone, board));
+        if (!hasSameColor)
+            removeStoneGroup(stoneGroup, board);
+        return hasSameColor;
     }
 
     // Поиск группы камней
     private List<Stone> findStoneGroup(Stone stone, Board board) {
+        visitedPositions.clear(); // Очищаем список посещенных позиций
+        stoneGroup = new ArrayList<>(); // Создаем новый список для группы камней
 
         // Находит все связанные камни в группе
         findConnectedStones(stone.x(), stone.y(), board);
+
         // Возвращает список камней, принадлежащих группе
         return stoneGroup;
     }
 
-    // Рекурсивно ищет все связанные в группу камни
     private void findConnectedStones(int x, int y, Board board) {
+
         Stone position = board.getPosition(x, y);
 
-        // Если текущая позиция пустая, уже посещена или имеет другой цвет выходим из цикла
-        if (position == null || visitedPositions.contains(position) ||
-                position.color() != colorGroup) {
+        if (position == null || visitedPositions.contains(position) || position.color() != colorGroup) {
             return;
         }
 
-        // Добавляет камень в группу и его координаты в список посещенных
-        visitedPositions.add(position);
         stoneGroup.add(position);
+        visitedPositions.add(position);
 
-        // Рекурсивно ищет соседей
         if (board.isValidXBoundary(x - 1)) {
             findConnectedStones(x - 1, y, board);
         }
@@ -58,6 +62,17 @@ public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
         }
         if (board.isValidYBoundary(y + 1)) {
             findConnectedStones(x, y + 1, board);
+        }
+    }
+
+    private void removeStoneGroup(List<Stone> stoneGroup, Board board) {
+        for (Stone stone : stoneGroup) {
+            if (stone.color() == Color.WHITE)
+                board.capturedStonesWhite++;
+            else {
+                board.capturedStonesBlack++;
+            }
+            board.removeStone(stone);
         }
     }
 }
