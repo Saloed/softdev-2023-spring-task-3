@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.github.BeatusL.mlnk.MLNK.Companion.debug
+import com.github.BeatusL.mlnk.MLNK.Companion.entityCount
 import com.github.BeatusL.mlnk.component.ImageComponent
 import com.github.BeatusL.mlnk.component.PhysicsComponent
 import com.github.BeatusL.mlnk.event.*
@@ -34,7 +35,7 @@ class GameScreen: KtxScreen {
     }
 
     private val rWorld: World = World { // world for render objects
-        entityCapacity = 64
+        entityCapacity = entityCount
         inject(stage)
         inject(textureAtlas)
         inject(oWorld)

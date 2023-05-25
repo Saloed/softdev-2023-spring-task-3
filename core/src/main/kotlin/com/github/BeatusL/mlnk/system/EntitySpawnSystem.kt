@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.TimeUtils
 import com.github.BeatusL.mlnk.MLNK.Companion.scale
 import com.github.BeatusL.mlnk.component.AnimationComponent
 import com.github.BeatusL.mlnk.component.AnimationModel
-import com.github.BeatusL.mlnk.component.AnimationPlaymode
 import com.github.BeatusL.mlnk.component.AttackComponent
 import com.github.BeatusL.mlnk.component.CollisionComponent
 import com.github.BeatusL.mlnk.component.ImageComponent
@@ -43,15 +42,14 @@ class EntitySpawnSystem(
     private val atlas: TextureAtlas,
     private val spawnCmps: ComponentMapper<SpawnComponent>,
 ): EventListener, IteratingSystem() {
-    private val cachedCfgs = mutableMapOf<String, SpawnConfig>()
+    private val cachedCfgs = mutableMapOf<EntityType, SpawnConfig>()
     private val cachedSizes = mutableMapOf<AnimationModel, Vector2>()
 
     override fun onTickEntity(entity: Entity) {
         with(spawnCmps[entity]) {
             val config = spawmConfig(type)
             val relativeSize = size(config.model)
-            val isPlayer = type == "Player"
-            val isShip = type in listOf("Player", "B", "M", "S")
+            val isShip = type in listOf(EntityType.Player, EntityType.B, EntityType.M, EntityType.S)
 
 
             world.entity {
@@ -82,7 +80,7 @@ class EntitySpawnSystem(
                 }
 
                 add<CollisionComponent> {
-                    borderCollisionEnabled = isPlayer
+                    borderCollisionEnabled = (type == EntityType.Player)
                 }
 
 
@@ -90,13 +88,13 @@ class EntitySpawnSystem(
                     add<MoveComponent> {
                         speed = config.speed
                         sin = when (type) {
-                            "BP" -> 1f
-                            "Player" -> 0f
+                            EntityType.BP -> 1f
+                            EntityType.Player -> 0f
                             else -> -1f
                         }
                     }
 
-                    if (isPlayer) add<PlayerComponent>() {
+                    if (type == EntityType.Player) add<PlayerComponent> {
                         x = location.x
                         y = location.y
                     }
@@ -106,12 +104,13 @@ class EntitySpawnSystem(
                     {
                         prevTime = TimeUtils.nanoTime()
                         prjType = when (type) {
-                            "Player" -> "BP"
-                            else -> "RP"
+                            EntityType.Player -> EntityType.BP
+                            else -> EntityType.RP
                         }
                     }
                     add<LifeComponent>()
-                    if (type == "Player" || type == "BP") add<AttackComponent>() {friendly = true}
+                    if (type == EntityType.Player || type == EntityType.BP) add<AttackComponent>
+                    {friendly = true}
                     else add<AttackComponent>()
                 }
             }
@@ -120,22 +119,13 @@ class EntitySpawnSystem(
         world.remove(entity)
     }
 
-    private fun spawmConfig(type: String): SpawnConfig = cachedCfgs.getOrPut(type) {
-        when (type) {
-            "Player" -> SpawnConfig(AnimationModel.player, AnimationPlaymode.Loop, 7f)
-            "B" -> SpawnConfig(AnimationModel.B, AnimationPlaymode.Loop, 5f)
-            "M" -> SpawnConfig(AnimationModel.M, AnimationPlaymode.Loop, 4f)
-            "S" -> SpawnConfig(AnimationModel.S, AnimationPlaymode.Loop, 4f)
-            "exps" -> SpawnConfig(AnimationModel.exps, AnimationPlaymode.Normal, 0f)
-            "BP" -> SpawnConfig(AnimationModel.BP, AnimationPlaymode.Loop, 10f)
-            "RP" -> SpawnConfig(AnimationModel.RP, AnimationPlaymode.Loop, 8f)
-            //"bound" -> SpawnConfig() to be implemented
-            else -> gdxError("$type has no spawn configuration!")
-        }
+    private fun spawmConfig(type: EntityType): SpawnConfig =
+        cachedCfgs.getOrPut(type) {
+        SpawnConfigGetter().spawmConfig(type)
     }
 
     private fun size(model: AnimationModel) = cachedSizes.getOrPut(model) {
-        if (model.atlasKey == "exps") vec2(1.75f, 1.75f)
+        if (model == AnimationModel.exps) vec2(1.75f, 1.75f)
         else {
             val regions = atlas.findRegions("${model.atlasKey}/${model.atlasKey}")
             if (regions.isEmpty) gdxError("No region for ${model.atlasKey}")
@@ -149,7 +139,7 @@ class EntitySpawnSystem(
             is MapChangeEvent -> {
                 val entityLayer = event.map.layer("obj")
                 entityLayer.objects.forEach { obj ->
-                    val type = obj.type ?: gdxError("$obj has no type!")
+                    val type = SpawnConfigGetter().stringToType(obj.type)
 
                     world.entity {
                         add<SpawnComponent> {
@@ -163,7 +153,7 @@ class EntitySpawnSystem(
             }
 
             is ObjCreation -> {
-                val type = event.type
+                val type = SpawnConfigGetter().stringToType(event.type)
                 val loc = event.location
 
                 world.entity {
@@ -178,6 +168,7 @@ class EntitySpawnSystem(
         }
         return false
     }
+
 
     companion object {
         const val HITBOX = "HITBOX"

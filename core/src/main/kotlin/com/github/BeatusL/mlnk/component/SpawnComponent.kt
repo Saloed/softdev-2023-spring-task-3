@@ -2,6 +2,7 @@ package com.github.BeatusL.mlnk.component
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType
+import com.github.BeatusL.mlnk.system.EntityType
 import ktx.math.vec2
 
 data class SpawnConfig(
@@ -15,6 +16,6 @@ data class SpawnConfig(
 
 
 data class SpawnComponent (
-    var type: String = "",
+    var type: EntityType = EntityType.Default,
     var location: Vector2 = vec2()
 )

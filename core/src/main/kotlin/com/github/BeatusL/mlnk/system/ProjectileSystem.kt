@@ -26,7 +26,7 @@ class ProjectileSystem(
         if (TimeUtils.nanoTime() - prjCmp.prevTime > 1000000000) {
             prjCmp.prevTime = TimeUtils.nanoTime()
             val x = imsCmp.image.x + (imsCmp.image.width / 2f) - 0.4f
-            val y = imsCmp.image.y + if (prjCmp.prjType == "BP") imsCmp.image.height
+            val y = imsCmp.image.y + if (prjCmp.prjType == EntityType.BP) imsCmp.image.height
             else - imsCmp.image.height
             world.entity {
                 add<SpawnComponent> {

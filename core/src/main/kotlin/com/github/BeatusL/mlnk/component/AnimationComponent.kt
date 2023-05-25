@@ -19,13 +19,13 @@ enum class AnimationType {
 */
 
 enum class AnimationPlaymode {
-    Loop, Normal;
+    Loop, Normal, Reversed;
 
     val key: String = this.toString()
 }
 
 class AnimationComponent(
-    var animationModel: AnimationModel = AnimationModel.Default,
+    private var animationModel: AnimationModel = AnimationModel.Default,
     var stateTime: Float = 0f,
     var playMode: Animation.PlayMode = Animation.PlayMode.LOOP
 ) {
@@ -35,16 +35,16 @@ class AnimationComponent(
     var nextAnimation: String = ""
 
     fun nextAnimation(model: AnimationModel, mode: AnimationPlaymode) {
-        when (mode.key) {
-            "Loop" -> playMode = Animation.PlayMode.LOOP
-            "Normal" -> playMode = Animation.PlayMode.NORMAL
-            "Reversed" -> playMode = Animation.PlayMode.REVERSED
+        playMode = when (mode) {
+            AnimationPlaymode.Loop -> Animation.PlayMode.LOOP
+            AnimationPlaymode.Normal -> Animation.PlayMode.NORMAL
+            AnimationPlaymode.Reversed -> Animation.PlayMode.REVERSED
         }
         this.animationModel = model
         nextAnimation = "${model.atlasKey}/${model.atlasKey}"
     }
 
     companion object {
-        val no_animation = ""
+        const val no_animation = ""
     }
 }
