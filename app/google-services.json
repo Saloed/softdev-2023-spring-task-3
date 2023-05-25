@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "838450817943",
+    "firebase_url": "https://mybe-d2532-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "mybe-d2532",
+    "storage_bucket": "mybe-d2532.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838450817943:android:e372ed9b10320a3f0b72d2",
+        "android_client_info": {
+          "package_name": "com.example.be"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "838450817943-jkcb3vbvf264nhlr8738j2qidseelebe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.be",
+            "certificate_hash": "e06491e34fdf92f7c3fee7052f4860d3cfea2cab"
+          }
+        },
+        {
+          "client_id": "838450817943-5e0etp12ivogadej833gtf3qmh8tf20l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGAMdB5v2h41wSCmlx61N_9dTkF7-1lUk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "838450817943-5e0etp12ivogadej833gtf3qmh8tf20l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

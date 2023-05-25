@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Be</string>
+    <string name="enter_name">Введите имя</string>
+    <string name="enter_password">Введите пароль</string>
+    <string name="enter_confirm_password">Введите пароль еще раз</string>
+    <string name="enter_email">Введите email</string>
+
+    <string name="signUP_signIn">Войдите в аккаунт или зарегистрируйтесь</string>
+    <string name="sign_in">Войти</string>
+    <string name="sign_up">Зарегистрироваться</string>
+
+    <string name="username_is_required">Заполните поле "Введите имя"</string>
+
+    <string name="empty">Тут пусто ;( \nСкорее добавляй сообщения</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="add_message">Добавить сообщение</string>
+    <string name="add_folder">Добавить папку</string>
+
+    <string name="name_folder">Введите название папки</string>
+    <string name="create_folder">Создать</string>
+
+    <string name="hi_text">Здесь ты можешь делиться всем, чем хочешь, записывая голосовые сообщения, или же просто написать текстом ;)</string>
+    <string name="write">Напиши</string>
+    <string name="voice">Запиши</string>
+    <string name="sign_out">Выйти из аккаунта</string>
+    <string name="nav_header">Что-то интересное</string>
+    <string name="change_fullname">Редактировать имя</string>
+    <string name="change_image">Поменять фото</string>
+
+    <string name="done">Готово</string>
+
+
+</resources>
