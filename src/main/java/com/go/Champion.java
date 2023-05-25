@@ -12,7 +12,7 @@ public class Champion {
         this.board = board;
         this.boardSize = board.getPositions().length;
         this.blackStonesCount = 0;
-        this.whiteStonesCount = 6.5;
+        this.whiteStonesCount = 1.5;
         countStones();
     }
 
@@ -32,10 +32,10 @@ public class Champion {
     }
 
     public double getScore() {
-        return Math.abs(blackStonesCount - (whiteStonesCount + 6.5));
+        return Math.abs(blackStonesCount - (whiteStonesCount));
     }
 
     public Color getChampion() {
-        return (blackStonesCount > whiteStonesCount + 6.5) ? Color.BLACK : Color.WHITE;
+        return (blackStonesCount > whiteStonesCount) ? Color.BLACK : Color.WHITE;
     }
 }
