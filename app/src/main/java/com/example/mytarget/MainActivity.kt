@@ -15,6 +15,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -114,13 +115,43 @@ fun MyTargetApp(
     val calendarDialogState = rememberMaterialDialogState()
     val colorDialogState = rememberMaterialDialogState()
     val context = LocalContext.current
-
     var pickedColor by remember { mutableStateOf(Color.Unspecified) }
 
     val resetFields: () -> Unit = {
         textFieldHeader = ""
         textFieldDescription = ""
     }
+
+//    val googleSignInClient = remember {
+//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//            .requestIdToken("142245757260-75kfqgh4klj51dcbma27pnkmln0dcbfk.apps.googleusercontent.com")
+//            .requestEmail()
+//            .build()
+//        GoogleSignIn.getClient(context, gso)
+//    }
+//
+//    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+//        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+//        try {
+//            val account = task.getResult(ApiException::class.java)
+//            val idToken = account?.idToken
+//            val credential = GoogleAuthProvider.getCredential(idToken, null)
+//            FirebaseAuth.getInstance().signInWithCredential(credential)
+//                .addOnCompleteListener { authResult ->
+//                    if (authResult.isSuccessful) {
+//                        // Авторизация успешна
+//                    } else {
+//                        // Обработка ошибки авторизации
+//                    }
+//                }
+//        } catch (e: ApiException) {
+//            // Обработка ошибки авторизации
+//        }
+//    }
+//
+//    val signInWithGoogle = {
+//        launcher.launch(googleSignInClient.signInIntent)
+//    }
 
 
     Column(Modifier.fillMaxSize()) {
@@ -129,16 +160,17 @@ fun MyTargetApp(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
-            Button(
-                onClick = {},
-                colors = ButtonDefaults.buttonColors(Color.White, contentColor = Color.Black)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.baseline_person_24),
-                    contentDescription = "Person",
-                    Modifier.size(40.dp)
-                )
-            }
+              Login()
+//            Button(
+//                onClick = {},
+//                colors = ButtonDefaults.buttonColors(Color.White, contentColor = Color.Black)
+//            ) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.baseline_person_24),
+//                    contentDescription = "Person",
+//                    Modifier.size(40.dp)
+//                )
+//            }
 
             Button(
                 onClick = {calendarDialogState.show()},
@@ -301,3 +333,72 @@ fun MyTargetApp(
     }
 }
 
+@Composable
+fun Login() {
+    var user by remember { mutableStateOf(Firebase.auth.currentUser) }
+    val launcher = rememberFirebaseAuthLauncher(
+        onAuthComplete = { result ->
+            user = result.user
+        },
+        onAuthError = {
+            user = null
+        }
+    )
+    val token = stringResource(id = R.string.web_client_id)
+    val context = LocalContext.current
+    if (user == null) {
+        Button(
+            onClick = {
+                val gso =
+                    GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(token)
+                        .requestEmail()
+                        .build()
+                val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                launcher.launch(googleSignInClient.signInIntent)
+            },
+            colors = ButtonDefaults.buttonColors(Color.White, contentColor = Color.Black)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.baseline_person_24),
+                contentDescription = "Person",
+                Modifier.size(40.dp)
+            )
+        }
+    }
+    else {
+        Button(onClick = {
+            Firebase.auth.signOut()
+            user = null
+        }) {
+            Image(
+                painter = painterResource(id = R.drawable.baseline_person_off_24),
+                contentDescription = "Person",
+                Modifier.size(40.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun rememberFirebaseAuthLauncher(
+    onAuthComplete: (AuthResult) -> Unit,
+    onAuthError: (ApiException) -> Unit
+):ManagedActivityResultLauncher<Intent, ActivityResult>{
+    val scope = rememberCoroutineScope()
+    return rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)!!
+            Log.d("GoogleAuth", "account $account")
+            val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
+            scope.launch {
+                val authResult = Firebase.auth.signInWithCredential(credential).await()
+                onAuthComplete(authResult)
+            }
+        } catch (e: ApiException) {
+            Log.d("GoogleAuth", e.toString())
+            onAuthError(e)
+        }
+    }
+}
