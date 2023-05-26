@@ -12,12 +12,11 @@ import static GameEngine.Game.GameHeight;
 import static GameEngine.Game.GameWidth;
 
 public class GamePanel extends JPanel {
-    private MouseInputs mouseInputs;
-    private Game game;
+    private final Game game;
 
     public GamePanel(Game game) {
         KeyPadInputs keyPadInputs = new KeyPadInputs(this);
-        mouseInputs = new MouseInputs(this);
+        MouseInputs mouseInputs = new MouseInputs(this);
         this.game = game;
 
         setSizeOfPanel();

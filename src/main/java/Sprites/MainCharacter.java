@@ -1,65 +1,147 @@
 package Sprites;
 
-import Scenes.LoadSave;
+import GameStates.Playing;
+import Scenes.DataProcessing;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import static GameEngine.Game.Scale;
+import static Sprites.Constants.Gravity;
 import static Sprites.Constants.MainCharacter.*;
 import static Scenes.HelpMethods.*;
+import static Sprites.Constants.MainCharacter.Health.*;
 
 public class MainCharacter extends Entity {
+
+    //Animations
     private BufferedImage[][] animations;
-    private int animationTick;
-    private int animationIndex;
-    private int mainCharacterAction = idle;
+    private int flipX = 0;
+    private int flipW = 1;
+
+    //Moving
     private boolean moving = false, attacking = false;
-    private boolean left, down, right, up;
+    private boolean left, right, jump;
     private int[][] lvlData;
 
-    public MainCharacter(float x, float y, int w, int h) {
+    //Health Bar
+    private BufferedImage statusBarImg;
+    private int healthWidth = HealthBarWidth;
+
+    private final Playing playing;
+
+    public MainCharacter(float x, float y, int w, int h, Playing playing) {
         super(x, y, w, h);
+        this.playing = playing;
+        this.action = Idle;
+        this.maxHealth = 100;
+        this.currentHealth = maxHealth;
+        this.speed = 0.7f * Scale;
         animation();
-        createHitbox(x, y, 26 * Scale, 35 * Scale);
+        createHitbox(20, 28);
+        createAttackHitbox();
+    }
+
+    public void setSpawnPoint(Point spawnPoint) {
+        this.x = spawnPoint.x;
+        this.y = spawnPoint.y;
+        hitbox.x = x;
+        hitbox.y = y;
     }
 
     public void update() {
+        updateHealthBar();
+        if (currentHealth <= 0) {
+            playing.gameOver(true);
+            return;
+        }
+        updateAttackHitbox();
         updatePosition();
+        if (attacking)
+            checkAttack();
         updateAnimation();
         setAnimation();
     }
 
+    private void checkAttack() {
+        if (attackChecked || animationIndex != 1) return;
+        attackChecked = true;
+        playing.checkEnemyHit(attackHitbox);
+    }
+
+    private void updateHealthBar() {
+        healthWidth = (int) ((currentHealth / (float) maxHealth) * HealthBarWidth);
+    }
+
+    public void changeHealth(int hp) {
+        currentHealth += hp;
+        if (currentHealth <= 0) {
+            currentHealth = 0;
+            //gameOver();
+        } else if (currentHealth >= maxHealth)
+            currentHealth = maxHealth;
+    }
+
+    private void createAttackHitbox() {
+        attackHitbox = new Rectangle2D.Float(x, y, (int) (20 * Scale), (int) (20 * Scale));
+    }
+
+    private void updateAttackHitbox() {
+        if (right) {
+            attackHitbox.x = hitbox.x + hitbox.width + Scale;
+        } else if (left) {
+            attackHitbox.x = hitbox.x - hitbox.width - Scale;
+        }
+        attackHitbox.y = hitbox.y + (Scale * 10);
+    }
+
     private void animation() {
-        BufferedImage image = LoadSave.GetSprite(LoadSave.MainCharacter);
-        animations = new BufferedImage[4][5];
+        BufferedImage image = DataProcessing.GetSprite(DataProcessing.MainCharacter);
+        animations = new BufferedImage[6][5];
 
         for (int j = 0; j < animations.length; j++)
             for (int i = 0; i < animations[j].length; i++) {
-                animations[j][i] = image.getSubimage(i * 48, j * 48, 48, 48);
+                animations[j][i] = image.getSubimage(i * 32, j * 32, 32, 32);
             }
+
+        statusBarImg = DataProcessing.GetSprite(DataProcessing.HealthBar);
     }
 
     public void lvlData(int[][] lvlData) {
         this.lvlData = lvlData;
+        if (IsEntityOnFloor(hitbox, lvlData)) inAir = true;
     }
 
-    public void render(Graphics g) {
-        float coordinateOffsetY = 6 * Scale;
-        float coordinateOffsetX = 10 * Scale;
-        g.drawImage(animations[mainCharacterAction][animationIndex], (int) (hitbox.x - coordinateOffsetX), (int) (hitbox.y - coordinateOffsetY), w, h, null);
-        drawHitbox(g);
+    public void render(Graphics g, int xLvlOffset) {
+        float coordinateOffsetY = 7 * Scale;
+        float coordinateOffsetX = 15 * Scale;
+        g.drawImage(animations[action][animationIndex],
+                (int) (hitbox.x - coordinateOffsetX) - xLvlOffset + flipX,
+                (int) (hitbox.y - coordinateOffsetY),
+                w * flipW, h, null);
+        //drawHitbox(g, xLvlOffset);
+        //drawAttackHitbox(g, xLvlOffset);
+        drawUI(g);
+    }
+
+    private void drawUI(Graphics g) {
+        g.drawImage(statusBarImg, StatusBarX, StatusBarY, StatusBarWidth, StatusBarHeight, null);
+        g.setColor(new Color(196, 16, 16));
+        g.fillRect(HealthBarX + StatusBarX, HealthBarY + StatusBarY, healthWidth, HealthBarHeight);
     }
 
     private void updateAnimation() {
         animationTick++;
-        int speed = 40;
+        int speed = 35;
+        if (action == Attack) speed = 20;
         if (animationTick >= speed) {
             animationTick = 0;
             animationIndex++;
-            if (animationIndex >= AmountOfFrames(mainCharacterAction)) {
+            if (animationIndex >= AmountOfFrames(action)) {
                 animationIndex = 0;
                 attacking = false;
+                attackChecked = false;
             }
         }
     }
@@ -71,32 +153,76 @@ public class MainCharacter extends Entity {
 
     private void updatePosition() {
         moving = false;
-        if (!left && !right && !down && !up) return;
+        if (jump) jump();
+        if (!inAir)
+            if ((!left && !right) || (left && right)) return;
 
-        float xSpeed = 0, ySpeed = 0;
-        float mainCharacterSpeed = 0.75f;
+        float xSpeed = 0;
 
-        if (left && !right) xSpeed = -mainCharacterSpeed;
-        else if (right && !left) xSpeed = mainCharacterSpeed;
+        if (left) {
+            xSpeed -= speed;
+            flipX = 0;
+            flipW = 1;
+        }
+        if (right) {
+            xSpeed += speed;
+            flipX = w;
+            flipW = -1;
+        }
+        if (!inAir) {
+            if (IsEntityOnFloor(hitbox, lvlData))
+                inAir = true;
+        }
+        if (inAir) {
+            if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
+                hitbox.y += airSpeed;
+                airSpeed += Gravity;
+                changeX(xSpeed);
+            } else {
+                hitbox.y = GetYPos(hitbox, airSpeed);
+                float fallSpeed = 0.5f * Scale;
+                if (airSpeed > 0) {
+                    inAirReset();
+                } else airSpeed = fallSpeed;
+                changeX(xSpeed);
+            }
+        } else {
+            changeX(xSpeed);
+        }
+        moving = true;
+    }
 
-        if (down && !up) ySpeed = mainCharacterSpeed;
-        else if (up && !down) ySpeed = -mainCharacterSpeed;
+    private void jump() {
+        if (inAir) return;
+        inAir = true;
+        //Jumping
+        airSpeed = -2.25f * Scale;
+    }
 
-        if (CanMoveHere(hitbox.x + xSpeed, hitbox.y + ySpeed, hitbox.width, hitbox.height, lvlData)) {
+    private void inAirReset() {
+        inAir = false;
+        airSpeed = 0;
+    }
+
+    private void changeX(float xSpeed) {
+        if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData)) {
             hitbox.x += xSpeed;
-            hitbox.y += ySpeed;
-            moving = true;
+        } else {
+            hitbox.x = GetXPosNextToWall(hitbox, xSpeed);
         }
     }
 
     private void setAnimation() {
-        int startAnimation = mainCharacterAction;
+        int startAnimation = action;
 
-        if (moving) mainCharacterAction = run;
-        else mainCharacterAction = idle;
+        if (moving) action = Run;
+        else action = Idle;
+        if (inAir) {
+            action = Jump;
+        }
 
-        if (attacking) mainCharacterAction = attack;
-        if (startAnimation != mainCharacterAction) resetAnimationTick();
+        if (attacking) action = Attack;
+        if (startAnimation != action) resetAnimationTick();
     }
 
     public void attack(boolean attacking) {
@@ -105,9 +231,7 @@ public class MainCharacter extends Entity {
 
     public void resetBool() {
         left = false;
-        down = false;
         right = false;
-        up = false;
     }
 
     public boolean isLeft() {
@@ -118,14 +242,6 @@ public class MainCharacter extends Entity {
         this.left = left;
     }
 
-    public boolean isDown() {
-        return down;
-    }
-
-    public void setDown(boolean down) {
-        this.down = down;
-    }
-
     public boolean isRight() {
         return right;
     }
@@ -134,11 +250,21 @@ public class MainCharacter extends Entity {
         this.right = right;
     }
 
-    public boolean isUp() {
-        return up;
+    public void setJump(boolean jump) {
+        this.jump = jump;
     }
 
-    public void setUp(boolean up) {
-        this.up = up;
+    public void resetAll() {
+        resetBool();
+        inAir = false;
+        attacking = false;
+        moving = false;
+        action = Idle;
+        currentHealth = maxHealth;
+
+        hitbox.x = x;
+        hitbox.y = y;
+        if (IsEntityOnFloor(hitbox, lvlData))
+            inAir = true;
     }
 }

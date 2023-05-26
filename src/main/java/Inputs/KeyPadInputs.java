@@ -1,5 +1,6 @@
 package Inputs;
 
+import GameStates.GameState;
 import Scenes.GamePanel;
 
 import java.awt.event.KeyAdapter;
@@ -18,37 +19,30 @@ public class KeyPadInputs extends KeyAdapter {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_A:
-                gamePanel.getGame().getMainCharacter().setLeft(true);
+        switch (GameState.gameState) {
+            case MENU:
+                gamePanel.getGame().getMenu().keyPressed(e);
                 break;
-            case KeyEvent.VK_S:
-                gamePanel.getGame().getMainCharacter().setDown(true);
+            case PLAYING:
+                gamePanel.getGame().getPlaying().keyPressed(e);
                 break;
-            case KeyEvent.VK_D:
-                gamePanel.getGame().getMainCharacter().setRight(true);
-                break;
-            case KeyEvent.VK_W:
-                gamePanel.getGame().getMainCharacter().setUp(true);
+            default:
                 break;
         }
-    }
+        }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_A:
-                gamePanel.getGame().getMainCharacter().setLeft(false);
-                break;
-            case KeyEvent.VK_S:
-                gamePanel.getGame().getMainCharacter().setDown(false);
-                break;
-            case KeyEvent.VK_D:
-                gamePanel.getGame().getMainCharacter().setRight(false);
-                break;
-            case KeyEvent.VK_W:
-                gamePanel.getGame().getMainCharacter().setUp(false);
-                break;
+        @Override
+        public void keyReleased (KeyEvent e){
+            switch (GameState.gameState) {
+                case MENU:
+                    gamePanel.getGame().getMenu().keyReleased(e);
+                    break;
+                case PLAYING:
+                    gamePanel.getGame().getPlaying().keyReleased(e);
+                    break;
+                default:
+                    break;
+            }
         }
-    }
+
 }

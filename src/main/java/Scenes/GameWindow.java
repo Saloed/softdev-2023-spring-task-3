@@ -5,10 +5,9 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
 public class GameWindow {
-    private JFrame jFrame;
 
     public GameWindow(GamePanel gamePanel) {
-        jFrame = new JFrame();
+        JFrame jFrame = new JFrame();
         ImageIcon image = new ImageIcon("src/main/resources/images/gold.png");
         jFrame.setIconImage(image.getImage());
 

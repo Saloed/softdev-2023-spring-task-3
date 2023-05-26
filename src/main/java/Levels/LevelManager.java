@@ -1,26 +1,50 @@
 package Levels;
 
 import GameEngine.Game;
-import Scenes.LoadSave;
+import GameStates.GameState;
+import GameStates.Playing;
+import Scenes.DataProcessing;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
-import static GameEngine.Game.TilesSizes;
+import static GameEngine.Game.TileSize;
 
 public class LevelManager {
-    private Game game;
+    private final Game game;
     private BufferedImage[] levelImage;
-    private Level level1;
+    private final ArrayList<Level> levels;
+    private int lvlIndex = 0;
 
     public LevelManager(Game game) {
         this.game = game;
         importImageForLevels();
-        level1 = new Level(LoadSave.GetLevelData());
+        levels = new ArrayList<>();
+        createAllLevels();
+    }
+
+    private void createAllLevels() {
+        BufferedImage[] allLevels = DataProcessing.GetAllLevels();
+        for (BufferedImage i : allLevels)
+            levels.add(new Level(i));
+    }
+
+    public void loadNextLvl() {
+        lvlIndex++;
+        if (lvlIndex >= levels.size()) {
+            lvlIndex = 0; //game completed and all lvls replay
+            GameState.gameState = GameState.MENU;
+        }
+        if (lvlIndex == 1) game.getPlaying().backgroundImage = DataProcessing.GetSprite(DataProcessing.PlayingBackgroundNight);
+        Level nextLevel = levels.get(lvlIndex);
+        game.getPlaying().getEnemyManager().loadEnemies(nextLevel);
+        game.getPlaying().getMainCharacter().lvlData(nextLevel.getLevelData());
+        game.getPlaying().setMaxTilesOffsetX(nextLevel.getLvlOffset());
     }
 
     private void importImageForLevels() {
-        BufferedImage image = LoadSave.GetSprite(LoadSave.ForLevels);
+        BufferedImage image = DataProcessing.GetSprite(DataProcessing.ForLevels);
         levelImage = new BufferedImage[48];
         for (int j = 0; j < 4; j++)
             for (int i = 0; i < 12; i++) {
@@ -29,19 +53,23 @@ public class LevelManager {
             }
     }
 
-    public void draw(Graphics g) {
+    public void draw(Graphics g, int xLvlOffset) {
         for (int j = 0; j < Game.TilesInHeight; j++) {
-            for (int i = 0; i < Game.TilesInWidth; i++) {
-                int index = level1.getIndex(i, j);
-                g.drawImage(levelImage[index], i * TilesSizes, j * TilesSizes, TilesSizes, TilesSizes, null);
+            for (int i = 0; i < levels.get(lvlIndex).getLevelData()[0].length; i++) {
+                int index = levels.get(lvlIndex).getIndex(i, j);
+                g.drawImage(levelImage[index], i * TileSize - xLvlOffset, j * TileSize, TileSize, TileSize, null);
             }
         }
     }
 
     public Level getLevel() {
-        return level1;
+        return levels.get(lvlIndex);
     }
 
     public void update() {
     }
+
+    /*public int getAmountOfLevels() {
+        return levels.size();
+    }*/
 }
