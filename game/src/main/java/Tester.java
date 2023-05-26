@@ -1,7 +1,7 @@
 import javax.swing.*;
 
 public class Tester {
-    public final JFrame menuFrame = new JFrame();
+    public JFrame menuFrame = new JFrame();
     public static JFrame gameFrame = new JFrame();
     private int playerScore = 0;
     private int dealerScore = 0;
@@ -12,7 +12,7 @@ public class Tester {
     public static enum STATE{
         MENU,
         GAME
-    };
+    }
 
     public static STATE currentState = STATE.MENU;
 
@@ -21,7 +21,6 @@ public class Tester {
         if(currentState == STATE.MENU) {
             tester.openMenu();
         }
-
     }
 
     public void openMenu() {
@@ -46,7 +45,6 @@ public class Tester {
     public Thread gameRefreshThread = new Thread () {
         public void run () {
             while(true){
-                Tester.
                 newGame.atmosphereComponent.refresh(currentBalance, playerScore, dealerScore-1, newGame.faceDown);
             }
         }

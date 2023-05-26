@@ -121,8 +121,8 @@ public class GameComponent extends JComponent implements MouseListener {
                     JOptionPane.showMessageDialog(frame, "YOU can't bet that much.");
                 }
             }
-
-           Tester.newGame.startGame();
+            Tester.newGame.startGame();
+            Tester.newGame.activatingBtns();
         }
     }
     public void mouseExited(MouseEvent e) {

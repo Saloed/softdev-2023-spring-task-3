@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.Font;
+import java.util.List;
 
 public class Game {
 
@@ -85,6 +86,8 @@ public class Game {
         for (int i = 0; i < 4; i++) {
             deck.removeCard(0);
         }
+    }
+    public void activatingBtns(){
 
         cardComponent = new GameComponent(dealerHand, playerHand);
         cardComponent.setBounds(0, 0, 1130, 665);
@@ -133,17 +136,19 @@ public class Game {
         });
     }
 
-    public void checkHand (ArrayList<Card> hand) {
+    public void checkHand (List<Card> hand) {
         if (hand.equals(playerHand)) {
             if(getSumOfHand(hand) == 21){
                 faceDown = false;
                 dealerWon = false;
                 JOptionPane.showMessageDialog(frame, "PLAYER HAS DONE BLACKJACK! PLAYER HAS WON!");
+                System.out.print("PLAYER HAS WON!");
                 roundOver = true;
             }
             else if (getSumOfHand(hand) > 21) {
                 faceDown = false;
                 JOptionPane.showMessageDialog(frame, "PLAYER HAS BUSTED! DEALER HAS WON!");
+                System.out.print("DEALER HAS WON!");
                 roundOver = true;
             }
         }
@@ -151,24 +156,26 @@ public class Game {
             if(getSumOfHand(hand) == 21) {
                 faceDown = false;
                 JOptionPane.showMessageDialog(frame, "DEALER HAS DONE BLACKJACK! DEALER HAS WON!");
+                System.out.print("DEALER HAS WON!");
                 roundOver = true;
             }
             else if (getSumOfHand(hand) > 21) {
                 faceDown = false;
                 dealerWon = false;
                 JOptionPane.showMessageDialog(frame, "DEALER HAS JUST BUSTED! PLAYER HAS WON!");
+                System.out.print("PLAYER HAS WON!");
                 roundOver = true;
             }
         }
     }
 
-    public void addCard(ArrayList<Card> hand) {
+    public void addCard(List<Card> hand) {
         hand.add(deck.getCard(0));
         deck.removeCard(0);
         faceDown = true;
     }
 
-    public boolean hasAceInHand(ArrayList<Card> hand) {
+    public boolean hasAceInHand(List<Card> hand) {
         for (Card card : hand) {
             if (card.getValue() == 11) {
                 return true;
@@ -177,7 +184,7 @@ public class Game {
         return false;
     }
 
-    public int aceCountInHand(ArrayList<Card> hand){
+    public int aceCountInHand(List<Card> hand){
         int aceCount = 0;
         for (Card card : hand) {
             if (card.getValue() == 11) {
@@ -187,7 +194,7 @@ public class Game {
         return aceCount;
     }
 
-    public int getSumWithHighAce(ArrayList<Card> hand) {
+    public int getSumWithHighAce(List<Card> hand) {
         int handSum = 0;
         for (Card card : hand) {
             handSum += card.getValue();
@@ -195,7 +202,7 @@ public class Game {
         return handSum;
     }
 
-    public int getSumOfHand (ArrayList<Card> hand) {
+    public int getSumOfHand (List<Card> hand) {
         int sumOfHand = 0;
         if(hasAceInHand(hand)) {
             if(getSumWithHighAce(hand) <= 21) {
@@ -219,7 +226,7 @@ public class Game {
         return 22;
     }
 
-    public  double decision (ArrayList<Card> phand, ArrayList<Card> dhand) {
+    public  double decision (List<Card> phand, List<Card> dhand) {
         int n = 21 - getSumOfHand(phand);
         double dec = 0.0;
         for (int i = 1; i <= n; i++) {
