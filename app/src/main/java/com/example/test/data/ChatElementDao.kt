@@ -22,6 +22,6 @@ interface ChatElementDao {
     @Query("SELECT * from Chats WHERE id = :id")
     fun getChatElement(id: String): Flow<ChatElement>
 
-    @Query("SELECT * from Chats ORDER BY id")
+    @Query("SELECT * from Chats") // ORDER BY id
     fun getAllChatElements():Flow<List<ChatElement>>
 }

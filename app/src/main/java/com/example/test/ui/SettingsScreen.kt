@@ -34,7 +34,7 @@ fun SettingsScreen(
     viewModel: ChatViewModel
 ) {
 
-    var telegramLoginForm by remember { mutableStateOf("")}
+    var telegramLoginForm by remember { mutableStateOf("") }
     Column(modifier = modifier) {
 
         Row(modifier = Modifier.padding(4.dp)) {
@@ -54,6 +54,16 @@ fun SettingsScreen(
                 }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
         }
+        Text(
+            stringResource(R.string.discord_id),
+            modifier = Modifier
+                .padding(4.dp)
+        )
+        Text(
+            userPreferencesRepository.discordId.collectAsState(initial = "").value,
+            modifier = Modifier
+                .padding(4.dp)
+        )
         Row(modifier = Modifier.padding(4.dp)) {
             Text(
                 stringResource(R.string.discord_token),
@@ -68,15 +78,21 @@ fun SettingsScreen(
                         userPreferencesRepository.saveDiscordTokenPreference(
                             it
                         )
+                        viewModel.getMeDiscord()
                     }
                 })
         }
+        Text(
+            userPreferencesRepository.telegramId.collectAsState(initial = "").value,
+            modifier = Modifier
+                .padding(4.dp)
+        )
         Row(modifier = Modifier.padding(4.dp)) {
             val context = LocalContext.current
             Button(
                 onClick = { viewModel.telegramInit(context.filesDir.absolutePath) })
             {
-                Text(stringResource(R.string.discord_token))
+                Text(stringResource(R.string.manual_tg_init))
             }
         }
         Row(modifier = Modifier.padding(4.dp)) {
@@ -94,7 +110,7 @@ fun SettingsScreen(
             Button(
                 onClick = { viewModel.onTelegramPromptUpdate(telegramLoginForm) })
             {
-                Text(stringResource(R.string.back_button))
+                Text(stringResource(R.string.submit))
             }
         }
     }

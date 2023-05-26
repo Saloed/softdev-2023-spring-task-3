@@ -7,19 +7,17 @@ package com.example.test.td;
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
+import com.example.test.ChatViewModel;
 import com.example.test.data.Author;
 import com.example.test.data.ChatElement;
 import com.example.test.data.ChatList;
+import com.example.test.data.ChatType;
 import com.example.test.data.Message;
 import com.example.test.data.RecipientsData;
 
 import org.drinkless.td.libcore.telegram.Client;
 import org.drinkless.td.libcore.telegram.TdApi;
 
-import java.io.BufferedReader;
-import java.io.IOError;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -320,6 +318,7 @@ public final class Example {
         promptCallback = promptCallbackFunction;
         // set log message handler to handle only fatal errors (0) and plain log messages (-1)
 //        Client.setLogMessageHandler(0, new LogMessageHandler());
+        Client.setLogVerbosityLevel(0);
 //
 //        // disable TDLib log and redirect fatal errors and plain log messages to a file
 //        Client.execute(new TdApi.SetLogVerbosityLevel(0));
@@ -354,7 +353,12 @@ public final class Example {
 //        }
     }
 
-    public static ChatList getChats() throws InterruptedException, IllegalAccessError {
+    public static RecipientsData getUser(Long id) {
+        TdApi.User user = Objects.requireNonNullElse(users.get(id), new TdApi.User());
+        return new RecipientsData(user.firstName, String.valueOf(user.id));
+    }
+
+    public static ChatList getChats(Function<List<RecipientsData>, String> callbackFunc) throws InterruptedException, IllegalAccessError {
 
         authorizationLock.lock();
         try {
@@ -366,45 +370,65 @@ public final class Example {
             authorizationLock.unlock();
         }
 
-        java.util.Iterator<OrderedChat> iter = mainChatList.iterator();
 
         getMainChatList(10);
         List<ChatElement> chatList = new ArrayList<>();
         synchronized (mainChatList) {
+            java.util.Iterator<OrderedChat> iter = mainChatList.iterator();
             for (int i = 0; i < mainChatList.size(); i++) {
-                long chatId = iter.next().chatId; // TODO:  java.util.ConcurrentModificationException, synchronized начинается поздно
+                long chatId = iter.next().chatId;
                 TdApi.Chat chat = chats.get(chatId);
                 synchronized (chat) {
+                    // TODO: Проверить тип чатов
+//                    client.send(new TdApi.GetBasicGroupFullInfo(chat.id), new FullChatHandler(callbackFunc)); // Можно случайно попросить не Basic chat, а личного или супергруппы
+
                     if (chat.lastMessage.content.getConstructor() == TdApi.MessageText.CONSTRUCTOR) {
                         String messageContent = ((TdApi.MessageText) chat.lastMessage.content).text.text;
-                        String messageAuthor = chat.lastMessage.authorSignature;// TODO: Спорная обработка id автора в следующей строчке
-                        chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", messageContent, new ArrayList<Message>(Arrays.asList(new Message(messageContent, new Author(messageAuthor, chat.lastMessage.senderId.toString())))), new ArrayList<RecipientsData>()));
+
+                        chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", messageContent, new ArrayList<Message>(Arrays.asList(new Message(messageContent, senderToAuthor(chat.lastMessage.senderId)))), new ArrayList<RecipientsData>()));
 
                     } else if (chat.lastMessage.content.getConstructor() == TdApi.MessagePhoto.CONSTRUCTOR) {
-                        String messageAuthor = chat.lastMessage.authorSignature;// TODO: Спорная обработка id автора в следующей строчке
+
                         String messageContent = "Фото";
-                        chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", messageContent, new ArrayList<Message>(Arrays.asList(new Message(messageContent, new Author(messageAuthor, chat.lastMessage.senderId.toString())))), new ArrayList<RecipientsData>()));
+                        chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", messageContent, new ArrayList<Message>(Arrays.asList(new Message(messageContent, senderToAuthor(chat.lastMessage.senderId)))), new ArrayList<RecipientsData>()));
 
                     } else if (chat.lastMessage.content.getConstructor() == TdApi.MessageVideo.CONSTRUCTOR) {
-                        String messageAuthor = chat.lastMessage.authorSignature;// TODO: Спорная обработка id автора в следующей строчке
+
                         String messageContent = "Видео";
-                        chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", messageContent, new ArrayList<Message>(Arrays.asList(new Message(messageContent, new Author(messageAuthor, chat.lastMessage.senderId.toString())))), new ArrayList<RecipientsData>()));
+                        chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", messageContent, new ArrayList<Message>(Arrays.asList(new Message(messageContent, senderToAuthor(chat.lastMessage.senderId)))), new ArrayList<RecipientsData>()));
 
                     } else {
-                        //new Message(chat.lastMessage.content.toString(), new Author(chat.lastMessage.authorSignature,chat.lastMessage.senderId.toString()))
                         chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", "Контент не поддерживается", new ArrayList<Message>(), new ArrayList<RecipientsData>()));
                     }
                 }
             }
         }
+        for (ChatElement chat : chatList) {
+            chat.setType(ChatType.TELEGRAM);
+        }
         return new ChatList(chatList);
     }
 
-    public static void getMessages(String chatId, Function<List<Message>, String> callbackFunc) throws InterruptedException {
-//        client.send(new TdApi.GetChatHistory(Long.parseLong(chatId), 0, 0, 50, false), defaultHandler);
-        client.send(new TdApi.GetChatHistory(Long.parseLong(chatId), 0, 0, 500, false), new CallbackHandler(callbackFunc));
+    public static void getMe(Function<RecipientsData, String> callbackFunc) {
+        client.send(new TdApi.GetMe(), new Client.ResultHandler(
+        ) {
+            @Override
+            public void onResult(TdApi.Object object) {
+                if (object.getConstructor() == TdApi.User.CONSTRUCTOR) {
+                    TdApi.User user = (TdApi.User) object;
+                    RecipientsData recipientsData = new RecipientsData(user.firstName, String.valueOf(user.id));
+                    callbackFunc.apply(recipientsData);
+                }
+            }
+        });
+    }
 
-//        Thread.sleep(4000);
+    public static void getMessages(String chatId, Function<List<Message>, String> callbackFunc) throws InterruptedException {
+        client.send(new TdApi.GetChatHistory(Long.parseLong(chatId), 0, 0, 500, false), new CallbackHandler(callbackFunc));
+    }
+
+    public static void sendMessageTd(long chatId, String message) {
+        client.send(new TdApi.SendMessage(chatId, 0, 0, new TdApi.MessageSendOptions(), new TdApi.ReplyMarkupForceReply(), new TdApi.InputMessageText(new TdApi.FormattedText(message, new TdApi.TextEntity[0]), false, true)), defaultHandler);
     }
 
     private static class OrderedChat implements Comparable<OrderedChat> {
@@ -434,6 +458,48 @@ public final class Example {
         }
     }
 
+    private static Author senderToAuthor(TdApi.MessageSender sender) {
+
+
+        switch (sender.getConstructor()) {
+            case TdApi.MessageSenderUser.CONSTRUCTOR -> {
+                TdApi.MessageSenderUser senderUser = (TdApi.MessageSenderUser) sender;//
+//
+                return new Author(Objects.requireNonNullElse(users.get(senderUser.userId), new TdApi.User()).firstName, String.valueOf(senderUser.userId));
+
+            }
+            case TdApi.MessageSenderChat.CONSTRUCTOR -> {
+                TdApi.MessageSenderChat senderChat = (TdApi.MessageSenderChat) sender;
+
+                return new Author("", String.valueOf(senderChat.chatId));
+            }
+        }
+        return new Author("", "");
+    }
+
+
+    private static class FullChatHandler implements Client.ResultHandler {
+        private static Function<List<RecipientsData>, String> func = null;
+
+        FullChatHandler(Function<List<RecipientsData>, String> f) {
+            func = f;
+        }
+
+        @Override
+        public void onResult(TdApi.Object object) {
+            if (object.getConstructor() == TdApi.BasicGroupFullInfo.CONSTRUCTOR) {
+                TdApi.BasicGroupFullInfo groupFullInfo = (TdApi.BasicGroupFullInfo) object;
+                List<RecipientsData> recipients = new ArrayList<>();
+                for (TdApi.ChatMember member : groupFullInfo.members) {
+                    recipients.add(new RecipientsData(member.memberId.toString(), member.status.toString()));
+                }
+                if (func != null) {
+                    func.apply(recipients);
+                }
+            }
+        }
+    }
+
     private static class CallbackHandler implements Client.ResultHandler {
         private static Function<List<Message>, String> func;
 
@@ -441,29 +507,73 @@ public final class Example {
             func = f;
         }
 
+
         @Override
         public void onResult(TdApi.Object object) {
             TdApi.Messages messages = (TdApi.Messages) object;
             List<Message> msgList = new ArrayList<Message>();
             for (TdApi.Message msg : messages.messages) {
-                if (msg.content.getConstructor() == TdApi.MessageText.CONSTRUCTOR) {
-                    String content = ((TdApi.MessageText) msg.content).text.text;
-                    msgList.add(new Message(content, new Author(msg.authorSignature, msg.senderId.toString())));
-                } else if (msg.content.getConstructor() == TdApi.MessagePhoto.CONSTRUCTOR) {
-                    String content = "Фото";
-                    msgList.add(new Message(content, new Author(msg.authorSignature, msg.senderId.toString())));
+                msgList.add(messageConverter(msg));
 
-                } else if (msg.content.getConstructor() == TdApi.MessageVideo.CONSTRUCTOR) {
-                    String content = "Видео";
-                    msgList.add(new Message(content, new Author(msg.authorSignature, msg.senderId.toString())));
-
-                } else {
-                    String content = "Сообщения этого типа не поддерживаются";
-                    msgList.add(new Message(content, new Author(msg.authorSignature, msg.senderId.toString())));
-
-                }
             }
             func.apply(msgList);
+        }
+    }
+
+    public static Message messageConverter(TdApi.Message msg) {
+        if (msg.content.getConstructor() == TdApi.MessageText.CONSTRUCTOR) {
+            String content = ((TdApi.MessageText) msg.content).text.text;
+            Message outputMessage = new Message(content, senderToAuthor(msg.senderId));
+            outputMessage.setChatId(String.valueOf(msg.chatId));
+            outputMessage.setTimestamp(msg.date);
+            return outputMessage;
+
+        } else if (msg.content.getConstructor() == TdApi.MessagePhoto.CONSTRUCTOR) {
+
+            TdApi.MessagePhoto messagePhoto = (TdApi.MessagePhoto) msg.content;
+            String content = messagePhoto.caption.text;
+            Message outputMessage = new Message(content, senderToAuthor(msg.senderId));
+
+//            messagePhoto.photo.sizes[0]
+            int preferredPhotoSize = 0;
+            int maxPhotoSize = -1;// TODO: Можно добавить выбор качества картинок
+            for (int i = 0; i < messagePhoto.photo.sizes.length; i++) {
+                if (messagePhoto.photo.sizes[i].width > maxPhotoSize) {
+                    preferredPhotoSize = i;
+                    maxPhotoSize = messagePhoto.photo.sizes[i].width;
+                }
+            }
+            client.send(new TdApi.DownloadFile(messagePhoto.photo.sizes[preferredPhotoSize].photo.id, 16, 0, 0, false), defaultHandler);
+            if (messagePhoto.photo.minithumbnail != null) {
+                outputMessage.setPreviewBitmap(messagePhoto.photo.minithumbnail.data);
+            }
+            String photoPath = messagePhoto.photo.sizes[preferredPhotoSize].photo.local.path;
+
+            outputMessage.setImagePath(photoPath);
+            outputMessage.setChatId(String.valueOf(msg.chatId));
+            outputMessage.setTimestamp(msg.date);
+            return outputMessage;
+//
+        } else if (msg.content.getConstructor() == TdApi.MessageVideo.CONSTRUCTOR) {
+            String content = "Видео";
+
+            Message outputMessage = new Message(content, senderToAuthor(msg.senderId));
+            outputMessage.setChatId(String.valueOf(msg.chatId));
+            outputMessage.setTimestamp(msg.date);
+            return outputMessage;
+        } else if (msg.content.getConstructor() == TdApi.MessageVoiceNote.CONSTRUCTOR) {
+            String content = "Голосовые сообщения не поддерживаются";
+            Message outputMessage = new Message(content, senderToAuthor(msg.senderId));
+            outputMessage.setChatId(String.valueOf(msg.chatId));
+            outputMessage.setTimestamp(msg.date);
+            return outputMessage;
+        } else {
+            String content = "Сообщения этого типа не поддерживаются";
+            Message outputMessage = new Message(content, senderToAuthor(msg.senderId));
+            outputMessage.setChatId(String.valueOf(msg.chatId));
+            outputMessage.setTimestamp(msg.date);
+            return outputMessage;
+
         }
     }
 
@@ -472,6 +582,12 @@ public final class Example {
         public void onResult(TdApi.Object object) {
             print(object.toString());
         }
+    }
+
+    private static BiFunction<String, Message, String> newMessageCallback = null;
+
+    public static void subscribeOnNewMessages(BiFunction<String, Message, String> func) {
+        newMessageCallback = func;
     }
 
     private static class UpdateHandler implements Client.ResultHandler {
@@ -685,9 +801,14 @@ public final class Example {
                     TdApi.UpdateSupergroupFullInfo updateSupergroupFullInfo = (TdApi.UpdateSupergroupFullInfo) object;
                     supergroupsFullInfo.put(updateSupergroupFullInfo.supergroupId, updateSupergroupFullInfo.supergroupFullInfo);
                     break;
+                case TdApi.UpdateNewMessage.CONSTRUCTOR: // Мой код
+                    TdApi.UpdateNewMessage update = (TdApi.UpdateNewMessage) object;
+                    newMessageCallback.apply(String.valueOf(update.message.chatId), messageConverter(update.message));
+
                 default:
                     // print("Unsupported update:" + newLine + object);
             }
+
         }
     }
 
@@ -706,6 +827,7 @@ public final class Example {
                     System.err.println("Receive wrong response from TDLib:" + newLine + object);
             }
         }
+
     }
 
 

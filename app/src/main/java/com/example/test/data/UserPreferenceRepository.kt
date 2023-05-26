@@ -21,6 +21,8 @@ class UserPreferencesRepository(
     private companion object {
         val FONT_SIZE = intPreferencesKey("font_size")
         val DISCORD_TOKEN = stringPreferencesKey("discord_token")
+        val DISCORD_ID = stringPreferencesKey("discord_id")
+        val TELEGRAM_ID = stringPreferencesKey("telegram_id")
         const val TAG = "UserPreferencesRepo"
     }
 
@@ -47,9 +49,43 @@ class UserPreferencesRepository(
             }
         }
         .map { preferences ->
-            preferences[DISCORD_TOKEN] ?: "10"
+            preferences[DISCORD_TOKEN] ?: ""
         }
 
+    val discordId:Flow<String> = dataStore.data
+        .catch {
+            if (it is IOException) {
+                Log.e(TAG, "Error reading preferences.", it)
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[DISCORD_ID] ?: ""
+        }
+    val telegramId:Flow<String> = dataStore.data
+        .catch {
+            if (it is IOException) {
+                Log.e(TAG, "Error reading preferences.", it)
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[TELEGRAM_ID] ?: ""
+        }
+    suspend fun saveTelegramIdPreference(telegramId:String){
+        dataStore.edit { preferences ->
+            preferences[TELEGRAM_ID] = telegramId
+        }
+    }
+    suspend fun saveDiscordIdPreference(discordId: String) {
+        dataStore.edit { preferences ->
+            preferences[DISCORD_ID] = discordId
+        }
+    }
     suspend fun saveFontSizePreference(fontSize: Int) {
         dataStore.edit { preferences ->
             preferences[FONT_SIZE] = fontSize

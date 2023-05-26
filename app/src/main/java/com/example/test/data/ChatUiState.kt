@@ -11,5 +11,5 @@ data class ChatUiState(
     fun ChatUiState.toChatList():ChatList = chatList
     fun ChatList.toChatUiState(actionEnabled:Boolean=false):ChatUiState = ChatUiState(chatList=chatList)
 
-    fun ChatUiState.isValid():Boolean = true// TODO: Другая validation функция
+
 }

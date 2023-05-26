@@ -14,4 +14,5 @@ class OfflineChatRepository(private val chatElementsDao: ChatElementDao) : ChatR
 
     override suspend fun updateChat(item: ChatElement) = chatElementsDao.update(item)
 
+
 }
