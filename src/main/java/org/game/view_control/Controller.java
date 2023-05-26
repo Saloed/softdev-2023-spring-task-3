@@ -1,11 +1,8 @@
 package org.game.view_control;
 
 import javafx.animation.ScaleTransition;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -20,8 +17,6 @@ public class Controller {
 
     @FXML
     public Button restartButton;
-    @FXML
-    private StackPane papa;
     @FXML
     private Pane winPane;
     @FXML

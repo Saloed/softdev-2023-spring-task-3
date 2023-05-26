@@ -2,8 +2,6 @@ package org.game.game;
 
 import java.util.Arrays;
 
-import static org.game.game.Constants.*;
-
 public class HexGrid {
 
     private final int[][] grid;
