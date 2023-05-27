@@ -25,9 +25,9 @@ public class SnakeGameScreen implements Screen {
 
     @Override
     public void show() {
+        batch = new SpriteBatch();
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
-        batch = new SpriteBatch();
 
         gameGrid = new Texture(Gdx.files.internal("background.png"));
         snake = new Snake(batch);
@@ -42,9 +42,10 @@ public class SnakeGameScreen implements Screen {
         Gdx.gl.glClearColor(66f / 255f, 66f / 255f, 231f / 255f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        //обновление позиции змеи
         snake.updatePosition(apple);
-        if(snake.isNeedIncreaseScore) sidePanel.score.increaseScore();
-        if(snake.isNeedHitPlay) game.hit.play();
+        if (snake.isNeedIncreaseScore) sidePanel.score.increaseScore();
+        if (snake.isNeedHitPlay) game.hit.play();
 
         // отрисовка элементов игры
         batch.begin();
@@ -74,10 +75,12 @@ public class SnakeGameScreen implements Screen {
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
     public void hide() {

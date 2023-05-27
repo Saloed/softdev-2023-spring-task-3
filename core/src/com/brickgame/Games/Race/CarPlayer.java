@@ -1,6 +1,5 @@
 package com.brickgame.Games.Race;
 
-import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.brickgame.Games.Piece;
@@ -9,7 +8,7 @@ import java.util.ArrayList;
 
 public class CarPlayer {
     private final SpriteBatch batch;
-    private final Piece[] car;
+    public final Piece[] car;
     public boolean isNeedPlayHit, isNeedIncreaseScore;
 
     public CarPlayer(SpriteBatch batch) {
@@ -23,24 +22,22 @@ public class CarPlayer {
                 new Piece(centerCar - 1, 0), new Piece(centerCar + 1, 0)};
     }
 
-    public void updatePosition() {
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && car[0].getX() == 6) {
-            for (Piece piece : car) {
-                piece.setX(piece.getX() - 3);
-            }
+
+    public void moveRight() {
+        if (car[0].getX() == 3) {
+            for (Piece piece : car) piece.setX(piece.getX() + 3);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && car[0].getX() == 3) {
-            for (Piece piece : car) {
-                piece.setX(piece.getX() + 3);
-            }
+    }
+
+    public void moveLeft() {
+        if (car[0].getX() == 6) {
+            for (Piece piece : car) piece.setX(piece.getX() - 3);
         }
     }
 
     public boolean checkCrash(ArrayList<CarEnemy> carEnemies) {
         for (CarEnemy carEnemy : carEnemies) {
-            if (carEnemy.car[0].getX() == car[0].getX() && carEnemy.car[6].getY() <= car[0].getY()) {
-                return true;
-            }
+            if (carEnemy.car[0].getX() == car[0].getX() && carEnemy.car[6].getY() <= car[0].getY()) return true;
         }
         return false;
     }

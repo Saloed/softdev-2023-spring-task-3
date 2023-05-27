@@ -27,9 +27,7 @@ public class CarEnemy {
     public void updatePosition() {
         timeUpdatePosition += Gdx.graphics.getDeltaTime();
         if (timeUpdatePosition >= timeUpdatePositionLimit) {
-            for (Piece piece : car) {
-                piece.setY(piece.getY() - 1);
-            }
+            for (Piece piece : car) piece.setY(piece.getY() - 1);
             timeUpdatePosition = 0;
         }
     }

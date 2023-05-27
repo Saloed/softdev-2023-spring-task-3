@@ -12,7 +12,7 @@ public class SideWalls {
     private float timeUpdatePosition = 0;
     public static float timeUpdatePositionLimit = 0.4f;
 
-    private final ArrayList<Piece> sideWalls;
+    private final List<Piece> sideWalls;
 
     public SideWalls(SpriteBatch batch) {
         this.batch = batch;
@@ -41,8 +41,6 @@ public class SideWalls {
     }
 
     public void draw() {
-        for (Piece piece : sideWalls) {
-            piece.draw(batch);
-        }
+        for (Piece piece : sideWalls) piece.draw(batch);
     }
 }

@@ -19,7 +19,7 @@ public class ShootGameScreen implements Screen {
     private SpriteBatch batch;
     private Texture gameGrid;
     private ArrayList<Enemy> enemies;
-    private float timeSpawn;
+    private float timeSpawn,timeStepShoot, timeShootLimit = 1f, timeSpawnLimit = 1.5f;
     private Gun gun;
     private SidePanel sidePanel;
 
@@ -46,24 +46,36 @@ public class ShootGameScreen implements Screen {
         Gdx.gl.glClearColor(66f / 255f, 66f / 255f, 231f / 255f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) gun.shoot();
+        //Обновление времен
+        timeStepShoot += Gdx.graphics.getDeltaTime();
+        timeSpawn += Gdx.graphics.getDeltaTime();
+
 
         // удаление улетевших за экран пуль и убитых врагов
         for (int i = enemies.size() - 1; i >= 0; --i) {
-            if (enemies.get(i).killed) {
-                enemies.remove(i);
-            }
+            if (enemies.get(i).killed) enemies.remove(i);
         }
         gun.deleteBullet();
 
         //спавн врагов
-        if (timeSpawn >= 1.2f) {
+        if (timeSpawn >= timeSpawnLimit) {
             enemies.add(new Enemy(batch, sidePanel.level));
             timeSpawn = 0;
         }
 
+        // стрельба
+        if (timeStepShoot >= timeShootLimit && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            gun.shoot();
+            timeStepShoot = 0;
+            if (gun.isNeedPlayHit){
+                game.hit.play();
+                gun.isNeedPlayHit = false;
+            }
+        }
+
         //обновление позиций пуль и врагов
-        gun.updatePosition();
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) gun.moveRight();
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) gun.moveLeft();
         for (Bullet bullet : gun.bullets) {
             bullet.updatePosition();
         }
@@ -73,9 +85,6 @@ public class ShootGameScreen implements Screen {
             if (gun.isNeedPlayBroke) game.broke.play();
             if (gun.isNeedIncreaseScore) sidePanel.score.increaseScore();
         }
-        if (gun.isNeedPlayHit) game.hit.play();
-
-        timeSpawn += Gdx.graphics.getDeltaTime();
 
         // отрисовка игровых объектов
         batch.begin();
@@ -89,7 +98,7 @@ public class ShootGameScreen implements Screen {
         // переход на следующий уровень
         if (sidePanel.isNextLevel()) {
             game.achives.play();
-            gun.timeShootLimit -= 0.2f;
+            timeShootLimit -= 0.2f;
         }
 
         // принудительный выход из игры

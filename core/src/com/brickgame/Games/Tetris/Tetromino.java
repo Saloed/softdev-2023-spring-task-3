@@ -1,17 +1,14 @@
 package com.brickgame.Games.Tetris;
 
-import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.brickgame.BrickGame;
 import com.brickgame.Games.Piece;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Tetromino {
 
-    Piece centerTetromino;
-    static float TIME_MOVE, TIME_MOVE_LIMIT = 0.6f;
+    public Piece centerTetromino;
 
     public final List<Piece> tetromino;
     int type;
@@ -28,19 +25,15 @@ T:
 
 I:
 2
-1
-0
-3
+2103
 
 J:
- 3
- 0
-21
+2
+103
 
 L:
-3
-0
-12
+2
+301
 
 O:
 23
@@ -67,9 +60,9 @@ Z:
     };
     Direction[][] directions = new Direction[][]{
             new Direction[]{Direction.LEFT, Direction.RIGHT, Direction.DOWN}, // T - 0
-            new Direction[]{Direction.UP, Direction.UP, Direction.DOWN}, // I - 1
-            new Direction[]{Direction.DOWN, Direction.LEFT_DOWN, Direction.UP}, // J - 2
-            new Direction[]{Direction.DOWN, Direction.RIGHT_DOWN, Direction.UP}, // L - 3
+            new Direction[]{Direction.LEFT, Direction.LEFT, Direction.RIGHT}, // I - 1
+            new Direction[]{Direction.LEFT, Direction.LEFT_UP, Direction.RIGHT}, // J - 2
+            new Direction[]{Direction.RIGHT, Direction.RIGHT_UP, Direction.LEFT}, // L - 3
             new Direction[]{Direction.UP, Direction.RIGHT, Direction.RIGHT_UP}, // O - 4
             new Direction[]{Direction.DOWN, Direction.LEFT_DOWN, Direction.RIGHT}, // S - 5
             new Direction[]{Direction.DOWN, Direction.RIGHT_DOWN, Direction.LEFT} // Z - 6
@@ -93,35 +86,37 @@ Z:
         }
     }
 
-    public void move() {
-        isNewTetromino = false;
-        TIME_MOVE += Gdx.graphics.getDeltaTime();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && canMoveLeft()) {
-            centerTetromino.setX(centerTetromino.getX() - 1);
-            updateTetromino();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && canMoveRight()) {
+
+    public void moveRight() {
+        if (canMoveRight()) {
             centerTetromino.setX(centerTetromino.getX() + 1);
             updateTetromino();
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && canMoveDown()) {
+    }
+
+    public void moveLeft() {
+        if (canMoveLeft()) {
+            centerTetromino.setX(centerTetromino.getX() - 1);
+            updateTetromino();
+        }
+    }
+
+    public void moveDown() {
+        if (canMoveDown()) {
             centerTetromino.setY(centerTetromino.getY() - 1);
             updateTetromino();
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            rotate();
-        }
-        if (TIME_MOVE >= TIME_MOVE_LIMIT) {
-            if (canMoveDown()) {
-                for (Piece piece : tetromino) {
-                    piece.setY(piece.getY() - 1);
-                }
-                updateTetromino();
-            } else {
-                // Если перемещение вниз невозможно, создается новая фигура и становится активной
-                isNewTetromino = true;
+    }
+
+    public void move() {
+        if (canMoveDown()) {
+            for (Piece piece : tetromino) {
+                piece.setY(piece.getY() - 1);
             }
-            TIME_MOVE = 0;
+            updateTetromino();
+        } else {
+            // Если перемещение вниз невозможно, создается новая фигура и становится активной
+            isNewTetromino = true;
         }
     }
 
@@ -182,7 +177,6 @@ Z:
         }
     }
 
-
     private void updateTetromino() {
         for (int i = 1; i < tetromino.size(); i++) {
             int dx = 0, dy = 0;
@@ -195,7 +189,6 @@ Z:
             tetromino.get(i).setY(centerTetromino.getY() + dy);
         }
     }
-
 
     public void draw() {
         for (Piece piece : tetromino) {

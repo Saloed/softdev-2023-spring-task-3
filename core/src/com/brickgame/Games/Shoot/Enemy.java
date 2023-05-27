@@ -10,7 +10,7 @@ import com.brickgame.Games.Piece;
 public class Enemy {
 
     private final SpriteBatch batch;
-    private float timeUpdatePosition, timeUpdatePositionLimit = 0.4f;
+    public float timeUpdatePosition, timeUpdatePositionLimit = 0.5f;
     public boolean killed;
     public Piece[] enemy;
     private int centerX;

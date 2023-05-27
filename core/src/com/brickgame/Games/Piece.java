@@ -9,7 +9,6 @@ import java.util.List;
 
 public class Piece {
     private float x, y;
-    private final Texture texturePiece;
 
     public List<Direction> directions;
     private int distance;
@@ -19,7 +18,6 @@ public class Piece {
     public Piece(float x, float y) {
         this.x = x;
         this.y = y;
-        texturePiece = new Texture("BrickOn.png");
     }
 
     public float getX() {
@@ -51,6 +49,7 @@ public class Piece {
     }
 
     public void draw(SpriteBatch batch) {
+        Texture texturePiece = new Texture("BrickOn.png");
         texturePiece.bind();
         batch.draw(texturePiece, x * Piece.SIZE, y * Piece.SIZE, SIZE, SIZE);
     }

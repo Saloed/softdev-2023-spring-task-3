@@ -10,7 +10,7 @@ public class Bullet {
     private final SpriteBatch batch;
     public final Piece bullet;
     private final Gun parent;
-    private float timeUpdatePosition, timeUpdatePositionLimit = 0.1f;
+    public float timeUpdatePosition, timeUpdatePositionLimit = 0.1f;
     public boolean needToDelete;
 
     public Bullet(SpriteBatch batch, Gun parent) {

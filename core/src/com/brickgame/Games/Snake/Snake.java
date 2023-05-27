@@ -5,16 +5,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.brickgame.BrickGame;
 import com.brickgame.Games.Piece;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class Snake {
     private final SpriteBatch batch;
     public float timeUpdatePosition = 0, timeUpdatePositionLimit = 0.2f;
 
-    private int direction; // 0 - вверх, 1 - вправо, 2 - вниз, 3 - влево
+    public int direction; // 0 - вверх, 1 - вправо, 2 - вниз, 3 - влево
 
-    public ArrayList<Piece> snake;
+    public List<Piece> snake;
     public boolean isNeedHitPlay, isNeedIncreaseScore;
 
     public Snake(SpriteBatch batch) {
@@ -33,6 +32,7 @@ public class Snake {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && direction != 2) direction = 0;
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && direction != 0) direction = 2;
 
+        float endX = snake.get(snake.size()-1).getX(), endY = snake.get(snake.size()-1).getY();
         if (timeUpdatePosition >= timeUpdatePositionLimit) {
             // Движение тела змеи
             for (int i = snake.size() - 1; i > 0; i--) {
@@ -61,7 +61,7 @@ public class Snake {
             }
             // Проверка столкновения головы с яблоком
             if (snake.get(0).getX() == apple.apple.getX() && snake.get(0).getY() == apple.apple.getY()) {
-                snake.add(new Piece(snake.get(snake.size() - 1).getX(), snake.get(snake.size() - 1).getY()));
+                snake.add(new Piece(endX, endY));
                 apple.spawnApple();
                 isNeedIncreaseScore = true;
                 isNeedHitPlay = true;

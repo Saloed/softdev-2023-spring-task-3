@@ -8,7 +8,7 @@ import com.brickgame.Games.Piece;
 public class Apple {
 
     private final SpriteBatch batch;
-   public Piece apple;
+    public Piece apple;
     private final Snake snake;
 
 

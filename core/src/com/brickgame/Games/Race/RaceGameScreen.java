@@ -31,13 +31,14 @@ public class RaceGameScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         batch = new SpriteBatch();
-        sidePanel = new SidePanel(batch, game);
 
+        sidePanel = new SidePanel(batch, game);
         gameGrid = new Texture(Gdx.files.internal("background.png"));
         sideWalls = new SideWalls(batch);
         carPlayer = new CarPlayer(batch);
         carsEnemy = new ArrayList<>();
         timeSpawnCarEnemy = 0;
+
         stage.addActor(sidePanel.musicButton);
     }
 
@@ -54,7 +55,8 @@ public class RaceGameScreen implements Screen {
         }
         //обновление позиций объектов игры
         sideWalls.updatePosition();
-        carPlayer.updatePosition();
+        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) carPlayer.moveRight();
+        if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) carPlayer.moveLeft();
         for (CarEnemy car : carsEnemy) car.updatePosition();
         carPlayer.deleteCarEnemy(carsEnemy); //удаление машин, ушедших за экран
         if (carPlayer.isNeedIncreaseScore) sidePanel.score.increaseScore();

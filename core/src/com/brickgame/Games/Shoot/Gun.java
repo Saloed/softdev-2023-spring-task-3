@@ -7,12 +7,13 @@ import com.brickgame.Games.Piece;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Gun {
-    public ArrayList<Piece> gun;
-    public ArrayList<Bullet> bullets;
+    public List<Piece> gun;
+    public List<Bullet> bullets;
     private final SpriteBatch batch;
-    public float timeStepShoot, timeMove, timeShootLimit = 1f, timeMoveLimit = 0.1f;
+    public float timeUpdatePositions, timeUpdatePositionLimit = 0.1f;
     public boolean isNeedPlayHit, isNeedPlayBroke, isNeedIncreaseScore;
 
     public Gun(SpriteBatch batch) {
@@ -21,27 +22,26 @@ public class Gun {
         bullets = new ArrayList<>();
     }
 
-    public void updatePosition() {
-        timeMove += Gdx.graphics.getDeltaTime();
-        if (timeMove >= timeMoveLimit) {
-            if (gun.get(gun.size() - 1).getX() + 1 <= BrickGame.GRID_WIDTH - 2 && Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                for (Piece piece : gun) piece.setX(piece.getX() + 1);
-            }
-            if (gun.get(0).getX() - 1 >= 0 && Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                for (Piece piece : gun) piece.setX(piece.getX() - 1);
-            }
-            timeMove = 0;
+    public void moveRight(){
+        timeUpdatePositions += Gdx.graphics.getDeltaTime();
+        if (gun.get(gun.size() - 1).getX() + 1 <= BrickGame.GRID_WIDTH - 2 && timeUpdatePositions >= timeUpdatePositionLimit) {
+            for (Piece piece : gun) piece.setX(piece.getX() + 1);
+            timeUpdatePositions = 0;
         }
     }
 
-    public void shoot() {
-        isNeedPlayHit = false;
-        timeStepShoot += Gdx.graphics.getDeltaTime();
-        if (timeStepShoot >= timeShootLimit) {
-            bullets.add(new Bullet(batch, this));
-            timeStepShoot = 0;
-            isNeedPlayHit = true;
+    public void moveLeft(){
+        timeUpdatePositions += Gdx.graphics.getDeltaTime();
+        if (gun.get(0).getX() - 1 >= 0 && timeUpdatePositions >= timeUpdatePositionLimit) {
+            for (Piece piece : gun) piece.setX(piece.getX() - 1);
+            timeUpdatePositions = 0;
         }
+
+    }
+
+    public void shoot() {
+            bullets.add(new Bullet(batch, this));
+            isNeedPlayHit = true;
     }
 
     public void deleteBullet() {

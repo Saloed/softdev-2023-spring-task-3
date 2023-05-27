@@ -16,19 +16,19 @@ public class EndGameScreen implements Screen {
     public EndGameScreen(BrickGame game, int beforeGame) {
         this.game = game;
         beforeGameScreen = beforeGame;
-        stage = new Stage(new ScreenViewport());
     }
 
     @Override
     public void show() {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+
         Table table = new Table();
         table.setFillParent(true);
         table.setDebug(false);
-        stage.addActor(table);
         TextButton resumeGame = new TextButton("Resume Game", game.skin);
         TextButton exitGame = new TextButton("Exit game", game.skin);
+
         table.add(resumeGame).fillX().uniformX();
         table.add(exitGame).fillX().uniformX();
 
@@ -45,6 +45,7 @@ public class EndGameScreen implements Screen {
                 game.changeScreen(0);
             }
         });
+        stage.addActor(table);
     }
 
     @Override
@@ -54,7 +55,6 @@ public class EndGameScreen implements Screen {
 
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
-
     }
 
     @Override
@@ -74,7 +74,8 @@ public class EndGameScreen implements Screen {
 
     @Override
     public void hide() {
-
+        Gdx.input.setInputProcessor(null);
+        dispose();
     }
 
     @Override

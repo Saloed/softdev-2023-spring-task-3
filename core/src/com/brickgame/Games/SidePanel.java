@@ -18,7 +18,7 @@ public class SidePanel {
     public SidePanel(SpriteBatch spriteBatch, BrickGame game) {
         this.batch = spriteBatch;
         this.game = game;
-        score = new Score(batch);
+        score = new Score(batch,game);
         level = 1;
         levelLabel = new Label("Level: " + level, game.skin);
         musicButton = new Button(null, game.skin, "music");

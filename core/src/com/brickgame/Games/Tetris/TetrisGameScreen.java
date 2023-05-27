@@ -9,8 +9,7 @@ import com.brickgame.BrickGame;
 import com.brickgame.Games.Piece;
 import com.brickgame.Games.SidePanel;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 
 public class TetrisGameScreen implements Screen {
@@ -22,7 +21,9 @@ public class TetrisGameScreen implements Screen {
     private Texture gameGrid;
     private Tetromino currentTetromino;
     private static boolean gameOver;
-    private static final ArrayList<Integer> types = new ArrayList<>();
+    private static final List<Integer> types = new ArrayList<>();
+
+    private float TIME_MOVE_LIMIT = 0.5f, TIME_MOVE;
 
     public TetrisGameScreen(BrickGame gam) {
         game = gam;
@@ -46,24 +47,37 @@ public class TetrisGameScreen implements Screen {
 
     @Override
     public void show() {
-        stage = new Stage();
         batch = new SpriteBatch();
-        board = new Board(batch);
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
 
+        board = new Board(batch);
         gameOver = false;
         sidePanel = new SidePanel(batch, game);
-        Gdx.input.setInputProcessor(stage);
         gameGrid = new Texture(Gdx.files.internal("background.png"));
-        stage.addActor(sidePanel.musicButton);
         createNewTetromino();
+
+        stage.addActor(sidePanel.musicButton);
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(66f / 255f, 66f / 255f, 231f / 255f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        currentTetromino.move();
 
+        TIME_MOVE += Gdx.graphics.getDeltaTime();
+
+        // Движение фигуры
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) currentTetromino.moveRight();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) currentTetromino.moveLeft();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) currentTetromino.rotate();
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) currentTetromino.moveDown();
+        if (TIME_MOVE >= TIME_MOVE_LIMIT) {
+            currentTetromino.move();
+            TIME_MOVE = 0;
+        }
+
+        //падение фигуры и создание новой фигуры, очищения ряда, если он заполнен
         if (currentTetromino.isNewTetromino) {
             board.setTetromino(currentTetromino);
             board.clearRows();
@@ -71,17 +85,18 @@ public class TetrisGameScreen implements Screen {
             createNewTetromino();
         }
 
+        // проигрыш звуков, если нужно + начисление очков
         if (board.isNeedPlayAchives) {
             game.achives.play();
             board.isNeedPlayAchives = false;
         }
-
         if (board.isNeedIncreaseScore) {
             sidePanel.score.increaseScore();
             board.isNeedIncreaseScore = false;
         }
+
         // переход на следующий уровень
-        if (sidePanel.isNextLevel() && Tetromino.TIME_MOVE_LIMIT > 0.05f) Tetromino.TIME_MOVE_LIMIT -= 0.05f;
+        if (sidePanel.isNextLevel() && TIME_MOVE_LIMIT > 0.05f) TIME_MOVE_LIMIT -= 0.05f;
 
         // отрисовка элементов игры
         batch.begin();
@@ -92,8 +107,10 @@ public class TetrisGameScreen implements Screen {
         stage.draw();
         batch.end();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) game.changeScreen(0); // принудительный выход из игры
+        // принудительный выход из игры
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) game.changeScreen(0);
 
+        // проигрыш
         if (gameOver) {
             game.changeScreen(6);
             game.endGameScreen.beforeGameScreen = 5;

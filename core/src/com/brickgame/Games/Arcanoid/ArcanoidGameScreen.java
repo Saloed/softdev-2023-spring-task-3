@@ -20,6 +20,8 @@ public class ArcanoidGameScreen implements Screen {
     private Blocks blocks;
     private Texture gameGrid;
 
+    private float  timeStepUpdPosPlatfrm, timeStepUpdatePosPlatLimit = 0.1f;
+
     public ArcanoidGameScreen(BrickGame gam) {
         game = gam;
     }
@@ -45,7 +47,16 @@ public class ArcanoidGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // обновление элементов игры
-        platform.updatePosition();
+        timeStepUpdPosPlatfrm += Gdx.graphics.getDeltaTime();
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && timeStepUpdPosPlatfrm >= timeStepUpdatePosPlatLimit) {
+            platform.moveRight();
+            timeStepUpdPosPlatfrm = 0;
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)&& timeStepUpdPosPlatfrm >= timeStepUpdatePosPlatLimit) {
+            platform.moveLeft();
+            timeStepUpdPosPlatfrm = 0;
+        }
         ball.updatePosition(platform);
         ball.collidesWithBlocks(blocks);
 
@@ -63,7 +74,6 @@ public class ArcanoidGameScreen implements Screen {
         sidePanel.draw();
         stage.draw();
         batch.end();
-
 
         // принудительный выход из игры, нажатием клавиши Escape
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) game.changeScreen(0);

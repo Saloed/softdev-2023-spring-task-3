@@ -41,14 +41,15 @@ public class BrickGame extends Game {
 
     @Override
     public void create() {
-//        GdxNativesLoader.load();
         assetsManager = new AssetsManager();
         mainMenuScreen = new MainMenuScreen(this);
         setScreen(mainMenuScreen);
+
         assetsManager.queueAddSounds();
         assetsManager.queueAddMusic();
         assetsManager.queueAddSkin();
         assetsManager.manager.finishLoading();
+
         skin = assetsManager.manager.get("skin/uiskin.json");
         hit = assetsManager.manager.get("Sounds/hit.mp3", Sound.class);
         broke = assetsManager.manager.get("Sounds/brickIsbroke.mp3", Sound.class);
@@ -57,7 +58,6 @@ public class BrickGame extends Game {
         music.setLooping(true);
         music.setVolume(0.5f);
         music.play();
-
     }
 
     @Override
@@ -102,5 +102,9 @@ public class BrickGame extends Game {
     public void dispose() {
         music.dispose();
         assetsManager.manager.dispose();
+        hit.dispose();
+        broke.dispose();
+        achives.dispose();
+        skin.dispose();
     }
 }

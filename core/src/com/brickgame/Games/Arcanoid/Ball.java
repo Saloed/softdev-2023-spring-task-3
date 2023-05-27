@@ -6,7 +6,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Ball {
-    private float dx, dy, timeUpdatePosition, timeUpdatePositionLimit = 0.2f;
+    public float dx, dy, timeUpdatePosition, timeUpdatePositionLimit = 0.2f;
     public Piece ball;
     private final SpriteBatch batch;
     public boolean isNeedPlayHit, isNeedIncreaseScore, isNeedPlayBroke;
@@ -26,14 +26,16 @@ public class Ball {
             dy = 1;
             ball.setX(platform.platform[platform.platform.length / 2].getX());
         }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            timeUpdatePositionLimit = 1 / 30f;
+        } else timeUpdatePositionLimit = 0.2f;
+
         if (timeUpdatePosition >= timeUpdatePositionLimit) {
             ball.setX(ball.getX() + dx);
             ball.setY(ball.getY() + dy);
 
             // Проверяем столкновение с границами экрана
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                timeUpdatePositionLimit = 1 / 30f;
-            } else timeUpdatePositionLimit = 0.2f;
             if (ball.getX() <= 0 || ball.getX() >= BrickGame.GRID_WIDTH - 1) {
                 dx = -dx;
                 isNeedPlayHit = true;
@@ -45,14 +47,11 @@ public class Ball {
                 isNeedPlayHit = true;
                 ball.setY(BrickGame.GRID_HEIGHT - 1);
             }
+
+            //проверяем столкновение с блоками
             checkCollisionPlatform(platform);
             timeUpdatePosition = 0;
         }
-    }
-
-
-    public void draw() {
-        ball.draw(batch);
     }
 
     private void checkCollisionPlatform(Platform platform) {
@@ -113,5 +112,8 @@ public class Ball {
                 }
             }
         }
+    }
+    public void draw() {
+        ball.draw(batch);
     }
 }
