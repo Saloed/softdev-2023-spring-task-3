@@ -17,6 +17,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -89,316 +90,284 @@ import java.util.Date
 import kotlin.reflect.KProperty
 
 class MainActivity : ComponentActivity() {
+    val tasksViewModel by viewModels<TasksViewModel>()
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyTargetTheme {
-                MyTargetApp()
+                MyTargetApp(
+                    tasksViewModel.tasks,
+                    onAddTask = {tasksViewModel.addTask(it)},
+                    onClearTasks = {tasksViewModel.clearTasks()},
+                    onMarkTask = { tasksViewModel.taskIsSuccesful(it.id, it.isComplete.value) },
+                    onRemoveTask = {tasksViewModel.removeTask(it)},
+                    viewModel = tasksViewModel
+
+                )
+
             }
         }
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyTargetApp(
-) {
-    var showDialog by remember { mutableStateOf(false) }
-    var textFieldHeader by remember { mutableStateOf("") }
-    var textFieldDescription by remember { mutableStateOf("") }
-    var pickedDate by remember { mutableStateOf(LocalDate.now()) }
-    var pickedDateCalendar by remember { mutableStateOf(LocalDate.now()) }
-    val dateDialogState = rememberMaterialDialogState()
-    val calendarDialogState = rememberMaterialDialogState()
-    val colorDialogState = rememberMaterialDialogState()
-    val context = LocalContext.current
-    var pickedColor by remember { mutableStateOf(Color.Unspecified) }
-
-    val resetFields: () -> Unit = {
-        textFieldHeader = ""
-        textFieldDescription = ""
-    }
-
-//    val googleSignInClient = remember {
-//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//            .requestIdToken("142245757260-75kfqgh4klj51dcbma27pnkmln0dcbfk.apps.googleusercontent.com")
-//            .requestEmail()
-//            .build()
-//        GoogleSignIn.getClient(context, gso)
+//@RequiresApi(Build.VERSION_CODES.O)
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun MyTargetApp(
+//) {
+//    var showDialog by remember { mutableStateOf(false) }
+//    var textFieldHeader by remember { mutableStateOf("") }
+//    var textFieldDescription by remember { mutableStateOf("") }
+//    var pickedDate by remember { mutableStateOf(LocalDate.now()) }
+//    var pickedDateCalendar by remember { mutableStateOf(LocalDate.now()) }
+//    val dateDialogState = rememberMaterialDialogState()
+//    val calendarDialogState = rememberMaterialDialogState()
+//    val colorDialogState = rememberMaterialDialogState()
+//    val context = LocalContext.current
+//    var pickedColor by remember { mutableStateOf(Color.Unspecified) }
+//
+//    val resetFields: () -> Unit = {
+//        textFieldHeader = ""
+//        textFieldDescription = ""
 //    }
 //
-//    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-//        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-//        try {
-//            val account = task.getResult(ApiException::class.java)
-//            val idToken = account?.idToken
-//            val credential = GoogleAuthProvider.getCredential(idToken, null)
-//            FirebaseAuth.getInstance().signInWithCredential(credential)
-//                .addOnCompleteListener { authResult ->
-//                    if (authResult.isSuccessful) {
-//                        // Авторизация успешна
-//                    } else {
-//                        // Обработка ошибки авторизации
-//                    }
-//                }
-//        } catch (e: ApiException) {
-//            // Обработка ошибки авторизации
-//        }
-//    }
+//    Column(Modifier.fillMaxSize()) {
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            verticalAlignment = Alignment.Top
+//        ) {
+//              Login()
 //
-//    val signInWithGoogle = {
-//        launcher.launch(googleSignInClient.signInIntent)
-//    }
-
-
-    Column(Modifier.fillMaxSize()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
-        ) {
-              Login()
 //            Button(
-//                onClick = {},
+//                onClick = {calendarDialogState.show()},
 //                colors = ButtonDefaults.buttonColors(Color.White, contentColor = Color.Black)
 //            ) {
 //                Image(
-//                    painter = painterResource(id = R.drawable.baseline_person_24),
-//                    contentDescription = "Person",
+//                    painter = painterResource(id = R.drawable.baseline_calendar_month_24),
+//                    contentDescription = "Calendar",
 //                    Modifier.size(40.dp)
 //                )
 //            }
-
-            Button(
-                onClick = {calendarDialogState.show()},
-                colors = ButtonDefaults.buttonColors(Color.White, contentColor = Color.Black)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.baseline_calendar_month_24),
-                    contentDescription = "Calendar",
-                    Modifier.size(40.dp)
-                )
-            }
-        }
-
-        MaterialDialog(
-            dialogState = calendarDialogState,
-            buttons = {
-                positiveButton("Выбрать"){
-
-                }
-                negativeButton("Отмена"){
-
-                }
-            }
-        ){
-            datepicker(
-                initialDate = LocalDate.now(),
-                title = "Выберите на какое число показать задачи"
-            ) {
-                pickedDateCalendar = it
-            }
-        }
-
-        Box(Modifier.fillMaxSize()) {
-            Column(
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 16.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    Button(
-                        onClick = {},
-                        colors = ButtonDefaults.buttonColors(
-                            Color.White,
-                            contentColor = Color.Black
-                        )
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.baseline_west_24),
-                            contentDescription = "West",
-                            Modifier.size(40.dp)
-                        )
-                    }
-
-                    Button(onClick = { showDialog = true }, shape = CircleShape)
-                    { Text("+", fontSize = 40.sp) }
-                    Button(
-                        onClick = {},
-                        colors = ButtonDefaults.buttonColors(
-                            Color.White,
-                            contentColor = Color.Black
-                        )
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.baseline_east_24),
-                            contentDescription = "East",
-                            Modifier.size(40.dp)
-                        )
-                    }
-                }
-            }
-        }
-
-        if (showDialog) {
-            AlertDialog(
-                onDismissRequest = { showDialog = false },
-                title = { Text(text = "Добавить задачу") },
-                text = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        TextField(
-                            value = textFieldHeader,
-                            onValueChange = { textFieldHeader = it },
-                            singleLine = true,
-                            placeholder = { Text("Название задачи") }
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        TextField(
-                            value = textFieldDescription,
-                            onValueChange = { textFieldDescription = it },
-                            placeholder = { Text("Описание задачи") }
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Button(onClick = { dateDialogState.show() }) {
-                            Text(text = "Выберите дату")
-                        }
-
-                        Button(onClick = { colorDialogState.show() }) {
-                            Text(text = "Выберите цвет")
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                    }
-                    MaterialDialog(
-                        dialogState = dateDialogState,
-                        buttons = {
-                            positiveButton("Выбрать"){
-
-                            }
-                            negativeButton("Отмена"){
-
-                            }
-                        }
-                    ){
-                        datepicker(
-                            initialDate = LocalDate.now(),
-                            title = "Выбор даты"
-
-                        ) {
-                            pickedDate = it
-                        }
-                    }
-
-                    MaterialDialog(dialogState = colorDialogState,
-                        buttons = {
-                            positiveButton("Выбрать"){
-
-                            }
-                            negativeButton("Отмена"){
-
-                            }
-                        }) {
-                        colorChooser(colors = ColorPalette.Primary) {
-                            pickedColor = it
-                        }
-                    }
-                },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            showDialog = false
-                            resetFields()
-                        }
-                    ) {
-                        Text(text = "OK")
-                    }
-                }
-            )
-        }
-    }
-}
-
-@Composable
-fun Login() {
-    var user by remember { mutableStateOf(Firebase.auth.currentUser) }
-    val launcher = rememberFirebaseAuthLauncher(
-        onAuthComplete = { result ->
-            user = result.user
-        },
-        onAuthError = {
-            user = null
-        }
-    )
-    val token = stringResource(id = R.string.web_client_id)
-    val context = LocalContext.current
-    if (user == null) {
-        Button(
-            onClick = {
-                val gso =
-                    GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(token)
-                        .requestEmail()
-                        .build()
-                val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                launcher.launch(googleSignInClient.signInIntent)
-            },
-            colors = ButtonDefaults.buttonColors(Color.White, contentColor = Color.Black)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.baseline_person_24),
-                contentDescription = "Person",
-                Modifier.size(40.dp)
-            )
-        }
-    }
-    else {
-        Button(onClick = {
-            Firebase.auth.signOut()
-            user = null
-        }) {
-            Image(
-                painter = painterResource(id = R.drawable.baseline_person_off_24),
-                contentDescription = "Person",
-                Modifier.size(40.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun rememberFirebaseAuthLauncher(
-    onAuthComplete: (AuthResult) -> Unit,
-    onAuthError: (ApiException) -> Unit
-):ManagedActivityResultLauncher<Intent, ActivityResult>{
-    val scope = rememberCoroutineScope()
-    return rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {result ->
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        try {
-            val account = task.getResult(ApiException::class.java)!!
-            Log.d("GoogleAuth", "account $account")
-            val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
-            scope.launch {
-                val authResult = Firebase.auth.signInWithCredential(credential).await()
-                onAuthComplete(authResult)
-            }
-        } catch (e: ApiException) {
-            Log.d("GoogleAuth", e.toString())
-            onAuthError(e)
-        }
-    }
-}
+//        }
+//
+//        MaterialDialog(
+//            dialogState = calendarDialogState,
+//            buttons = {
+//                positiveButton("Выбрать"){
+//
+//                }
+//                negativeButton("Отмена"){
+//
+//                }
+//            }
+//        ){
+//            datepicker(
+//                initialDate = LocalDate.now(),
+//                title = "Выберите на какое число показать задачи"
+//            ) {
+//                pickedDateCalendar = it
+//            }
+//        }
+//
+//        Box(Modifier.fillMaxSize()) {
+//            Column(
+//                Modifier
+//                    .align(Alignment.BottomCenter)
+//                    .padding(bottom = 16.dp)
+//            ) {
+//                Row(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.SpaceAround,
+//                    verticalAlignment = Alignment.Bottom
+//                ) {
+//                    Button(
+//                        onClick = {},
+//                        colors = ButtonDefaults.buttonColors(
+//                            Color.White,
+//                            contentColor = Color.Black
+//                        )
+//                    ) {
+//                        Image(
+//                            painter = painterResource(id = R.drawable.baseline_west_24),
+//                            contentDescription = "West",
+//                            Modifier.size(40.dp)
+//                        )
+//                    }
+//
+//                    Button(onClick = { showDialog = true }, shape = CircleShape)
+//                    { Text("+", fontSize = 40.sp) }
+//                    Button(
+//                        onClick = {},
+//                        colors = ButtonDefaults.buttonColors(
+//                            Color.White,
+//                            contentColor = Color.Black
+//                        )
+//                    ) {
+//                        Image(
+//                            painter = painterResource(id = R.drawable.baseline_east_24),
+//                            contentDescription = "East",
+//                            Modifier.size(40.dp)
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (showDialog) {
+//            AlertDialog(
+//                onDismissRequest = { showDialog = false },
+//                title = { Text(text = "Добавить задачу") },
+//                text = {
+//                    Column(
+//                        horizontalAlignment = Alignment.CenterHorizontally,
+//                        verticalArrangement = Arrangement.Center
+//                    ) {
+//                        TextField(
+//                            value = textFieldHeader,
+//                            onValueChange = { textFieldHeader = it },
+//                            singleLine = true,
+//                            placeholder = { Text("Название задачи") }
+//                        )
+//
+//                        Spacer(modifier = Modifier.height(16.dp))
+//
+//                        TextField(
+//                            value = textFieldDescription,
+//                            onValueChange = { textFieldDescription = it },
+//                            placeholder = { Text("Описание задачи") }
+//                        )
+//
+//                        Spacer(modifier = Modifier.height(16.dp))
+//
+//                        Button(onClick = { dateDialogState.show() }) {
+//                            Text(text = "Выберите дату")
+//                        }
+//
+//                        Button(onClick = { colorDialogState.show() }) {
+//                            Text(text = "Выберите цвет")
+//                        }
+//
+//                        Spacer(modifier = Modifier.height(16.dp))
+//
+//                    }
+//                    MaterialDialog(
+//                        dialogState = dateDialogState,
+//                        buttons = {
+//                            positiveButton("Выбрать"){
+//
+//                            }
+//                            negativeButton("Отмена"){
+//
+//                            }
+//                        }
+//                    ){
+//                        datepicker(
+//                            initialDate = LocalDate.now(),
+//                            title = "Выбор даты"
+//
+//                        ) {
+//                            pickedDate = it
+//                        }
+//                    }
+//
+//                    MaterialDialog(dialogState = colorDialogState,
+//                        buttons = {
+//                            positiveButton("Выбрать"){
+//
+//                            }
+//                            negativeButton("Отмена"){
+//
+//                            }
+//                        }) {
+//                        colorChooser(colors = ColorPalette.Primary) {
+//                            pickedColor = it
+//                        }
+//                    }
+//                },
+//                confirmButton = {
+//                    Button(
+//                        onClick = {
+//                            showDialog = false
+//                            resetFields()
+//                        }
+//                    ) {
+//                        Text(text = "OK")
+//                    }
+//                }
+//            )
+//        }
+//    }
+//}
+//
+//@Composable
+//fun Login() {
+//    var user by remember { mutableStateOf(Firebase.auth.currentUser) }
+//    val launcher = rememberFirebaseAuthLauncher(
+//        onAuthComplete = { result ->
+//            user = result.user
+//        },
+//        onAuthError = {
+//            user = null
+//        }
+//    )
+//    val token = stringResource(id = R.string.web_client_id)
+//    val context = LocalContext.current
+//    if (user == null) {
+//        Button(
+//            onClick = {
+//                val gso =
+//                    GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                        .requestIdToken(token)
+//                        .requestEmail()
+//                        .build()
+//                val googleSignInClient = GoogleSignIn.getClient(context, gso)
+//                launcher.launch(googleSignInClient.signInIntent)
+//            },
+//            colors = ButtonDefaults.buttonColors(Color.White, contentColor = Color.Black)
+//        ) {
+//            Image(
+//                painter = painterResource(id = R.drawable.baseline_person_24),
+//                contentDescription = "Person",
+//                Modifier.size(40.dp)
+//            )
+//        }
+//    }
+//    else {
+//        Button(onClick = {
+//            Firebase.auth.signOut()
+//            user = null
+//        }) {
+//            Image(
+//                painter = painterResource(id = R.drawable.baseline_person_off_24),
+//                contentDescription = "Person",
+//                Modifier.size(40.dp)
+//            )
+//        }
+//    }
+//}
+//
+//@Composable
+//fun rememberFirebaseAuthLauncher(
+//    onAuthComplete: (AuthResult) -> Unit,
+//    onAuthError: (ApiException) -> Unit
+//):ManagedActivityResultLauncher<Intent, ActivityResult>{
+//    val scope = rememberCoroutineScope()
+//    return rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {result ->
+//        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+//        try {
+//            val account = task.getResult(ApiException::class.java)!!
+//            Log.d("GoogleAuth", "account $account")
+//            val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
+//            scope.launch {
+//                val authResult = Firebase.auth.signInWithCredential(credential).await()
+//                onAuthComplete(authResult)
+//            }
+//        } catch (e: ApiException) {
+//            Log.d("GoogleAuth", e.toString())
+//            onAuthError(e)
+//        }
+//    }
+//}
