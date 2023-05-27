@@ -14,13 +14,15 @@ class GameBoard extends JPanel {
 
     boolean gameover;
     boolean bombsArranged;
+    final Geometry geometry;
 
-    public GameBoard() {
+    public GameBoard(Geometry geometry) {
+        this.geometry = geometry;
         setBorder(BorderFactory.createLineBorder(Color.black));
-        setPreferredSize(Geometry.boardDimension());
+        setPreferredSize(geometry.boardDimension());
 
-        for (int row = 0; row < Geometry.numOfRows; row++)
-            for (int col = 0; col < Geometry.numOfCellsInRow; col++)
+        for (int row = 0; row < geometry.numOfRows; row++)
+            for (int col = 0; col < geometry.numOfCellsInRow; col++)
                 cells.add(new Cell(row, col));
 
         assingNeighbours();
@@ -75,7 +77,7 @@ class GameBoard extends JPanel {
         bombsArranged = true;
         var random = new Random();
         var i = 0;
-        while (i < Geometry.numOfBombs) {
+        while (i < geometry.numOfBombs) {
             var cell = cells.get(random.nextInt(cells.size()));
             if (cell != exclude && !cell.hasBomb) {
                 cell.hasBomb = true;
@@ -86,8 +88,8 @@ class GameBoard extends JPanel {
     }
 
     Cell getCell(int row, int col) {
-        if (row < 0 || col < 0 || col >= Geometry.numOfCellsInRow) return null;
-        int idx = row * Geometry.numOfCellsInRow + col;
+        if (row < 0 || col < 0 || col >= geometry.numOfCellsInRow) return null;
+        int idx = row * geometry.numOfCellsInRow + col;
         if (idx >= cells.size()) return null;
         return cells.get(idx);
     }

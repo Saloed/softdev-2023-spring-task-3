@@ -6,6 +6,7 @@ import java.awt.*;
 public class App {
 
     private static GameBoard gameBoard;
+    private static Geometry geometry = new Geometry(10, 16, 32);
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(App::createGUI);
@@ -34,7 +35,7 @@ public class App {
     }
 
     private static void createGameBoard(JFrame frame) {
-        gameBoard = new GameBoard();
+        gameBoard = new GameBoard(geometry);
         frame.add(gameBoard, BorderLayout.CENTER);
         frame.pack();
     }
@@ -47,9 +48,9 @@ public class App {
     private static void showSettingsDialog(JFrame frame) {
         var title = "Game parameters";
         var settingsPanel = new SettingsPanel();
-        settingsPanel.rows.setValue(Geometry.numOfRows);
-        settingsPanel.columns.setValue(Geometry.numOfCellsInRow);
-        settingsPanel.bombs.setValue(Geometry.numOfBombs);
+        settingsPanel.rows.setValue(geometry.numOfRows);
+        settingsPanel.columns.setValue(geometry.numOfCellsInRow);
+        settingsPanel.bombs.setValue(geometry.numOfBombs);
 
         int res = JOptionPane.showConfirmDialog(
                 null, settingsPanel, title,
@@ -65,9 +66,7 @@ public class App {
             return;
         }
 
-        Geometry.numOfRows = rows;
-        Geometry.numOfCellsInRow = columns;
-        Geometry.numOfBombs = bombs;
+        geometry = new Geometry(rows, columns, bombs);
 
         recreateGameBoard(frame);
     }

@@ -7,8 +7,9 @@ class AppTest {
 
     @Test
     public void testGameBoard() {
-        var gameBoard = new GameBoard();
-        assertEquals(Geometry.numOfRows * Geometry.numOfCellsInRow, gameBoard.cells.size());
+        var geometry = new Geometry(10, 16, 32);
+        var gameBoard = new GameBoard(geometry);
+        assertEquals(geometry.numOfRows * geometry.numOfCellsInRow, gameBoard.cells.size());
 
         var cell = gameBoard.cells.get(0);
         gameBoard.bombsArrangement(cell);
@@ -19,7 +20,7 @@ class AppTest {
         assertFalse(gameBoard.gameover);
 
         var bombs = gameBoard.cells.stream().filter(c -> c.hasBomb).count();
-        assertEquals(Geometry.numOfBombs, bombs);
+        assertEquals(geometry.numOfBombs, bombs);
         var cellBomb = gameBoard.cells.stream().filter(c -> c.hasBomb).limit(1).findFirst();
         assertFalse(cellBomb.isEmpty() || cellBomb.get().open(true));
     }

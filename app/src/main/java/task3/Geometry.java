@@ -3,21 +3,21 @@ package task3;
 import java.awt.*;
 
 class Geometry {
-    public static int numOfRows = 10;
-    public static int numOfCellsInRow = 16;
-    public static int numOfBombs = numOfRows * numOfCellsInRow / 5;
+    public final int numOfRows;
+    public final int numOfCellsInRow;
+    public final int numOfBombs;
 
     public static final int CELL_OUTER_RADIUS = 20;
     public static final int CELL_INNER_RADIUS = (int) Math.round(CELL_OUTER_RADIUS * Math.sqrt(3) / 2);
 
-    public static int boardWidth() {
+    public int boardWidth() {
         return (3 * numOfCellsInRow + 1) * CELL_OUTER_RADIUS / 2;
     }
-    public static int boardHeight() {
+    public int boardHeight() {
         return (2 * numOfRows + 1) * CELL_INNER_RADIUS;
     }
 
-    public static Dimension boardDimension() {
+    public Dimension boardDimension() {
         return new Dimension(boardWidth(), boardHeight());
     }
 
@@ -54,5 +54,11 @@ class Geometry {
         int x = (3 * col + 2) * CELL_OUTER_RADIUS / 2;
         int y = (2 * row + h) * CELL_INNER_RADIUS;
         return new Point(x, y);
+    }
+
+    public Geometry(int rows, int columns, int bombs) {
+        this.numOfRows = rows;
+        this.numOfCellsInRow = columns;
+        this.numOfBombs = bombs;
     }
 }
