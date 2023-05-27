@@ -4,12 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
 
 class GameBoard extends JPanel {
 
-    final ArrayList<Cell> cells = new ArrayList<>();
+    final List<Cell> cells = new ArrayList<>();
 
     boolean gameover;
     boolean bombsArranged;
@@ -61,7 +62,9 @@ class GameBoard extends JPanel {
                 }
                 gameover = true;
             }
-            case 3 -> cell.hasFlag = !cell.hasFlag;
+            case 3 -> {
+                if (!cell.isOpen) cell.hasFlag = !cell.hasFlag;
+            }
         }
         repaint();
     }

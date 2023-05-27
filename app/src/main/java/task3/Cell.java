@@ -1,6 +1,7 @@
 package task3;
 
 import java.awt.*;
+import java.util.List;
 import java.util.ArrayList;
 
 public class Cell {
@@ -25,7 +26,7 @@ public class Cell {
         neighbourBombs = neighbours.stream().filter(cell -> cell.hasBomb).count();
     }
 
-    ArrayList<Cell> neighbours = new ArrayList<>();
+    final List<Cell> neighbours = new ArrayList<>();
 
     Cell(int row, int col) {
         this.row = row;

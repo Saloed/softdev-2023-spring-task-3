@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class App {
 
-    static GameBoard gameBoard;
+    private static GameBoard gameBoard;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(App::createGUI);
@@ -54,7 +54,6 @@ public class App {
         int res = JOptionPane.showConfirmDialog(
                 null, settingsPanel, title,
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        System.out.println(res);
 
         if (res != JOptionPane.OK_OPTION) return;
         var rows = settingsPanel.rows.value();
