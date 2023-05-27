@@ -99,13 +99,13 @@ class Registration : AppCompatActivity() {
 
                     /*databaseReference = FirebaseDatabase.getInstance().getReference("Users/$CURRENT_UID").child("Data")*//*создаем дерево*/
                     val uid = AUTH.currentUser?.uid.toString()
-                    val hashMap: MutableMap<String, Any> = mutableMapOf()
-                    hashMap[CHILD_ID] = uid
-                    hashMap[CHILD_USERNAME] = uid
-                    hashMap[CHILD_PROFILEIMAGE] = ""
-                    hashMap[CHILD_FULLNAME] = userName
+                    val map: MutableMap<String, Any> = mutableMapOf()
+                    map[CHILD_ID] = uid
+                    map[CHILD_USERNAME] = uid
+                    map[CHILD_PROFILEIMAGE] = ""
+                    map[CHILD_FULLNAME] = userName
 
-                    REF_DATABASE_ROOT.child(NODE_USERS).child(uid).updateChildren(hashMap)
+                    REF_DATABASE_ROOT.child(NODE_USERS).child(uid).updateChildren(map)
                         .addOnCompleteListener {
                             if (it.isSuccessful) {
                                 /*открываем MainActivity*/

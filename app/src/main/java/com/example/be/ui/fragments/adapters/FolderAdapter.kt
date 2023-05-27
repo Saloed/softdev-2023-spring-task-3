@@ -1,4 +1,4 @@
-package com.example.be
+package com.example.be.ui.fragments.adapters
 
 
 import android.util.Log
@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.be.R
 import com.example.be.databinding.NewFolderBinding
 import com.example.be.models.Folder
+import com.example.be.utilits.FOLDER
 
 
 class FolderAdapter(private val mList: ArrayList<Folder>, var listener: OnItemClickListener?): RecyclerView.Adapter<FolderAdapter.FolderHolder>() {
@@ -41,8 +43,9 @@ class FolderAdapter(private val mList: ArrayList<Folder>, var listener: OnItemCl
         fun bind(folder: Folder, listener: OnItemClickListener?) = with(binding) {
             imageView.setImageResource(R.drawable.baseline_folder_24)
             nameFolder.text = folder.name
+
             itemView.setOnClickListener {
-                Log.d("MyLog", "хай]")
+                FOLDER = Folder(folder.name, folder.id)
                 listener?.onFolderClick(folder)
             }
             btnDelete.setOnClickListener {
@@ -50,6 +53,7 @@ class FolderAdapter(private val mList: ArrayList<Folder>, var listener: OnItemCl
                 listener?.onDeleteClick(folder)
             }
             btnEdit.setOnClickListener {
+                FOLDER = Folder(folder.name, folder.id)
                 listener?.onEditClick(folder)
             }
         }

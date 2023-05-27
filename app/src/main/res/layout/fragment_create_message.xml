@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brown"
-    tools:context=".activity.CreateMessage">
+    android:background="@color/brown">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+        android:id="@+id/cardViewHiText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         android:background="@color/black"
+        android:visibility="visible"
         app:cardBackgroundColor="@color/brown"
         app:cardCornerRadius="10dp"
         app:cardElevation="20dp"
@@ -20,7 +20,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="invisible">
 
         <TextView
             android:id="@+id/hiText"
@@ -37,9 +38,11 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewWriteMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:visibility="gone"
         app:cardBackgroundColor="@color/yellow"
         app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -47,12 +50,13 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.23000002">
+        tools:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="8dp">
 
             <TextView
                 android:id="@+id/textView4"
@@ -62,64 +66,71 @@
                 android:layout_margin="5dp"
                 android:text="@string/write"
                 android:textColor="@color/white"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:visibility="visible" />
 
             <EditText
-                android:id="@+id/editTextTextMultiLine"
+                android:id="@+id/writeTitleOfMessage"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:minHeight="48dp"
+                android:layout_height="wrap_content"
                 android:backgroundTint="@color/yellow"
                 android:ems="10"
                 android:gravity="start|top"
-                android:hint="@string/write"
+                android:hint="Напиши заголовок"
                 android:inputType="textMultiLine"
+                android:minHeight="48dp"
+                android:padding="5dp"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 android:textColorHint="@color/white_hint"
                 tools:ignore="RtlCompat" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/writeYourText"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/yellow"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="Текст"
+                    android:inputType="textMultiLine"
+                    android:minHeight="48dp"
+                    android:padding="5dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white_hint"
+                    tools:ignore="RtlCompat" />
+
+                <ImageView
+                    android:id="@+id/btn_voice"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:minHeight="300dp"
+                    app:srcCompat="@drawable/baseline_keyboard_voice_24" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/buttonCreateMessageDone"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        app:cardBackgroundColor="@color/yellow"
-        app:cardCornerRadius="10dp"
+        android:text="@string/done"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.79">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/voiceText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:text="@string/voice"
-                android:textColor="@color/white"
-                android:textSize="24sp" />
-
-            <ImageView
-                android:id="@+id/btn_voice"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:layout_gravity="right"
-                android:layout_margin="8dp"
-                app:srcCompat="@drawable/baseline_keyboard_voice_24" />
-
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintEnd_toEndOf="@+id/cardViewWriteMessage"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="@+id/cardViewWriteMessage"
+        app:layout_constraintTop_toBottomOf="@+id/cardViewWriteMessage"
+        app:layout_constraintVertical_bias="0.108"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

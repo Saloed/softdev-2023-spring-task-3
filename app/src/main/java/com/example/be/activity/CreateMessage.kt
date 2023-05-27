@@ -12,12 +12,11 @@ import com.example.be.utilits.CURRENT_UID
 import com.example.be.R
 import com.example.be.RECORD_AUDIO
 import com.example.be.checkAppPermission
-import com.example.be.databinding.ActivityCreateMessageBinding
 import com.example.be.utilits.showToast
 import com.google.firebase.database.FirebaseDatabase
 
 class CreateMessage : AppCompatActivity() {
-    lateinit var binding: ActivityCreateMessageBinding
+    /*lateinit var binding: ActivityCreateMessageBinding
     var nameFolder: String? = null
 
     lateinit var mAppVoiceRecorder: AppVoiceRecorder
@@ -28,7 +27,7 @@ class CreateMessage : AppCompatActivity() {
         binding = ActivityCreateMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val bundle: Bundle? = intent.extras /*получаю значения с другого активити*/
+        val bundle: Bundle? = intent.extras *//*получаю значения с другого активити*//*
         nameFolder = bundle?.getString("nameFolder")
 
         mAppVoiceRecorder = AppVoiceRecorder()
@@ -46,7 +45,7 @@ class CreateMessage : AppCompatActivity() {
         binding.btnVoice.setOnTouchListener { v, event ->
             if (checkAppPermission(RECORD_AUDIO)) {
                 if (event.action == MotionEvent.ACTION_DOWN) {
-                        /*record*/
+                        *//*record*//*
                     binding.voiceText.text = "Запись"
                     binding.btnVoice.setColorFilter(ContextCompat.getColor(this, R.color.white))
                     Log.d("MyLog", "btnVoice")
@@ -58,12 +57,12 @@ class CreateMessage : AppCompatActivity() {
                     Log.d("MyLog", "startRecord")
 
                 } else if (event.action == MotionEvent.ACTION_UP) {
-                    /*stop record*/
+                    *//*stop record*//*
                     binding.btnVoice.colorFilter = null
                     binding.voiceText.text = "Записано"
                     Log.d("MyLog", "before startRecord")
                     mAppVoiceRecorder.stopRecord { file, messageKey ->
-                        uploadFileToStorage(Uri.fromFile(file), messageKey)/*загружает всё, если хорошо закончилось*/
+                        uploadFileToStorage(Uri.fromFile(file), messageKey)*//*загружает всё, если хорошо закончилось*//*
                     }
                     Log.d("MyLog", "stopRecord")
                 }
@@ -82,7 +81,7 @@ class CreateMessage : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mAppVoiceRecorder.releaseRecorder()
-    }
+    }*/
 
 }
 

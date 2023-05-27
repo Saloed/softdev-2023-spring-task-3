@@ -46,36 +46,4 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <!-- <androidx.drawerlayout.widget.DrawerLayout
-         android:id="@+id/drawerMenu"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:visibility="visible"
-         app:layout_constraintBottom_toBottomOf="parent"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toTopOf="parent"
-         tools:openDrawer="end">
-
-
-
-         <com.google.android.material.navigation.NavigationView
-             android:id="@+id/nvForLectures"
-             android:layout_width="250dp"
-             android:layout_height="match_parent"
-             android:layout_gravity="start"
-             android:background="@color/yellow"
-             android:backgroundTint="@color/brown_night"
-             android:textAlignment="center"
-             app:itemShapeFillColor="@color/brown"
-             app:itemTextAppearance="@style/TextAppearance.AppCompat.Body1"
-             app:itemTextColor="@color/white"
-             app:menu="@menu/nav_menu_for_lectures"
-             app:subheaderColor="@color/white"
-             app:subheaderInsetEnd="45dp"
-             app:subheaderTextAppearance="@style/TextAppearance.AppCompat.Body2" />
-
-     </androidx.drawerlayout.widget.DrawerLayout>-->
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@
         app:showAsAction="never"
         android:orderInCategory="1"
         />
+
     <item android:id="@+id/profile_menu_exit"
         android:title="Выйти"
         android:icon="@drawable/baseline_exit_to_app_24"

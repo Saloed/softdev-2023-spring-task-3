@@ -73,23 +73,7 @@ class MainActivity : AppCompatActivity() { /*MainActivity копия класс�
     }
 
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean { /*функция запускается когда нажимаем на какой-нибудь элемент из меню*/
-        when (item.itemId) {
-            R.id.profile_menu_exit -> {
-                AUTH.signOut()
-                replaceActivity(Registration())
-            }
-            R.id.profile -> {
-                replaceFragment(ProfileFragment())
-            }
-        }
-        return true
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
 
 
     override fun onStart() {

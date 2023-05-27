@@ -11,9 +11,11 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.example.be.R
 import com.example.be.databinding.ActivityInFolderBinding
 import com.example.be.ui.fragments.CreateMessageFragment
+import com.example.be.ui.fragments.ProfileFragment
 import com.example.be.ui.objects.AppDrawer
 import com.example.be.utilits.initFirebase
 import com.example.be.utilits.replaceFragment
+import com.example.be.utilits.showToast
 
 class InFolderActivity : AppCompatActivity() {
 
@@ -30,7 +32,7 @@ class InFolderActivity : AppCompatActivity() {
         initFields()
         initFunc()
 
-        registerEvents()
+
     }
 
     private fun initFields() {
@@ -50,35 +52,22 @@ class InFolderActivity : AppCompatActivity() {
     }
 
     private fun initFunc() {
-
+        registerEvents()
     }
 
 
     private fun registerEvents() {
         binding.addMessage.setOnClickListener {
-            replaceFragment(CreateMessageFragment())
-            /*startActivity(
-                Intent(this, CreateMessage::class.java).putExtra(
-                    "nameFolder",
-                    nameFolder.text
-                )
-            )*/
+            showToast("what is this")
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.dataContainerInFolder,
+                    ProfileFragment()
+                ).commit()
+            /*this.supportFragmentManager.beginTransaction()
+                .replace(R.id.dataContainerInFolder,
+                    CreateMessageFragment()
+                ).commit()*/
         }
     }
-
-    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle presses on the action bar menu items
-        when (item.itemId) {
-            android.R.id.home -> {
-                this.onBackPressed()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }*/
 
 }

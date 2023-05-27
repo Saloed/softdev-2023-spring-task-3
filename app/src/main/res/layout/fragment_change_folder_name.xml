@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/brown"
-    tools:context=".ui.fragments.change_fragments.ChangeFullnameFragment">
+    tools:context=".ui.fragments.change_fragments.ChangeFolderNameFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,12 +29,12 @@
             app:cardPreventCornerOverlap="true">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/edit_folder_name"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="center"
-                android:text="@string/enter_name"
+                android:text="Поменяйте название"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="normal"
@@ -49,15 +49,14 @@
             app:cardCornerRadius="10dp">
 
             <EditText
-                android:id="@+id/fullname_change"
+                android:id="@+id/enter_edit_folder_name"
                 android:layout_width="300dp"
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:layout_marginTop="8dp"
                 android:backgroundTint="@color/brown_night"
                 android:ems="10"
-                android:hint="@string/enter_name"
-                android:inputType="text|textEmailAddress"
+                android:hint="Введите название"
                 android:textColor="@color/white"
                 android:textColorHighlight="@color/white"
                 android:textColorHint="@color/white_hint"
@@ -65,7 +64,7 @@
                 android:visibility="visible" />
         </androidx.cardview.widget.CardView>
         <Button
-            android:id="@+id/done"
+            android:id="@+id/done_edit_folder_name"
             android:layout_width="316dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

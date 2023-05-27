@@ -1,12 +1,11 @@
 package com.example.be.ui.fragments
 
 import android.app.Dialog
-import android.content.Intent
-import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
@@ -18,25 +17,24 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.be.models.Folder
-import com.example.be.FolderAdapter
+import com.example.be.ui.fragments.adapters.FolderAdapter
 import com.example.be.R
 import com.example.be.activity.APP_ACTIVITY
-import com.example.be.activity.InFolderActivity
-import com.example.be.activity.MainActivity
-import com.example.be.databinding.FragmentMainBinding
+import com.example.be.activity.Registration
+import com.example.be.ui.fragments.change_fragments.ChangeFolderNameFragment
+import com.example.be.utilits.AUTH
 import com.example.be.utilits.CHILD_FOLDERS
 import com.example.be.utilits.CURRENT_UID
+import com.example.be.utilits.FOLDER
 import com.example.be.utilits.NODE_USERS
 import com.example.be.utilits.REF_DATABASE_ROOT
+import com.example.be.utilits.replaceActivity
 import com.example.be.utilits.replaceFragment
 import com.example.be.utilits.showToast
-import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.NonCancellable.key
 
 
 class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClickListener {
@@ -55,6 +53,7 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
 
     override fun onResume() {
         super.onResume()
+        setHasOptionsMenu(true)
         initFields()
         initFuns()
         /*initRecycleView()*/
@@ -185,10 +184,10 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
         val folderName = dialog.findViewById<EditText>(R.id.etFolderName)
         dialog.findViewById<Button>(R.id.btnСreateFolder).setOnClickListener {
             val name = folderName.text.toString()
-            val keyFolder = databaseReference.push().key
-            data.add(Folder(name, keyFolder.toString()))
+            val keyFolder = databaseReference.push().key.toString()
+            data.add(Folder(name, keyFolder))
 
-            databaseReference.child(keyFolder?:"empty").setValue(Folder(name, keyFolder.toString())).addOnCompleteListener {
+            databaseReference.child(keyFolder).setValue(Folder(name, keyFolder)).addOnCompleteListener {
                 if (it.isSuccessful) {
                     showToast("Папка сохранена")
                 }
@@ -205,11 +204,9 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
     }
 
     override fun onFolderClick(folder: Folder) {
-        startActivity(Intent(APP_ACTIVITY, InFolderActivity::class.java).apply {
-            putExtra("folderName", folder.name)
-            putExtra("folderId", folder.id)
-
-        })
+        /*FOLDER = Folder(folder.name, folder.id)*/
+        Log.d("MyLog", "${FOLDER.name}, ${FOLDER.id}")
+        replaceFragment(InFolderFragment())
     }
 
     override fun onDeleteClick(folder: Folder) {
@@ -224,11 +221,28 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
     }
 
     override fun onEditClick(folder: Folder) {
-        TODO("Not yet implemented")
+        replaceFragment(ChangeFolderNameFragment())
     }
 
 
 
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean { /*функция запускается когда нажимаем на какой-нибудь элемент из меню*/
+        when (item.itemId) {
+            R.id.profile_menu_exit -> {
+                AUTH.signOut()
+                replaceActivity(Registration())
+            }
+            R.id.profile -> {
+                replaceFragment(ProfileFragment())
+            }
+        }
+        return true
+    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater)
+    }
 }
 
 
