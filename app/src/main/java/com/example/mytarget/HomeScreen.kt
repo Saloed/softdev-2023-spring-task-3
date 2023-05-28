@@ -96,6 +96,7 @@ import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -118,7 +119,10 @@ fun MyTargetApp(
     val calendarDialogState = rememberMaterialDialogState()
     val colorDialogState = rememberMaterialDialogState()
     val context = LocalContext.current
-    var pickedColor by remember { mutableStateOf(Color.Unspecified) }
+    var pickedColor by remember { mutableStateOf(Color.Blue) }
+    var showSortDialog by remember{ mutableStateOf(false) }
+    var sortType = TypeOfSort.DAY
+
 
     val resetFields: () -> Unit = {
         textFieldHeader = ""
@@ -132,6 +136,8 @@ fun MyTargetApp(
             verticalAlignment = Alignment.Top
         ) {
             Login()
+
+            Text(text = DateTimeFormatter.ofPattern("dd MMM yyyy").format(pickedDateCalendar), modifier = Modifier.padding(0.dp,16.dp))
 
             Button(
                 onClick = {calendarDialogState.show()},
@@ -163,7 +169,8 @@ fun MyTargetApp(
                 pickedDateCalendar = it
             }
         }
-        TaskList(viewModel = viewModel(), date = LocalDate.now(), onMarkTask = onMarkTask, onRemoveTask = onRemoveTask)
+
+        TaskList(viewModel = viewModel(), date = pickedDateCalendar, onMarkTask = onMarkTask, onRemoveTask = onRemoveTask, sort = sortType)
         Box(Modifier.fillMaxSize()) {
             Column(
                 Modifier
@@ -172,18 +179,18 @@ fun MyTargetApp(
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
                     Button(
-                        onClick = {},
+                        onClick = {showSortDialog = true},
                         colors = ButtonDefaults.buttonColors(
                             Color.White,
                             contentColor = Color.Black
                         )
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.baseline_west_24),
+                            painter = painterResource(id = R.drawable.baseline_sort_24),
                             contentDescription = "West",
                             Modifier.size(40.dp)
                         )
@@ -191,21 +198,44 @@ fun MyTargetApp(
 
                     Button(onClick = { showDialog = true }, shape = CircleShape)
                     { Text("+", fontSize = 40.sp) }
-                    Button(
-                        onClick = {},
-                        colors = ButtonDefaults.buttonColors(
-                            Color.White,
-                            contentColor = Color.Black
-                        )
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.baseline_east_24),
-                            contentDescription = "East",
-                            Modifier.size(40.dp)
-                        )
-                    }
                 }
             }
+        }
+
+        if (showSortDialog) {
+            AlertDialog(
+                onDismissRequest = {showSortDialog = false},
+                title = { Text(text = "За какой срок показать задачи")},
+                text = {
+                    Column(verticalArrangement = Arrangement.Top) {
+                        Button(onClick = {sortType = TypeOfSort.DAY},
+                            colors = ButtonDefaults.buttonColors(
+                                Color.White,
+                                contentColor = Color.Black
+                            )) {
+                            Text(text = "День")
+                        }
+                        Button(onClick = {sortType = TypeOfSort.WEEK},
+                            colors = ButtonDefaults.buttonColors(
+                                Color.White,
+                                contentColor = Color.Black
+                            )) {
+                            Text(text = "Неделя")
+                        }
+                        Button(onClick = {sortType = TypeOfSort.MONTH},
+                            colors = ButtonDefaults.buttonColors(
+                                Color.White,
+                                contentColor = Color.Black
+                            )) {
+                            Text(text = "Месяц")
+                        }
+                    }
+                },
+            confirmButton = {
+                Button(onClick = { showSortDialog = false }) {
+                    Text(text = "OK")
+                }
+            })
         }
 
         if (showDialog) {
@@ -283,7 +313,7 @@ fun MyTargetApp(
                     Button(
                         onClick = {
                             onAddTask(
-                                Task((viewModel.tasks.size + 1).toLong(),
+                                Task((viewModel.tasks.size).toLong(),
                                 textFieldHeader,
                                 textFieldDescription,
                                 pickedDate,
@@ -292,6 +322,8 @@ fun MyTargetApp(
                             )
                             showDialog = false
                             resetFields()
+                            pickedColor = Color.Blue
+                            pickedDate = LocalDate.now()
                         }
                     ) {
                         Text(text = "OK")
@@ -339,7 +371,7 @@ fun Login() {
         Button(onClick = {
             Firebase.auth.signOut()
             user = null
-        }) {
+        }, colors = ButtonDefaults.buttonColors(Color.White, contentColor = Color.Black)) {
             Image(
                 painter = painterResource(id = R.drawable.baseline_person_off_24),
                 contentDescription = "Person",
@@ -380,31 +412,32 @@ fun TasksListItem(
     onRemoveTask: (Task) -> Unit
 ) {
     var showDialogDescription by remember { mutableStateOf(false) }
+    var showDeleteConfirm by remember{ mutableStateOf(false) }
     Box(
         modifier = Modifier
             .background(color = task.taskColor.copy(alpha = 0.5f))
- //           .padding(16.dp)
-//            .clickable { onNavigation(todo) },
+            .padding(16.dp)
     ) {
-        Spacer(modifier = Modifier.size(16.dp))
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Checkbox(checked = viewModel.getTaskByTask(task).isComplete.value, onCheckedChange = { viewModel.taskIsSuccesful(task.id, it) })
-            Spacer(modifier = Modifier.size(16.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = task.taskName)
-                Spacer(modifier = Modifier.size(16.dp))
-                IconButton(onClick = { showDialogDescription = true }) {
-                    Icon(imageVector = Icons.Default.MoreVert , contentDescription = "description")
-                }
+            Checkbox(checked = viewModel.getTaskByTask(task).isComplete.value, onCheckedChange = { viewModel.taskIsSuccesful(task.id, it) }, modifier = Modifier.weight(1f))
+
+            IconButton(onClick = { showDialogDescription = true }, modifier = Modifier.weight(1f)) {
+                Icon(imageVector = Icons.Default.MoreVert , contentDescription = "description")
+            }
+
+            Text(text = task.taskName, modifier = Modifier.weight(7f))
+
+            IconButton(onClick = { showDeleteConfirm = true }, modifier = Modifier.weight(1f)) {
+                Icon(imageVector = Icons.Default.Clear, contentDescription = null)
             }
         }
-        Spacer(modifier = Modifier.size(16.dp))
-        IconButton(onClick = { viewModel.removeTask(task) }) {
-            Icon(imageVector = Icons.Default.Clear, contentDescription = null)
-        }
+
+
     }
     if (showDialogDescription) {
         AlertDialog(
@@ -425,25 +458,59 @@ fun TasksListItem(
             }
         )
     }
+
+    if (showDeleteConfirm) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirm = false },
+            title = { Text(text = "Подтверждение") },
+            text = {
+                Text(text = "Подтвердить удаление заметки?")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+
+                        showDeleteConfirm = false
+                        viewModel.removeTask(task.id,task)
+
+                    }
+                ) {
+                    Text(text = "OK")
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    showDeleteConfirm = false
+                }) {
+                    Text(text = "Отменить")
+                }
+            }
+        )
+    }
 }
 
 @Composable
-fun TaskList(viewModel: TasksViewModel,date: LocalDate, onMarkTask: (Task) -> Unit, onRemoveTask: (Task) -> Unit) {
+fun TaskList(
+    viewModel: TasksViewModel,
+    date: LocalDate,
+    onMarkTask: (Task) -> Unit,
+    onRemoveTask: (Task) -> Unit,
+    sort: TypeOfSort
+) {
     val tasks = viewModel.tasks
 
-    LazyColumn {
-        items(items = viewModel.getTaskByDate(date)) { task ->
-            TasksListItem(
-                Task(task.id,
-                task.taskName,
-                task.taskDescription,
-                task.date,
-                task.isComplete,
-                task.taskColor),
-                viewModel = viewModel,
-                onMarkTask = onMarkTask,
-                onRemoveTask = onRemoveTask
-            )
+    // Фильтрация задач в зависимости от sortType
+    val filteredTasks = when (sort) {
+        TypeOfSort.DAY -> tasks.filter { it.date == date }
+        TypeOfSort.WEEK -> tasks.filter { it.date.isAfter(date.minusDays(7)) && it.date.isBefore(date.plusDays(7)) }
+        TypeOfSort.MONTH -> tasks.filter { it.date.month == date.month }
+    }
+
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(filteredTasks) { task ->
+            TasksListItem(task, viewModel, onMarkTask, onRemoveTask)
         }
     }
 }

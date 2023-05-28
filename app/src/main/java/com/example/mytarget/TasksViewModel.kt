@@ -26,19 +26,14 @@ class TasksViewModel: ViewModel() {
         tasks.add(task)
     }
 
-    fun removeTask(task: Task) {
-        tasks.remove(task)
+    fun removeTask(id: Long, task: Task) {
+        _tasks.update { tasks ->
+            val updTask = tasks.first {it.id == id}
+            tasks.remove(updTask)
+            tasks
+        }
     }
 
-//    fun markTaskComplete(task: Task) {
-//        task.isComplete = true
-//    }
-//    fun markTaskIncomplete(task: Task) {
-//        task.isComplete = false
-//    }
-//    fun markTask(mark: Boolean,task: Task){
-//        task.isComplete = mark
-//    }
     fun taskIsSuccesful(id: Long, isMarked: Boolean) {
         _tasks.update { tasks ->
             val updTask = tasks.first { it.id == id }
@@ -61,25 +56,23 @@ class TasksViewModel: ViewModel() {
         tasks.clear()
     }
 
-    fun sortTasksByNearestWeekStart() {
+    fun getTasksForCurrentWeek(tasks: List<Task>): List<Task> {
         val currentDate = LocalDate.now()
         val nearestWeekStart = currentDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
-        val sortedTasks = tasks.sortedBy { task ->
-            val daysUntilStartOfWeek = ChronoUnit.DAYS.between(task.date, nearestWeekStart)
-            if (daysUntilStartOfWeek < 0) Long.MAX_VALUE else daysUntilStartOfWeek
+        val nearestWeekEnd = currentDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+
+        return tasks.filter { task ->
+            task.date.isAfter(nearestWeekStart) && task.date.isBefore(nearestWeekEnd.plusDays(1))
         }
-        tasks.clear()
-        tasks.addAll(sortedTasks)
     }
 
-    fun sortTasksByNearestMonthStart() {
+    fun getTasksForCurrentMonth(tasks: List<Task>): List<Task> {
         val currentDate = LocalDate.now()
-        val nearestMonthStart = currentDate.with(TemporalAdjusters.firstDayOfMonth())
-        val sortedTasks = tasks.sortedBy { task ->
-            val daysUntilStartOfMonth = ChronoUnit.DAYS.between(task.date, nearestMonthStart)
-            if (daysUntilStartOfMonth < 0) Long.MAX_VALUE else daysUntilStartOfMonth
+        val firstDayOfMonth = currentDate.with(TemporalAdjusters.firstDayOfMonth())
+        val lastDayOfMonth = currentDate.with(TemporalAdjusters.lastDayOfMonth())
+
+        return tasks.filter { task ->
+            task.date.isAfter(firstDayOfMonth) && task.date.isBefore(lastDayOfMonth.plusDays(1))
         }
-        tasks.clear()
-        tasks.addAll(sortedTasks)
     }
 }

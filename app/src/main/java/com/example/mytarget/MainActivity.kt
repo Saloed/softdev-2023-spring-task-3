@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
                     onAddTask = {tasksViewModel.addTask(it)},
                     onClearTasks = {tasksViewModel.clearTasks()},
                     onMarkTask = { tasksViewModel.taskIsSuccesful(it.id, it.isComplete.value) },
-                    onRemoveTask = {tasksViewModel.removeTask(it)},
+                    onRemoveTask = {tasksViewModel.removeTask(it.id,it)},
                     viewModel = tasksViewModel
 
                 )
