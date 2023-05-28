@@ -25,10 +25,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             DailyPlannerTheme {
                 Plans(
-                    plansViewModel.planList,
-                    onAddPlan = {plansViewModel.addPlan(it)},
+                    plansViewModel.planListUiState.planList.data,
+                    onAddPlan = {plansViewModel.addPlan()},
                     viewModel = plansViewModel,
-                    onCheckPlan = { plansViewModel.planIsDone(it.id, it.planDone.value)}
+                    onCheckPlan = { plansViewModel.onPlanDoneChange(it. documentId, it.planDone)}
                 )
             }
         }

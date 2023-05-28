@@ -35,6 +35,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +48,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -96,11 +96,14 @@ fun rememberFirebaseAuthLauncher(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Plans(
-    plans: List<Plan>,
+    plans: List<Plan>?,
     onAddPlan: (Plan) -> Unit,
     viewModel: PlansViewModel = viewModel(),
     onCheckPlan: (Plan) -> Unit
 ) {
+    LaunchedEffect(key1 = Unit){
+        viewModel.loadPlans()
+    }
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
     }
@@ -110,13 +113,6 @@ fun Plans(
     val dateDialogState = rememberMaterialDialogState()
     val openDialog = remember { mutableStateOf(false) }
     val openProfile = remember { mutableStateOf(false) }
-    val openAuth = remember { mutableStateOf(false) }
-    val isSignIn = remember { mutableStateOf(false) }
-
-    var text by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf(TextFieldValue()) }
-    var password by remember { mutableStateOf(TextFieldValue()) }
-
 
     var pickedTime by remember {
         mutableStateOf(LocalTime.now(Clock.systemDefaultZone()))
@@ -129,7 +125,6 @@ fun Plans(
                 .format(pickedTime)
         }
     }
-    val isCheckedHabbit = remember { mutableStateOf(false) }
     var user by remember { mutableStateOf(Firebase.auth.currentUser) }
     val launcher = rememberFirebaseAuthLauncher(
         onAuthComplete = { result ->
@@ -153,6 +148,7 @@ fun Plans(
             progress = viewModel.daysCheckedPlans(formattedDate),
             color = Color.Green
         )
+        Text(text = viewModel.planUiState.toString())
         Row(
             modifier = Modifier
                 .width(220.dp)
@@ -256,14 +252,14 @@ fun Plans(
                         Text(text = formattedTime, style = MaterialTheme.typography.body2)
                     }
                     TextField(
-                        value = text,
-                        onValueChange = { text = it }
+                        value = viewModel.planUiState.planText ,
+                        onValueChange = { viewModel.onTextChange(it) }
                     )
 
                     Row(modifier = Modifier.wrapContentSize()) {
                         Checkbox(
-                            checked = isCheckedHabbit.value,
-                            onCheckedChange = { isCheckedHabbit.value = it })
+                            checked = viewModel.planUiState.useful_habit ,
+                            onCheckedChange = {viewModel.onHabitChange(it) })
                         Text(text = "Полезная привычка", modifier = Modifier.padding(top = 10.dp))
                     }
                 }
@@ -279,16 +275,11 @@ fun Plans(
                             contentColor = Color.Black
                         ),
                         onClick = {
+                            viewModel.onTimeChange(formattedTime)
+                            viewModel.onDateChange(formattedDate)
                             openDialog.value = false;
-                            onAddPlan(
-                                Plan(viewModel.planList.size.toString(),
-                                    formattedDate,
-                                    formattedTime to text,
-                                    isCheckedHabbit.value,
-                                    mutableStateOf(false)
-
-                                )
-                            );
+                            viewModel.addPlan();
+                            viewModel.loadPlans()
                         }
                     ) {
                         Text("Добавить")
@@ -316,7 +307,7 @@ fun Plans(
                             .requestEmail()
                             .build()
                     val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                    launcher.launch(googleSignInClient.signInIntent)
+                    launcher.launch(googleSignInClient.signInIntent);
                 }) {
                     Image(
                         painter = painterResource(
@@ -371,7 +362,7 @@ fun Plans(
                 Text(if (user != null ) user!!.displayName.toString() else "Войдите в аккаунт", style = MaterialTheme.typography.h5, textDecoration = TextDecoration.Underline)
             },
             text = {
-                Text(text = "За сегодня вы выполнили ${viewModel.habbitCheckedPlans(formattedDate)} полезных привычек")
+                Text(text = "За сегодня вы выполнили ${viewModel.habitCheckedPlans(formattedDate)} полезных привычек")
             },
             buttons = {
                 Row(
@@ -419,13 +410,16 @@ fun ListItem(plan: Plan, viewModel: PlansViewModel, onCheckPlan: (Plan) -> Unit)
         ) {
             Row {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(text = plan.time_planText.first, style = MaterialTheme.typography.h5)
+                    Text(text = plan.time, style = MaterialTheme.typography.h5)
 
                 }
 
                 Checkbox(
-                    checked = viewModel.getCurrentPlan(plan).planDone.value,
-                    onCheckedChange = { viewModel.planIsDone(plan.id, it ) })
+                    checked = viewModel.planUiState.planDone,
+                    onCheckedChange = {viewModel.onPlanDoneChange(viewModel.planUiState.documentId, it)})
+                Button(onClick = {}) {
+                    Image(painter = painterResource(id = R.drawable.check) , contentDescription = "Image")
+                }
             }
 
             Column(
@@ -435,7 +429,7 @@ fun ListItem(plan: Plan, viewModel: PlansViewModel, onCheckPlan: (Plan) -> Unit)
 
             ) {
 
-                Text(text = plan.time_planText.second + plan.id)
+                Text(text = plan.planText)
                 if (plan.useful_habit)
                     Text(
                         text = "Полезная привычка",
@@ -449,22 +443,25 @@ fun ListItem(plan: Plan, viewModel: PlansViewModel, onCheckPlan: (Plan) -> Unit)
 }
 
 //"$day - ${month + 1} - $year"
+
 @Composable
 fun RecyclerView(
     currentDay: String,
     viewModel: PlansViewModel = viewModel(),
     onCheckPlan: (Plan) -> Unit
 ) {
+
     LazyColumn(
         modifier = Modifier
             .padding(bottom = 55.dp)
     ) {
         items(items = viewModel.getCurrentDayPlans(currentDay)) { time ->
             ListItem(
-                Plan(time.id,
+                Plan(time.userId
+                    ,
                     currentDay,
-                    time.time_planText, time.useful_habit,
-                    time.planDone
+                    time.time, time.planText, time.useful_habit,
+                    time.planDone,time.documentId
                 ),
 
                 viewModel = viewModel,

@@ -1,47 +1,125 @@
 package com.example.dailyplanner.appbotnav
 
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.dailyplanner.Plan
+import com.example.dailyplanner.firestoredb.StorageRepository
+
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
-class PlansViewModel : ViewModel() {
-    private var _planList = MutableStateFlow(
-        mutableListOf(
-            Plan("0", "25 May 2023", "10:00" to "sleep", true, mutableStateOf(false) ),
+class PlansViewModel(private val repository: StorageRepository = StorageRepository()) :
+    ViewModel() {
+    private val firestore = FirebaseFirestore.getInstance()
+    fun user() = Firebase.auth.currentUser
+    fun userId() = if (user()?.uid?.isNotBlank() == true) user()!!.uid else ""
+    fun hasUser(): Boolean = Firebase.auth.currentUser != null
+    fun getUserId(): String = Firebase.auth.currentUser?.uid.orEmpty()
+
+    var planListUiState by mutableStateOf(PlanListUiState())
+    var planUiState by mutableStateOf(PlanUiState())
+    fun loadPlans() {
+        if (hasUser()) {
+            if (userId().isNotBlank()) {
+                getUserPlans(userId())
+            }
+        } else {
+            planListUiState = planListUiState.copy(
+                planList = StorageRepository.Resources.Error(
+                    throwable = Throwable(message = "User is not Login")
+                )
+            )
+        }
+    }
+
+    private fun getUserPlans(userId: String) = viewModelScope.launch {
+        repository.getUserPlans(userId).collect {
+            planListUiState = planListUiState.copy(planList = it)
+        }
+    }
+
+    fun signOut() = repository.signOut()
+    private fun getPlan(id: String) = repository.getPLan(planId = id, onError = {}, onSuccess = {})
+    fun onDateChange(date: String) {
+        planUiState = planUiState.copy(date = date)
+    }
+
+    fun onTimeChange(time: String) {
+        planUiState = planUiState.copy(time = time)
+    }
+
+    fun onTextChange(planText: String) {
+        planUiState = planUiState.copy(planText = planText)
+    }
+
+    fun onHabitChange(habit: Boolean) {
+        planUiState = planUiState.copy(useful_habit = habit)
+    }
+
+    fun onPlanDoneChange(id: String, planDone: Boolean) {
+        getPlan(id)
+        planUiState = planUiState.copy(documentId = id, planDone = planDone)
+        repository.updateNote(id, planDone)
+    }
+
+
+    fun addPlan() {
+        repository.addPlan(
+            userId = userId(),
+            date = planUiState.date,
+            time = planUiState.time,
+            planText = planUiState.planText,
+            useful_habit = planUiState.useful_habit,
+            planDone = planUiState.planDone,
+
+            )
+    }
+    fun updateNote(
+        noteId: String,
+        isDone : Boolean
+    ){
+        repository.updateNote(
+           planId = planUiState.documentId,
+            planDone = isDone
         )
-    )
-    val planList: MutableList<Plan>
-        get() = _planList.value
 
-
-    fun addPlan(plan: Plan) {
-        planList.add(plan)
+       repository.updateNote(noteId, planUiState.planDone)
     }
 
-    fun planIsDone(id: String, isChecked: Boolean) {
-        val updatedPlan = getPlanById(id)?.copy(planDone = mutableStateOf(isChecked))
-        val forUpdate = mutableListOf<Plan>()
-        planList.remove( getPlanById(id))
-        forUpdate.addAll(planList)
-        forUpdate.add(updatedPlan!!)
-        forUpdate.sortBy { it.id }
-        _planList= MutableStateFlow(forUpdate)
 
-    }
+    fun getCurrentDayPlans(date: String): List<Plan> =
+        if (planListUiState.planList.data != null) planListUiState.planList.data!!.filter { it.date == date } else listOf()
 
-    fun getPlanById(id: String): Plan? = planList.find { it.id == id }
-
-
-    fun getCurrentPlan(plan: Plan) = planList[planList.indexOf(plan)]
-    fun getCurrentDayPlans(date: String): List<Plan> = planList.filter { it.date == date }
     fun daysCheckedPlans(day: String): Float =
-        if (getCurrentDayPlans(day).size != 0) (getCurrentDayPlans(day).filter { it.planDone.value }.size.toFloat() / getCurrentDayPlans(
+        if (getCurrentDayPlans(day).isNotEmpty()) (getCurrentDayPlans(day).filter { it.planDone }.size.toFloat() / getCurrentDayPlans(
             day
         ).size.toFloat()) else 0f
 
-    fun habbitCheckedPlans(day: String): Int =
-        (getCurrentDayPlans(day).filter { it.planDone.value && it.useful_habit }.size)
+    fun habitCheckedPlans(day: String): Int =
+        (getCurrentDayPlans(day).filter { it.planDone && it.useful_habit }.size)
+
+    companion object {
+        private const val PLANS_COLLECTION_REF = "plans"
+    }
 
 }
+
+
+data class PlanUiState(
+    var date: String = "",
+    var time: String = "",
+    var planText: String = "",
+    var useful_habit: Boolean = false,
+    var planDone: Boolean = false,
+    var documentId: String = ""
+)
+
+data class PlanListUiState(
+    public val planList: StorageRepository.Resources<List<Plan>> = StorageRepository.Resources.Loading(),
+)

@@ -4,9 +4,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 
 data class Plan(
-    val id: String = "",
-    val date: String = "",
-    val time_planText:Pair<String, String>,
-    val useful_habit:  Boolean,
-    var planDone: MutableState<Boolean> = mutableStateOf(false)
-)
+    public val userId: String,
+    public var date: String = "",
+    public var time: String = "",
+    public var planText: String = "",
+    public var useful_habit: Boolean,
+    public var planDone: Boolean = false,
+    public var documentId: String = ""
+) {
+
+   constructor() : this("","","","",true, false,"",)
+}
