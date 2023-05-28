@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class Handler {
@@ -33,8 +35,10 @@ public class Handler {
     private final List<String> file = new ArrayList<>();
     private final int dictSize = 6963;
     private  String noDelete = "";
+    private int count;
     private final List<String> copyWords = new ArrayList<>();
     private final String[] yellowLetters = new String[5];
+    private boolean active = true;
 
 
 
@@ -64,12 +68,7 @@ public class Handler {
             lenght = 0;
             if (check()) {
                 if (isChecki) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Вы победили")
-                            .setCancelable(false)
-                            .setPositiveButton("Хорошо", (dialog, which) -> dialog.cancel());
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                    dialog("Вы победили", false);
                 }
                 checki = true;
             }
@@ -78,17 +77,23 @@ public class Handler {
         }
         if (height == 6 && !checki) {
             if (isChecki) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Вы проиграли")
-                        .setMessage("Загаданное слово: " + word)
-                        .setCancelable(false)
-                        .setPositiveButton("Попробую еще раз", (dialog, which) -> dialog.cancel());
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                dialog("Вы проиграли", true);
                 checki = true;
                 isChecki = false;
             }
         }
+    }
+    private void dialog(String string, boolean bols){
+        String adString = "";
+        if (bols){
+            adString+="\nЗагаданное слово: " + word;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(string + adString)
+                .setCancelable(false)
+                .setPositiveButton("Попробую еще раз", (dialog, which) -> dialog.cancel());
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void delete() {
@@ -99,30 +104,62 @@ public class Handler {
     }
     public String clue(){
         String clueW ="нет слова";
-        String[] letters = noDelete.split("");
-        boolean checkClue = true;
         for (String line: copyWords){
-                for (String letter : letters) {
-                    if (!line.contains(letter)) {
-                        checkClue = false;
-                        break;
-                    }
-                }
+            if (count > 2 && active){
                 String[] let = line.split("");
-                for (int i = 0; i < 5; i++) {
-                    System.out.println(wordly[i]);
-                    if (!alf.contains(let[i]) || yellowLetters[i].contains(let[i])) {
+                boolean checkClue = true;
+                for(int i = 0; i < 5; i++){
+                    if (!(alf.contains(let[i]) && !noDelete.contains(let[i]))){
                         checkClue = false;
                         break;
                     }
                 }
-            if (line.matches(clueWord) && checkClue){
+                if (checkClue){
+                    clueW = line;
+                    break;
+                }
+                active = false;
+            }else{
+                if (line.matches(clueWord) && checkAlf(line) && checkNoDelete(line)){
                 clueW = line;
                 break;
+                }
+                if (height != 4){
+                    active = true;
+                }
             }
-            checkClue = true;
         }
         return clueW;
+    }
+    private boolean checkAlf (String line){
+        boolean checkClue = true;
+        Map<String, String> map = new HashMap<>();
+        String[] let = line.split("");
+        for (int i = 0; i < 5; i++) {
+            if (!alf.contains(let[i]) || yellowLetters[i].contains(let[i])) {
+                checkClue = false;
+                break;
+            }
+            if (map.get(let[i]) != null && !noDelete.contains(let[i])){
+                checkClue = false;
+                break;
+            }
+            else{
+                map.put(let[i], let[i]);
+            }
+        }
+        return checkClue;
+    }
+    private boolean checkNoDelete(String line){
+        boolean checkClue = true;
+        String[] letters = noDelete.split("");
+        for (String letter : letters) {
+            if (!line.contains(letter)) {
+                checkClue = false;
+                break;
+            }
+        }
+        return checkClue;
     }
 
     public String ret() {
@@ -147,7 +184,7 @@ public class Handler {
     public boolean check() {
         String[] wordForCheck = word.split("");
         char[] chars = clueWord.toCharArray();
-        int count = 0;
+        int countGreen = 0;
         for (int i = 0; i < 5; i++) {
             if (wordForCheck[i].equals(wordly[i].toLowerCase())) {
                 textView[height][i].setBackgroundResource(R.color.green);
@@ -158,7 +195,10 @@ public class Handler {
                 }
                 wordly[i] = "-";
                 count++;
-
+                countGreen++;
+            }
+            else{
+                yellowLetters[i]+=wordly[i].toLowerCase();
             }
         }
         for (int i = 0; i < 5; i++) {
@@ -167,6 +207,7 @@ public class Handler {
                     textView[height][i].setBackgroundResource(R.color.yellow);
                     wordForCheck[j] = "*";
                     yellowLetters[i] += wordly[i].toLowerCase();
+                    count++;
                     if (!noDelete.contains(wordly[i])){
                         noDelete+=wordly[i].toLowerCase();
                     }
@@ -181,10 +222,8 @@ public class Handler {
             if (alf.contains(wordly[i]) && !noDelete.contains(wordly[i])){
                 alf = alf.replace(wordly[i],"");
             }
-            System.out.println(wordly[i]);
-            System.out.println(wordForCheck[i]);
         }
         clueWord = String.valueOf(chars);
-        return count == 5;
+        return countGreen == 5;
     }
 }
