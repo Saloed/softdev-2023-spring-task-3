@@ -30,6 +30,7 @@ public class Handler {
     private String clueWord;
     private String[] wordly = new String[5];
     private String alf = "абвгдежзийклмнопрстуфхцчшщъыьэюя";
+
     private final TextView[][] textView;
     private final Resources resources;
     private final List<String> file = new ArrayList<>();
