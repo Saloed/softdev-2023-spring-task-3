@@ -1,10 +1,8 @@
-package com.example.be
+package com.example.be.ui.fragments.voice_message
 
 import android.media.MediaRecorder
 import android.util.Log
-import android.widget.Toast
 import com.example.be.activity.APP_ACTIVITY
-import com.example.be.activity.MainActivity
 import com.example.be.utilits.showToast
 import java.io.File
 
@@ -32,10 +30,7 @@ class AppVoiceRecorder {
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT)
             mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
             mMediaRecorder.setOutputFile(mFile.absolutePath)/*передали путь*/
-            Log.d("MyLog", "prepare")
             mMediaRecorder.prepare()
-
-
         }
 
         private fun createFileForRecord() {

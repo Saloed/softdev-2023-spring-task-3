@@ -21,8 +21,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.example.be.models.Message
 import com.example.be.ui.fragments.change_fragments.ChangeTitleMessageFragment
-import com.example.be.utilits.TEXT_MESSAGE
+import com.example.be.ui.fragments.voice_message.VoiceMessageFragment
 import com.example.be.utilits.TYPE_TEXT
+import com.example.be.utilits.TYPE_VOICE
 import com.example.be.utilits.showToast
 
 
@@ -102,9 +103,9 @@ class InFolderFragment : BaseFragment(R.layout.fragment_in_folder), InFolderAdap
     override fun onFolderClick(message: Message) {
         if (message.type == TYPE_TEXT){
             replaceFragment(InTextMessageFragment())
-        } /*else {
-
-        }*/
+        } else if (message.type == TYPE_VOICE) {
+            replaceFragment(VoiceMessageFragment())
+        }
     }
 
     override fun onDeleteClick(message: Message) {

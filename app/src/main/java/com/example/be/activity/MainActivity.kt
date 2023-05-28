@@ -2,15 +2,10 @@ package com.example.be.activity
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.example.be.AddFragment
-import com.example.be.R
 import com.example.be.databinding.ActivityMainBinding
 import com.example.be.models.User
 import com.example.be.ui.fragments.MainFragment
-import com.example.be.ui.fragments.ProfileFragment
 import com.example.be.ui.objects.AppDrawer
 import com.example.be.utilits.AUTH
 import com.example.be.utilits.CURRENT_UID

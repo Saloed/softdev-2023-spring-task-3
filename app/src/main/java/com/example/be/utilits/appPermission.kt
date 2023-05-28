@@ -1,4 +1,4 @@
-package com.example.be
+package com.example.be.utilits
 
 import android.content.pm.PackageManager
 import android.os.Build

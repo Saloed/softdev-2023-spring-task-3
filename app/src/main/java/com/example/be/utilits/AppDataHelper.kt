@@ -1,5 +1,6 @@
 package com.example.be.utilits
 
+import android.net.Uri
 import com.example.be.models.Folder
 import com.example.be.models.Message
 import com.example.be.models.User
@@ -20,6 +21,8 @@ lateinit var REF_STORAGE_ROOT: StorageReference
 
 const val NODE_USERS = "Users"
 const val FOLDER_PROFILE_IMAGE = "profileImage"
+const val FOLDER_VOICE_RECORDER = "voiceRecorder"
+
 
 const val CHILD_ID = "id"
 const val CHILD_USERNAME = "username"
@@ -33,6 +36,7 @@ const val ID_MESSAGE = "id"
 const val TITLE_MESSAGE = "title"
 const val TYPE_TEXT = "text"
 const val TYPE_VOICE = "voice"
+const val VOICE_URL = "voiceUrl"
 
 
 
@@ -47,4 +51,19 @@ fun initFirebase() {
     FOLDER = Folder()
     MESSAGE = Message()
     REF_STORAGE_ROOT = FirebaseStorage.getInstance().reference
+}
+
+inline fun putFileToStorage(uri: Uri, path: StorageReference, crossinline function: () -> Unit) {
+    /* функция высшего порядка, отправляет картинку в хранилище */
+    path.putFile(uri)
+        .addOnSuccessListener { function() }
+        .addOnFailureListener { showToast(it.message.toString()) }
+
+}
+
+inline fun getUrlFromStorage(path: StorageReference, crossinline function: (url: String) -> Unit) {
+    /* Функция высшего порядка, получает  URL картинки из хранилища */
+    path.downloadUrl
+        .addOnSuccessListener { function(it.toString()) }
+        .addOnFailureListener { showToast(it.message.toString()) }
 }

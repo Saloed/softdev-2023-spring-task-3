@@ -13,6 +13,7 @@ import com.example.be.models.Folder
 import com.example.be.models.Message
 import com.example.be.utilits.FOLDER
 import com.example.be.utilits.MESSAGE
+import com.example.be.utilits.TYPE_VOICE
 
 class InFolderAdapter(var listener: OnItemClickListener?): RecyclerView.Adapter<InFolderAdapter.InFolderHolder>() {
 
@@ -30,6 +31,9 @@ class InFolderAdapter(var listener: OnItemClickListener?): RecyclerView.Adapter<
 
         fun bind(message: Message, listener: OnItemClickListener?) = with(binding) {
             titleMessage.text = message.title
+            if (message.type == TYPE_VOICE) {
+                imageView4.setImageResource(R.drawable.baseline_mic_24)
+            }
 
             itemView.setOnClickListener {
                 MESSAGE = Message(message.text, message.type, message.id, message.title)
