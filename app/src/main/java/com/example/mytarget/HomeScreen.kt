@@ -118,7 +118,6 @@ fun MyTargetApp(
     val calendarDialogState = rememberMaterialDialogState()
     val colorDialogState = rememberMaterialDialogState()
     val context = LocalContext.current
-    var idCounter = remember {"0".toInt()}
     var pickedColor by remember { mutableStateOf(Color.Unspecified) }
 
     val resetFields: () -> Unit = {
@@ -283,7 +282,6 @@ fun MyTargetApp(
                 confirmButton = {
                     Button(
                         onClick = {
-                            idCounter++
                             onAddTask(
                                 Task((viewModel.tasks.size + 1).toLong(),
                                 textFieldHeader,
