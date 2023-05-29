@@ -105,7 +105,6 @@ import java.time.format.DateTimeFormatter
 fun MyTargetApp(
     tasks: List<Task>,
     onAddTask: (Task) -> Unit,
-    onClearTasks: () -> Unit,
     onMarkTask: (Task) -> Unit,
     onRemoveTask: (Task) -> Unit,
     viewModel: TasksViewModel = viewModel()
@@ -427,7 +426,7 @@ fun TasksListItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Checkbox(checked = viewModel.getTaskByTask(task).isComplete.value, onCheckedChange = { viewModel.taskIsSuccesful(task.id, it) }, modifier = Modifier.weight(1f))
+            viewModel.getTaskByTask(task)?.isComplete?.let { Checkbox(checked = it.value, onCheckedChange = { viewModel.taskIsSuccessful(task.id, it) }, modifier = Modifier.weight(1f)) }
 
             IconButton(onClick = { showDialogDescription = true }, modifier = Modifier.weight(1f)) {
                 Icon(imageVector = Icons.Default.MoreVert , contentDescription = "description")

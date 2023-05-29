@@ -14,47 +14,55 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 import java.util.Date
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 
 
 class TasksViewModel: ViewModel() {
-    private var _tasks: MutableStateFlow<MutableList<Task>> = MutableStateFlow(mutableListOf())
-
+//    private val _tasks: MutableStateFlow<MutableList<Task>> = MutableStateFlow(mutableListOf())
+private val _tasks: SnapshotStateList<Task> = mutableStateListOf()
     val tasks: MutableList<Task>
-        get() = _tasks.value
+        get() = _tasks
 
     fun addTask(task: Task) {
         tasks.add(task)
     }
 
     fun removeTask(id: Long, task: Task) {
-        _tasks.update { tasks ->
-            val updTask = tasks.first {it.id == id}
-            tasks.remove(updTask)
-            tasks
-        }
+//        _tasks.update { tasks ->
+//            val updTask = tasks.first {it.id == id}
+//            tasks.remove(updTask)
+//            tasks
+//        }
+        val task = tasks.first { it.id == id }
+        _tasks.remove(task)
     }
 
-    fun taskIsSuccesful(id: Long, isMarked: Boolean) {
-        _tasks.update { tasks ->
-            val updTask = tasks.first { it.id == id }
-            updTask.isComplete.value = isMarked
+//    fun taskIsSuccessful(id: Long, isMarked: Boolean) {
+//        _tasks.update { tasks ->
+//            val updTask = tasks.first { it.id == id }
+//            updTask.isComplete.value = isMarked
+//            tasks
+//        }
+//    }
 
-            tasks
-        }
+    fun taskIsSuccessful(id: Long, isMarked: Boolean) {
+        val task = tasks.first { it.id == id }
+        task.isComplete.value = isMarked
     }
 
-    fun getTaskByTask(task: Task) = tasks[tasks.indexOf(task)]
+    fun getTaskByTask(task: Task): Task? {
+        val index = tasks.indexOf(task)
+        return if (index != -1) tasks[index] else null
+    }
 
     fun getTaskById(id: Long): Task? = tasks.find { it.id == id }
 
 
     fun getTaskByDate(date: LocalDate): List<Task> = tasks.filter { it.date == date }
+    //fun getTaskByDate(date: LocalDate): List<Task> = tasks.filter { it.date == date }
 
     fun getTaskByColor(color: Color): List<Task> = tasks.filter { it.taskColor == color }
-
-    fun clearTasks() {
-        tasks.clear()
-    }
 
     fun getTasksForCurrentWeek(tasks: List<Task>): List<Task> {
         val currentDate = LocalDate.now()
