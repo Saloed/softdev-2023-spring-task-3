@@ -43,7 +43,9 @@ class DebtsViewPagerAdapter(
                         return@forEach
                     }
                 }
-                if (!toDelete) youDebt.add("${it.dPerson}    ${it.dAmount.toInt()}P")
+                if (!toDelete) {
+                    youDebt.add("${it.dPerson}    ${it.dAmount.toInt()}P")
+                }
             }
             item.needToGet.forEach {
                 var toDelete = false
@@ -57,16 +59,16 @@ class DebtsViewPagerAdapter(
             }
 
             item.paid.forEach { (s, strings) ->
+                paid.addAll(strings)
                 events.forEach {
                     if (it.eInfo?.eKey == s) paid.add("${it.eInfo!!.eName.toString()} ${it.eInfo!!.eDate.toString()}:")
                 }
-                paid.addAll(strings)
             }
             item.bought.forEach { (s, strings) ->
+                bought.addAll(strings)
                 events.forEach {
                     if (it.eInfo?.eKey == s) bought.add("${it.eInfo!!.eName.toString()} ${it.eInfo!!.eDate.toString()}:")
                 }
-                bought.addAll(strings)
             }
             lvYouDebt.adapter = ArrayAdapter(
                 this.binding.root.context,
@@ -81,12 +83,12 @@ class DebtsViewPagerAdapter(
             lvYouBuy.adapter = ArrayAdapter(
                 this.binding.root.context,
                 android.R.layout.simple_list_item_1,
-                bought
+                bought.reversed()
             )
             lvYouPaid.adapter = ArrayAdapter(
                 this.binding.root.context,
                 android.R.layout.simple_list_item_1,
-                paid
+                paid.reversed()
             )
             lvYouDebt.setOnItemClickListener { _, _, i, _ ->
                 onDebtClicked?.invoke(position, item.needToSend[i].dPerson.toString())
