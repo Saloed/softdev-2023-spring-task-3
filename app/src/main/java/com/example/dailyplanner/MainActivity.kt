@@ -17,7 +17,7 @@ import com.google.firebase.ktx.Firebase
 private lateinit var auth: FirebaseAuth
 
 class MainActivity : ComponentActivity() {
-    val plansViewModel by viewModels<PlansViewModel>()
+    private val plansViewModel by viewModels<PlansViewModel>()
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     plansViewModel.planListUiState.planList.data,
                     onAddPlan = {plansViewModel.addPlan()},
                     viewModel = plansViewModel,
-                    onCheckPlan = { plansViewModel.onPlanDoneChange(it. documentId, it.planDone)}
+                    onCheckPlan = { plansViewModel.onPlanDoneChange(plansViewModel.planUiState.planDone)}
                 )
             }
         }

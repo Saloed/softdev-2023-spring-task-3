@@ -36,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -99,9 +100,9 @@ fun Plans(
     plans: List<Plan>?,
     onAddPlan: (Plan) -> Unit,
     viewModel: PlansViewModel = viewModel(),
-    onCheckPlan: (Plan) -> Unit
+    onCheckPlan: (String) -> Unit
 ) {
-    LaunchedEffect(key1 = Unit){
+    LaunchedEffect(key1 = Unit) {
         viewModel.loadPlans()
     }
     var pickedDate by remember {
@@ -112,6 +113,7 @@ fun Plans(
     }
     val dateDialogState = rememberMaterialDialogState()
     val openDialog = remember { mutableStateOf(false) }
+    val openChangeDialog = remember { mutableStateOf(false) }
     val openProfile = remember { mutableStateOf(false) }
 
     var pickedTime by remember {
@@ -136,7 +138,7 @@ fun Plans(
     )
     val token = stringResource(R.string.default_web_client_id)
     val context = LocalContext.current
-    var idGenerator = remember {"0".toInt()}
+    var idGenerator = remember { "0".toInt() }
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -172,7 +174,7 @@ fun Plans(
                 )
             }
             Button(
-                onClick = { openDialog.value = true;  idGenerator ++;},
+                onClick = { openDialog.value = true; idGenerator++; },
                 shape = RoundedCornerShape(10),
                 modifier = Modifier
                     .size(width = 60.dp, height = 35.dp)
@@ -195,7 +197,12 @@ fun Plans(
         }
 
 
-        RecyclerView(currentDay = formattedDate, viewModel = viewModel(), onCheckPlan = onCheckPlan)
+        RecyclerView(
+            currentDay = formattedDate,
+            viewModel = viewModel(),
+            onCheckPlan = onCheckPlan,
+            openChangeDialog = openChangeDialog
+        )
     }
     MaterialDialog(
         dialogState = timeDialogState,
@@ -230,6 +237,11 @@ fun Plans(
     }
 
     if (openDialog.value) {
+        LaunchedEffect(key1 = Unit) {
+
+            viewModel.getPlan(viewModel.planUiState.documentId)
+
+        }
         AlertDialog(
             onDismissRequest = {
                 openDialog.value = false
@@ -252,15 +264,22 @@ fun Plans(
                         Text(text = formattedTime, style = MaterialTheme.typography.body2)
                     }
                     TextField(
-                        value = viewModel.planUiState.planText ,
+                        value = viewModel.planUiState.planText,
                         onValueChange = { viewModel.onTextChange(it) }
                     )
 
                     Row(modifier = Modifier.wrapContentSize()) {
                         Checkbox(
-                            checked = viewModel.planUiState.useful_habit ,
-                            onCheckedChange = {viewModel.onHabitChange(it) })
+                            checked = viewModel.planUiState.useful_habit,
+                            onCheckedChange = { viewModel.onHabitChange(it) })
                         Text(text = "Полезная привычка", modifier = Modifier.padding(top = 10.dp))
+                    }
+                    Row(modifier = Modifier.wrapContentSize()) {
+                        Checkbox(
+                            checked = viewModel.planUiState.planDone,
+                            onCheckedChange = { viewModel.onPlanDoneChange(it) })
+                        Text(text = "План выполнен", modifier = Modifier.padding(top = 10.dp))
+
                     }
                 }
             },
@@ -283,6 +302,77 @@ fun Plans(
                         }
                     ) {
                         Text("Добавить")
+                    }
+                }
+            }
+        )
+
+    }
+    if (openChangeDialog.value) {
+        LaunchedEffect(key1 = Unit) {
+
+            viewModel.getPlan(viewModel.planUiState.documentId)
+
+
+        }
+        AlertDialog(
+            onDismissRequest = {
+                openChangeDialog.value = false
+            },
+            title = {
+                Text(text = "Отредактировать план")
+            },
+            text = {
+                Column() {
+
+                    Button(
+                        onClick = { },
+                        modifier = Modifier
+                            .size(height = 40.dp, width = 70.dp)
+                            .padding(bottom = 5.dp), colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color.LightGray,
+                            contentColor = Color.Black
+                        )
+                    ) {
+                        Text(text = viewModel.planUiState.time, style = MaterialTheme.typography.body2)
+                    }
+                    TextField(
+                        value = viewModel.planUiState.planText,
+                        onValueChange = { viewModel.onTextChange(it) }
+                    )
+
+                    Row(modifier = Modifier.wrapContentSize()) {
+                        Checkbox(
+                            checked = viewModel.planUiState.useful_habit,
+                            onCheckedChange = { viewModel.onHabitChange(it) })
+                        Text(text = "Полезная привычка", modifier = Modifier.padding(top = 10.dp))
+                    }
+                    Row(modifier = Modifier.wrapContentSize()) {
+                        Checkbox(
+                            checked = viewModel.planUiState.planDone,
+                            onCheckedChange = { viewModel.onPlanDoneChange(it) })
+                        Text(text = "План выполнен", modifier = Modifier.padding(top = 10.dp))
+
+                    }
+                }
+            },
+            buttons = {
+                Row(
+                    modifier = Modifier.padding(all = 8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color.Green,
+                            contentColor = Color.Black
+                        ),
+                        onClick = {
+                            openDialog.value = false;
+                            viewModel.updateNote(viewModel.planUiState.documentId );
+                            viewModel.loadPlans()
+                        }
+                    ) {
+                        Text("Сохранить")
                     }
                 }
             }
@@ -359,7 +449,11 @@ fun Plans(
             },
             modifier = Modifier.wrapContentSize(),
             title = {
-                Text(if (user != null ) user!!.displayName.toString() else "Войдите в аккаунт", style = MaterialTheme.typography.h5, textDecoration = TextDecoration.Underline)
+                Text(
+                    if (user != null) user!!.displayName.toString() else "Войдите в аккаунт",
+                    style = MaterialTheme.typography.h5,
+                    textDecoration = TextDecoration.Underline
+                )
             },
             text = {
                 Text(text = "За сегодня вы выполнили ${viewModel.habitCheckedPlans(formattedDate)} полезных привычек")
@@ -388,7 +482,12 @@ fun Plans(
 }
 
 @Composable
-fun ListItem(plan: Plan, viewModel: PlansViewModel, onCheckPlan: (Plan) -> Unit) {
+fun ListItem(
+    plan: Plan,
+    viewModel: PlansViewModel,
+    onCheckPlan: (String) -> Unit,
+    openChangeDialog: MutableState<Boolean>
+) {
     val expanded = remember { mutableStateOf(false) }
 
     val planText by animateDpAsState(
@@ -414,11 +513,16 @@ fun ListItem(plan: Plan, viewModel: PlansViewModel, onCheckPlan: (Plan) -> Unit)
 
                 }
 
-                Checkbox(
-                    checked = viewModel.planUiState.planDone,
-                    onCheckedChange = {viewModel.onPlanDoneChange(viewModel.planUiState.documentId, it)})
-                Button(onClick = {}) {
-                    Image(painter = painterResource(id = R.drawable.check) , contentDescription = "Image")
+//                Checkbox(
+//                    checked = viewModel.planUiState.planDone,
+//                    onCheckedChange = {viewModel.onPlanDoneChange(viewModel.planUiState.documentId, it)})
+                Button(onClick = {
+                    openChangeDialog.value = true; viewModel.getPlan(plan.documentId); onCheckPlan.invoke(plan.documentId)
+                }) {
+                    Image(
+                        painter = painterResource(id = R.drawable.check),
+                        contentDescription = "Image"
+                    )
                 }
             }
 
@@ -448,24 +552,26 @@ fun ListItem(plan: Plan, viewModel: PlansViewModel, onCheckPlan: (Plan) -> Unit)
 fun RecyclerView(
     currentDay: String,
     viewModel: PlansViewModel = viewModel(),
-    onCheckPlan: (Plan) -> Unit
+    onCheckPlan: (String) -> Unit,
+    openChangeDialog: MutableState<Boolean>
 ) {
 
     LazyColumn(
         modifier = Modifier
             .padding(bottom = 55.dp)
     ) {
-        items(items = viewModel.getCurrentDayPlans(currentDay)) { time ->
+        items(items = viewModel.getCurrentDayPlans(currentDay)) { plan ->
             ListItem(
-                Plan(time.userId
-                    ,
+                Plan(
+                    plan.userId,
                     currentDay,
-                    time.time, time.planText, time.useful_habit,
-                    time.planDone,time.documentId
+                    plan.time, plan.planText, plan.useful_habit,
+                    plan.planDone, plan.documentId
                 ),
 
                 viewModel = viewModel,
-                onCheckPlan = onCheckPlan
+                onCheckPlan = onCheckPlan,
+                openChangeDialog = openChangeDialog
             )
         }
     }

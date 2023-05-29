@@ -60,7 +60,7 @@ class StorageRepository() {
         onSuccess: (Plan?) -> Unit
     ) {
         plansRef
-            .document("plans")
+            .document("planId")
             .get()
             .addOnSuccessListener {
                 onSuccess.invoke(it?.toObject(Plan::class.java))
@@ -110,7 +110,7 @@ class StorageRepository() {
             "planDone" to planDone,
         )
 
-        plansRef.document("plans/$planId").update(updateData)
+        plansRef.document("plans/$planId").set(updateData)
     }
     fun signOut() = Firebase.auth.signOut()
 

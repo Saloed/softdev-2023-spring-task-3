@@ -45,7 +45,7 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
     }
 
     fun signOut() = repository.signOut()
-    private fun getPlan(id: String) = repository.getPLan(planId = id, onError = {}, onSuccess = {})
+    fun getPlan(id: String) = repository.getPLan(planId = id, onError = {}, onSuccess = {})
     fun onDateChange(date: String) {
         planUiState = planUiState.copy(date = date)
     }
@@ -62,10 +62,8 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
         planUiState = planUiState.copy(useful_habit = habit)
     }
 
-    fun onPlanDoneChange(id: String, planDone: Boolean) {
-        getPlan(id)
-        planUiState = planUiState.copy(documentId = id, planDone = planDone)
-        repository.updateNote(id, planDone)
+    fun onPlanDoneChange(planDone: Boolean) {
+        planUiState = planUiState.copy(planDone = planDone)
     }
 
 
@@ -82,11 +80,10 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
     }
     fun updateNote(
         noteId: String,
-        isDone : Boolean
     ){
         repository.updateNote(
            planId = planUiState.documentId,
-            planDone = isDone
+            planDone = planUiState.planDone
         )
 
        repository.updateNote(noteId, planUiState.planDone)
