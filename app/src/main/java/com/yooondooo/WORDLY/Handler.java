@@ -4,7 +4,9 @@ package com.yooondooo.WORDLY;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.util.DisplayMetrics;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,12 +18,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
 public class Handler {
     public boolean checki = false;
     private boolean isChecki = true;
+    private Map<String, Button> alfButtons;
     private int height;
     private int lenght;
     private final int countLetters;
@@ -34,16 +38,17 @@ public class Handler {
     private final Resources resources;
     private final List<String> file = new ArrayList<>();
     private final int dictSize = 6963;
-    private  String noDelete = "";
+    private String noDelete = "";
     private int count;
     private final List<String> copyWords = new ArrayList<>();
     private final String[] yellowLetters = new String[5];
     private boolean active = true;
+    private String forBut = "";
 
 
-
-    public Handler(TextView[][] textView, PlayScene context) {
+    public Handler(TextView[][] textView, Map<String, Button> alfButtons, PlayScene context) {
         this.textView = textView;
+        this.alfButtons = alfButtons;
         clueWord = ".....";
         height = 0;
         lenght = 0;
@@ -53,7 +58,7 @@ public class Handler {
         Random random = new Random();
         countLetters = random.nextInt(dictSize);
         word = ret();
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             yellowLetters[i] = "";
         }
     }
@@ -83,11 +88,12 @@ public class Handler {
             }
         }
     }
-    private void dialog(String string, boolean bols){
+
+    private void dialog(String string, boolean bols) {
         String adString = "";
         String messege = "Отлично";
-        if (bols){
-            adString+="\nЗагаданное слово: " + word;
+        if (bols) {
+            adString += "\nЗагаданное слово: " + word;
             messege = "Попробую еще раз";
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -104,30 +110,33 @@ public class Handler {
             textView[height][lenght].setText("");
         }
     }
-    public String clue(){
-        String clueW ="нет слова";
-        if (count > 2 && active){
+
+    public String clue() {
+        String clueW = "нет слова";
+        if (count > 2 && active) {
             clueW = withActive(clueW);
-            if (clueW.equals("нет слова")){
+            if (clueW.equals("нет слова")) {
                 clueW = noneActive(clueW);
             }
-        }else{
+        } else {
             clueW = noneActive(clueW);
         }
         return clueW;
     }
-    private String noneActive(String clueW){
-        for (String line: copyWords){
-            if (line.matches(clueWord) && checkAlf(line) && checkNoDelete(line)){
+
+    private String noneActive(String clueW) {
+        for (String line : copyWords) {
+            if (line.matches(clueWord) && checkAlf(line) && checkNoDelete(line)) {
                 clueW = line;
                 break;
             }
         }
         return clueW;
     }
-    private String withActive(String clueW){
-        for (String line: copyWords){
-            if (checkForDop(line)){
+
+    private String withActive(String clueW) {
+        for (String line : copyWords) {
+            if (checkForDop(line)) {
                 clueW = line;
                 break;
             }
@@ -135,18 +144,20 @@ public class Handler {
         active = false;
         return clueW;
     }
-    private boolean checkForDop(String line){
+
+    private boolean checkForDop(String line) {
         String[] let = line.split("");
         boolean checkClue = true;
-        for(int i = 0; i < 5; i++){
-            if (!(alf.contains(let[i]) && !noDelete.contains(let[i]))){
+        for (int i = 0; i < 5; i++) {
+            if (!(alf.contains(let[i]) && !noDelete.contains(let[i]))) {
                 checkClue = false;
                 break;
             }
         }
         return checkClue;
     }
-    private boolean checkAlf (String line){
+
+    private boolean checkAlf(String line) {
         boolean checkClue = true;
         Map<String, String> map = new HashMap<>();
         String[] let = line.split("");
@@ -155,17 +166,17 @@ public class Handler {
                 checkClue = false;
                 break;
             }
-            if (map.get(let[i]) != null && !noDelete.contains(let[i])){
+            if (map.get(let[i]) != null && !noDelete.contains(let[i])) {
                 checkClue = false;
                 break;
-            }
-            else{
+            } else {
                 map.put(let[i], let[i]);
             }
         }
         return checkClue;
     }
-    private boolean checkNoDelete(String line){
+
+    private boolean checkNoDelete(String line) {
         boolean checkClue = true;
         String[] letters = noDelete.split("");
         for (String letter : letters) {
@@ -205,40 +216,54 @@ public class Handler {
                 textView[height][i].setBackgroundResource(R.color.green);
                 wordForCheck[i] = "*";
                 chars[i] = wordly[i].toLowerCase().charAt(0);
-                if (!noDelete.contains(wordly[i])){
-                    noDelete+=wordly[i].toLowerCase();
+                if (!noDelete.contains(wordly[i])) {
+                    noDelete += wordly[i].toLowerCase();
+                }
+                Button button = alfButtons.get(wordly[i]);
+                if (!forBut.contains(wordly[i]) && button != null ){
+                    button.setBackgroundColor(resources.getColor(R.color.green));
+                    forBut+=wordly[i];
                 }
                 wordly[i] = "-";
                 count++;
                 countGreen++;
-            }
-            else{
-                yellowLetters[i]+=wordly[i].toLowerCase();
+
+            } else {
+                yellowLetters[i] += wordly[i].toLowerCase();
             }
         }
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 if (wordly[i].toLowerCase().equals(wordForCheck[j])) {
                     textView[height][i].setBackgroundResource(R.color.yellow);
+                    Button button = alfButtons.get(wordly[i].toUpperCase(Locale.ROOT));
+                    if (!forBut.contains(wordly[i]) && button != null ){
+                        button.setBackgroundColor(resources.getColor(R.color.YELLOW));
+                        forBut+=wordly[i];
+                    }
                     wordForCheck[j] = "*";
                     yellowLetters[i] += wordly[i].toLowerCase();
                     count++;
-                    if (!noDelete.contains(wordly[i])){
-                        noDelete+=wordly[i].toLowerCase();
+                    if (!noDelete.contains(wordly[i])) {
+                        noDelete += wordly[i].toLowerCase();
                     }
                     break;
-                }
-                else{
+                } else {
                     wordly[i] = wordly[i].toLowerCase();
                 }
             }
         }
-        for (int i = 0; i < 5; i++){
-            if (alf.contains(wordly[i]) && !noDelete.contains(wordly[i])){
-                alf = alf.replace(wordly[i],"");
+        for (int i = 0; i < 5; i++) {
+            if (alf.contains(wordly[i]) && !noDelete.contains(wordly[i])) {
+                alf = alf.replace(wordly[i], "");
+                Button button = alfButtons.get(wordly[i].toUpperCase(Locale.ROOT));
+                if (!forBut.contains(wordly[i]) && button != null ){
+                    button.setBackgroundColor(resources.getColor(R.color.grey));
+                    forBut+=wordly[i];
+                }
             }
         }
-        if (height != 5 && !active){
+        if (height != 5 && !active) {
             active = true;
         }
         clueWord = String.valueOf(chars);
