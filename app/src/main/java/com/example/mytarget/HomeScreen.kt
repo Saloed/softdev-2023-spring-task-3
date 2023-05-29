@@ -121,7 +121,8 @@ fun MyTargetApp(
     val context = LocalContext.current
     var pickedColor by remember { mutableStateOf(Color.Blue) }
     var showSortDialog by remember{ mutableStateOf(false) }
-    var sortType = TypeOfSort.DAY
+    //var sortType = TypeOfSort.DAY
+    var sortType by remember{ mutableStateOf(TypeOfSort.DAY) }
 
 
     val resetFields: () -> Unit = {
@@ -137,7 +138,9 @@ fun MyTargetApp(
         ) {
             Login()
 
-            Text(text = DateTimeFormatter.ofPattern("dd MMM yyyy").format(pickedDateCalendar), modifier = Modifier.padding(0.dp,16.dp))
+            if (sortType == TypeOfSort.DAY) Text(text = DateTimeFormatter.ofPattern("dd MMM yyyy").format(pickedDateCalendar), modifier = Modifier.padding(0.dp,16.dp))
+            else if (sortType == TypeOfSort.WEEK) Text(text = "Задачи на эту неделю", modifier = Modifier.padding(0.dp,16.dp))
+            else Text(text = "Задачи на этот месяц", modifier = Modifier.padding(0.dp,16.dp))
 
             Button(
                 onClick = {calendarDialogState.show()},

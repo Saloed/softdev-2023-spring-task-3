@@ -62,7 +62,7 @@ class TasksViewModel: ViewModel() {
         val nearestWeekEnd = currentDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
 
         return tasks.filter { task ->
-            task.date.isAfter(nearestWeekStart) && task.date.isBefore(nearestWeekEnd.plusDays(1))
+            task.date.isAfter(nearestWeekStart.minusDays(1)) && task.date.isBefore(nearestWeekEnd.plusDays(1))
         }
     }
 
@@ -72,7 +72,7 @@ class TasksViewModel: ViewModel() {
         val lastDayOfMonth = currentDate.with(TemporalAdjusters.lastDayOfMonth())
 
         return tasks.filter { task ->
-            task.date.isAfter(firstDayOfMonth) && task.date.isBefore(lastDayOfMonth.plusDays(1))
+            task.date.isAfter(firstDayOfMonth.minusDays(1)) && task.date.isBefore(lastDayOfMonth.plusDays(1))
         }
     }
 }
