@@ -10,7 +10,7 @@ import com.github.quillraven.fleks.Qualifier
 
 class ScoreComponent {
     val text: String = "Score: "
-    var score: Long = 0
+    var score: Long = 1000000
     lateinit var label: Label
     lateinit var location: Vector2
 

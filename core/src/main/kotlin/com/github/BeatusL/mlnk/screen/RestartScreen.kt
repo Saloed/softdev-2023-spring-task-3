@@ -21,12 +21,27 @@ import ktx.app.KtxScreen
 import ktx.assets.disposeSafely
 import ktx.log.logger
 
-class RestartScreen(private val score: Long): KtxScreen {
+class RestartScreen(score: Long): KtxScreen {
     private val gStage: Stage = Stage(ExtendViewport(9f, 16f))
     private val uiStage: Stage = Stage(ExtendViewport(360f, 640f))
     private val textureAtlas = TextureAtlas("atlas/GameObj.atlas")
     private val font = BitmapFont(Gdx.files.internal("font.fnt"))
     private val textStyle = Label.LabelStyle(font, Color.BLACK)
+    private var scoreText: String
+    private var labelText: String
+
+    init {
+        if (score < 1000000) {
+            scoreText = "Yikes! You scored: " + score.toString() + "p"
+            labelText = "Touch anywhere to restart"
+        } else {
+            scoreText = "You scored a lot"
+            labelText = "Go touch some grass)"
+        }
+    }
+
+
+
 
 
     private val rWorld: World = World { // world for render objects
@@ -78,11 +93,11 @@ class RestartScreen(private val score: Long): KtxScreen {
     }
 
     private fun createLabel() {
-        val label1 = Label(labelText1 + score + "p", textStyle)
+        val label1 = Label(scoreText, textStyle)
         label1.setPosition(labelLocation.x, labelLocation.y)
         uiStage.addActor(label1)
 
-        val label2 = Label(labelText2, textStyle)
+        val label2 = Label(labelText, textStyle)
         label2.setPosition(labelLocation.x, labelLocation.y - 30)
         uiStage.addActor(label2)
     }
@@ -90,8 +105,7 @@ class RestartScreen(private val score: Long): KtxScreen {
 
 
     companion object {
-        private const val labelText1 = "Yikes! You scored: "
-        private const val  labelText2 = "Touch anywhere to restart"
+
         private val labelLocation = Vector2(5f, 410f)
         private val log = logger<GameScreen>()
     }
