@@ -68,6 +68,7 @@ class PhysicsSystem(
             }
         }
 
+        if (y !in -1f..18f) world.remove(entity)
 
     }
 

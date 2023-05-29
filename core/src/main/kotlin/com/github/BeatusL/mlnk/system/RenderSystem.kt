@@ -13,6 +13,7 @@ import com.github.quillraven.fleks.AllOf
 import com.github.quillraven.fleks.ComponentMapper
 import com.github.quillraven.fleks.Entity
 import com.github.quillraven.fleks.IteratingSystem
+import com.github.quillraven.fleks.Qualifier
 import com.github.quillraven.fleks.collection.compareEntity
 import ktx.graphics.use
 import ktx.tiled.forEachLayer
@@ -20,7 +21,8 @@ import ktx.tiled.forEachLayer
 
 @AllOf([ImageComponent::class])
 class RenderSystem(
-    private val stage: Stage,
+    private val gStage: Stage,
+    @Qualifier("UI")private val uiStage: Stage,
     private val imageCmps: ComponentMapper<ImageComponent>
     ): EventListener, IteratingSystem(
     comparator = compareEntity{ e1, e2 -> imageCmps[e1].compareTo(imageCmps[e2]) }   // just a very fast way to compare entities
@@ -28,17 +30,17 @@ class RenderSystem(
 
     private val bLayers = mutableListOf<TiledMapTileLayer>()
     private val fLayers = mutableListOf<TiledMapTileLayer>()
-    private val mRender = OrthogonalTiledMapRenderer(null, scale, stage.batch)
-    private val cam = stage.camera as OrthographicCamera
+    private val mRender = OrthogonalTiledMapRenderer(null, scale, gStage.batch)
+    private val cam = gStage.camera as OrthographicCamera
 
     override fun onTick() {
         super.onTick()
 
-        with(stage) {
+        with(gStage) {
             viewport.apply()
             mRender.setView(cam)
             if (bLayers.isNotEmpty()) {
-                stage.batch.use(cam) {
+                gStage.batch.use(cam) {
                     bLayers.forEach { mRender.renderTileLayer(it) }
                 }
             }
@@ -48,10 +50,18 @@ class RenderSystem(
 
             mRender.setView(cam)
             if (fLayers.isNotEmpty()) {
-                stage.batch.use(stage.camera as OrthographicCamera) {
+                gStage.batch.use(gStage.camera as OrthographicCamera) {
                     fLayers.forEach { mRender.renderTileLayer(it) }
                 }
             }
+
+
+        }
+
+        with(uiStage) { //rendering ui
+            viewport.apply()
+            act(deltaTime)
+            draw()
         }
     }
 

@@ -32,9 +32,7 @@ class AttackSystem (
         if (attackCmp.state == AttackState.DEALING_DMG) {
             val (x, y) = physCmp.body.position
             val (width, height) = physCmp.size
-
-            if (y !in -1f..17f) lifeCmps[entity].takeDamage += attackCmp.damage
-
+            
 
             rect.set(x - width/2f, y - height/2f, x + width/2f, y + height/2f)
 

@@ -12,10 +12,11 @@ data class SpawnConfig(
     val physicScaling: Vector2 = vec2(1f, 1f),
     val physicOffset: Vector2 = vec2(0f, 0f),
     val bodyType: BodyType = BodyType.DynamicBody,
+
 )
 
 
 data class SpawnComponent (
     var type: EntityType = EntityType.Default,
-    var location: Vector2 = vec2()
+    var location: Vector2 = vec2(),
 )

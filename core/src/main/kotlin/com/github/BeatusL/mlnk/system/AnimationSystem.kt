@@ -37,7 +37,7 @@ class AnimationSystem(
         aCmps.animation.playMode = aCmps.playMode
         imageCmps[entity].image.drawable = aCmps.animation.getKeyFrame(aCmps.stateTime)
 
-        if (aCmps.playMode == Animation.PlayMode.NORMAL && aCmps.stateTime >= 4/16f) // 4 frames times 1/16f
+        if (aCmps.playMode == Animation.PlayMode.NORMAL && aCmps.stateTime >= 1/4f) // 4 frames times 1/16 fps
             world.remove(entity)
     }
 

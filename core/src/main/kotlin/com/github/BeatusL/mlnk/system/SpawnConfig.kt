@@ -69,5 +69,7 @@ class SpawnConfigGetter {
 }
 
 enum class EntityType {
-    Player, B, S, M, BP, RP, exps, Default
+    Player, B, S, M, BP, RP, exps, Default;
+
+    fun isEnemy() = this in listOf(B, M, S)
 }

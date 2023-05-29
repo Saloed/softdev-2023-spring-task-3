@@ -30,7 +30,7 @@ class TouchProcessor (
             with(moveCmps[it]) {
                 val deltaX = touchX - player.x - image.width / 2f
                 val deltaY = touchY - player.y - image.height / 2f
-                if (touchX == 1000f || (round(abs(deltaY)) == 0f && round(abs(deltaX)) == 0f)) {
+                if (touchX == 1000f || (round(abs(deltaY)) == 0f && round(abs(deltaX)) == 0f)) { // round() for dead zone
                     sin = 0f
                     cos = 0f
                 } else {

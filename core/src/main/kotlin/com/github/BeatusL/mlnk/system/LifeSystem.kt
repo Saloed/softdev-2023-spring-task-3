@@ -29,7 +29,9 @@ class LifeSystem(
 
         if (lifeCmp.isDead){
             configureEntity(entity) {
-                deadCmps.add(it)
+                deadCmps.add(it) {
+                    type = lifeCmp.lType
+                }
                 if (it in playerCmps) game.playerDead()
             }
         }

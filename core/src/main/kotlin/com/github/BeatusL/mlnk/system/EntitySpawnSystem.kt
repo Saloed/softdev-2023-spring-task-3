@@ -108,7 +108,7 @@ class EntitySpawnSystem(
                             else -> EntityType.RP
                         }
                     }
-                    add<LifeComponent>()
+                    add<LifeComponent>() {lType = type}
                     if (type == EntityType.Player || type == EntityType.BP) add<AttackComponent>
                     {friendly = true}
                     else add<AttackComponent>()
