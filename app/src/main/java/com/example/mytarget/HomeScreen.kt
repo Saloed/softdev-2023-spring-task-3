@@ -490,27 +490,56 @@ fun TasksListItem(
 }
 
 @Composable
-fun TaskList(
-    viewModel: TasksViewModel,
-    date: LocalDate,
-    onMarkTask: (Task) -> Unit,
-    onRemoveTask: (Task) -> Unit,
-    sort: TypeOfSort
-) {
+fun TaskList(viewModel: TasksViewModel,date: LocalDate, onMarkTask: (Task) -> Unit, onRemoveTask: (Task) -> Unit, sort: TypeOfSort) {
     val tasks = viewModel.tasks
 
-    // Фильтрация задач в зависимости от sortType
-    val filteredTasks = when (sort) {
-        TypeOfSort.DAY -> tasks.filter { it.date == date }
-        TypeOfSort.WEEK -> tasks.filter { it.date.isAfter(date.minusDays(7)) && it.date.isBefore(date.plusDays(7)) }
-        TypeOfSort.MONTH -> tasks.filter { it.date.month == date.month }
-    }
+    LazyColumn {
+        if (sort == TypeOfSort.DAY) {
+            items(items = viewModel.getTaskByDate(date)) { task ->
+                TasksListItem(
+                    Task(task.id,
+                        task.taskName,
+                        task.taskDescription,
+                        task.date,
+                        task.isComplete,
+                        task.taskColor),
+                    viewModel = viewModel,
+                    onMarkTask = onMarkTask,
+                    onRemoveTask = onRemoveTask
+                )
+            }
+        }
 
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        items(filteredTasks) { task ->
-            TasksListItem(task, viewModel, onMarkTask, onRemoveTask)
+        if (sort == TypeOfSort.WEEK) {
+            items(items = viewModel.getTasksForCurrentWeek(viewModel.tasks)) { task ->
+                TasksListItem(
+                    Task(task.id,
+                        task.taskName,
+                        task.taskDescription,
+                        task.date,
+                        task.isComplete,
+                        task.taskColor),
+                    viewModel = viewModel,
+                    onMarkTask = onMarkTask,
+                    onRemoveTask = onRemoveTask
+                )
+            }
+        }
+
+        if (sort == TypeOfSort.MONTH) {
+            items(items = viewModel.getTasksForCurrentMonth(viewModel.tasks)) { task ->
+                TasksListItem(
+                    Task(task.id,
+                        task.taskName,
+                        task.taskDescription,
+                        task.date,
+                        task.isComplete,
+                        task.taskColor),
+                    viewModel = viewModel,
+                    onMarkTask = onMarkTask,
+                    onRemoveTask = onRemoveTask
+                )
+            }
         }
     }
 }
