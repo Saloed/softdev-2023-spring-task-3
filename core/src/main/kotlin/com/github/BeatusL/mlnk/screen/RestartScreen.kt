@@ -49,7 +49,7 @@ class RestartScreen(private val score: Long): KtxScreen {
             }
         }
 
-        val map = TmxMapLoader().load("map/entry.tmx")
+        val map = TmxMapLoader().load("map/blank.tmx")
 
         gStage.fire(MapChangeEvent(map))
 

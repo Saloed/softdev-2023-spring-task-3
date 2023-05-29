@@ -49,7 +49,7 @@ class EntryScreen: KtxScreen {
             }
         }
 
-        val map = TmxMapLoader().load("map/entry.tmx")
+        val map = TmxMapLoader().load("map/blank.tmx")
 
         gStage.fire(MapChangeEvent(map))
 
