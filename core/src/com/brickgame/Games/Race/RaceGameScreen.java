@@ -28,9 +28,9 @@ public class RaceGameScreen implements Screen {
 
     @Override
     public void show() {
+        batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
-        batch = new SpriteBatch();
 
         sidePanel = new SidePanel(batch, game);
         gameGrid = new Texture(Gdx.files.internal("background.png"));

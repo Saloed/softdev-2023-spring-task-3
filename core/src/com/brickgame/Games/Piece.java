@@ -9,9 +9,9 @@ import java.util.List;
 
 public class Piece {
     private float x, y;
-
     public List<Direction> directions;
     private int distance;
+    Texture timeTexture;
 
     public static final float SIZE = 32f;
 
@@ -49,7 +49,9 @@ public class Piece {
     }
 
     public void draw(SpriteBatch batch) {
+        if(timeTexture != null)timeTexture.dispose();
         Texture texturePiece = new Texture("BrickOn.png");
+        timeTexture = texturePiece;
         texturePiece.bind();
         batch.draw(texturePiece, x * Piece.SIZE, y * Piece.SIZE, SIZE, SIZE);
     }
