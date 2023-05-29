@@ -108,7 +108,7 @@ public class Handler {
         String clueW ="нет слова";
         if (count > 2 && active){
             clueW = withActive(clueW);
-            if (clueW.equals("")){
+            if (clueW.equals("нет слова")){
                 clueW = noneActive(clueW);
             }
         }else{
@@ -123,9 +123,6 @@ public class Handler {
                 break;
             }
         }
-//        if (height != 5){
-//            active = true;
-//        }
         return clueW;
     }
     private String withActive(String clueW){
@@ -134,7 +131,6 @@ public class Handler {
                 clueW = line;
                 break;
             }
-            active = false;
         }
         active = false;
         return clueW;
@@ -242,7 +238,7 @@ public class Handler {
                 alf = alf.replace(wordly[i],"");
             }
         }
-        if (height != 5){
+        if (height != 5 && !active){
             active = true;
         }
         clueWord = String.valueOf(chars);
