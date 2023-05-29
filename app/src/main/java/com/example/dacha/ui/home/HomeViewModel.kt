@@ -3,6 +3,7 @@ package com.example.dacha.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.dacha.data.model.NewsModel
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.data.repository.HomeRepository
 import com.example.dacha.utils.UiState
@@ -49,4 +50,16 @@ class HomeViewModel @Inject constructor(val repository: HomeRepository) : ViewMo
     fun getPerson(){
         repository.getPerson {_person.value = it}
     }
+
+    fun addNews(news: NewsModel) {
+        repository.addNews(news) {}
+    }
+
+    private val _news = MutableLiveData<UiState<List<NewsModel>>>()
+    val news: LiveData<UiState<List<NewsModel>>> = _news
+    fun getNews() {
+        _news.value = UiState.Loading
+        repository.getNews {_news.value = it}
+    }
+
 }

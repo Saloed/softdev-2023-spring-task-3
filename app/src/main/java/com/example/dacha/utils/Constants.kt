@@ -11,6 +11,7 @@ object FireDatabase {
     val EPEOPLE = "epeople"
     val TRANSACTIONS = "transactions"
     val GALLERY = "gallery"
+    val NEWS = "news"
 }
 
 object SharedPrefConstants {

@@ -20,35 +20,40 @@ import com.esafirm.imagepicker.features.registerImagePicker
 import com.example.dacha.R
 import com.example.dacha.data.model.*
 import com.example.dacha.databinding.PurchaseBottomSheetBinding
+import com.example.dacha.ui.home.HomeViewModel
 import com.example.dacha.utils.*
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
 
 
 @AndroidEntryPoint
 class PurchaseBottomFragment(
-    val purchase: PurchaseModel?,
-    val listOfPP: List<PlanProductModel>,
+    private val purchase: PurchaseModel?,
+    private val listOfPP: List<PlanProductModel>,
     val people: List<SimplePersonModel>,
-    val eventId: String
+    private val eventId: String,
+    val person: PersonModel
 ) : BottomSheetDialogFragment() {
 
     lateinit var binding: PurchaseBottomSheetBinding
     val viewModel: ProductsViewModel by viewModels()
+    val homeVM: HomeViewModel by viewModels()
     var closeFunction: ((Boolean) -> Unit)? = null
     var isSuccessAddTask: Boolean = false
 
     var resultProducts = mutableMapOf<String, ResultProductModel>()
     var planProducts = mutableMapOf<String, PlanProductModel>()
     var payer = purchase?.purchaseInfo?.paid
+    var checkImage = purchase?.purchaseInfo?.photo
 
     private val launcher = registerImagePicker { images ->
         if (images.isNotEmpty()) uploadImages(images[0].uri)
     }
 
     private val pProdToDelete = mutableMapOf<String, PlanProductModel>()
-    val pProdToAdd = mutableMapOf<String, PlanProductModel>()
+    private val pProdToAdd = mutableMapOf<String, PlanProductModel>()
 
 
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
@@ -150,9 +155,14 @@ class PurchaseBottomFragment(
                 returnMode = ReturnMode.ALL
                 arrowColor = R.color.new_status_bar
                 imageTitle = "Выберите фото"
+                theme = R.style.Theme_Dacha
                 doneButtonText = "Готово"
             }
             )
+        }
+
+        binding.addResultDialogBtn.setOnClickListener {
+
         }
 
         binding.purchaseDoneBtn.setOnClickListener {
@@ -178,6 +188,14 @@ class PurchaseBottomFragment(
                     binding.progressBar.hide()
                     toast(state.data.second)
                     updatePlans(pProdToDelete.values.toList(), pProdToAdd.values.toList())
+                    homeVM.addNews(
+                        NewsModel(
+                            null,
+                            person,
+                            "Добавил(а) покупку в магазине ${state.data.first.purchaseInfo?.market}",
+                            LocalDateTime.now().toString().split(".")[0]
+                        )
+                    )
                     this.dismiss()
                 }
             }
@@ -196,6 +214,14 @@ class PurchaseBottomFragment(
                     binding.progressBar.hide()
                     toast(state.data.second)
                     updatePlans(pProdToDelete.values.toList(), pProdToAdd.values.toList())
+                    homeVM.addNews(
+                        NewsModel(
+                            null,
+                            person,
+                            "Обновил(а) покупку в магазине ${state.data.first.purchaseInfo?.market}",
+                            LocalDateTime.now().toString().split(".")[0]
+                        )
+                    )
                     this.dismiss()
                 }
             }
@@ -222,6 +248,14 @@ class PurchaseBottomFragment(
                         )
                     }
                     updatePlans(pProdToDelete.values.toList(), pProdToAdd.values.toList())
+                    homeVM.addNews(
+                        NewsModel(
+                            null,
+                            person,
+                            "Удалил(а) покупку в магазине ${state.data.first.purchaseInfo?.market}",
+                            LocalDateTime.now().toString().split(".")[0]
+                        )
+                    )
                     this.dismiss()
                 }
             }
@@ -240,10 +274,22 @@ class PurchaseBottomFragment(
                 }
                 is UiState.Success -> {
                     binding.progressBar.hide()
-                    purchase?.purchaseInfo?.photo = state.data.second
+                    checkImage = state.data.second
+                    homeVM.addNews(
+                        NewsModel(
+                            null,
+                            person,
+                            "Добавил(а) чек покупки в магазине ${purchase?.purchaseInfo?.market}",
+                            LocalDateTime.now().toString().split(".")[0]
+                        )
+                    )
                 }
             }
         }
+    }
+
+    private fun showAddNewProductDialog() {
+
     }
 
     private fun showAddResultDialog(lvProducts: ListView, fullList: List<String>, i: Int) {
@@ -344,7 +390,7 @@ class PurchaseBottomFragment(
         resultProducts.forEach { (_, product) ->
             result[product.rKey.toString()] = product
         }
-        return PurchaseModel(PurchaseInfo(purchase?.purchaseInfo?.key, market, purchase?.purchaseInfo?.photo, paid), result)
+        return PurchaseModel(PurchaseInfo(purchase?.purchaseInfo?.key, market, checkImage, paid), result)
     }
 
     fun setDismissListener(function: ((Boolean) -> Unit)?) {

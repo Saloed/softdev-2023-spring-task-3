@@ -45,7 +45,7 @@ class PurchaseAdapter(val onPurchaseClicked: ((Int, PurchaseModel) -> Unit)? = n
             tvProduct.text = item.purchaseInfo?.market
             tvPayer.text = "Оплатил: ${item.purchaseInfo?.paid?.name}"
 
-            if (item.purchaseInfo?.photo == null) btnCheck.hide()
+            if (item.purchaseInfo?.photo.isNullOrEmpty()) btnCheck.hide()
             else {
                 btnCheck.show()
                 btnCheck.setOnClickListener {

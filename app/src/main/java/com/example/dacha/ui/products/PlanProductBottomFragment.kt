@@ -9,26 +9,32 @@ import android.widget.ArrayAdapter
 import androidx.core.util.forEach
 import androidx.fragment.app.viewModels
 import com.example.dacha.R
+import com.example.dacha.data.model.NewsModel
+import com.example.dacha.data.model.PersonModel
 import com.example.dacha.data.model.PlanProductModel
 import com.example.dacha.data.model.SimplePersonModel
 import com.example.dacha.databinding.PlanProductBottomSheetLayoutBinding
+import com.example.dacha.ui.home.HomeViewModel
 import com.example.dacha.utils.UiState
 import com.example.dacha.utils.hide
 import com.example.dacha.utils.show
 import com.example.dacha.utils.toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
 
 
 @AndroidEntryPoint
 class PlanProductBottomFragment(
-    val product: PlanProductModel?,
+    private val product: PlanProductModel?,
     val people: List<SimplePersonModel>,
-    val eventId: String
+    private val eventId: String,
+    val person: PersonModel?
 ) : BottomSheetDialogFragment() {
 
     lateinit var binding: PlanProductBottomSheetLayoutBinding
     val viewModel: ProductsViewModel by viewModels()
+    val homeVM: HomeViewModel by viewModels()
     var closeFunction: ((Boolean) -> Unit)? = null
     var isSuccessAddTask: Boolean = false
 
@@ -134,6 +140,14 @@ class PlanProductBottomFragment(
                 is UiState.Success -> {
                     isSuccessAddTask = true
                     binding.progressBar.hide()
+                    homeVM.addNews(
+                        NewsModel(
+                            null,
+                            person,
+                            "Добавил(а) продукт ${state.data.first.pProduct}",
+                            LocalDateTime.now().toString().split(".")[0]
+                        )
+                    )
                     toast(state.data.second)
                     this.dismiss()
                 }
@@ -151,6 +165,14 @@ class PlanProductBottomFragment(
                 is UiState.Success -> {
                     isSuccessAddTask = true
                     binding.progressBar.hide()
+                    homeVM.addNews(
+                        NewsModel(
+                            null,
+                            person,
+                            "Обновил(а) продукт ${state.data.first.pProduct}",
+                            LocalDateTime.now().toString().split(".")[0]
+                        )
+                    )
                     toast(state.data.second)
                     this.dismiss()
                 }
@@ -168,6 +190,14 @@ class PlanProductBottomFragment(
                 is UiState.Success -> {
                     isSuccessAddTask = true
                     binding.progressBar.hide()
+                    homeVM.addNews(
+                        NewsModel(
+                            null,
+                            person,
+                            "Удалил(а) продукт ${state.data.first.pProduct}",
+                            LocalDateTime.now().toString().split(".")[0]
+                        )
+                    )
                     toast(state.data.second)
                     this.dismiss()
                 }

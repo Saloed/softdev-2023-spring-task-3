@@ -13,20 +13,24 @@ import androidx.fragment.app.viewModels
 import com.example.dacha.R
 import com.example.dacha.data.model.*
 import com.example.dacha.databinding.FragmentDebtsBinding
+import com.example.dacha.ui.home.HomeViewModel
 import com.example.dacha.utils.*
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class DebtsFragment : Fragment() {
 
 
     val viewModel: DebtsViewModel by viewModels()
+    val homeVM: HomeViewModel by viewModels()
     lateinit var binding: FragmentDebtsBinding
     var events = listOf<EventModel>()
     var people = listOf<PersonModel>()
     var transfers = mutableMapOf<String, MutableList<DebtModel>>()
+    var person = PersonModel()
     private val boughtProducts = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
     private val paidProducts = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
     val adapter by lazy {
@@ -43,6 +47,7 @@ class DebtsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDebtsBinding.inflate(inflater, container, false)
+        homeVM.getPerson()
         viewModel.getPeople()
         viewModel.getEvents()
         viewModel.getTransactions()
@@ -57,6 +62,24 @@ class DebtsFragment : Fragment() {
     }
 
     private fun observer() {
+        homeVM.person.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    binding.progressBar.show()
+                }
+                is UiState.Failure -> {
+                    binding.progressBar.hide()
+                    toast(state.error)
+                }
+                is UiState.Success -> {
+                    binding.progressBar.hide()
+                    person = state.data!!
+                }
+                else -> {
+                    binding.progressBar.show()
+                }
+            }
+        }
         viewModel.people.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
@@ -142,6 +165,14 @@ class DebtsFragment : Fragment() {
 
         button.setOnClickListener {
             viewModel.addTransaction(transaction = transaction)
+            homeVM.addNews(
+                NewsModel(
+                    null,
+                    person,
+                    "Добавил(а) перевод ${transaction.from?.name} - ${transaction.to?.name} (${transaction.howMuch}P)",
+                    LocalDateTime.now().toString().split(".")[0]
+                )
+            )
             viewModel.getTransactions()
             dialog.dismiss()
         }

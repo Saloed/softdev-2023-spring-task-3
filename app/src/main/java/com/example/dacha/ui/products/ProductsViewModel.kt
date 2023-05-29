@@ -65,13 +65,6 @@ class ProductsViewModel @Inject constructor(val repository: ProductRepository) :
         repository.getChosenEvent {_chosenEvent.value = it}
     }
 
-    private val _people = MutableLiveData<UiState<List<PersonModel>>>()
-    val people: LiveData<UiState<List<PersonModel>>> = _people
-
-    fun getPeople() {
-        _people.value = UiState.Loading
-        repository.getPeople {_people.value = it}
-    }
 
     private val _addPlanProduct = MutableLiveData<UiState<Pair<PlanProductModel, String>>>()
     val addPlanProduct: LiveData<UiState<Pair<PlanProductModel, String>>> = _addPlanProduct

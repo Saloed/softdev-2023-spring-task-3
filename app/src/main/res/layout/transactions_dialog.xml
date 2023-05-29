@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="10dp">
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,49 +15,42 @@
         android:paddingVertical="32dp">
 
         <TextView
-            android:id="@+id/tv_product_top"
+            android:id="@+id/tv_transactions_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Покупка"
+            android:text="Переводы"
             android:textAppearance="@style/TitleStyle"
             android:textSize="34sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/add_result_dialog_et"
+        <ListView
+            android:id="@+id/lv_transactions"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/second_bg"
-            android:hint="Введите цену за шт."
-            android:imeOptions="actionDone"
-            android:inputType="numberDecimal"
-            android:textAppearance="@style/SubTitleStyle"
+            android:layout_height="350dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_product_top">
-
-            <requestFocus />
-        </EditText>
-
-
+            app:layout_constraintTop_toBottomOf="@+id/tv_transactions_top"/>
 
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/add_result_dialog_btn"
+            android:id="@+id/transactions_dialog_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:textAppearance="@style/SubTitleStyle"
-            android:textAllCaps="false"
             android:backgroundTint="@color/new_colorSecondary"
-            android:text="Добавить"
+            android:text="Готово"
+            android:textAllCaps="false"
+            android:textAppearance="@style/SubTitleStyle"
+            android:layout_marginTop="8dp"
             app:elevation="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_result_dialog_et" />
+            app:layout_constraintTop_toBottomOf="@+id/lv_transactions" />
 
 
 

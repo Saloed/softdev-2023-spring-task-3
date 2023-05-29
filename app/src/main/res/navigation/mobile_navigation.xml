@@ -22,7 +22,11 @@
         android:id="@+id/galleryFragment"
         android:name="com.example.dacha.ui.dashboard.GalleryFragment"
         android:label="fragment_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_gallery" >
+        <action
+            android:id="@+id/action_galleryFragment_to_navigation_dashboard"
+            app:destination="@id/navigation_dashboard" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_products"
         android:name="com.example.dacha.ui.products.ProductsFragment"

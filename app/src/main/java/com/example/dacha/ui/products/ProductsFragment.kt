@@ -2,6 +2,7 @@ package com.example.dacha.ui.products
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dacha.R
 import com.example.dacha.data.model.*
 import com.example.dacha.databinding.FragmentProductsBinding
+import com.example.dacha.ui.home.HomeViewModel
 import com.example.dacha.utils.UiState
 import com.example.dacha.utils.hide
 import com.example.dacha.utils.show
@@ -19,14 +21,17 @@ import dagger.hilt.android.AndroidEntryPoint
 class ProductsFragment : Fragment() {
 
     val viewModel: ProductsViewModel by viewModels()
+    private val homeVM: HomeViewModel by viewModels()
     lateinit var binding: FragmentProductsBinding
     val adapter by lazy {
         PlanProductAdapter(onProductClicked = { pos, item -> onProductClicked(pos, item) })
     }
 
-    val purchaseAdapter by lazy {
+    private val purchaseAdapter by lazy {
         PurchaseAdapter(onPurchaseClicked = { pos, item -> onPurchaseClicked(pos, item) })
     }
+
+    var person = PersonModel()
 
     private var chosenEventId: String? = null
     private var chosenEvent: EventModel? = null
@@ -39,14 +44,15 @@ class ProductsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel.getPeople()
+        homeVM.getPeople()
         viewModel.getEvents()
+        homeVM.getPerson()
         binding = FragmentProductsBinding.inflate(inflater, container, false)
         binding.productsToolbar.inflateMenu(R.menu.event_menu)
         binding.productsToolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.addEvent -> {
-                    val eventBottomFragment = EventBottomFragment(null, false, list)
+                    val eventBottomFragment = EventBottomFragment(null, false, list, person)
                     eventBottomFragment.setDismissListener {
                         if (it) {
                             viewModel.getEvents()
@@ -69,7 +75,7 @@ class ProductsFragment : Fragment() {
                 }
                 R.id.changeEvent -> {
                     val eventBottomFragment = EventBottomFragment(
-                        chosenEvent, false, list
+                        chosenEvent, false, list, person
                     )
                     eventBottomFragment.setDismissListener {
                         if (it) {
@@ -81,7 +87,7 @@ class ProductsFragment : Fragment() {
                     true
                 }
                 R.id.deleteEvent -> {
-                    val eventBottomFragment = EventBottomFragment(chosenEvent, true, list)
+                    val eventBottomFragment = EventBottomFragment(chosenEvent, true, list, person)
                     eventBottomFragment.setDismissListener {
                         if (it) {
                             viewModel.getEvents()
@@ -118,7 +124,8 @@ class ProductsFragment : Fragment() {
             val planProductBottomFragment = PlanProductBottomFragment(
                 null,
                 chosenEvent?.ePeople ?: emptyList(),
-                chosenEventId.toString()
+                chosenEventId.toString(),
+                person
             )
 
             planProductBottomFragment.setDismissListener {
@@ -131,7 +138,11 @@ class ProductsFragment : Fragment() {
 
         binding.btnAddPurchase.setOnClickListener {
             val purchaseBottomFragment = PurchaseBottomFragment(
-                null, planProducts, chosenEvent?.ePeople ?: emptyList(), chosenEventId.toString()
+                null,
+                planProducts,
+                chosenEvent?.ePeople ?: emptyList(),
+                chosenEventId.toString(),
+                person
             )
             purchaseBottomFragment.setDismissListener {
                 if (it) {
@@ -152,6 +163,24 @@ class ProductsFragment : Fragment() {
     }
 
     private fun observer() {
+        homeVM.person.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    binding.progressBar.show()
+                }
+                is UiState.Failure -> {
+                    binding.progressBar.hide()
+                    toast(state.error)
+                }
+                is UiState.Success -> {
+                    binding.progressBar.hide()
+                    person = state.data!!
+                }
+                else -> {
+                    binding.progressBar.show()
+                }
+            }
+        }
         viewModel.chosenEvent.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
@@ -172,7 +201,7 @@ class ProductsFragment : Fragment() {
                 }
             }
         }
-        viewModel.people.observe(viewLifecycleOwner) { state ->
+        homeVM.people.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
                     binding.progressBar.show()
@@ -256,7 +285,8 @@ class ProductsFragment : Fragment() {
         val planProductBottomFragment = PlanProductBottomFragment(
             item,
             chosenEvent?.ePeople ?: emptyList(),
-            chosenEventId.toString()
+            chosenEventId.toString(),
+            person
         )
         planProductBottomFragment.setDismissListener {
             if (it) {
@@ -268,7 +298,11 @@ class ProductsFragment : Fragment() {
 
     private fun onPurchaseClicked(pos: Int, item: PurchaseModel) {
         val purchaseBottomFragment = PurchaseBottomFragment(
-            item, planProducts, chosenEvent?.ePeople ?: emptyList(), chosenEventId.toString()
+            item,
+            planProducts,
+            chosenEvent?.ePeople ?: emptyList(),
+            chosenEventId.toString(),
+            person
         )
         purchaseBottomFragment.setDismissListener {
             if (it) {

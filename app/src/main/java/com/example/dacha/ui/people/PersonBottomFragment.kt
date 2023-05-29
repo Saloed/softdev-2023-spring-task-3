@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.viewModels
 import com.example.dacha.R
+import com.example.dacha.data.model.NewsModel
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.databinding.BottomSheetLayoutBinding
+import com.example.dacha.ui.home.HomeViewModel
 import com.example.dacha.utils.UiState
 import com.example.dacha.utils.hide
 import com.example.dacha.utils.show
@@ -17,6 +19,7 @@ import com.example.dacha.utils.toast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
 
 
 private const val COLLAPSED_HEIGHT = 260
@@ -26,6 +29,7 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
 
     lateinit var binding: BottomSheetLayoutBinding
     val viewModel: PeopleViewModel by viewModels()
+    private val homeVM: HomeViewModel by viewModels()
     var closeFunction: ((Boolean) -> Unit)? = null
     var isSuccessAddTask: Boolean = false
 
@@ -133,6 +137,14 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
                     isSuccessAddTask = true
                     binding.progressBar.hide()
                     toast(state.data.second)
+                    homeVM.addNews(
+                        NewsModel(
+                            null,
+                            person,
+                            "Добавил ${state.data.first.name}",
+                            LocalDateTime.now().toString().split(".")[0]
+                        )
+                    )
                     this.dismiss()
                 }
             }
@@ -150,6 +162,14 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
                     isSuccessAddTask = true
                     binding.progressBar.hide()
                     toast(state.data.second)
+                    homeVM.addNews(
+                        NewsModel(
+                            null,
+                            person,
+                            "Обновил ${state.data.first.name}",
+                            LocalDateTime.now().toString().split(".")[0]
+                        )
+                    )
                     this.dismiss()
                 }
             }

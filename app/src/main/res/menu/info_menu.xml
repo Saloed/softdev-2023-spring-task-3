@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/transactions_info"
+        android:icon="@drawable/baseline_payment_24"
+        android:orderInCategory="1"
+        android:title="Переводы"
+        android:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/history_info"
+        android:icon="@drawable/baseline_history"
+        android:orderInCategory="1"
+        android:title="История"
+        android:showAsAction="ifRoom" />
+
+</menu>

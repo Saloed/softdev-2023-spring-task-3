@@ -110,6 +110,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_purchase_paid" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/add_result_dialog_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/new_colorPrimaryVariant"
+        android:text="Добавить новую позицию"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TitleStyle"
+        android:textColor="@color/new_colorSubSecondary"
+        android:textSize="12sp"
+        app:elevation="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_purchase_products"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_purchase_products" />
+
 
 
     <ListView

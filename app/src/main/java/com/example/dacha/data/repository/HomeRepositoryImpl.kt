@@ -2,6 +2,7 @@ package com.example.dacha.data.repository
 
 import android.content.SharedPreferences
 import android.media.metrics.PlaybackErrorEvent
+import com.example.dacha.data.model.NewsModel
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.utils.FireDatabase
 import com.example.dacha.utils.SharedPrefConstants
@@ -67,5 +68,32 @@ class HomeRepositoryImpl(val database: FirebaseDatabase, val shPref: SharedPrefe
         } else {
             result.invoke(UiState.Success(PersonModel(null, id, name, null)))
         }
+    }
+
+    override fun addNews(news: NewsModel, result: (UiState<NewsModel>) -> Unit) {
+        val ref = database.reference.child(FireDatabase.NEWS).push()
+        val uniqueKey = ref.key ?: "invalid"
+        val new = NewsModel(key = uniqueKey, person = news.person, info = news.info, date = news.date)
+        ref
+            .setValue(new)
+            .addOnSuccessListener {
+                result.invoke(UiState.Success(new))
+            }
+            .addOnFailureListener {
+                result.invoke(UiState.Failure(it.localizedMessage))
+            }
+    }
+
+    override fun getNews(result: (UiState<List<NewsModel>>) -> Unit) {
+        val ref = database.reference.child(FireDatabase.NEWS)
+        ref.get()
+            .addOnSuccessListener {
+                val news = arrayListOf<NewsModel>()
+                for (item in it.children) {
+                    val new = item.getValue(NewsModel::class.java)
+                    if (new != null) news.add(new)
+                }
+                result.invoke(UiState.Success(news))
+            }
     }
 }

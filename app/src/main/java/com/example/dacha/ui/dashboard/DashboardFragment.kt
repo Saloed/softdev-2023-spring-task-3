@@ -13,15 +13,22 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dacha.R
 import com.example.dacha.data.model.AlbumModel
+import com.example.dacha.data.model.NewsModel
+import com.example.dacha.data.model.PersonModel
 import com.example.dacha.databinding.FragmentDashboardBinding
+import com.example.dacha.ui.home.HomeViewModel
 import com.example.dacha.utils.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment() {
 
     private val viewModel: DashboardViewModel by viewModels()
+    private val homeVM: HomeViewModel by viewModels()
+    var person = PersonModel()
     lateinit var binding: FragmentDashboardBinding
 
     val adapter by lazy {
@@ -38,7 +45,9 @@ class DashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.show()
         viewModel.getAlbums()
+        homeVM.getPerson()
         return binding.root
     }
 
@@ -50,6 +59,7 @@ class DashboardFragment : Fragment() {
             showAddAlbumDialog()
         }
         observer()
+
     }
 
     private fun showAddAlbumDialog() {
@@ -63,6 +73,14 @@ class DashboardFragment : Fragment() {
             } else {
                 val text = editText.text.toString()
                 viewModel.addAlbum(AlbumModel(text, null, emptyList()))
+                homeVM.addNews(
+                    NewsModel(
+                        null,
+                        person,
+                        "Добавил(а) альбом $text",
+                        LocalDateTime.now().toString().split(".")[0]
+                    )
+                )
                 viewModel.getAlbums()
                 dialog.dismiss()
             }
@@ -82,6 +100,14 @@ class DashboardFragment : Fragment() {
             } else {
                 val text = editText.text.toString()
                 viewModel.updateAlbum(AlbumModel(text, album.key, album.photos))
+                homeVM.addNews(
+                    NewsModel(
+                        null,
+                        person,
+                        "Обновил(а) альбом $text",
+                        LocalDateTime.now().toString().split(".")[0]
+                    )
+                )
                 viewModel.getAlbums()
                 dialog.dismiss()
             }
@@ -102,6 +128,21 @@ class DashboardFragment : Fragment() {
                 is UiState.Success -> {
                     binding.progressBar.hide()
                     adapter.updateList(state.data.toMutableList())
+                }
+            }
+        }
+        homeVM.person.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    binding.progressBar.show()
+                }
+                is UiState.Failure -> {
+                    binding.progressBar.hide()
+                    toast(state.error)
+                }
+                is UiState.Success -> {
+                    binding.progressBar.hide()
+                    person = state.data!!
                 }
             }
         }

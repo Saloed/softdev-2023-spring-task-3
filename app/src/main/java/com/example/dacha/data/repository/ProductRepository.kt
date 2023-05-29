@@ -15,7 +15,6 @@ interface ProductRepository {
     fun chooseEvent(event: EventModel, result: (UiState<Pair<EventModel, String>>) -> Unit)
     fun getEvents(result: (UiState<List<EventModel>>) -> Unit)
     fun getChosenEvent(result: (UiState<String?>) -> Unit)
-    fun getPeople(result: (UiState<List<PersonModel>>) -> Unit)
     fun addPlanProduct(event: String, planProduct: PlanProductModel, result: (UiState<Pair<PlanProductModel, String>>) -> Unit)
     fun updatePlanProduct(event: String, planProduct: PlanProductModel, result: (UiState<Pair<PlanProductModel, String>>) -> Unit)
     fun deletePlanProduct(event: String, planProduct: PlanProductModel, result: (UiState<Pair<PlanProductModel, String>>) -> Unit)

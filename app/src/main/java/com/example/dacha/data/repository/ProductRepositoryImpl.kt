@@ -102,19 +102,6 @@ class ProductRepositoryImpl(
         }
     }
 
-    override fun getPeople(result: (UiState<List<PersonModel>>) -> Unit) {
-        val ref = database.reference.child(FireDatabase.PEOPLE)
-        ref.get()
-            .addOnSuccessListener {
-                val people = arrayListOf<PersonModel>()
-                for (item in it.children) {
-                    val person = item.getValue(PersonModel::class.java)
-                    if (person != null) people.add(person)
-                }
-                result.invoke(UiState.Success(people))
-            }
-    }
-
     override fun addPlanProduct(
         event: String,
         planProduct: PlanProductModel,
@@ -267,6 +254,7 @@ class ProductRepositoryImpl(
             var url = ""
             val uri: Uri = withContext(Dispatchers.IO) {
                 storageReference
+                    .child(fileUri.toString())
                     .putFile(fileUri)
                     .await()
                     .storage

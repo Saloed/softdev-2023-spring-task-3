@@ -1,7 +1,9 @@
 package com.example.dacha.ui.products
 
 import android.content.DialogInterface
+import android.media.tv.PesRequest
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +14,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.util.forEach
 import androidx.fragment.app.viewModels
 import com.example.dacha.R
-import com.example.dacha.data.model.EventInfo
-import com.example.dacha.data.model.EventModel
-import com.example.dacha.data.model.SimplePersonModel
+import com.example.dacha.data.model.*
 import com.example.dacha.databinding.EventChangeBottomSheetBinding
+import com.example.dacha.ui.home.HomeViewModel
 import com.example.dacha.utils.UiState
 import com.example.dacha.utils.hide
 import com.example.dacha.utils.show
@@ -23,17 +24,20 @@ import com.example.dacha.utils.toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
 import java.time.YearMonth
 
 @AndroidEntryPoint
 class EventBottomFragment(
     private val event: EventModel?,
     private val toDelete: Boolean,
-    val people: List<SimplePersonModel>
+    val people: List<SimplePersonModel>,
+    val person: PersonModel?
 ) : BottomSheetDialogFragment() {
 
     lateinit var binding: EventChangeBottomSheetBinding
     val viewModel: ProductsViewModel by viewModels()
+    private val homeVM: HomeViewModel by viewModels()
     var closeFunction: ((Boolean) -> Unit)? = null
     var isSuccessAddTask: Boolean = false
 
@@ -59,6 +63,7 @@ class EventBottomFragment(
                     container
                 )
             )
+
         val tvTop: TextView = binding.tvEventTop
         val tfName: TextInputLayout = binding.tvNameEvent
         val eventDatePicker: ConstraintLayout = binding.eventDatePicker
@@ -206,6 +211,15 @@ class EventBottomFragment(
                 is UiState.Success -> {
                     isSuccessAddTask = true
                     viewModel.chooseEvent(state.data.first)
+                    homeVM.addNews(
+                        NewsModel(
+                            null,
+                            person,
+                            "Добавил(а) поездку: ${state.data.first.eInfo?.eName}",
+                            LocalDateTime.now().toString().split(".")[0]
+                        )
+                    )
+                    Log.e("ADD", "Добавил(а) поездку: ${state.data.first.eInfo?.eName}")
                     binding.progressBar.hide()
                     toast(state.data.second)
                     this.dismiss()
@@ -224,6 +238,14 @@ class EventBottomFragment(
                 is UiState.Success -> {
                     isSuccessAddTask = true
                     viewModel.chooseEvent(state.data.first)
+                    homeVM.addNews(
+                        NewsModel(
+                            null,
+                            person,
+                            "Обновил(а) поездку: ${state.data.first.eInfo?.eName}",
+                            LocalDateTime.now().toString().split(".")[0]
+                        )
+                    )
                     binding.progressBar.hide()
                     toast(state.data.second)
                     this.dismiss()
@@ -242,6 +264,14 @@ class EventBottomFragment(
                 is UiState.Success -> {
                     isSuccessAddTask = true
                     binding.progressBar.hide()
+                    homeVM.addNews(
+                        NewsModel(
+                            null,
+                            person,
+                            "Удалил(а) поездку: ${state.data.first.eInfo?.eName}",
+                            LocalDateTime.now().toString().split(".")[0]
+                        )
+                    )
                     toast(state.data.second)
                     this.dismiss()
                 }
