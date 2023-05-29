@@ -85,13 +85,15 @@ public class Handler {
     }
     private void dialog(String string, boolean bols){
         String adString = "";
+        String messege = "Отлично";
         if (bols){
             adString+="\nЗагаданное слово: " + word;
+            messege = "Попробую еще раз";
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(string + adString)
                 .setCancelable(false)
-                .setPositiveButton("Попробую еще раз", (dialog, which) -> dialog.cancel());
+                .setPositiveButton(messege, (dialog, which) -> dialog.cancel());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -104,32 +106,49 @@ public class Handler {
     }
     public String clue(){
         String clueW ="нет слова";
-        for (String line: copyWords){
-            if (count > 2 && active){
-                String[] let = line.split("");
-                boolean checkClue = true;
-                for(int i = 0; i < 5; i++){
-                    if (!(alf.contains(let[i]) && !noDelete.contains(let[i]))){
-                        checkClue = false;
-                        break;
-                    }
-                }
-                if (checkClue){
-                    clueW = line;
-                    break;
-                }
-                active = false;
-            }else{
-                if (line.matches(clueWord) && checkAlf(line) && checkNoDelete(line)){
-                clueW = line;
-                break;
-                }
-                if (height != 5){
-                    active = true;
-                }
+        if (count > 2 && active){
+            clueW = withActive(clueW);
+            if (clueW.equals("")){
+                clueW = noneActive(clueW);
             }
+        }else{
+            clueW = noneActive(clueW);
         }
         return clueW;
+    }
+    private String noneActive(String clueW){
+        for (String line: copyWords){
+            if (line.matches(clueWord) && checkAlf(line) && checkNoDelete(line)){
+                clueW = line;
+                break;
+            }
+        }
+//        if (height != 5){
+//            active = true;
+//        }
+        return clueW;
+    }
+    private String withActive(String clueW){
+        for (String line: copyWords){
+            if (checkForDop(line)){
+                clueW = line;
+                break;
+            }
+            active = false;
+        }
+        active = false;
+        return clueW;
+    }
+    private boolean checkForDop(String line){
+        String[] let = line.split("");
+        boolean checkClue = true;
+        for(int i = 0; i < 5; i++){
+            if (!(alf.contains(let[i]) && !noDelete.contains(let[i]))){
+                checkClue = false;
+                break;
+            }
+        }
+        return checkClue;
     }
     private boolean checkAlf (String line){
         boolean checkClue = true;
@@ -222,6 +241,9 @@ public class Handler {
             if (alf.contains(wordly[i]) && !noDelete.contains(wordly[i])){
                 alf = alf.replace(wordly[i],"");
             }
+        }
+        if (height != 5){
+            active = true;
         }
         clueWord = String.valueOf(chars);
         return countGreen == 5;
