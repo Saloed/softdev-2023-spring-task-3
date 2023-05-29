@@ -95,15 +95,13 @@ class GameScreen: KtxScreen {
         log.debug { "Resources disposed" }
     }
 
-    fun spawn(type: String, location: Vector2) {
-        stage.fire(ObjCreation(type, location))
-    }
 
     private fun spawnEnemy() {
         val type = listOf("B", "M", "S").random()
         val y = 15f
         val x = Random.nextFloat() * 9
-        spawn(type, Vector2(x, y))
+
+        stage.fire(ObjCreation(type, Vector2(x, y)))
         lastSpawnTime = TimeUtils.nanoTime()
         log.debug { "enemy spawned at $x:$y" }
     }

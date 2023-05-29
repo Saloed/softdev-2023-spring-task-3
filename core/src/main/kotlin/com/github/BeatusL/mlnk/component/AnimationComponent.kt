@@ -20,19 +20,17 @@ enum class AnimationType {
 
 enum class AnimationPlaymode {
     Loop, Normal, Reversed;
-
-    val key: String = this.toString()
 }
 
 class AnimationComponent(
-    private var animationModel: AnimationModel = AnimationModel.Default,
+    var animationModel: AnimationModel = AnimationModel.Default,
     var stateTime: Float = 0f,
     var playMode: Animation.PlayMode = Animation.PlayMode.LOOP
 ) {
     lateinit var animation: Animation<TextureRegionDrawable>
 
 
-    var nextAnimation: String = ""
+    var nextAnimation: String = no_animation
 
     fun nextAnimation(model: AnimationModel, mode: AnimationPlaymode) {
         playMode = when (mode) {

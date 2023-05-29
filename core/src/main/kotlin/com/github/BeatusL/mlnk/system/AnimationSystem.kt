@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.github.BeatusL.mlnk.component.AnimationComponent
 import com.github.BeatusL.mlnk.component.AnimationComponent.Companion.no_animation
-import com.github.BeatusL.mlnk.component.AnimationPlaymode
 import com.github.BeatusL.mlnk.component.ImageComponent
 import com.github.quillraven.fleks.AllOf
 import com.github.quillraven.fleks.ComponentMapper
@@ -27,8 +26,6 @@ class AnimationSystem(
     override fun onTickEntity(entity: Entity) {
         val aCmps = animationCmps[entity]
 
-        if (aCmps.playMode.toString() == AnimationPlaymode.Normal.key && aCmps.stateTime >= 1/16f)
-            configureEntity(entity) {world.remove(it)}
 
         if (aCmps.nextAnimation == no_animation) {
             aCmps.stateTime += deltaTime
@@ -40,7 +37,8 @@ class AnimationSystem(
         aCmps.animation.playMode = aCmps.playMode
         imageCmps[entity].image.drawable = aCmps.animation.getKeyFrame(aCmps.stateTime)
 
-
+        if (aCmps.playMode == Animation.PlayMode.NORMAL && aCmps.stateTime >= 4/16f) // 4 frames times 1/16f
+            world.remove(entity)
     }
 
     private fun animation(keyPath: String): Animation<TextureRegionDrawable> {

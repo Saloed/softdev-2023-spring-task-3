@@ -5,6 +5,6 @@ import com.github.BeatusL.mlnk.system.EntityType
 
 data class ProjectileComponent(
     var prevTime: Long = TimeUtils.nanoTime(),
-    var prjType: EntityType = EntityType.Default
+    var prjType: EntityType = EntityType.Default,
 )
 

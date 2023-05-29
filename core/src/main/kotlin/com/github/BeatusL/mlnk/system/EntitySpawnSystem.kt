@@ -152,6 +152,7 @@ class EntitySpawnSystem(
                 return true
             }
 
+
             is ObjCreation -> {
                 val type = SpawnConfigGetter().stringToType(event.type)
                 val loc = event.location
