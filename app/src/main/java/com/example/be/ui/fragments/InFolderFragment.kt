@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.be.R
 import com.example.be.activity.APP_ACTIVITY
+import com.example.be.activity.COUNT_MESSAGE
 import com.example.be.activity.COUNT_SNAPSHOT
+import com.example.be.activity.COUNT_SNAPSHOT_PLUS
 import com.example.be.ui.fragments.adapters.InFolderAdapter
 import com.example.be.utilits.CHILD_FOLDERS
 import com.example.be.utilits.CURRENT_UID
@@ -49,7 +51,6 @@ class InFolderFragment : BaseFragment(R.layout.fragment_in_folder), InFolderAdap
         val idFolder: String = FOLDER.id
         Log.d("MyLog", idFolder)
         nameFolder.text = name
-
 
     }
 
@@ -111,6 +112,7 @@ class InFolderFragment : BaseFragment(R.layout.fragment_in_folder), InFolderAdap
     override fun onDeleteClick(message: Message) {
         refMessages.child(message.id).removeValue().addOnCompleteListener {
             if (it.isSuccessful) {
+                /*COUNT_MESSAGE -= 1*/
                 showToast("Удалено")
             } else {
                 showToast("Не Удалено")

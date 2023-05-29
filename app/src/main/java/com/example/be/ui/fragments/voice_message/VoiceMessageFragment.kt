@@ -33,7 +33,7 @@ class VoiceMessageFragment : BaseFragment(R.layout.new_voice) {
         btnStart.setOnClickListener {
             btnStart.visibility = View.GONE
             btnStop.visibility = View.VISIBLE
-            showToast("start")
+            showToast("Начало")
             btnStop.setOnClickListener {
                 stop {
                     btnStart.visibility = View.VISIBLE

@@ -31,7 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="8dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="8dp"
             android:textSize="24sp"
             tools:text="TextView" />
 
@@ -41,6 +42,32 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="@string/change_fullname" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:text="Открытые лекции"
+            android:textSize="24sp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="320dp"
+            android:layout_height="50dp"
+            android:progressTint="@color/yellow"
+            android:scaleY="4" />
+
+        <TextView
+            android:id="@+id/range"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:layout_marginTop="20dp"
+            android:textSize="24sp"/>
 
     </LinearLayout>
 

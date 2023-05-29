@@ -21,7 +21,7 @@ class AppVoicePlayer {
     fun play(messageKey: String, fileUrl: String, function: () -> Unit) {
         file = File(APP_ACTIVITY.filesDir, messageKey)
         if (file.exists() && file.length() > 0 && file.isFile) {
-            startPlay() {
+            startPlay {
                 function()
             }
         } else {

@@ -16,11 +16,15 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.be.models.Folder
-import com.example.be.ui.fragments.adapters.FolderAdapter
 import com.example.be.R
 import com.example.be.activity.APP_ACTIVITY
+import com.example.be.activity.COUNT_MESSAGE
+import com.example.be.activity.COUNT_SNAPSHOT
+import com.example.be.activity.COUNT_SNAPSHOT_PLUS
 import com.example.be.activity.Registration
+import com.example.be.models.Folder
+import com.example.be.models.Message
+import com.example.be.ui.fragments.adapters.FolderAdapter
 import com.example.be.ui.fragments.change_fragments.ChangeFolderNameFragment
 import com.example.be.utilits.AUTH
 import com.example.be.utilits.CHILD_FOLDERS
@@ -28,6 +32,7 @@ import com.example.be.utilits.CURRENT_UID
 import com.example.be.utilits.FOLDER
 import com.example.be.utilits.NODE_USERS
 import com.example.be.utilits.REF_DATABASE_ROOT
+import com.example.be.utilits.countSnapshot
 import com.example.be.utilits.replaceActivity
 import com.example.be.utilits.replaceFragment
 import com.example.be.utilits.showToast
@@ -56,53 +61,7 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
         setHasOptionsMenu(true)
         initFields()
         initFuns()
-        /*initRecycleView()*/
-
     }
-
-   /* override fun onPause() {
-        super.onPause()
-        mAdapter.stopListening()
-    }
-
-    private fun initRecycleView() {
-
-        rcForFolderView = view?.findViewById(R.id.rcForFolder)!!
-        *//*rcForFolderView.layoutManager = LinearLayoutManager(APP_ACTIVITY)
-        rcForFolderView.layoutManager = GridLayoutManager(APP_ACTIVITY, 2)
-        rcForFolderView.setHasFixedSize(true)*//*
-
-        mRefFolders = REF_DATABASE_ROOT.child(CURRENT_UID).child(CHILD_FOLDERS)
-        Log.d("MyLog", "$rcForFolderView")
-
-        val options = FirebaseRecyclerOptions.Builder<Folder>()
-            .setQuery(mRefFolders, Folder::class.java)
-            .build()
-
-        Log.d("MyLog", "options")
-        mAdapter = object : FirebaseRecyclerAdapter<Folder, FoldersHolder>(options) {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoldersHolder {
-                val inflater = LayoutInflater.from(parent.context)
-                val view = inflater.inflate(R.layout.new_folder, parent, false)
-                return FoldersHolder(view)
-            }
-
-            override fun onBindViewHolder(holder: FoldersHolder, position: Int, model: Folder) {
-                holder.nameFolderAdapter.text = model.name
-                Log.d("MyLog", model.name)
-            }
-
-        }
-
-        rcForFolderView.layoutManager = LinearLayoutManager(APP_ACTIVITY)
-        rcForFolderView.adapter = mAdapter
-        mAdapter.startListening()
-    }
-
-    class FoldersHolder(view: View) : RecyclerView.ViewHolder(view.rootView) {
-        val nameFolderAdapter: TextView = view.findViewById(R.id.nameFolder)
-    }*/
-
     private fun initFuns() {
         fetchData()
         registerEvents()
@@ -126,6 +85,7 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
         rcForFolderView.layoutManager = LinearLayoutManager(APP_ACTIVITY)
         rcForFolderView.layoutManager = GridLayoutManager(APP_ACTIVITY, 2)
         rcForFolderView.adapter = adapter
+
     }
 
     private fun registerEvents() {
@@ -145,6 +105,7 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
     }
 
     private fun fetchData() {
+        COUNT_SNAPSHOT_PLUS = 0
         Log.d("MyLog", "fetchData")
         var countOfFolders = 0
         databaseReference.addValueEventListener(object : ValueEventListener {
@@ -153,12 +114,13 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
                 if (snapshot.exists()) {
                     rcForFolderView.visibility = View.VISIBLE
                     view?.findViewById<TextView>(R.id.textView2)?.visibility = View.GONE
+                    val countOfSnapshot = 0
                     for (s in snapshot.children) {
                         countOfFolders++
                         val values = s.getValue(Folder::class.java)
                         nameFolderList.add(values!!)
+                        countSnapshot(values)
                     }
-
                     val mAdapter = FolderAdapter(nameFolderList, this@MainFragment)
                     rcForFolderView.layoutManager = LinearLayoutManager(APP_ACTIVITY)
                     rcForFolderView.layoutManager = GridLayoutManager(APP_ACTIVITY, 2)
@@ -229,7 +191,7 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean { /*функция запускается когда нажимаем на какой-нибудь элемент из меню*/
         when (item.itemId) {
-            R.id.profile_menu_exit -> {
+            R.id.menu_exit -> {
                 AUTH.signOut()
                 replaceActivity(Registration())
             }
@@ -243,6 +205,7 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
         inflater.inflate(R.menu.main_menu, menu);
         super.onCreateOptionsMenu(menu, inflater)
     }
+
 }
 
 

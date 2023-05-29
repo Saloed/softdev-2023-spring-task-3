@@ -1,12 +1,24 @@
 package com.example.be.ui.objects
 
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.be.R
 import com.example.be.activity.APP_ACTIVITY
+import com.example.be.activity.COUNT_LECTURES
+import com.example.be.activity.COUNT_SNAPSHOT_PLUS
+import com.example.be.activity.PREV_COUNT_SNAPSHOT_PLUS
+import com.example.be.activity.URL_FIRST_LECTURE
+import com.example.be.activity.URL_FOURTH_LECTURE
+import com.example.be.activity.URL_SECOND_LECTURE
+import com.example.be.activity.URL_THIRD_LECTURE
 import com.example.be.ui.fragments.FirstLectureFragment
 import com.example.be.utilits.replaceFragment
+import com.example.be.utilits.showToast
+import com.github.barteksc.pdfviewer.PDFView
 import com.mikepenz.materialdrawer.AccountHeader
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
@@ -14,9 +26,13 @@ import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
+import kotlinx.coroutines.NonDisposableHandle.parent
 import okhttp3.internal.http2.Header
 
-class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: androidx.appcompat.widget.Toolbar) {
+class AppDrawer(
+    val mainActivity: AppCompatActivity,
+    val toolbar: androidx.appcompat.widget.Toolbar
+) {
 
     private lateinit var mHeader: Header
     private lateinit var mDrawer: Drawer
@@ -47,7 +63,7 @@ class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: androidx.appco
     }
 
     private fun createHeader() {
-       /* mHeader = R.menu.main_menu*//*HeaderBuilder()
+        /* mHeader = R.menu.main_menu*//*HeaderBuilder()
             .withActivity(APP_ACTIVITY)
             .withHeaderBackground(R.color.brown)
             .
@@ -69,9 +85,7 @@ class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: androidx.appco
                 PrimaryDrawerItem().withIdentifier(100)/*число по которому будеи находить это меню*/
                     .withIconTintingEnabled(true)/*видны иконки*/
                     .withName("Управление собой")
-                    /*.withDisabledTextColor(R.color.white)*/
-                    .withTextColor(R.color.white)
-                    /*.withDisabledTextColorRes(R.color.white)*/
+                    /*.withTextColor(R.color.white)*/
                     .withSelectable(false),/*выбранный или нет*/
                 PrimaryDrawerItem().withIdentifier(101)
                     .withIconTintingEnabled(true)
@@ -85,15 +99,33 @@ class AppDrawer(val mainActivity: AppCompatActivity, val toolbar: androidx.appco
                     .withIconTintingEnabled(true)
                     .withName("Эмоциональное выгорание")
                     .withSelectable(false)
-            ).withOnDrawerItemClickListener(object: Drawer.OnDrawerItemClickListener{
+            ).withOnDrawerItemClickListener(object : Drawer.OnDrawerItemClickListener {
                 override fun onItemClick(
                     view: View?,
                     position: Int,
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
-                    when (position) {
-                        1 -> replaceFragment(FirstLectureFragment())
+                    showToast(COUNT_SNAPSHOT_PLUS.toString())
+
+                    if (position == 1) {
+                        replaceFragment(FirstLectureFragment(URL_FIRST_LECTURE))
+                        return false
                     }
+
+                    if (position == 2 && COUNT_SNAPSHOT_PLUS == 2) {
+                        replaceFragment(FirstLectureFragment(URL_SECOND_LECTURE))
+                        return false
+                    } else if (position == 2) showToast("Эта лекция будет открыта через ${2 - COUNT_SNAPSHOT_PLUS} созданных сообщения")
+
+                    if (position == 3 && COUNT_SNAPSHOT_PLUS == 3) {
+                        replaceFragment(FirstLectureFragment(URL_THIRD_LECTURE))
+                        return false
+                    } else if (position == 3) showToast("Эта лекция будет открыта через ${3 - COUNT_SNAPSHOT_PLUS} созданных сообщения")
+
+                    if (position == 4 && COUNT_SNAPSHOT_PLUS == 4) {
+                        replaceFragment(FirstLectureFragment(URL_FOURTH_LECTURE))
+                        return false
+                    } else if (position == 4) showToast("Эта лекция будет открыта через ${4 - COUNT_SNAPSHOT_PLUS} созданных сообщения")
 
                     return false
                 }

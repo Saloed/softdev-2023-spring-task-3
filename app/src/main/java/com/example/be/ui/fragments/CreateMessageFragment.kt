@@ -17,6 +17,7 @@ import com.example.be.ui.fragments.voice_message.AppVoiceRecorder
 import com.example.be.R
 import com.example.be.utilits.RECORD_AUDIO
 import com.example.be.activity.APP_ACTIVITY
+import com.example.be.activity.COUNT_MESSAGE
 import com.example.be.activity.COUNT_SNAPSHOT
 import com.example.be.utilits.checkAppPermission
 import com.example.be.models.Message
@@ -26,6 +27,7 @@ import com.example.be.utilits.FOLDER
 import com.example.be.utilits.FOLDER_VOICE_RECORDER
 import com.example.be.utilits.ID_MESSAGE
 import com.example.be.utilits.MESSAGE
+import com.example.be.utilits.NODE_ALLMESSAGE
 import com.example.be.utilits.NODE_USERS
 import com.example.be.utilits.REF_DATABASE_ROOT
 import com.example.be.utilits.REF_STORAGE_ROOT
@@ -76,6 +78,7 @@ class CreateMessageFragment : BaseFragment(R.layout.fragment_create_message) {
             .child(CURRENT_UID)
             .child(CHILD_FOLDERS)
             .child(FOLDER.id)
+
 
         if (COUNT_SNAPSHOT == 0) {
             view?.setOnClickListener {
@@ -129,6 +132,7 @@ class CreateMessageFragment : BaseFragment(R.layout.fragment_create_message) {
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         showToast("Всё отлично!")
+                        /*COUNT_MESSAGE += 1*/
                         APP_ACTIVITY.supportFragmentManager.popBackStack()
                     }
                 }
@@ -159,15 +163,14 @@ class CreateMessageFragment : BaseFragment(R.layout.fragment_create_message) {
                     /*stop record*/
                     btnVoice.colorFilter = null
                     recordingText.text = "Записано"
-                    Log.d("MyLog", "before startRecord")
                     mAppVoiceRecorder.stopRecord { file, messageKey ->
                         uploadFileToStorage(
                             Uri.fromFile(file),
                             messageKey
                         )/*загружает всё, если хорошо закончилось*/
                     }
+                    /*COUNT_MESSAGE += 1*/
                     APP_ACTIVITY.supportFragmentManager.popBackStack()
-                    Log.d("MyLog", "stopRecord")
                 }
             }
             true

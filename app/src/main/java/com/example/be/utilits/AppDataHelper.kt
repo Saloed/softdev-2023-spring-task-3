@@ -20,8 +20,11 @@ lateinit var REF_STORAGE_ROOT: StorageReference
 
 
 const val NODE_USERS = "Users"
+const val NODE_ALLMESSAGE = "All_message"
 const val FOLDER_PROFILE_IMAGE = "profileImage"
 const val FOLDER_VOICE_RECORDER = "voiceRecorder"
+const val FOLDER_LECTURES = "letures"
+
 
 
 const val CHILD_ID = "id"
