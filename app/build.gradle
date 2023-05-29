@@ -5,17 +5,14 @@ plugins {
 android {
     namespace 'com.yooondooo.WORDLY'
     compileSdk 33
-
     defaultConfig {
         applicationId "com.yooondooo.WORDLY"
         minSdk 22
         targetSdk 33
         versionCode 1
         versionName "1.0"
-//        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner "androidx.test.runner.ExampleUnitTest"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -28,7 +25,6 @@ android {
     }
 
 }
-
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'

@@ -124,7 +124,7 @@ public class Handler {
                 clueW = line;
                 break;
                 }
-                if (height != 4){
+                if (height != 5){
                     active = true;
                 }
             }
