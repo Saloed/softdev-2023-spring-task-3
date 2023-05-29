@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Event
 import com.badlogic.gdx.scenes.scene2d.EventListener
 import com.github.BeatusL.mlnk.component.ScoreComponent
 import com.github.BeatusL.mlnk.event.EnemyDead
+import com.github.BeatusL.mlnk.game
 import com.github.quillraven.fleks.AllOf
 import com.github.quillraven.fleks.ComponentMapper
 import com.github.quillraven.fleks.Entity
@@ -31,6 +32,7 @@ class ScoreSystem(
 
             scoreCmp.addpoint(multiplier)
             log.debug { "Score is ${scoreCmp.score}" }
+            game.setScore(scoreCmp.score)
             return true
         }
         return false

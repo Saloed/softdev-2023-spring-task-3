@@ -14,7 +14,7 @@ class MLNK : KtxGame<KtxScreen>() {
 
     override fun create() {
         Gdx.app.logLevel = Application.LOG_DEBUG
-        addScreen(RestartScreen())
+        addScreen(RestartScreen(0))
         addScreen(EntryScreen())
         setScreen<EntryScreen>()
     }
@@ -22,6 +22,7 @@ class MLNK : KtxGame<KtxScreen>() {
     override fun render() {
         if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.justTouched()) &&
             !this.containsScreen<GameScreen>()) {
+            removeScreen<RestartScreen>()
             addScreen(GameScreen())
             setScreen<GameScreen>()
         }
@@ -29,13 +30,19 @@ class MLNK : KtxGame<KtxScreen>() {
     }
 
     fun playerDead() {
+        this.addScreen(RestartScreen(gameScore))
         this.setScreen<RestartScreen>()
         this.removeScreen<GameScreen>()
+    }
+
+    fun setScore(score: Long) {
+        gameScore = score
     }
 
 
 
     companion object {
+        private var gameScore: Long = 0
         const val scale = 1/20f
         const val entityCount = 64
         val debug = false
