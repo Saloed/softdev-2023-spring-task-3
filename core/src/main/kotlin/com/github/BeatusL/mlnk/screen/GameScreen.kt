@@ -29,8 +29,8 @@ import ktx.math.vec2
 import kotlin.random.Random
 
 class GameScreen: KtxScreen {
-    private val gStage: Stage = Stage(ExtendViewport(9f, 16f))
-    private val uiStage: Stage = Stage(ExtendViewport(270f, 480f))
+    private val gStage: Stage = Stage(ExtendViewport(gameStageWidth, gameStageHeight))
+    private val uiStage: Stage = Stage(ExtendViewport(uiStageWidth, uiStageHeight))
     private val textureAtlas = TextureAtlas("atlas/GameObj.atlas")
     private val font = BitmapFont(Gdx.files.internal("font.fnt"))
     private val textStyle = Label.LabelStyle(font, Color.BLACK)
@@ -95,7 +95,7 @@ class GameScreen: KtxScreen {
 
     override fun render(delta: Float) {
         rWorld.update(delta.coerceAtMost(1/4f)) // delta cap needed to avoid stuttering
-        if (TimeUtils.nanoTime() - lastSpawnTime > 500000000) {
+        if (TimeUtils.nanoTime() - lastSpawnTime > spawnInterval) {
             spawnEnemy()
             log.debug { "${rWorld.numEntities.toString()} active entities" }
         }
@@ -134,6 +134,11 @@ class GameScreen: KtxScreen {
 
 
     companion object {
+        const val spawnInterval = 500000000
+        const val gameStageWidth = 9f
+        const val gameStageHeight = 16f
+        const val uiStageWidth = 270f
+        const val uiStageHeight = 480f
         private val labelLocation = Vector2(10f, 430f)
         private val log = logger<GameScreen>()
     }

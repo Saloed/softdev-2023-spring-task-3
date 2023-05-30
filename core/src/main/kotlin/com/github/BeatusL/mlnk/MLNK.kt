@@ -29,22 +29,18 @@ class MLNK : KtxGame<KtxScreen>() {
         super.render()
     }
 
-    fun playerDead() {
-        this.addScreen(RestartScreen(gameScore))
+    fun playerDead(finalScore: Long) {
+        this.addScreen(RestartScreen(finalScore))
         this.setScreen<RestartScreen>()
         this.removeScreen<GameScreen>()
-    }
-
-    fun setScore(score: Long) {
-        gameScore = score
     }
 
 
 
     companion object {
-        private var gameScore: Long = 0
         const val scale = 1/20f
         const val entityCount = 64
+        const val scoreID = 2
         val debug = false
     }
 }

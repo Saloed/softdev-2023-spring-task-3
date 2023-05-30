@@ -22,8 +22,8 @@ import ktx.assets.disposeSafely
 import ktx.log.logger
 
 class EntryScreen: KtxScreen {
-    private val gStage: Stage = Stage(ExtendViewport(9f, 16f))
-    private val uiStage: Stage = Stage(ExtendViewport(360f, 640f))
+    private val gStage: Stage = Stage(ExtendViewport(gameStageWidth, gameStageHeight))
+    private val uiStage: Stage = Stage(ExtendViewport(uiStageWidth, uiStageHeight))
     private val textureAtlas = TextureAtlas("atlas/GameObj.atlas")
     private val font = BitmapFont(Gdx.files.internal("font.fnt"))
     private val textStyle = Label.LabelStyle(font, Color.BLACK)
@@ -90,6 +90,10 @@ class EntryScreen: KtxScreen {
 
 
     companion object {
+        const val gameStageWidth = 9f
+        const val gameStageHeight = 16f
+        const val uiStageWidth = 360f
+        const val uiStageHeight = 640f
         private const val labelText1 = "Hello there!"
         private const val  labelText2 = "Touch anywhere to start"
         private val labelLocation = Vector2(10f, 410f)

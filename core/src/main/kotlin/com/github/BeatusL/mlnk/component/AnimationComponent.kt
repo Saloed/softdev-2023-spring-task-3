@@ -30,7 +30,7 @@ class AnimationComponent(
     lateinit var animation: Animation<TextureRegionDrawable>
 
 
-    var nextAnimation: String = no_animation
+    var nextAnimation: String = noAnimation
 
     fun nextAnimation(model: AnimationModel, mode: AnimationPlaymode) {
         playMode = when (mode) {
@@ -43,6 +43,6 @@ class AnimationComponent(
     }
 
     companion object {
-        const val no_animation = ""
+        const val noAnimation = ""
     }
 }

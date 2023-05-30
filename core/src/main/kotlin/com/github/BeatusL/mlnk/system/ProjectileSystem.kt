@@ -25,7 +25,7 @@ class ProjectileSystem(
         val phCmp = phCmps[entity]
         val height = imCmps[entity].image.height
 
-        if (TimeUtils.nanoTime() - prjCmp.prevTime > 1000000000) {
+        if (TimeUtils.nanoTime() - prjCmp.prevTime > projectileInterval) {
             prjCmp.prevTime = TimeUtils.nanoTime()
             var x = phCmp.body.position.x
             var y = phCmp.body.position.y
@@ -53,6 +53,7 @@ class ProjectileSystem(
 
 
     companion object{
+        const val projectileInterval = 1000000000
         const val BPWidth = 0.3f
         const val RPWidth = 0.25f
     }

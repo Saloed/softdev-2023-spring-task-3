@@ -125,7 +125,7 @@ class EntitySpawnSystem(
     }
 
     private fun size(model: AnimationModel) = cachedSizes.getOrPut(model) {
-        if (model == AnimationModel.exps) vec2(1.75f, 1.75f)
+        if (model == AnimationModel.exps) vec2(expsModelSide, expsModelSide)
         else {
             val regions = atlas.findRegions("${model.atlasKey}/${model.atlasKey}")
             if (regions.isEmpty) gdxError("No region for ${model.atlasKey}")
@@ -172,6 +172,7 @@ class EntitySpawnSystem(
 
 
     companion object {
+        const val expsModelSide = 1.75f
         const val HITBOX = "HITBOX"
     }
 

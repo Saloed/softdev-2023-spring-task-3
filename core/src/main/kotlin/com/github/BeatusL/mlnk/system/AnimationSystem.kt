@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.github.BeatusL.mlnk.component.AnimationComponent
-import com.github.BeatusL.mlnk.component.AnimationComponent.Companion.no_animation
+import com.github.BeatusL.mlnk.component.AnimationComponent.Companion.noAnimation
 import com.github.BeatusL.mlnk.component.ImageComponent
 import com.github.quillraven.fleks.AllOf
 import com.github.quillraven.fleks.ComponentMapper
@@ -27,12 +27,12 @@ class AnimationSystem(
         val aCmps = animationCmps[entity]
 
 
-        if (aCmps.nextAnimation == no_animation) {
+        if (aCmps.nextAnimation == noAnimation) {
             aCmps.stateTime += deltaTime
         } else {
             aCmps.animation = animation(aCmps.nextAnimation)
             aCmps.stateTime = 0f
-            aCmps.nextAnimation = no_animation
+            aCmps.nextAnimation = noAnimation
         }
         aCmps.animation.playMode = aCmps.playMode
         imageCmps[entity].image.drawable = aCmps.animation.getKeyFrame(aCmps.stateTime)

@@ -31,7 +31,7 @@ class PhysicsSystem(
     private val physCmps: ComponentMapper<PhysicsComponent>,
     private val colCmps: ComponentMapper<CollisionComponent>,
     private val playerCmps: ComponentMapper<PlayerComponent>
-): ContactListener, IteratingSystem(interval = Fixed(1/60f)) { // fixed timestep`s good for optimization
+): ContactListener, IteratingSystem(interval = Fixed(timeStep)) { // fixed timestep`s good for optimization
 
     init {
         oWorld.setContactListener(this)
@@ -68,7 +68,7 @@ class PhysicsSystem(
             }
         }
 
-        if (y !in -1f..18f) world.remove(entity)
+        if (y !in lowerWorldBound..upperWorldBound) world.remove(entity)
 
     }
 
@@ -95,6 +95,9 @@ class PhysicsSystem(
 
 
     companion object {
+        const val upperWorldBound = 18f
+        const val lowerWorldBound = -1f
+        const val timeStep = 1/60f
         private val log = logger<PhysicsSystem>()
     }
 }
