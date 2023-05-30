@@ -2,6 +2,7 @@ package UI;
 
 import Util.Resource;
 import object.*;
+import org.jetbrains.annotations.NotNull;
 
 
 import javax.sound.sampled.Clip;
@@ -12,19 +13,17 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 
-public class Screen extends JPanel implements Runnable, KeyListener {
+public class Screen extends JPanel implements KeyListener {
     public static final int GAME_FIRST_STATE = 0;
     public static final int GAME_PLAY_STATE = 1;
     public static final int GAME_OVER_STATE = 2;
     public static final float GRAVITY = 0.5f;
     public static final float GROUDNY = 110;
     public static final int SCREEN_WIDTH = 600;
-    private static final int timeToSleep = 20;
     private float score;
     private int highScore;
 
     private MainCharacter mainCharacter;
-    private final Thread thread;
     private final Land land;
     private final Clouds clouds;
     private final EnemiesManager enemiesManager;
@@ -37,7 +36,6 @@ public class Screen extends JPanel implements Runnable, KeyListener {
 
 
     public Screen() {
-        thread = new Thread(this);
         mainCharacter = new MainCharacter();
         mainCharacter.setX(50);
         mainCharacter.setY(60);
@@ -47,23 +45,6 @@ public class Screen extends JPanel implements Runnable, KeyListener {
         enemiesManager = new EnemiesManager(mainCharacter);
         imageGameOver = Resource.getImage("files/gameover_text.png");
         imageReplay = Resource.getImage("files/replay_button.png");
-    }
-
-    public void start() {
-        thread.start();
-    }
-
-    @Override
-    public void run() {
-        while (true) {
-            try {
-                update();
-                repaint();
-                Thread.sleep(timeToSleep);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     public void update() {
@@ -88,7 +69,7 @@ public class Screen extends JPanel implements Runnable, KeyListener {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paint(@NotNull Graphics g) {
         g.setColor(Color.decode("#f7f7f7"));
         g.fillRect(0, 0, getWidth(), getHeight());
         switch (gameState) {
@@ -99,8 +80,8 @@ public class Screen extends JPanel implements Runnable, KeyListener {
             case GAME_PLAY_STATE -> {
                 clouds.draw(g);
                 land.draw(g);
-                mainCharacter.draw(g);
                 enemiesManager.draw(g);
+                mainCharacter.draw(g);
                 g.drawString("HI " + highScore + " " + (int) score, 500, 20);
             }
             case GAME_OVER_STATE -> {
@@ -190,11 +171,6 @@ public class Screen extends JPanel implements Runnable, KeyListener {
     public void setMainCharacter(MainCharacter mainCharacter) {
         this.mainCharacter = mainCharacter;
     }
-
-    public Thread getThread() {
-        return thread;
-    }
-
 
     public int getGameState() {
         return gameState;
