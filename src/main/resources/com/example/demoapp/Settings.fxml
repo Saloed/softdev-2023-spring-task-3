@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<ScrollPane maxHeight="600.0" maxWidth="700.0" prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demoapp.SettingsController">
+   <content>
+      <AnchorPane maxHeight="600.0" maxWidth="700.0" prefHeight="600.0" prefWidth="700.0">
+         <children>
+            <Pane layoutX="170.0" layoutY="122.0" prefHeight="4.0" prefWidth="366.0" style="-fx-background-color: red;" />
+            <Text layoutX="320.0" layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Timer" wrappingWidth="74.93670654296875">
+               <font>
+                  <Font name="Century Gothic" size="27.0" />
+               </font>
+            </Text>
+            <Text layoutX="97.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pomodoro duration" wrappingWidth="259.73675537109375">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Text>
+            <Text layoutX="97.0" layoutY="276.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Break duration" wrappingWidth="290.936767578125">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Text>
+            <TextField fx:id="inputWorkTime" layoutX="352.0" layoutY="206.0" prefHeight="26.0" prefWidth="172.0" />
+            <TextField fx:id="inputRestTime" layoutX="352.0" layoutY="254.0" prefHeight="26.0" prefWidth="170.0" />
+            <Text layoutX="293.0" layoutY="366.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Notifications">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Text>
+            <Button fx:id="applyPomodoro" layoutX="540.0" layoutY="207.0" mnemonicParsing="false" onAction="#changeWorkTime" style="-fx-background-color: red;" text="Apply!" />
+            <Button fx:id="applyBreak" layoutX="540.0" layoutY="254.0" mnemonicParsing="false" onAction="#changeRestTime" style="-fx-background-color: red;" text="Apply!" />
+            <Line endX="298.99993896484375" endY="3.0517578125E-5" layoutX="329.0" layoutY="330.0" startX="-257.0" />
+            <Button fx:id="backToWork" layoutX="258.0" layoutY="498.0" mnemonicParsing="false" onAction="#switchToMainScene" prefHeight="46.0" prefWidth="184.0" style="-fx-background-color: red;" text="Back to work" textFill="WHITE">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Button>
+            <Text fx:id="warning1" fill="RED" layoutX="352.0" layoutY="247.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="256.79997558593755">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Text>
+            <Text fx:id="warning2" fill="RED" layoutX="354.0" layoutY="312.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="222.40007324218755">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Text>
+            <RadioButton fx:id="alert" layoutX="91.0" layoutY="386.0" mnemonicParsing="false" onAction="#changeSound" text="alert">
+               <font>
+                  <Font name="Century Gothic" size="21.0" />
+               </font>
+               <toggleGroup>
+                  <ToggleGroup fx:id="music" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="calm" layoutX="91.0" layoutY="430.0" mnemonicParsing="false" onAction="#changeSound" selected="true" text="calm" toggleGroup="$music">
+               <font>
+                  <Font name="Century Gothic" size="21.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="cuckoo" layoutX="278.0" layoutY="393.0" mnemonicParsing="false" onAction="#changeSound" text="cuckoo" toggleGroup="$music">
+               <font>
+                  <Font name="Century Gothic" size="21.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="classmates" layoutX="278.0" layoutY="436.0" mnemonicParsing="false" onAction="#changeSound" text="classmates" toggleGroup="$music">
+               <font>
+                  <Font name="Century Gothic" size="22.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="triangle" layoutX="495.0" layoutY="392.0" mnemonicParsing="false" onAction="#changeSound" text="triangle" toggleGroup="$music">
+               <font>
+                  <Font name="Century Gothic" size="22.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="victory" layoutX="495.0" layoutY="436.0" mnemonicParsing="false" onAction="#changeSound" text="victory" toggleGroup="$music">
+               <font>
+                  <Font name="Century Gothic" size="22.0" />
+               </font>
+            </RadioButton>
+            <Text fill="RED" layoutX="189.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" textAlignment="CENTER" wrappingWidth="329.336669921875">
+               <font>
+                  <Font name="Century Gothic" size="82.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+   </content>
+</ScrollPane>
