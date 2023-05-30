@@ -9,14 +9,14 @@ public class Tester {
     public static Game newGame = new Game(gameFrame);
     private boolean isFirstTime = true;
 
-    public static enum STATE{
+    public enum STATE{
         MENU,
         GAME
     }
 
     public static STATE currentState = STATE.MENU;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         Tester tester = new Tester();
         if(currentState == STATE.MENU) {
             tester.openMenu();
@@ -42,41 +42,49 @@ public class Tester {
         gameCheckThread.start();
     }
 
-    public Thread gameRefreshThread = new Thread () {
-        public void run () {
-            while(true){
-                newGame.atmosphereComponent.refresh(currentBalance, playerScore, dealerScore-1, newGame.faceDown);
-            }
+    public Thread gameRefreshThread = new Thread(() -> {
+        while(true){
+            newGame.atmosphereComponent.refresh(currentBalance, playerScore, dealerScore-1, newGame.faceDown);
         }
-    };
+    });
 
-    public Thread gameCheckThread = new Thread () {
-        public void run () {
-            while(true) {
-                if (isFirstTime||newGame.roundOver) {
-                    if (newGame.dealerWon){
-                        dealerScore++;
-                        currentBalance-= GameComponent.currentBet;
+    public Thread gameCheckThread = new Thread(() -> {
+        while(true) {
+            if (isFirstTime||newGame.roundOver) {
+                if (newGame.dealerWon){
+                    dealerScore++;
+                    currentBalance-= GameComponent.currentBet;
+                    if (newGame.done){
+                        JOptionPane.showMessageDialog(newGame.frame, "DEALER HAS DONE BLACKJACK! DEALER HAS WON!");
                     }
-                    else {
-                        playerScore++;
-                        currentBalance+= GameComponent.currentBet*2;
+                    else if (newGame.busted){
+                        JOptionPane.showMessageDialog(newGame.frame, "PLAYER HAS BUSTED! DEALER HAS WON!");
                     }
-                    if (currentBalance <= 0){
-                        dealerScore = 1;
-                        playerScore = 0;
-                        currentBalance = 100;
-                        JOptionPane.showMessageDialog(gameFrame, "A NEW GAME HAS STARTED");
-
-                    }
-                    gameFrame.getContentPane().removeAll();
-                    newGame = new Game(gameFrame);
-                    newGame.formGame();
-
-                    isFirstTime = false;
                 }
+                else {
+                    playerScore++;
+                    currentBalance+= GameComponent.currentBet*2;
+                    if (newGame.done){
+                        JOptionPane.showMessageDialog(newGame.frame, "PLAYER HAS DONE BLACKJACK! PLAYER HAS WON!");
+                    }
+                    else if (newGame.busted){
+                        JOptionPane.showMessageDialog(newGame.frame, "DEALER HAS BUSTED! PLAYER HAS WON!");
+                    }
+                }
+                if (currentBalance <= 0){
+                    dealerScore = 1;
+                    playerScore = 0;
+                    currentBalance = 100;
+                    JOptionPane.showMessageDialog(gameFrame, "A NEW GAME HAS STARTED");
+
+                }
+                gameFrame.getContentPane().removeAll();
+                newGame = new Game(gameFrame);
+                newGame.formGame();
+
+                isFirstTime = false;
             }
         }
-    };
+    });
 }
 

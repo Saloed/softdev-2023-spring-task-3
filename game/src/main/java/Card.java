@@ -9,23 +9,10 @@ public class Card {
     private final int rank; //Ace 0, 2 (1) - 10 (9), Jack 10, Queen 11, King 12
     private final int value;
 
-    public Card() {
-        suit = 0;
-        rank = 0;
-        value = 0;
-    }
-
     public Card(int s, int r, int v) {
         suit = s;
         rank = r;
         value = v;
-    }
-
-    public int getSuit() { //this method returns you the suit of the card.
-        return suit;
-    }
-    public int getRank() { //this method returns you the rank of the card.
-        return rank;
     }
     public int getValue() { //this method returns you the value of the card.
         return value;

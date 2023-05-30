@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.awt.event.*;
 import javax.swing.*;
 import java.awt.Font;
 import java.util.List;
@@ -11,6 +10,8 @@ public class Game {
 
     public boolean faceDown;
     public boolean dealerWon;
+    public boolean done;
+    public boolean busted;
     public volatile boolean roundOver;
 
 
@@ -27,12 +28,14 @@ public class Game {
     public Game(JFrame f) {
         deck = new Deck();
         deck.shuffleDeck();
-        dealerHand = new ArrayList<Card>();
-        playerHand = new ArrayList<Card>();
+        dealerHand = new ArrayList<>();
+        playerHand = new ArrayList<>();
         atmosphereComponent = new GameComponent(dealerHand, playerHand);
         frame = f;
         faceDown = true;
         dealerWon = true;
+        done = false;
+        busted = false;
         roundOver = false;
     }
 
@@ -62,11 +65,9 @@ public class Game {
         frame.add(btnHint);
         frame.add(btnExit);
 
-        btnExit.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Better luck next time, but always remember to gamble responsibly!");
-                System.exit(0);
-            }
+        btnExit.addActionListener(e -> {
+            JOptionPane.showMessageDialog(frame, "Better luck next time, but always remember to gamble responsibly!");
+            System.exit(0);
         });
 
         atmosphereComponent = new GameComponent(dealerHand, playerHand);
@@ -97,40 +98,32 @@ public class Game {
         checkHand(dealerHand);
         checkHand(playerHand);
 
-        btnHit.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                addCard(playerHand);
-                checkHand(playerHand);
-                if (getSumOfHand(playerHand)<17 && getSumOfHand(dealerHand)<17){
-                    addCard(dealerHand);
-                    checkHand(dealerHand);
-                }
+        btnHit.addActionListener(e -> {
+            addCard(playerHand);
+            checkHand(playerHand);
+            if (getSumOfHand(playerHand)<17 && getSumOfHand(dealerHand)<17){
+                addCard(dealerHand);
+                checkHand(dealerHand);
             }
         });
 
-        btnHint.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "The probability of drawing the desired card:" + decision(playerHand, dealerHand));
+        btnHint.addActionListener(e -> JOptionPane.showMessageDialog(frame, "The probability of drawing the desired card:" + decision(playerHand, dealerHand)));
+        btnStand.addActionListener(e -> {
+            while (getSumOfHand(dealerHand)<17) {
+                addCard(dealerHand);
+                checkHand(dealerHand);
             }
-        });
-        btnStand.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                while (getSumOfHand(dealerHand)<17) {
-                    addCard(dealerHand);
-                    checkHand(dealerHand);
+            if ((getSumOfHand(dealerHand)<21) && getSumOfHand(playerHand)<21) {
+                if(getSumOfHand(playerHand) > getSumOfHand(dealerHand)) {
+                    faceDown = false;
+                    dealerWon = false;
+                    JOptionPane.showMessageDialog(frame, "PLAYER HAS WON BECAUSE OF A BETTER HAND!");
+                    roundOver = true;
                 }
-                if ((getSumOfHand(dealerHand)<21) && getSumOfHand(playerHand)<21) {
-                    if(getSumOfHand(playerHand) > getSumOfHand(dealerHand)) {
-                        faceDown = false;
-                        dealerWon = false;
-                        JOptionPane.showMessageDialog(frame, "PLAYER HAS WON BECAUSE OF A BETTER HAND!");
-                        roundOver = true;
-                    }
-                    else {
-                        faceDown = false;
-                        JOptionPane.showMessageDialog(frame, "DEALER HAS WON BECAUSE OF A BETTER HAND!");
-                        roundOver = true;
-                    }
+                else {
+                    faceDown = false;
+                    JOptionPane.showMessageDialog(frame, "DEALER HAS WON BECAUSE OF A BETTER HAND!");
+                    roundOver = true;
                 }
             }
         });
@@ -141,13 +134,13 @@ public class Game {
             if(getSumOfHand(hand) == 21){
                 faceDown = false;
                 dealerWon = false;
-                JOptionPane.showMessageDialog(frame, "PLAYER HAS DONE BLACKJACK! PLAYER HAS WON!");
+                done = true;
                 System.out.print("PLAYER HAS WON!");
                 roundOver = true;
             }
             else if (getSumOfHand(hand) > 21) {
                 faceDown = false;
-                JOptionPane.showMessageDialog(frame, "PLAYER HAS BUSTED! DEALER HAS WON!");
+                busted = true;
                 System.out.print("DEALER HAS WON!");
                 roundOver = true;
             }
@@ -155,14 +148,14 @@ public class Game {
         else {
             if(getSumOfHand(hand) == 21) {
                 faceDown = false;
-                JOptionPane.showMessageDialog(frame, "DEALER HAS DONE BLACKJACK! DEALER HAS WON!");
+                done = true;
                 System.out.print("DEALER HAS WON!");
                 roundOver = true;
             }
             else if (getSumOfHand(hand) > 21) {
                 faceDown = false;
                 dealerWon = false;
-                JOptionPane.showMessageDialog(frame, "DEALER HAS JUST BUSTED! PLAYER HAS WON!");
+                busted = true;
                 System.out.print("PLAYER HAS WON!");
                 roundOver = true;
             }
