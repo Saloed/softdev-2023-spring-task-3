@@ -2,7 +2,6 @@ package com.example.demoapp;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,7 +19,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.util.ResourceBundle;
 
 import static com.example.demoapp.MainController.workTime;
@@ -76,7 +74,7 @@ public class PlannerController implements Initializable {
         return String.format("%02d:%02d", hours, minutes);
     }
     @FXML
-    public void removeTask(ActionEvent actionEvent) {
+    public void removeTask() {
         if (!observableList1.isEmpty()){
             observableList1.remove(observableList1.size()-1);
             uncompleted.setText(String.valueOf(observableList1.size()));
@@ -109,7 +107,7 @@ public class PlannerController implements Initializable {
 
     
     @FXML
-    public void switchToMain(ActionEvent event) throws IOException {
+    public void switchToMain() throws IOException {
         Stage stage = (Stage) back.getScene().getWindow();
         stage.close();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("mainScene.fxml"));

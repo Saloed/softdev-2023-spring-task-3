@@ -35,8 +35,6 @@ public class SettingsController implements Initializable {
     public ToggleGroup music;
     public RadioButton alert;
     public RadioButton calm;
-    public RadioButton cuckoo;
-    public RadioButton classmates;
     public RadioButton triangle;
     public RadioButton victory;
 
@@ -48,7 +46,7 @@ public class SettingsController implements Initializable {
     }
 
     @FXML
-    public void switchToMainScene(ActionEvent event) throws IOException {
+    public void switchToMainScene() throws IOException {
         Stage stage = (Stage) backToWork.getScene().getWindow();
         stage.close();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("mainScene.fxml"));
@@ -103,11 +101,11 @@ public class SettingsController implements Initializable {
     protected void changeSound(ActionEvent event){
         RadioButton btn = (RadioButton) event.getSource();
         String id = btn.getId()+".mp3";
-        System.out.println(id);
         String filename = Paths.get("src", "main",
                 "resources", "com", "example", "demoapp", "music",
                 id).toString();
         playSound(filename);
+        MainController.filename = filename;
     }
 
 }

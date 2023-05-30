@@ -3,14 +3,12 @@ package com.example.demoapp;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -36,7 +34,7 @@ public class MainController implements Initializable {
     public Button start;
     public Button stop;
     public Button pause;
-    public Pane pane;
+
     public Button plannerButton;
     public Circle circle;
 
@@ -55,7 +53,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void switchToPlanner(ActionEvent event) throws IOException {
+    public void switchToPlanner() throws IOException {
         Stage stage = (Stage) settings2.getScene().getWindow();
         stage.close();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("planner.fxml"));
@@ -68,7 +66,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void switchToSettings(ActionEvent event) throws IOException {
+    public void switchToSettings() throws IOException {
         Stage stage = (Stage) settings2.getScene().getWindow();
         stage.close();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Settings.fxml"));
@@ -107,7 +105,6 @@ public class MainController implements Initializable {
 
     @FXML
     protected void onStartButtonClick() {
-        System.out.println("START");
         stop.setDisable(false);
         start.setDisable(true);
         pause.setDisable(false);
@@ -119,11 +116,10 @@ public class MainController implements Initializable {
                         e -> {
 
                             if (this.sec <= 0 && this.min != 0) {
-                                System.out.println("!!!!!!!!!!!");
                                 this.min--;
                                 this.sec = 59;
                             }
-                            ;
+
                             time.setText(String.format("%02d:%02d", this.min, this.sec));
                             if (this.min == 0 && this.sec <= 0) {
                                 playSound(filename);
@@ -141,8 +137,7 @@ public class MainController implements Initializable {
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
     }
-    int doneMinutes;
-    int doneHours;
+
 
 
     public void rest(boolean isDone) {
@@ -170,7 +165,6 @@ public class MainController implements Initializable {
 
     @FXML
     protected void onStopButtonClick() {
-        System.out.println("STOP");
         if (stop.textProperty().getValue().equals("stop")) {
             if (isGreen) {
                 repaintToRed();
@@ -202,9 +196,7 @@ public class MainController implements Initializable {
 
     @FXML
     protected void onPauseButtonClick() {
-        System.out.println("PAUSE");
         start.setDisable(false);
-        System.out.println("START IS WORKING");
         start.setText("continue");
         stop.setText("done");
         timeline.stop();
@@ -227,7 +219,7 @@ public class MainController implements Initializable {
     }
 
 
-    String filename = Paths.get("src", "main",
+    static String filename = Paths.get("src", "main",
             "resources", "com", "example", "demoapp", "music",
             "calm.mp3").toString();
 
