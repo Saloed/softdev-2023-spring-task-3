@@ -14,5 +14,5 @@ data class MapChangeEvent(val map: TiledMap): Event()
 
 data class ObjCreation(val type: String, val location: Vector2): Event()
 
-data class EnemyDead(val type: EntityType): Event()
+data class EnemyDead(val type: EntityType, val location: Vector2): Event()
 

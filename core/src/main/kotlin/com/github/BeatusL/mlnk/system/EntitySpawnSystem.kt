@@ -21,6 +21,7 @@ import com.github.BeatusL.mlnk.component.PlayerComponent
 import com.github.BeatusL.mlnk.component.ProjectileComponent
 import com.github.BeatusL.mlnk.component.SpawnComponent
 import com.github.BeatusL.mlnk.component.SpawnConfig
+import com.github.BeatusL.mlnk.event.EnemyDead
 import com.github.BeatusL.mlnk.event.MapChangeEvent
 import com.github.BeatusL.mlnk.event.ObjCreation
 import com.github.quillraven.fleks.AllOf
@@ -79,10 +80,6 @@ class EntitySpawnSystem(
 
                 }
 
-                add<CollisionComponent> {
-                    borderCollisionEnabled = (type == EntityType.Player)
-                }
-
 
                 if (config.speed > 0f) {
                     add<MoveComponent> {
@@ -93,40 +90,108 @@ class EntitySpawnSystem(
                             else -> -1f
                         }
                     }
+                }
 
-                    if (type == EntityType.Player) add<PlayerComponent> {
-                        x = location.x
-                        y = location.y
-                    }
+                when(type) {
+                    EntityType.Player -> {
+                        add<PlayerComponent> {
+                            x = location.x
+                            y = location.y
+                        }
 
+                        add<CollisionComponent> {
+                            borderCollisionEnabled = true
+                        }
 
-                    if (isShip) add<ProjectileComponent>()
-                    {
-                        prevTime = TimeUtils.nanoTime()
-                        when (type) {
-                            EntityType.Player -> {
-                                prjType = EntityType.BP
-                                prjMultiplier = 1.2f
-                            }
-                            EntityType.S -> {
-                                prjType = EntityType.RP
-                                prjMultiplier = 1.0f
-                            }
-                            EntityType.M -> {
-                                prjType = EntityType.RP
-                                prjMultiplier = 1.2f
-                            }
-                            else -> {
-                                prjType = EntityType.RP
-                                prjMultiplier = 1.5f
-                            }
+                        add<ProjectileComponent>() {
+                            prevTime = TimeUtils.nanoTime()
+                            prjType = EntityType.BP
+                            prjMultiplier = 1.2f
+                        }
+
+                        add<LifeComponent> {
+                            lType = type
+                        }
+
+                        add<AttackComponent>() {
+                            friendly = true
                         }
                     }
-                    add<LifeComponent>() {lType = type}
-                    if (type == EntityType.Player || type == EntityType.BP) add<AttackComponent>
-                    {friendly = true}
-                    else add<AttackComponent>()
+
+                    EntityType.S -> {
+                        add<CollisionComponent>()
+
+                        add<ProjectileComponent>() {
+                            prevTime = TimeUtils.nanoTime()
+                            prjType = EntityType.RP
+                            prjMultiplier = 1.0f
+                        }
+
+                        add<LifeComponent>() {lType = type}
+
+                        add<AttackComponent>()
+                    }
+
+                    EntityType.M -> {
+                        add<CollisionComponent>()
+
+                        add<ProjectileComponent>() {
+                            prevTime = TimeUtils.nanoTime()
+                            prjType = EntityType.RP
+                            prjMultiplier = 1.2f
+                        }
+
+                        add<LifeComponent>() {lType = type}
+
+                        add<AttackComponent>()
+                    }
+
+                    EntityType.B -> {
+                        add<CollisionComponent>()
+
+                        add<ProjectileComponent>() {
+                            prevTime = TimeUtils.nanoTime()
+                            prjType = EntityType.RP
+                            prjMultiplier = 1.5f
+                        }
+
+                        add<LifeComponent>() {lType = type}
+
+                        add<AttackComponent>()
+                    }
+
+                    EntityType.BP -> {
+                        add<CollisionComponent>()
+
+                        add<LifeComponent>() {lType = type}
+
+                        add<AttackComponent>() {friendly = true}
+                    }
+
+                    EntityType.RP -> {
+                        add<CollisionComponent>()
+
+                        add<LifeComponent>() {lType = type}
+
+                        add<AttackComponent>()
+                    }
+
+                    else -> {
+                        add<LifeComponent>() {lType = type}
+
+                        add<AttackComponent> {
+                            powerUp = true
+                            friendly = true
+                            damage = 0
+                        }
+                    }
                 }
+
+
+
+
+
+
             }
 
         }
@@ -180,12 +245,27 @@ class EntitySpawnSystem(
                 return true
             }
 
+            is EnemyDead ->
+                if ((0..100).random() <= boxDropChance) {
+                    val x = event.location.x
+                    val y = event.location.y
+
+                    world.entity {
+                        add<SpawnComponent> {
+                            this.type = EntityType.Box
+                            this.location.set(x, y)
+                        }
+                    }
+
+                }
+
         }
         return false
     }
 
 
     companion object {
+        const val boxDropChance = 15 // in %
         const val expsModelSide = 1.75f
         const val HITBOX = "HITBOX"
     }

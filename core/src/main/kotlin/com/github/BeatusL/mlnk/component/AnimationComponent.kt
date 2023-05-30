@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 
 enum class AnimationModel {
-    player, S, M, B, RP, BP, exps, Box, Default;
+    player, S, M, B, RP, BP, exps, Box, Default, Crate;
 
     val atlasKey: String = this.toString()
 

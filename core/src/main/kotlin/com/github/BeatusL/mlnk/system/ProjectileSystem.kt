@@ -5,6 +5,7 @@ package com.github.BeatusL.mlnk.system
 import com.badlogic.gdx.utils.TimeUtils
 import com.github.BeatusL.mlnk.component.ImageComponent
 import com.github.BeatusL.mlnk.component.PhysicsComponent
+import com.github.BeatusL.mlnk.component.PlayerComponent
 import com.github.BeatusL.mlnk.component.ProjectileComponent
 import com.github.BeatusL.mlnk.component.SpawnComponent
 import com.github.quillraven.fleks.AllOf
@@ -17,15 +18,23 @@ import com.github.quillraven.fleks.IteratingSystem
 class ProjectileSystem(
     private val phCmps: ComponentMapper<PhysicsComponent>,
     private val prjCmps: ComponentMapper<ProjectileComponent>,
-    private val imCmps: ComponentMapper<ImageComponent>
+    private val imCmps: ComponentMapper<ImageComponent>,
+    private val playerCmps: ComponentMapper<PlayerComponent>,
 ): IteratingSystem() {
 
     override fun onTickEntity(entity: Entity) {
         val prjCmp = prjCmps[entity]
         val phCmp = phCmps[entity]
         val height = imCmps[entity].image.height
+        val timeDiff = TimeUtils.nanoTime() - prjCmp.prevTime
+        var multiplier = prjCmp.prjMultiplier
 
-        if (TimeUtils.nanoTime() - prjCmp.prevTime > projectileInterval / prjCmp.prjMultiplier) {
+        if (entity in playerCmps && playerCmps[entity].poweredUpTime > 0) {
+            multiplier *= powerUpMultiplier
+            playerCmps[entity].poweredUpTime -= timeDiff
+        }
+
+        if (timeDiff * multiplier > projectileInterval) {
             prjCmp.prevTime = TimeUtils.nanoTime()
             var x = phCmp.body.position.x
             var y = phCmp.body.position.y
@@ -53,6 +62,7 @@ class ProjectileSystem(
 
 
     companion object{
+        const val powerUpMultiplier = 4
         const val projectileInterval = 1000000000
         const val BPWidth = 0.3f
         const val RPWidth = 0.25f

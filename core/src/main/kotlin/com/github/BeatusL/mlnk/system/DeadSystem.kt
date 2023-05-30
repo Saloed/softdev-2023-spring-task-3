@@ -41,7 +41,7 @@ class DeadSystem(
             }
 
             if (deadCmp.type.isEnemy()) {
-                uiStage.fire(EnemyDead(deadCmp.type))
+                uiStage.fire(EnemyDead(deadCmp.type, location))
                 log.debug { "Enemy died" }
             }
 

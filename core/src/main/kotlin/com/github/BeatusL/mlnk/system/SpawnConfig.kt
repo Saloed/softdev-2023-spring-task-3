@@ -58,6 +58,12 @@ class SpawnConfigGetter {
                 5f
             )
 
+            EntityType.Crate -> SpawnConfig(
+                AnimationModel.Crate,
+                AnimationPlaymode.Loop,
+                5f
+            )
+
             else -> gdxError("Unexpected Entity type: $type")
         }
     }
@@ -76,7 +82,7 @@ class SpawnConfigGetter {
 }
 
 enum class EntityType {
-    Player, B, S, M, BP, RP, exps, Box, Default;
+    Player, B, S, M, BP, RP, exps, Box, Crate, Default;
 
     fun isEnemy() = this in listOf(B, M, S)
 }
