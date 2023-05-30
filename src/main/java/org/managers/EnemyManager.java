@@ -40,10 +40,10 @@ public class EnemyManager {
 
     public void loadRoadDirArr() { //Загружает карту уровня, но из неё берутся только тайлы с дорогами и их направление
         try {
-            roadDirArr = Utils.GetRoadDirArr(playing.getGame().getTileManager().getTypeArr(), start, end);
+            roadDirArr = Utils.getRoadDirArr(playing.getGame().getTileManager().getTypeArr(), start, end);
         } catch (IncorrectLevelStructure e) {
             e.printStackTrace();
-            LoadSave.ResetLevel();
+            LoadSave.resetLevel();
         }
     }
 

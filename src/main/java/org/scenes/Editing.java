@@ -32,8 +32,8 @@ public class Editing extends GameScene implements SceneMethods {
     }
 
     public void loadDefaultLevel() {
-        lvl = LoadSave.GetLevelData();
-        ArrayList<PathPoint> points = LoadSave.GetLevelPathPoints();
+        lvl = LoadSave.getLevelData();
+        ArrayList<PathPoint> points = new ArrayList<>(LoadSave.getLevelPathPoints());
         start = points.get(0);
         end = points.get(1);
         getGame().getPlaying().getEnemyManager().setStartAndEndPoints(start, end);
@@ -85,7 +85,7 @@ public class Editing extends GameScene implements SceneMethods {
 
     public void saveLevel() {
         //При нажатии кнопки сохранения уровень сохраняется
-        LoadSave.SaveLevel(lvl, start, end);
+        LoadSave.saveLevel(lvl, start, end);
         getGame().getPlaying().setLevel(lvl, start, end);
         getGame().getPlaying().resetAll();
         getGame().getPlaying().getEnemyManager().loadRoadDirArr();

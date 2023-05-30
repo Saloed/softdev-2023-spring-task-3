@@ -64,7 +64,7 @@ public class TowerManager {
 
     private boolean isEnemyInRange(Tower t, Enemy e) {
         //Применяет метод из Utils, проверка врага в радиусе башни
-        int range = org.helpers.Utils.GetHypoDistance(t.getX(), t.getY(), e.getX(), e.getY());
+        int range = org.helpers.Utils.getHypoDistance(t.getX(), t.getY(), e.getX(), e.getY());
         return range < t.getRange();
     }
 

@@ -9,7 +9,7 @@ public class GameScene {
     private Game game;
     protected int animationIndex;
     protected int ANIMATION_SPEED;
-    protected  int tick;
+    protected int tick;
 
 
     public GameScene(Game game) {

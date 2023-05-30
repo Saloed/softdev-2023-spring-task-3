@@ -8,6 +8,7 @@ import static org.helpers.Constants.Tiles.*;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TileManager {
 
@@ -15,7 +16,7 @@ public class TileManager {
             TL_WATER_CORNER, TR_WATER_CORNER, BR_WATER_CORNER, T_WATER, R_WATER, B_WATER, L_WATER, TL_ISLE, TR_ISLE,
             BR_ISLE, BL_ISLE;
     public BufferedImage atlas;
-    public ArrayList<Tile> tiles = new ArrayList<>();
+    public List<Tile> tiles = new ArrayList<>();
 
     public ArrayList<Tile> roadsS = new ArrayList<>();
     public ArrayList<Tile> roadsC = new ArrayList<>();
@@ -100,7 +101,7 @@ public class TileManager {
     }
 
     public int[][] getTypeArr() {
-        int[][] idArr = LoadSave.GetLevelData();
+        int[][] idArr = LoadSave.getLevelData();
         int[][] typeArr = new int[idArr.length][idArr[0].length];
 
         for (int j = 0; j < idArr.length; j++)

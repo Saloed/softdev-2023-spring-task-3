@@ -5,14 +5,15 @@ import org.scenes.Playing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class WaveManager {
     private Playing playing;
-    private ArrayList<Wave> waves;
-    private static final int enemySpawnTickLimit = 60 * 1; //Кол-во секунд между каждым врагом
+    private List<Wave> waves;
+    private static final int ENEMY_SPAWN_TICK_LIMIT = 60 * 1; //Кол-во секунд между каждым врагом
+    private static final int WAVE_TICK_LIMIT = 60 * 5; //Кол-во секунд между волнами
     private int enemySpawnTick;
     private int enemyIndex, waveIndex;
-    private static final int waveTickLimit = 60 * 5; //Кол-во секунд между волнами
     private int waveTick;
     private boolean waveStartTimer, waveTickTimerOver;
 
@@ -21,19 +22,19 @@ public class WaveManager {
 
         waves = new ArrayList<>();
 
-        enemySpawnTick = enemySpawnTickLimit;
+        enemySpawnTick = ENEMY_SPAWN_TICK_LIMIT;
         waveTick = 0;
 
         createWaves();
     }
 
     public void update() {
-        if (enemySpawnTick < enemySpawnTickLimit)
+        if (enemySpawnTick < ENEMY_SPAWN_TICK_LIMIT)
             enemySpawnTick++;
 
         if (waveStartTimer) {
             waveTick++;
-            if (waveTick >= waveTickLimit) {
+            if (waveTick >= WAVE_TICK_LIMIT) {
                 waveTickTimerOver = true;
             }
         }
@@ -71,12 +72,12 @@ public class WaveManager {
         waves.add(new Wave(new ArrayList<>(Arrays.asList(2, 0, 1, 0, 1, 1, 0, 1)))); //10
     }
 
-    public ArrayList<Wave> getWaves() {
+    public List<Wave> getWaves() {
         return waves;
     }
 
     public boolean isTimeForNewEnemy() {
-        return enemySpawnTick >= enemySpawnTickLimit;
+        return enemySpawnTick >= ENEMY_SPAWN_TICK_LIMIT;
     }
 
     public boolean isThereMoreEnemiesInWave() {
@@ -96,7 +97,7 @@ public class WaveManager {
     }
 
     public float getTimeLeft() {
-        float ticksLeft = waveTickLimit - waveTick;
+        float ticksLeft = WAVE_TICK_LIMIT - waveTick;
         return ticksLeft / 60.0f;
     }
 
@@ -113,6 +114,6 @@ public class WaveManager {
         waveStartTimer = false;
         waveTickTimerOver = false;
         waveTick = 0;
-        enemySpawnTick = enemySpawnTickLimit;
+        enemySpawnTick = ENEMY_SPAWN_TICK_LIMIT;
     }
 }

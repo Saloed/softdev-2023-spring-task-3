@@ -27,7 +27,7 @@ public class Game implements Runnable {
     private TileManager tileManager;
 
     public Game() {
-        LoadSave.CreateFolder();
+        LoadSave.createFolder();
 
         //Создание уровня
         createDefaultLevel();
@@ -64,11 +64,11 @@ public class Game implements Runnable {
         for (int i = 220; i < 240; i++)
             arr[i] = 2;
 
-        LoadSave.CreateLevel(arr);
+        LoadSave.createLevel(arr);
     }
 
     private void setLanguage() {
-        LoadSave.CreateLanguageFile();
+        LoadSave.createLanguageFile();
     }
 
     private void start() {

@@ -3,7 +3,7 @@ package org.helpers;
 import org.main.IncorrectLevelStructure;
 import org.objects.PathPoint;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.helpers.Constants.Direction.*;
 import static org.helpers.Constants.Tiles.*;
@@ -11,7 +11,7 @@ import static org.main.LangTexts.lvlWarningStr;
 
 public class Utils {
 
-    public static int[][] GetRoadDirArr(int[][] lvlTypeArr, PathPoint start, PathPoint end) {
+    public static int[][] getRoadDirArr(int[][] lvlTypeArr, PathPoint start, PathPoint end) {
         //Нужен, чтобы выстроить путь врагам ещё до того, как они появились
         //Перед этим, каждый противник отдельно проверял направление их пути каждый вызов метода update(),
         //что являлось затратным
@@ -22,8 +22,8 @@ public class Utils {
 
         while (!isCurrTileSameAsEnd(currTile, end)) {
             PathPoint prevTile = currTile;
-            currTile = GetNextRoadTile(prevTile, lastDir, lvlTypeArr);
-            lastDir = GetDirFromPrevToCurr(prevTile, currTile);
+            currTile = getNextRoadTile(prevTile, lastDir, lvlTypeArr);
+            lastDir = getDirFromPrevToCurr(prevTile, currTile);
 
             roadDirArr[prevTile.getyCord()][prevTile.getxCord()] = lastDir;
         }
@@ -32,7 +32,7 @@ public class Utils {
         return roadDirArr;
     }
 
-    private static int GetDirFromPrevToCurr(PathPoint prevTile, PathPoint currTile) {
+    private static int getDirFromPrevToCurr(PathPoint prevTile, PathPoint currTile) {
         //Сравнивает два тайла с помощью их координат, и возвращает направление от первого ко второму
         //Вверх/Вниз
         if (prevTile.getxCord() == currTile.getxCord()) {
@@ -47,17 +47,17 @@ public class Utils {
         }
     }
 
-    private static PathPoint GetNextRoadTile(PathPoint prevTile, int lastDir, int[][] lvltypeArr) {
+    private static PathPoint getNextRoadTile(PathPoint prevTile, int lastDir, int[][] lvltypeArr) {
         //Проходит по всем (кроме противоположного текущему направлению), пока не найдёт тайл с дорогой
         //А если не найдёт (начало не соединено с концом), то выкидывает ошибку, которая в итоге пересоздаст уровень
         int testDir = lastDir;
         int counterCheck = 0;
-        PathPoint testTile = GetTileInDir(prevTile, testDir, lastDir);
+        PathPoint testTile = getTileInDir(prevTile, testDir, lastDir);
 
-        while (!IsTileRoad(testTile, lvltypeArr)) {
+        while (!isTileRoad(testTile, lvltypeArr)) {
             testDir++;
             testDir %= 4;
-            testTile = GetTileInDir(prevTile, testDir, lastDir);
+            testTile = getTileInDir(prevTile, testDir, lastDir);
 
             counterCheck++;
 
@@ -71,7 +71,7 @@ public class Utils {
         return testTile;
     }
 
-    private static boolean IsTileRoad(PathPoint testTile, int[][] lvltypeArr) {
+    private static boolean isTileRoad(PathPoint testTile, int[][] lvltypeArr) {
         if (testTile != null)
             if (testTile.getyCord() >= 0 && testTile.getyCord() < lvltypeArr.length)
                 if (testTile.getxCord() >= 0 && testTile.getxCord() < lvltypeArr[0].length)
@@ -79,7 +79,7 @@ public class Utils {
         return false;
     }
 
-    private static PathPoint GetTileInDir(PathPoint prevTile, int testDir, int lastDir) {
+    private static PathPoint getTileInDir(PathPoint prevTile, int testDir, int lastDir) {
         //Проходит по всем (кроме противоположного текущему направлению), и возвращает следующий тайл по направлению
         switch (testDir) {
             case LEFT -> {
@@ -105,7 +105,7 @@ public class Utils {
         return false;
     }
 
-    public static int[][] ArrayListTo2Dint(ArrayList<Integer> list, int ySize, int xSize) {
+    public static int[][] arrayListTo2Dint(List<Integer> list, int ySize, int xSize) {
         //Превращает список int в матрицу 20x20 (Для создания уровня)
         int[][] newArr = new int[ySize][xSize];
 
@@ -119,7 +119,7 @@ public class Utils {
         return newArr;
     }
 
-    public static int[] TwoDToIntArr(int[][] twoArr) {
+    public static int[] twoDToIntArr(int[][] twoArr) {
         //Тоже самое, что и прошлый метод, но наоборот
         int[] oneArr = new int[twoArr.length * twoArr[0].length];
         for (int j = 0; j < twoArr.length; j++) {
@@ -131,7 +131,7 @@ public class Utils {
         return oneArr;
     }
 
-    public static int GetHypoDistance(float x1, float y1, float x2, float y2) {
+    public static int getHypoDistance(float x1, float y1, float x2, float y2) {
         //Находит расстояние между двумя точками
         float xDiff = Math.abs(x1 - x2);
         float yDiff = Math.abs(y1 - y2);

@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -24,7 +25,7 @@ public class LoadSave {
     public static File langFile = new File(filePath + langFileName);
 
 
-    public static void CreateFolder() {
+    public static void createFolder() {
         File folder = new File(homePath + File.separator + saveFolder);
         if (!folder.exists())
             folder.mkdir();
@@ -44,7 +45,7 @@ public class LoadSave {
     }
 
 
-    public static void CreateLevel(int[] idArr) {
+    public static void createLevel(int[] idArr) {
         //Создаёт новый уровень с названием. Если уже существует, то ничего не делает
         if (!lvlFile.exists()) {
             try {
@@ -52,16 +53,16 @@ public class LoadSave {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            WriteToFile(idArr, new PathPoint(0, 11), new PathPoint(19, 11));
+            writeToFile(idArr, new PathPoint(0, 11), new PathPoint(19, 11));
         }
     }
 
-    public static void ResetLevel() {
+    public static void resetLevel() {
         lvlFile.delete();
         Game.createDefaultLevel();
     }
 
-    private static void WriteToFile(int[] idArr, PathPoint start, PathPoint end) {
+    private static void writeToFile(int[] idArr, PathPoint start, PathPoint end) {
         //Записывает в файл ID каждой клетки, а также позицию появляения врагов и позицию базы
         // (4 значения в конце, для каждой координаты)
         try {
@@ -80,17 +81,17 @@ public class LoadSave {
         }
     }
 
-    public static void SaveLevel(int[][] idArr, PathPoint start, PathPoint end) {
+    public static void saveLevel(int[][] idArr, PathPoint start, PathPoint end) {
         //Сохраняет уровень при нажатии на кнопку "Сохранить"
         if (lvlFile.exists())
-            WriteToFile(Utils.TwoDToIntArr(idArr), start, end);
+            writeToFile(Utils.twoDToIntArr(idArr), start, end);
         else
             System.out.println("Файла не существует.");
     }
 
-    private static ArrayList<Integer> ReadFromFile() {
+    private static List<Integer> readFromFile() {
         //Считывает информацию из txt файла уровня
-        ArrayList<Integer> list = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
         try {
             Scanner sc = new Scanner(lvlFile);
 
@@ -105,11 +106,11 @@ public class LoadSave {
         return list;
     }
 
-    public static ArrayList<PathPoint> GetLevelPathPoints() {
+    public static List<PathPoint> getLevelPathPoints() {
         //Находит координаты появления врагов и базы
         if (lvlFile.exists()) {
-            ArrayList<Integer> list = ReadFromFile();
-            ArrayList<PathPoint> points = new ArrayList<>();
+            ArrayList<Integer> list = new ArrayList<>(readFromFile());
+            List<PathPoint> points = new ArrayList<>();
             points.add(new PathPoint(list.get(400), list.get(401)));
             points.add(new PathPoint(list.get(402), list.get(403)));
 
@@ -120,19 +121,19 @@ public class LoadSave {
         }
     }
 
-    public static int[][] GetLevelData() {
+    public static int[][] getLevelData() {
         //Считывает данные каждой клетки из txt файла
 
         if (lvlFile.exists()) {
-            ArrayList<Integer> list = ReadFromFile();
-            return Utils.ArrayListTo2Dint(list, 20, 20);
+            ArrayList<Integer> list = new ArrayList<>(readFromFile());
+            return Utils.arrayListTo2Dint(list, 20, 20);
         } else {
             System.out.println("Файла не существует");
             return null;
         }
     }
 
-    public static void CreateLanguageFile() {
+    public static void createLanguageFile() {
         //Создаёт файл для записи языка
         if (!langFile.exists()) {
             try {
