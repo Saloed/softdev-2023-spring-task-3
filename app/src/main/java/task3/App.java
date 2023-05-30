@@ -6,7 +6,7 @@ import java.awt.*;
 public class App {
 
     private GameBoard gameBoard;
-    private static Geometry geometry = new Geometry(10, 16, 32);
+    private Geometry geometry = new Geometry(10, 16, 32);
 
     public static void main(String[] args) {
         var app = new App();
