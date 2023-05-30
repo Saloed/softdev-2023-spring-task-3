@@ -20,19 +20,12 @@ fun replaceActivity(activity: AppCompatActivity) {
     APP_ACTIVITY.finish()
 }
 
-fun replaceFragment(fragment: Fragment, addStack:Boolean = true) {
-    if (addStack){
+fun replaceFragment(fragment: Fragment) {
         APP_ACTIVITY.supportFragmentManager.beginTransaction()
             .addToBackStack(null)
             .replace(R.id.dataContainer,
                 fragment
             ).commit()
-    } else {
-        APP_ACTIVITY.supportFragmentManager.beginTransaction()
-            .replace(R.id.dataContainer,
-                fragment
-            ).commit()
-    }
 }
 
 fun countSnapshot(value: Folder?) {

@@ -1,4 +1,4 @@
-package com.example.be.ui.fragments.voice_message
+package com.example.be.ui.fragments.voice
 
 import android.media.MediaPlayer
 import com.example.be.utilits.APP_ACTIVITY

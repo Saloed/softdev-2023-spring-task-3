@@ -20,7 +20,6 @@ lateinit var REF_STORAGE_ROOT: StorageReference
 
 
 const val NODE_USERS = "Users"
-const val NODE_ALLMESSAGE = "All_message"
 const val FOLDER_PROFILE_IMAGE = "profileImage"
 const val FOLDER_VOICE_RECORDER = "voiceRecorder"
 const val FOLDER_LECTURES = "letures"
@@ -57,7 +56,7 @@ fun initFirebase() {
 }
 
 inline fun putFileToStorage(uri: Uri, path: StorageReference, crossinline function: () -> Unit) {
-    /* функция высшего порядка, отправляет картинку в хранилище */
+    /* отправляет в хранилище */
     path.putFile(uri)
         .addOnSuccessListener { function() }
         .addOnFailureListener { showToast(it.message.toString()) }
@@ -65,7 +64,7 @@ inline fun putFileToStorage(uri: Uri, path: StorageReference, crossinline functi
 }
 
 inline fun getUrlFromStorage(path: StorageReference, crossinline function: (url: String) -> Unit) {
-    /* Функция высшего порядка, получает  URL картинки из хранилища */
+    /* получает  URL из хранилища */
     path.downloadUrl
         .addOnSuccessListener { function(it.toString()) }
         .addOnFailureListener { showToast(it.message.toString()) }

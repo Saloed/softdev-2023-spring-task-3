@@ -2,6 +2,7 @@ package com.example.be.activity
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.be.databinding.ActivityMainBinding
 import com.example.be.models.User
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity() { /*MainActivity копия класс�
     private fun initFields() {
         APP_ACTIVITY = this
         mToolbar = bindingClass.mainToolbar
-        mAppDrawer = AppDrawer(this, mToolbar)
+        mAppDrawer = AppDrawer(mToolbar)
 
         initUser()
     }
@@ -67,37 +68,4 @@ class MainActivity : AppCompatActivity() { /*MainActivity копия класс�
         mAppDrawer.create()
         replaceFragment(MainFragment())
     }
-
-
-
-
-
-    override fun onStart() {
-        super.onStart()
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-    }
-
-
 }

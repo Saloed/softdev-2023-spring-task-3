@@ -11,7 +11,7 @@ import android.widget.TextView
 import com.example.be.R
 import com.example.be.utilits.COUNT_SNAPSHOT_PLUS
 import com.example.be.activity.Registration
-import com.example.be.ui.fragments.change_fragments.ChangeFullnameFragment
+import com.example.be.ui.fragments.changes.ChangeFullnameFragment
 import com.example.be.utilits.AUTH
 import com.example.be.utilits.USER
 import com.example.be.utilits.replaceActivity
@@ -35,14 +35,17 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
 
     private fun initFields() {
-        changeFullname = view?.findViewById(R.id.change_fullname)!!
-        fullName = view?.findViewById(R.id.fullName)!!
-        fullName.text = USER.fullname
-        image = view?.findViewById(R.id.imageView3)!!
-        image.setImageResource(R.drawable.baseline_person_24)
+        with(binding) {
+            changeFullname = findViewById(R.id.change_fullname)
+            fullName = findViewById(R.id.fullName)
+            fullName.text = USER.fullname
+            image = findViewById(R.id.imageView3)
+            image.setImageResource(R.drawable.baseline_person_24)
 
-        progressbar = view?.findViewById(R.id.progressBar)!!
-        range = view?.findViewById(R.id.range)!!
+            progressbar = findViewById(R.id.progressBar)
+            range = findViewById(R.id.range)
+        }
+
         initProgressbar()
 
     }

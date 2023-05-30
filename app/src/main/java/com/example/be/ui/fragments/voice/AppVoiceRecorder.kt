@@ -1,7 +1,6 @@
-package com.example.be.ui.fragments.voice_message
+package com.example.be.ui.fragments.voice
 
 import android.media.MediaRecorder
-import android.util.Log
 import com.example.be.utilits.APP_ACTIVITY
 import com.example.be.utilits.showToast
 import java.io.File
@@ -17,8 +16,7 @@ class AppVoiceRecorder {
                 createFileForRecord()
                 prepareMediaRecorder()
                 mMediaRecorder.start()
-                Log.d("MyLog", "start")
-                showToast("start")
+                showToast("Запись")
             } catch (e: Exception) {
                 showToast(e.message.toString())
             }
@@ -36,18 +34,12 @@ class AppVoiceRecorder {
         private fun createFileForRecord() {
             mFile = File(APP_ACTIVITY.filesDir, mMessageKey)/*обьявили*/
             mFile.createNewFile()/*создали*/
-            Log.d("MyLog", "Вроде как должен создаться файл")
-            Log.d("MyLog", mFile.absolutePath)
-
-
         }
 
         fun stopRecord(onSuccess: (file: File, messageKey: String) -> Unit) {
             try {
                 mMediaRecorder.stop()
                 onSuccess(mFile, mMessageKey)
-                Log.d("MyLog", "onSuccess stop")
-
             } catch (e: Exception) {
                 showToast(e.message.toString())
                 mFile.delete()

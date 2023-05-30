@@ -20,8 +20,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.example.be.models.Message
-import com.example.be.ui.fragments.change_fragments.ChangeTitleMessageFragment
-import com.example.be.ui.fragments.voice_message.VoiceMessageFragment
+import com.example.be.ui.fragments.changes.ChangeTitleMessageFragment
+import com.example.be.ui.fragments.voice.VoiceMessageFragment
 import com.example.be.utilits.TYPE_TEXT
 import com.example.be.utilits.TYPE_VOICE
 import com.example.be.utilits.showToast
@@ -44,10 +44,9 @@ class InFolderFragment : BaseFragment(R.layout.fragment_in_folder), InFolderAdap
     }
 
     private fun initFields() {
-        nameFolder = view?.findViewById(R.id.nameOfFolder)!!
+        nameFolder = binding.findViewById(R.id.nameOfFolder)/*view?.findViewById(R.id.nameOfFolder)!!*/
         val name: String = FOLDER.name
         val idFolder: String = FOLDER.id
-        Log.d("MyLog", idFolder)
         nameFolder.text = name
 
     }
@@ -59,7 +58,7 @@ class InFolderFragment : BaseFragment(R.layout.fragment_in_folder), InFolderAdap
     }
 
     private fun initRecyclerView() {
-        recyclerView = view?.findViewById(R.id.recyclerViewForMessages)!!
+        recyclerView = binding.findViewById(R.id.recyclerViewForMessages)
         adapter = InFolderAdapter(this)
         refMessages = REF_DATABASE_ROOT
             .child(NODE_USERS)
@@ -94,7 +93,7 @@ class InFolderFragment : BaseFragment(R.layout.fragment_in_folder), InFolderAdap
 
 
     private fun registerEvents() {
-        view?.findViewById<ImageView>(R.id.addMessage)!!.setOnClickListener {
+        binding.findViewById<ImageView>(R.id.addMessage).setOnClickListener {
             replaceFragment(CreateMessageFragment())
         }
     }

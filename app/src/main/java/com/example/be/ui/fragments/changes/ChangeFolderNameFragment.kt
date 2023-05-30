@@ -1,4 +1,4 @@
-package com.example.be.ui.fragments.change_fragments
+package com.example.be.ui.fragments.changes
 
 import android.widget.Button
 import android.widget.EditText
@@ -23,8 +23,8 @@ class ChangeFolderNameFragment : BaseFragment(R.layout.fragment_change_folder_na
     }
 
     private fun initFields() {
-        folderNameChange = view?.findViewById(R.id.enter_edit_folder_name)!!
-        btnDone = view?.findViewById(R.id.done_edit_folder_name)!!
+        folderNameChange = binding.findViewById(R.id.enter_edit_folder_name)
+        btnDone = binding.findViewById(R.id.done_edit_folder_name)
     }
 
     private fun registerEvent() {

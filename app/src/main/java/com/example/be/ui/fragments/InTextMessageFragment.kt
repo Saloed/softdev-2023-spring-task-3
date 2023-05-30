@@ -14,8 +14,8 @@ class InTextMessageFragment : BaseFragment(R.layout.fragment_in_text_message) {
     }
 
     private fun initFields() {
-        nameOfMessage = view?.findViewById(R.id.nameOfMessage)!!
-        messageText = view?.findViewById(R.id.messageText)!!
+        nameOfMessage = binding.findViewById(R.id.nameOfMessage)
+        messageText = binding.findViewById(R.id.messageText)
 
         nameOfMessage.text = MESSAGE.title
         messageText.text = MESSAGE.text

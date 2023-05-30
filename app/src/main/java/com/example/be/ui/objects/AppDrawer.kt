@@ -11,6 +11,10 @@ import com.example.be.utilits.URL_FOURTH_LECTURE
 import com.example.be.utilits.URL_SECOND_LECTURE
 import com.example.be.utilits.URL_THIRD_LECTURE
 import com.example.be.ui.fragments.FirstLectureFragment
+import com.example.be.utilits.identifier_first_lection
+import com.example.be.utilits.identifier_forth_lection
+import com.example.be.utilits.identifier_second_lection
+import com.example.be.utilits.identifier_third_lection
 import com.example.be.utilits.replaceFragment
 import com.example.be.utilits.showToast
 import com.mikepenz.materialdrawer.Drawer
@@ -19,17 +23,12 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import okhttp3.internal.http2.Header
 
-class AppDrawer(
-    val mainActivity: AppCompatActivity,
-    val toolbar: androidx.appcompat.widget.Toolbar
-) {
+class AppDrawer(val toolbar: androidx.appcompat.widget.Toolbar) {
 
-    private lateinit var mHeader: Header
     private lateinit var mDrawer: Drawer
     private lateinit var mDrawerLayout: DrawerLayout
 
     fun create() {
-        createHeader()
         createDrawer()
         mDrawerLayout = mDrawer.drawerLayout
     }
@@ -52,17 +51,6 @@ class AppDrawer(
         }
     }
 
-    private fun createHeader() {
-        /* mHeader = R.menu.main_menu*//*HeaderBuilder()
-            .withActivity(APP_ACTIVITY)
-            .withHeaderBackground(R.color.brown)
-            .
-            *//*.addProfiles(
-                ProfileDrawerItem().withName("Что-то интересное!")
-            )*//*
-            .build()*/
-    }
-
     private fun createDrawer() {
         mDrawer = DrawerBuilder()
             .withActivity(APP_ACTIVITY)
@@ -72,20 +60,19 @@ class AppDrawer(
             .withHeader(R.layout.nav_header)
             .withSliderBackgroundColor(APP_ACTIVITY.resources.getColor(R.color.brown))
             .addDrawerItems(
-                PrimaryDrawerItem().withIdentifier(100)/*число по которому будеи находить это меню*/
+                PrimaryDrawerItem().withIdentifier(identifier_first_lection)/*число по которому будеи находить это меню*/
                     .withIconTintingEnabled(true)/*видны иконки*/
                     .withName("Управление собой")
-                    /*.withTextColor(R.color.white)*/
                     .withSelectable(false),/*выбранный или нет*/
-                PrimaryDrawerItem().withIdentifier(101)
+                PrimaryDrawerItem().withIdentifier(identifier_second_lection)
                     .withIconTintingEnabled(true)
                     .withName("Самоопределение")
                     .withSelectable(false),
-                PrimaryDrawerItem().withIdentifier(102)
+                PrimaryDrawerItem().withIdentifier(identifier_third_lection)
                     .withIconTintingEnabled(true)
                     .withName("Личные границы")
                     .withSelectable(false),
-                PrimaryDrawerItem().withIdentifier(103)
+                PrimaryDrawerItem().withIdentifier(identifier_forth_lection)
                     .withIconTintingEnabled(true)
                     .withName("Эмоциональное выгорание")
                     .withSelectable(false)
@@ -95,8 +82,6 @@ class AppDrawer(
                     position: Int,
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
-                    showToast(COUNT_SNAPSHOT_PLUS.toString())
-
                     if (position == 1) {
                         replaceFragment(FirstLectureFragment(URL_FIRST_LECTURE))
                         return false

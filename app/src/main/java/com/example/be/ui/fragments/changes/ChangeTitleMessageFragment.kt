@@ -1,4 +1,4 @@
-package com.example.be.ui.fragments.change_fragments
+package com.example.be.ui.fragments.changes
 
 import android.widget.Button
 import android.widget.EditText

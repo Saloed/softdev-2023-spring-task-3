@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
@@ -13,7 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-import com.example.be.ui.fragments.voice_message.AppVoiceRecorder
+import com.example.be.ui.fragments.voice.AppVoiceRecorder
 import com.example.be.R
 import com.example.be.utilits.RECORD_AUDIO
 import com.example.be.utilits.APP_ACTIVITY
@@ -62,14 +61,17 @@ class CreateMessageFragment : BaseFragment(R.layout.fragment_create_message) {
 
     private fun initFields() {
         mAppVoiceRecorder = AppVoiceRecorder()
-        btnVoice = view?.findViewById(R.id.btn_voice)!!
-        /*voiceText = view?.findViewById(R.id.voiceText)!!*/
-        hiText = view?.findViewById(R.id.cardViewHiText)!!
-        cardViewWrite = view?.findViewById(R.id.cardViewWriteMessage)!!
-        writeText = view?.findViewById(R.id.writeYourText)!!
-        recordingText = view?.findViewById(R.id.textView4)!!
-        btnDoneMessage = view?.findViewById(R.id.buttonCreateMessageDone)!!
-        title = view?.findViewById(R.id.writeTitleOfMessage)!!
+        with(binding) {
+            btnVoice = findViewById(R.id.btn_voice)
+            /*voiceText = view?.findViewById(R.id.voiceText)!!*/
+            hiText = findViewById(R.id.cardViewHiText)
+            cardViewWrite = findViewById(R.id.cardViewWriteMessage)
+            writeText = findViewById(R.id.writeYourText)
+            recordingText = findViewById(R.id.textView4)
+            btnDoneMessage = findViewById(R.id.buttonCreateMessageDone)
+            title = findViewById(R.id.writeTitleOfMessage)
+        }
+
 
         refToWritingMassage = REF_DATABASE_ROOT
             .child(NODE_USERS)
@@ -79,7 +81,7 @@ class CreateMessageFragment : BaseFragment(R.layout.fragment_create_message) {
 
 
         if (COUNT_SNAPSHOT == 0) {
-            view?.setOnClickListener {
+            binding.setOnClickListener {
                 hiText.visibility = View.GONE
                 cardViewWrite.visibility = View.VISIBLE
                 btnDoneMessage.visibility = View.VISIBLE
@@ -113,7 +115,6 @@ class CreateMessageFragment : BaseFragment(R.layout.fragment_create_message) {
             }
 
             override fun afterTextChanged(s: Editable?) {}
-
         })
 
         btnDoneMessage.setOnClickListener {
@@ -130,13 +131,12 @@ class CreateMessageFragment : BaseFragment(R.layout.fragment_create_message) {
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         showToast("Всё отлично!")
-                        /*COUNT_MESSAGE += 1*/
                         APP_ACTIVITY.supportFragmentManager.popBackStack()
                     }
                 }
         }
 
-        btnVoice.setOnTouchListener { v, event ->
+        btnVoice.setOnTouchListener { _, event ->
             if (checkAppPermission(RECORD_AUDIO)) {
                 writeText.visibility = View.GONE
                 if (event.action == MotionEvent.ACTION_DOWN) {
@@ -145,7 +145,6 @@ class CreateMessageFragment : BaseFragment(R.layout.fragment_create_message) {
                     recordingText.text = "Запись"
                     btnDoneMessage.visibility = View.INVISIBLE
                     btnVoice.setColorFilter(ContextCompat.getColor(APP_ACTIVITY, R.color.white))
-                    Log.d("MyLog", "btnVoice")
 
                     val messageKey = REF_DATABASE_ROOT
                         .child(NODE_USERS)
@@ -153,21 +152,15 @@ class CreateMessageFragment : BaseFragment(R.layout.fragment_create_message) {
                         .child(CHILD_FOLDERS)
                         .child(FOLDER.id).push().key.toString()
 
-                    Log.d("MyLog", "messageKey $messageKey")
                     mAppVoiceRecorder.startRecord(messageKey)
-                    Log.d("MyLog", "startRecord")
 
                 } else if (event.action == MotionEvent.ACTION_UP) {
                     /*stop record*/
                     btnVoice.colorFilter = null
                     recordingText.text = "Записано"
                     mAppVoiceRecorder.stopRecord { file, messageKey ->
-                        uploadFileToStorage(
-                            Uri.fromFile(file),
-                            messageKey
-                        )/*загружает всё, если хорошо закончилось*/
+                        uploadFileToStorage(Uri.fromFile(file), messageKey)/*загружает всё, если хорошо закончилось*/
                     }
-                    /*COUNT_MESSAGE += 1*/
                     APP_ACTIVITY.supportFragmentManager.popBackStack()
                 }
             }

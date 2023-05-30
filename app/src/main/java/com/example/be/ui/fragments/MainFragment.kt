@@ -1,7 +1,6 @@
 package com.example.be.ui.fragments
 
 import android.app.Dialog
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -14,7 +13,6 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.be.R
 import com.example.be.utilits.APP_ACTIVITY
@@ -22,11 +20,10 @@ import com.example.be.utilits.COUNT_SNAPSHOT_PLUS
 import com.example.be.activity.Registration
 import com.example.be.models.Folder
 import com.example.be.ui.fragments.adapters.FolderAdapter
-import com.example.be.ui.fragments.change_fragments.ChangeFolderNameFragment
+import com.example.be.ui.fragments.changes.ChangeFolderNameFragment
 import com.example.be.utilits.AUTH
 import com.example.be.utilits.CHILD_FOLDERS
 import com.example.be.utilits.CURRENT_UID
-import com.example.be.utilits.FOLDER
 import com.example.be.utilits.NODE_USERS
 import com.example.be.utilits.REF_DATABASE_ROOT
 import com.example.be.utilits.countSnapshot
@@ -43,15 +40,11 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
 
     private lateinit var rcForFolderView: RecyclerView
     private lateinit var cardPlus: CardView
-    private lateinit var cardChat: CardView
-    private lateinit var cardFolder: CardView
     private lateinit var databaseReference: DatabaseReference
 
     private lateinit var adapter: FolderAdapter
     private lateinit var nameFolderList: ArrayList<Folder>
     private lateinit var data: ArrayList<Folder>
-
-
 
     override fun onResume() {
         super.onResume()
@@ -59,6 +52,7 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
         initFields()
         initFuns()
     }
+
     private fun initFuns() {
         fetchData()
         registerEvents()
@@ -72,54 +66,35 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
         databaseReference =
             REF_DATABASE_ROOT.child(NODE_USERS).child(CURRENT_UID).child(CHILD_FOLDERS)
 
-
         cardPlus = view?.findViewById(R.id.cardViewPlus)!!
-        cardChat = view?.findViewById(R.id.cardViewChat)!!
-        cardFolder = view?.findViewById(R.id.cardViewFolder)!!
-
-
         rcForFolderView = view?.findViewById(R.id.rcForFolder)!!
-        rcForFolderView.layoutManager = LinearLayoutManager(APP_ACTIVITY)
+        /*rcForFolderView.layoutManager = LinearLayoutManager(APP_ACTIVITY)
         rcForFolderView.layoutManager = GridLayoutManager(APP_ACTIVITY, 2)
-        rcForFolderView.adapter = adapter
+        rcForFolderView.adapter = adapter*/
 
     }
 
     private fun registerEvents() {
-        /*нажатие на +*/
-        cardPlus.setOnClickListener {
-            cardPlus.visibility = View.GONE
-            cardChat.visibility = View.VISIBLE
-            cardFolder.visibility = View.VISIBLE
-        }
-
         /*добавление папки*/
-        cardFolder.setOnClickListener {
+        cardPlus.setOnClickListener {
             dialogCreateNewFolder()
         }
-
-
     }
 
     private fun fetchData() {
         COUNT_SNAPSHOT_PLUS = 0
-        Log.d("MyLog", "fetchData")
-        var countOfFolders = 0
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 nameFolderList.clear()
                 if (snapshot.exists()) {
                     rcForFolderView.visibility = View.VISIBLE
                     view?.findViewById<TextView>(R.id.textView2)?.visibility = View.GONE
-                    val countOfSnapshot = 0
                     for (s in snapshot.children) {
-                        countOfFolders++
                         val values = s.getValue(Folder::class.java)
                         nameFolderList.add(values!!)
                         countSnapshot(values)
                     }
                     val mAdapter = FolderAdapter(nameFolderList, this@MainFragment)
-                    rcForFolderView.layoutManager = LinearLayoutManager(APP_ACTIVITY)
                     rcForFolderView.layoutManager = GridLayoutManager(APP_ACTIVITY, 2)
                     rcForFolderView.adapter = mAdapter
                 } else {
@@ -146,11 +121,12 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
             val keyFolder = databaseReference.push().key.toString()
             data.add(Folder(name, keyFolder))
 
-            databaseReference.child(keyFolder).setValue(Folder(name, keyFolder)).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    showToast("Папка сохранена")
+            databaseReference.child(keyFolder).setValue(Folder(name, keyFolder))
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        showToast("Папка сохранена")
+                    }
                 }
-            }
             view?.findViewById<TextView>(R.id.textView2)?.visibility = View.GONE
             dialog.dismiss()
         }
@@ -164,12 +140,10 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
 
     override fun onFolderClick(folder: Folder) {
         /*FOLDER = Folder(folder.name, folder.id)*/
-        Log.d("MyLog", "${FOLDER.name}, ${FOLDER.id}")
         replaceFragment(InFolderFragment())
     }
 
     override fun onDeleteClick(folder: Folder) {
-
         databaseReference.child(folder.id).removeValue().addOnCompleteListener {
             if (it.isSuccessful) {
                 showToast("Удалено")
@@ -184,20 +158,20 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
     }
 
 
-
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean { /*функция запускается когда нажимаем на какой-нибудь элемент из меню*/
         when (item.itemId) {
             R.id.menu_exit -> {
                 AUTH.signOut()
                 replaceActivity(Registration())
             }
+
             R.id.profile -> {
                 replaceFragment(ProfileFragment())
             }
         }
         return true
     }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_menu, menu);
         super.onCreateOptionsMenu(menu, inflater)

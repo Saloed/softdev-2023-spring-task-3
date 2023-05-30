@@ -9,14 +9,13 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
-class FirstLectureFragment(path: String) : BaseFragment(R.layout.fragment_first_lecture) {
+class FirstLectureFragment(val path: String) : BaseFragment(R.layout.fragment_first_lecture) {
 
     lateinit var pdfView:PDFView
-    val url: String = path
     override fun onStart() {
         super.onStart()
-        pdfView = view?.findViewById(R.id.pdfview)!!
-        RetrievePDFfromUrl(pdfView).execute(url)
+        pdfView = binding.findViewById(R.id.pdfview)
+        RetrievePDFfromUrl(pdfView).execute(path)
     }
 
     class RetrievePDFfromUrl(pdfView: PDFView) : AsyncTask<String, Void, InputStream>() {

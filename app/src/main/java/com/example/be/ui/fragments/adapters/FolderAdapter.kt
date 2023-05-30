@@ -22,7 +22,6 @@ class FolderAdapter(private val mList: ArrayList<Folder>, var listener: OnItemCl
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderHolder {
         /*создает FolderHoder и туда передает разметку, котрую можно заполнять уже*/
-        /*берет разметку и превращает ее в реальный view*/
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.new_folder, parent, false)
         return FolderHolder(view)
@@ -39,7 +38,6 @@ class FolderAdapter(private val mList: ArrayList<Folder>, var listener: OnItemCl
 
     class FolderHolder(item: View): RecyclerView.ViewHolder(item) {
         val binding = NewFolderBinding.bind(item)
-
         fun bind(folder: Folder, listener: OnItemClickListener?) = with(binding) {
             imageView.setImageResource(R.drawable.baseline_folder_24)
             nameFolder.text = folder.name
