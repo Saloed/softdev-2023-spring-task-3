@@ -20,4 +20,13 @@ interface IGame {
 
     // Метод, который возвращает сохраненную игру из файла
     void returnGame(File file);
+
+    // Метод, который возвращает текущего игрока
+    Game.PlayerColor getCurrentPlayer();
+
+    // Метод, который записывает игру в файл
+    void saveArrayToFile(File file, Stone[][] arr);
+
+    // Метод, который читает игру из файла
+    Stone[][] loadArrayFromFile(File file);
 }

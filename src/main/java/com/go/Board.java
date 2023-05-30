@@ -50,7 +50,8 @@ public class Board implements IBoard {
         return true;
     }
 
-    private boolean checkNeighbors(Stone stone, ICheckSurvivalGroupRule checkLiberties, ICheckSurvivalGroupRule checkSameColor) {
+    @Override
+    public boolean checkNeighbors(Stone stone, ICheckSurvivalGroupRule checkLiberties, ICheckSurvivalGroupRule checkSameColor) {
         int[] dx = {-1, 1, 0, 0}; // Смещение по горизонтали для каждого направления
         int[] dy = {0, 0, -1, 1}; // Смещение по вертикали для каждого направления
 
@@ -81,7 +82,8 @@ public class Board implements IBoard {
     }
 
     // Метод осуществляющий удаление группы с доски
-    private void removeStoneGroup(List<Stone> stoneGroup) {
+    @Override
+    public void removeStoneGroup(List<Stone> stoneGroup) {
         for (Stone stone : stoneGroup) {
             if (stone.playerColor() == Game.PlayerColor.WHITE)
                 capturedStonesBlack++;
@@ -143,10 +145,12 @@ public class Board implements IBoard {
         return positions;
     }
 
+    @Override
     public double getCapturedStonesWhite() {
         return capturedStonesWhite;
     }
 
+    @Override
     public int getCapturedStonesBlack() {
         return capturedStonesBlack;
     }

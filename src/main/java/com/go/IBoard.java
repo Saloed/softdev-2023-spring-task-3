@@ -1,8 +1,15 @@
 package com.go;
 
+import java.util.List;
+
 interface IBoard {
     boolean addStone(Stone stone);
+
+    boolean checkNeighbors(Stone stone, ICheckSurvivalGroupRule checkLiberties, ICheckSurvivalGroupRule checkSameColor);
+
     void removeStone(Stone stone);
+
+    void removeStoneGroup(List<Stone> stoneGroup);
 
     void clearBoard();
 
@@ -19,4 +26,8 @@ interface IBoard {
     void setPositions(Stone[][] positions);
 
     Stone[][] getPositions();
+
+    double getCapturedStonesWhite();
+
+    int getCapturedStonesBlack();
 }

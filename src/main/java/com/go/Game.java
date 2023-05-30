@@ -78,12 +78,14 @@ public class Game implements IGame {
     }
 
     // Метод, который возвращает текущего игрока
+    @Override
     public PlayerColor getCurrentPlayer() {
         return currentPlayer;
     }
 
     // Метод, который записывает игру в файл
-    private void saveArrayToFile(File file, Stone[][] arr) {
+    @Override
+    public void saveArrayToFile(File file, Stone[][] arr) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             bw.write(String.valueOf(arr.length));
             bw.newLine();
@@ -105,7 +107,8 @@ public class Game implements IGame {
     }
 
     // Метод, который читает игру из файла
-    private Stone[][] loadArrayFromFile(File file) {
+    @Override
+    public Stone[][] loadArrayFromFile(File file) {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             int rows = Integer.parseInt(br.readLine());
             int cols = Integer.parseInt(br.readLine());
