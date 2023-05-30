@@ -146,7 +146,6 @@ fun Plans(
     )
     val token = stringResource(R.string.default_web_client_id)
     val context = LocalContext.current
-    var idGenerator = remember { "0".toInt() }
     val NOTIFICATION_ID = 999
     val CHANNEL_ID = "channelID"
 
@@ -196,7 +195,7 @@ fun Plans(
                 )
             }
             Button(
-                onClick = { openDialog.value = true; idGenerator++; },
+                onClick = { openDialog.value = true },
                 shape = RoundedCornerShape(10),
                 modifier = Modifier
                     .size(width = 60.dp, height = 35.dp)

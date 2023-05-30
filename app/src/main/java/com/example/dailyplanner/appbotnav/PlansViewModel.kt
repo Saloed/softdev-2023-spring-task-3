@@ -40,10 +40,12 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
     }
 
     fun signOut() = repository.signOut()
+
     fun getPlan(id: String): Plan {
        val planList =  planListUiState.planList.data!!
         return planList.first{it.documentId == id}
     }
+
     fun onDateChange(date: String) {
         planUiState = planUiState.copy(date = date)
     }
