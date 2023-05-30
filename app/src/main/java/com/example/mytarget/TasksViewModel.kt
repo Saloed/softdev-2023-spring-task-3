@@ -1,25 +1,14 @@
 package com.example.mytarget
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.Color
-import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
-import java.util.Date
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 
 
 class TasksViewModel: ViewModel() {
-//    private val _tasks: MutableStateFlow<MutableList<Task>> = MutableStateFlow(mutableListOf())
 private val _tasks: SnapshotStateList<Task> = mutableStateListOf()
     val tasks: MutableList<Task>
         get() = _tasks
@@ -28,9 +17,9 @@ private val _tasks: SnapshotStateList<Task> = mutableStateListOf()
         tasks.add(task)
     }
 
-    fun removeTask(id: Long, task: Task) {
-        val task = tasks.first { it.id == id }
-        _tasks.remove(task)
+    fun removeTask(id: Long) {
+        val taskForRemove = tasks.first { it.id == id }
+        _tasks.remove(taskForRemove)
     }
 
 
@@ -48,8 +37,6 @@ private val _tasks: SnapshotStateList<Task> = mutableStateListOf()
 
 
     fun getTaskByDate(date: LocalDate): List<Task> = tasks.filter { it.date == date }
-
-    fun getTaskByColor(color: Color): List<Task> = tasks.filter { it.taskColor == color }
 
     fun getTasksForCurrentWeek(tasks: List<Task>): List<Task> {
         val currentDate = LocalDate.now()

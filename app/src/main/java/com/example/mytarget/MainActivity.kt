@@ -90,8 +90,7 @@ import java.util.Date
 import kotlin.reflect.KProperty
 
 class MainActivity : ComponentActivity() {
-    val tasksViewModel by viewModels<TasksViewModel>()
-    @RequiresApi(Build.VERSION_CODES.O)
+    private val tasksViewModel by viewModels<TasksViewModel>()
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,7 +100,7 @@ class MainActivity : ComponentActivity() {
                     tasksViewModel.tasks,
                     onAddTask = {tasksViewModel.addTask(it)},
                     onMarkTask = { tasksViewModel.taskIsSuccessful(it.id, it.isComplete.value) },
-                    onRemoveTask = {tasksViewModel.removeTask(it.id,it)},
+                    onRemoveTask = {tasksViewModel.removeTask(it.id)},
                     viewModel = tasksViewModel
 
                 )

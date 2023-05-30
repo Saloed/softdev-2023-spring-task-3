@@ -52,7 +52,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -103,9 +102,11 @@ fun MyTargetApp(
         ) {
             Login()
 
-            if (sortType == TypeOfSort.DAY) Text(text = DateTimeFormatter.ofPattern("dd MMM yyyy").format(pickedDateCalendar), modifier = Modifier.padding(0.dp,16.dp))
-            else if (sortType == TypeOfSort.WEEK) Text(text = "Задачи на эту неделю", modifier = Modifier.padding(0.dp,16.dp))
-            else Text(text = "Задачи на этот месяц", modifier = Modifier.padding(0.dp,16.dp))
+            when (sortType) {
+                TypeOfSort.DAY -> Text(text = DateTimeFormatter.ofPattern("dd MMM yyyy").format(pickedDateCalendar), modifier = Modifier.padding(0.dp,16.dp))
+                TypeOfSort.WEEK -> Text(text = "Задачи на эту неделю", modifier = Modifier.padding(0.dp,16.dp))
+                else -> Text(text = "Задачи на этот месяц", modifier = Modifier.padding(0.dp,16.dp))
+            }
 
             Button(
                 onClick = {calendarDialogState.show()},
@@ -436,7 +437,7 @@ fun TasksListItem(
                     onClick = {
 
                         showDeleteConfirm = false
-                        viewModel.removeTask(task.id,task)
+                        viewModel.removeTask(task.id)
 
                     }
                 ) {
@@ -456,8 +457,6 @@ fun TasksListItem(
 
 @Composable
 fun TaskList(viewModel: TasksViewModel,date: LocalDate, sort: TypeOfSort) {
-    val tasks = viewModel.tasks
-
     LazyColumn {
         if (sort == TypeOfSort.DAY) {
             items(items = viewModel.getTaskByDate(date)) { task ->
