@@ -15,7 +15,7 @@ import com.example.be.utilits.TITLE_MESSAGE
 import com.example.be.utilits.showToast
 
 class ChangeTitleMessageFragment : BaseFragment(R.layout.fragment_change_title_message) {
-    lateinit var TitleChange: EditText
+    lateinit var titleChange: EditText
     lateinit var btnDone: Button
 
     override fun onStart() {
@@ -25,16 +25,17 @@ class ChangeTitleMessageFragment : BaseFragment(R.layout.fragment_change_title_m
     }
 
     private fun initFields() {
-        TitleChange = view?.findViewById(R.id.enter_edit_title_message)!!
+        titleChange = view?.findViewById(R.id.enter_edit_title_message)!!
+        titleChange.setText(MESSAGE.title)
         btnDone = view?.findViewById(R.id.done_edit_title_message)!!
     }
 
     private fun registerEvent() {
         btnDone.setOnClickListener {
-            if ((TitleChange.text).isEmpty()) {
+            if ((titleChange.text).isEmpty()) {
                 showToast("Введите название")
             } else {
-                MESSAGE.title = TitleChange.text.toString()
+                MESSAGE.title = titleChange.text.toString()
                 REF_DATABASE_ROOT.child(NODE_USERS)
                     .child(CURRENT_UID)
                     .child(CHILD_FOLDERS)

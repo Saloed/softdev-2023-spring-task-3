@@ -24,6 +24,7 @@ class ChangeFolderNameFragment : BaseFragment(R.layout.fragment_change_folder_na
 
     private fun initFields() {
         folderNameChange = binding.findViewById(R.id.enter_edit_folder_name)
+        folderNameChange.setText(FOLDER.name)
         btnDone = binding.findViewById(R.id.done_edit_folder_name)
     }
 

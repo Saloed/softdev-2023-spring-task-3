@@ -17,6 +17,7 @@ import com.example.be.utilits.USER
 import com.example.be.utilits.initFirebase
 import com.example.be.utilits.replaceActivity
 import com.example.be.utilits.replaceFragment
+import com.example.be.utilits.showToast
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -53,9 +54,7 @@ class MainActivity : AppCompatActivity() { /*MainActivity копия класс�
         REF_DATABASE_ROOT.child(NODE_USERS).child(CURRENT_UID)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    Log.d("MyLog", "$snapshot")
                     USER = snapshot.getValue(User::class.java) ?: User()
-                    Log.d("MyLog", "$USER")
                 }
 
                 override fun onCancelled(error: DatabaseError) {}

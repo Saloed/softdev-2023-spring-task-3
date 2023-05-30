@@ -16,6 +16,7 @@ import com.example.be.utilits.AUTH
 import com.example.be.utilits.USER
 import com.example.be.utilits.replaceActivity
 import com.example.be.utilits.replaceFragment
+import com.example.be.utilits.showToast
 
 class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
@@ -51,7 +52,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private fun initProgressbar() {
-        /*progressbar.progressDrawable.*/
         progressbar.max = 1000
         var currentProgress = 0
         if (COUNT_SNAPSHOT_PLUS > 4) {

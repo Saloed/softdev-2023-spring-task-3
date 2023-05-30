@@ -19,14 +19,14 @@ class ChangeFullnameFragment : BaseFragment(R.layout.fragment_change_fullname) {
 
     override fun onResume() {
         super.onResume()
-        initFirebase()
         initFields()
         registerEvent()
     }
 
     private fun initFields() {
-        fullnameChange = view?.findViewById(R.id.fullname_change)!!
-        btnDone = view?.findViewById(R.id.done)!!
+        fullnameChange = binding.findViewById(R.id.fullname_change)
+        fullnameChange.setText(USER.fullname)
+        btnDone = binding.findViewById(R.id.done)
     }
 
     private fun registerEvent() {

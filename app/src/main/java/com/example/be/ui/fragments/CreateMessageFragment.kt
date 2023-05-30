@@ -118,50 +118,60 @@ class CreateMessageFragment : BaseFragment(R.layout.fragment_create_message) {
         })
 
         btnDoneMessage.setOnClickListener {
-            val messageKey = refToWritingMassage.push().key.toString()
-            val map: MutableMap<String, Any> = mutableMapOf()
-            map[TEXT_MESSAGE] = writeText.text.toString()
-            map[TYPE_MESSAGE] = TYPE_TEXT
-            map[ID_MESSAGE] = messageKey
-            map[TITLE_MESSAGE] = title.text.toString()
-            MESSAGE =
-                Message(writeText.text.toString(), TYPE_TEXT, messageKey, title.text.toString())
+            if (title.text.isEmpty()) {
+                showToast("Заполните поле заголовка")
+            } else {
+                val messageKey = refToWritingMassage.push().key.toString()
+                val map: MutableMap<String, Any> = mutableMapOf()
+                map[TEXT_MESSAGE] = writeText.text.toString()
+                map[TYPE_MESSAGE] = TYPE_TEXT
+                map[ID_MESSAGE] = messageKey
+                map[TITLE_MESSAGE] = title.text.toString()
+                MESSAGE =
+                    Message(writeText.text.toString(), TYPE_TEXT, messageKey, title.text.toString())
 
-            refToWritingMassage.child(messageKey).updateChildren(map)
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        showToast("Всё отлично!")
-                        APP_ACTIVITY.supportFragmentManager.popBackStack()
+                refToWritingMassage.child(messageKey).updateChildren(map)
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            showToast("Всё отлично!")
+                            APP_ACTIVITY.supportFragmentManager.popBackStack()
+                        }
                     }
-                }
+            }
+
         }
 
         btnVoice.setOnTouchListener { _, event ->
             if (checkAppPermission(RECORD_AUDIO)) {
-                writeText.visibility = View.GONE
-                if (event.action == MotionEvent.ACTION_DOWN) {
 
-                    /*record*/
-                    recordingText.text = "Запись"
-                    btnDoneMessage.visibility = View.INVISIBLE
-                    btnVoice.setColorFilter(ContextCompat.getColor(APP_ACTIVITY, R.color.white))
+                if (title.text.isEmpty()) {
+                    showToast("Заполните поле заголовка")
+                } else {
+                    writeText.visibility = View.GONE
+                    if (event.action == MotionEvent.ACTION_DOWN) {
 
-                    val messageKey = REF_DATABASE_ROOT
-                        .child(NODE_USERS)
-                        .child(CURRENT_UID)
-                        .child(CHILD_FOLDERS)
-                        .child(FOLDER.id).push().key.toString()
+                        /*record*/
+                        recordingText.text = "Запись"
+                        btnDoneMessage.visibility = View.INVISIBLE
+                        btnVoice.setColorFilter(ContextCompat.getColor(APP_ACTIVITY, R.color.white))
 
-                    mAppVoiceRecorder.startRecord(messageKey)
+                        val messageKey = REF_DATABASE_ROOT
+                            .child(NODE_USERS)
+                            .child(CURRENT_UID)
+                            .child(CHILD_FOLDERS)
+                            .child(FOLDER.id).push().key.toString()
 
-                } else if (event.action == MotionEvent.ACTION_UP) {
-                    /*stop record*/
-                    btnVoice.colorFilter = null
-                    recordingText.text = "Записано"
-                    mAppVoiceRecorder.stopRecord { file, messageKey ->
-                        uploadFileToStorage(Uri.fromFile(file), messageKey)/*загружает всё, если хорошо закончилось*/
+                        mAppVoiceRecorder.startRecord(messageKey)
+
+                    } else if (event.action == MotionEvent.ACTION_UP) {
+                        /*stop record*/
+                        btnVoice.colorFilter = null
+                        recordingText.text = "Записано"
+                        mAppVoiceRecorder.stopRecord { file, messageKey ->
+                            uploadFileToStorage(Uri.fromFile(file), messageKey)/*загружает всё, если хорошо закончилось*/
+                        }
+                        APP_ACTIVITY.supportFragmentManager.popBackStack()
                     }
-                    APP_ACTIVITY.supportFragmentManager.popBackStack()
                 }
             }
             true

@@ -68,9 +68,6 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
 
         cardPlus = view?.findViewById(R.id.cardViewPlus)!!
         rcForFolderView = view?.findViewById(R.id.rcForFolder)!!
-        /*rcForFolderView.layoutManager = LinearLayoutManager(APP_ACTIVITY)
-        rcForFolderView.layoutManager = GridLayoutManager(APP_ACTIVITY, 2)
-        rcForFolderView.adapter = adapter*/
 
     }
 
@@ -117,18 +114,22 @@ class MainFragment : Fragment(R.layout.fragment_main), FolderAdapter.OnItemClick
         dialog.setContentView(R.layout.fragment_add)
         val folderName = dialog.findViewById<EditText>(R.id.etFolderName)
         dialog.findViewById<Button>(R.id.btnСreateFolder).setOnClickListener {
-            val name = folderName.text.toString()
-            val keyFolder = databaseReference.push().key.toString()
-            data.add(Folder(name, keyFolder))
+            if (folderName.text.isEmpty()) {
+                showToast("Заполните поле ввода")
+            } else {
+                val name = folderName.text.toString()
+                val keyFolder = databaseReference.push().key.toString()
+                data.add(Folder(name, keyFolder))
 
-            databaseReference.child(keyFolder).setValue(Folder(name, keyFolder))
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        showToast("Папка сохранена")
+                databaseReference.child(keyFolder).setValue(Folder(name, keyFolder))
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            showToast("Папка сохранена")
+                        }
                     }
-                }
-            view?.findViewById<TextView>(R.id.textView2)?.visibility = View.GONE
-            dialog.dismiss()
+                view?.findViewById<TextView>(R.id.textView2)?.visibility = View.GONE
+                dialog.dismiss()
+            }
         }
 
         dialog.findViewById<ImageView>(R.id.closeBtn).setOnClickListener {
