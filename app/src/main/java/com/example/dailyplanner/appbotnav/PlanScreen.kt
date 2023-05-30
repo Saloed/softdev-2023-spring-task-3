@@ -146,15 +146,15 @@ fun Plans(
     )
     val token = stringResource(R.string.default_web_client_id)
     val context = LocalContext.current
-    val NOTIFICATION_ID = 999
-    val CHANNEL_ID = "channelID"
+    val notificationId = 999
+    val channelId = "channelID"
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         // Create the NotificationChannel.
         val name = stringResource(R.string.channel_name)
         val descriptionText = stringResource(R.string.channel_description)
         val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
+        val mChannel = NotificationChannel(channelId, name, importance)
         mChannel.description = descriptionText
         // Register the channel with the system. You can't change the importance
         // or other notification behaviors after this.
@@ -325,7 +325,7 @@ fun Plans(
                             val startOfDay = LocalDateTime.of(pickedDate, LocalTime.MIN)
                             val millis =
                                 startOfDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+                            val builder = NotificationCompat.Builder(context, channelId)
                                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                                 .setContentTitle("План через час")
                                 .setContentText("Вы запланировали через час ${viewModel.planUiState.planText}")
@@ -336,7 +336,7 @@ fun Plans(
 
 
                             with(NotificationManagerCompat.from(context)) {
-                                notify(NOTIFICATION_ID, builder.build()) // посылаем уведомление
+                                notify(notificationId, builder.build()) // посылаем уведомление
                             }
 
 

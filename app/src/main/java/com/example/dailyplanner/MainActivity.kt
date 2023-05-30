@@ -15,10 +15,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-private lateinit var auth: FirebaseAuth
 
 class MainActivity : ComponentActivity() {
     private val plansViewModel by viewModels<PlansViewModel>()
+    private lateinit var auth: FirebaseAuth
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
