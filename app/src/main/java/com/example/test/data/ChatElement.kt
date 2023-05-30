@@ -7,7 +7,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.example.test.td.Example
+import com.example.test.td.TdClient
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -23,6 +23,8 @@ class ChatElement(
     @SerialName("recipients") @Ignore var recipients: List<RecipientsData> = listOf()
 
 ) {
+
+
     @Transient
     @Ignore
     var _messages: SnapshotStateList<Message> = mutableStateListOf()
@@ -61,10 +63,11 @@ class ChatElement(
         set(value: List<Message>) {
 
             for (message in value) {
-                if (message !in _messages) _messages.add(message)
+                if (message !in _messages) {
+                    _messages.add(message)
+                }
             }
             _messages.sortByDescending { it.timestamp }
-
 
 
         }
@@ -76,16 +79,6 @@ class ChatElement(
         this.messages = messages
     }
 
-    fun updateMessagesCopying(messages: List<Message>): ChatElement {
-        return ChatElement(
-            id,
-            name,
-            previewImage,
-            if (messages.isEmpty()) "" else messages.first().content,
-            messages,
-            recipients
-        )
-    }
 
     fun setChatMessages(messages: List<Message>) {
         this.messages = messages
@@ -94,27 +87,30 @@ class ChatElement(
 
     fun addMessage(message: Message) {
         if (message !in _messages) {
-
             _messages.add(0, message)
-
-            unreadCount.value++
+            if (!message.isMe) unreadCount.value++
         }
+        displayMessage = messages.firstOrNull()?.content ?: ""
     }
 
     fun updateMessages() {
-        Example.getMessages(this.id) { updateCallback(it) }
+        TdClient.getMessages(this.id) { updateCallback(it) }
+    }
+
+    fun updateHistory() {
+        if (_messages.lastOrNull()?.id != null) {
+            TdClient.getMessagesHistory(this.id, _messages.last().id) { updateCallback(it) }
+        }
     }
 
     private fun updateCallback(messages: List<Message>): String {
-//        this.messages = messages
-
         for (message in messages.sortedBy { it.timestamp }.reversed()) {
             if (message !in _messages) _messages.add(message)
         }
         this.displayMessage =
-            _messages.firstOrNull()?.content ?: "" // Использование setChatMessages не работает
+            _messages.firstOrNull()?.content ?: ""
 
-        if (_messages.size < MIN_MESSAGE_COUNT) updateMessages() // TODO: может быть бесконечный цикл
+        if (_messages.size < MIN_MESSAGE_COUNT) updateMessages()
 
         return ""
     }

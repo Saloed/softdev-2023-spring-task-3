@@ -8,8 +8,8 @@ class ChatList(
 ) {
     fun updateChatById(chat: ChatElement) =
         ChatList(chats.filter { it.id != chat.id }.toMutableList() + chat)
-    fun updateChatById(id:String, message:Message){
-        chats.find { it.id==id }?.addMessage(message) ?: throw IndexOutOfBoundsException() // TODO: Может выбросить исключение если пришло уведомление на еще не загруженный чат
+    fun addMessageById(id:String, message:Message){
+        chats.find { it.id==id }?.addMessage(message) ?: throw IndexOutOfBoundsException()
     }
 
     operator fun plus(other: ChatList) =

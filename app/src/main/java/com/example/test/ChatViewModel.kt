@@ -1,7 +1,6 @@
 package com.example.test
 
 
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.test.data.ChatElement
@@ -15,7 +14,7 @@ import com.example.test.data.Message
 import com.example.test.data.OfflineMessageRepository
 import com.example.test.data.RecipientsData
 import com.example.test.data.UserPreferencesRepository
-import com.example.test.td.Example
+import com.example.test.td.TdClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,31 +41,31 @@ class ChatViewModel(
     fun setSelectedChat(chat: ChatElement) {
         if (chat.messages.isEmpty()) {
             viewModelScope.launch {
-                chat.setChatMessages(messageRepository.getMessagesByChatId(chat.id).first())
+                if (chat.messages.isEmpty()) { // К моменту запуска корутины сообщения уже могли появиться
+                    chat.setChatMessages(messageRepository.getMessagesByChatId(chat.id).first())
+                }
             }
         }
-        if (chat.type == ChatType.TELEGRAM) {
-            chat.updateMessages()
+        when (chat.type) {
+            ChatType.DISCORD ->
+                viewModelScope.launch {
+                    chat.setChatMessages(updateDiscordMessages(chat.id))
+                }
+
+            ChatType.TELEGRAM -> chat.updateMessages()
+            ChatType.MIXED -> null
         }
         _uiState.update { currentState ->
 
-//            updateChatMessages(chat)
             currentState.copy(
                 isChatSelected = true,
                 selectedChat = chat,
                 selectedChatId = chat.id
             )
         }
-//        if (chat.messages.isEmpty()) { // TODO: Lazy load сообщений
-//        updateChatMessages(chat) //
-//        }
 
         chat.unreadCount.value = 0
-        if (chat.type == ChatType.DISCORD) {
-            viewModelScope.launch {
-                chat.setChatMessages(updateDiscordMessages(chat.id))
-            }
-        }
+
 
     }
 
@@ -78,6 +77,12 @@ class ChatViewModel(
                     messageRepository.insertMessage(message)
                 }
             }
+        }
+    }
+
+    fun saveMessage(message: Message) {
+        viewModelScope.launch {
+            messageRepository.insertMessage(message)
         }
     }
 
@@ -109,9 +114,9 @@ class ChatViewModel(
                     currentState
                 }
             }
-
+            saveChats()
         }
-        saveChats()
+
     }
 
     private val json = Json {
@@ -187,9 +192,9 @@ class ChatViewModel(
             } catch (_: Exception) {
 
             }
-            var me: RecipientsData = RecipientsData("", "")
+            var me = RecipientsData("", "")
             try {
-                me = json.decodeFromString<RecipientsData>(response)
+                me = json.decodeFromString(response)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -227,7 +232,7 @@ class ChatViewModel(
     }
 
     fun updateTelegramChats(): ChatList {
-        val chatList = Example.getChats { onUpdateFullChat(it) }
+        val chatList = TdClient.getChats { onUpdateFullChat(it) }
         return chatList
     }
 
@@ -241,14 +246,13 @@ class ChatViewModel(
     }
 
 
-
     fun telegramInit(dbPath: String) {
-        Example.main(dbPath) { prompt -> runBlocking { telegramLoginCallback(prompt) } }
-        Example.subscribeOnNewMessages { id, message -> newMessageCallback(id, message) }
+        TdClient.main(dbPath) { prompt -> runBlocking { telegramLoginCallback(prompt) } }
+        TdClient.subscribeOnNewMessages { id, message -> newMessageCallback(id, message) }
     }
 
     fun onTelegramPromptUpdate(result: String) {
-        Example.getMe { getMeCallback(it) }
+        TdClient.getMe { getMeCallback(it) }
         telegramPromptResult = result
     }
 
@@ -265,7 +269,7 @@ class ChatViewModel(
     }
 
     fun updateTelegramMessages(chatId: String) {
-        Example.getMessages(chatId) { onTelegramChatUpdate(it) }
+        TdClient.getMessages(chatId) { onTelegramChatUpdate(it) }
     }
 
 //    fun onTelegramChatRecipientsUpdate(recipients: List<RecipientsData>) { // TODO: Не используется
@@ -279,25 +283,8 @@ class ChatViewModel(
 //    }
 
     fun onTelegramChatUpdate(messages: List<Message>): String {
-
-        viewModelScope.launch {
-            if (_uiState.value.selectedChat != null) {
-                _uiState.update { currentState ->
-                    val chat = _uiState.value.selectedChat
-                    for (message in messages) {
-                        message.chatId = chat!!.id
-                    }
-                    val updatedChat =
-                        chat!!.updateMessagesCopying(messages)
-                    currentState.copy(
-                        chatList = _uiState.value.chatList.updateChatById(updatedChat),
-                        isChatSelected = true,
-                        selectedChat = updatedChat,
-                        selectedChatId = chat.id
-                    )
-
-                }
-            }
+        for (message in messages) {
+            _uiState.value.chatList.addMessageById(message.chatId!!, message)
         }
 
         return ""
@@ -309,7 +296,7 @@ class ChatViewModel(
         when (chat.type) {
             ChatType.TELEGRAM -> {
 
-                Example.sendMessageTd(
+                TdClient.sendMessageTd(
                     chat.id.toLongOrNull() ?: throw NullPointerException(),
                     message
                 )
@@ -341,21 +328,31 @@ class ChatViewModel(
         }
     }
 
-    fun newMessageCallback(chatId: String, message: Message): String {
+    fun newMessageCallback(
+        chatId: String,
+        message: Message
+    ): String { // TODO: Теперь сообщение само знает из какого оно чата
 
-//        if(chatId==_uiState.value.selectedChat?.id){
-//            _uiState.value.selectedChat!!.addMessage(message)
-//        }
+
         viewModelScope.launch {
-            _uiState.value.chatList.updateChatById(chatId, message)
+            try {
+                _uiState.value.chatList.addMessageById(chatId, message)
+            } catch (e: IndexOutOfBoundsException) {
+                updateChats()
+            }
             _uiState.update { currentState ->
                 currentState.copy()
             }
+            saveMessage(message)
         }
 
-//        var builder = NotificationCompat.Builder(this, CHANNEL_ID).setContentTitle(message.author.username)
-//            .setContentText(message.content).setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+//        var builder = NotificationCompat.Builder(context, CHANNEL_ID)
+//            .setContentTitle(message.author.username)
+//            .setContentText(message.content)
+//            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         return ""
     }
+
 }

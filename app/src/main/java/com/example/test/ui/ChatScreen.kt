@@ -6,12 +6,8 @@ import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.absolutePadding
-
-
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,8 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -28,8 +24,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,9 +51,9 @@ import com.example.test.data.ChatType
 import com.example.test.data.Message
 import com.example.test.data.RecipientsData
 import com.example.test.data.UserPreferencesRepository
-import com.example.test.ui.theme.Purple80
 import com.example.test.ui.theme.PurpleGrey80
-import java.io.FileNotFoundException
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -76,26 +74,32 @@ fun ChatScreen(
 
         else -> meId = ""
     }
+    val columnState = rememberLazyListState()
     Scaffold() {
-//        innerPadding-> val uiState by viewModel.uiState.collectAsState()
-        Button(
-            onClick = { membersListVisible = !membersListVisible },
-            modifier = Modifier
-                .absolutePadding(left = 150.dp)
-                .zIndex(5.0f)
-        ) {
-            Text("Список участников")
-        }
+//        Button(
+//            onClick = { membersListVisible = !membersListVisible },
+//            modifier = Modifier
+//                .absolutePadding(left = 150.dp)
+//                .zIndex(5.0f)
+//        ) {
+//            Text("Список участников")
+//        }
         if (membersListVisible) {
             recipientsList(chat.recipients)
         }
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
             ConstraintLayout(modifier = Modifier.fillMaxSize()) {
                 val (lazyColumn, messageBar) = createRefs()
-//            Spacer(modifier = Modifier.padding(16.dp))
                 LazyColumn(
                     reverseLayout = true,
-                    modifier = Modifier.constrainAs(lazyColumn) { bottom.linkTo(messageBar.top) }) {
+                    modifier = Modifier.constrainAs(lazyColumn) { bottom.linkTo(messageBar.top) },
+                    state = columnState
+                ) {
+
 
                     items(chat.messages) { message ->
                         Box(modifier = modifier.padding(4.dp)) {
@@ -120,6 +124,13 @@ fun ChatScreen(
             }
         }
     }
+    if (remember { derivedStateOf { columnState.firstVisibleItemIndex } }.value >= chat.messages.size - 15) {
+        when (chat.type) {
+            ChatType.TELEGRAM -> chat.updateHistory()
+            ChatType.DISCORD -> null
+            ChatType.MIXED -> null
+        }
+    }
 }
 
 @Composable
@@ -129,7 +140,7 @@ fun newMessageBar(onSendButtonClicked: (String) -> Unit, modifier: Modifier = Mo
         TextField(
             value = message,
             onValueChange = { message = it },
-            modifier = Modifier.fillMaxWidth(0.9f)
+            modifier = Modifier.fillMaxWidth(0.9f),
         )
         IconButton(onClick = {
             onSendButtonClicked(message)
@@ -137,7 +148,8 @@ fun newMessageBar(onSendButtonClicked: (String) -> Unit, modifier: Modifier = Mo
         }, modifier = Modifier.align(Alignment.CenterVertically)) {
             Icon(
                 imageVector = Icons.Filled.Send,
-                contentDescription = stringResource(R.string.submit)
+                contentDescription = stringResource(R.string.submit),
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
 
@@ -147,7 +159,6 @@ fun newMessageBar(onSendButtonClicked: (String) -> Unit, modifier: Modifier = Mo
 @Preview(showBackground = true)
 @Composable
 fun Preview() {
-//    ChatScreen()
 }
 
 @Composable
@@ -160,20 +171,27 @@ fun messageDisplay(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
-            .background(if (!isMe) com.example.test.ui.theme.Purple80 else com.example.test.ui.theme.PurpleGrey80)
+            .background(if (!isMe) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.primaryContainer)
     ) {
 
         Column(modifier = modifier.padding(horizontal = 8.dp)) {
             Text(
                 text = message.content,
-                fontSize = contentFontSize.sp
+                fontSize = contentFontSize.sp,
+                color = MaterialTheme.colorScheme.onSurface
             )
             Row {
                 Text(
                     text = message.sender,
-                    fontWeight = FontWeight.Thin
+                    fontWeight = FontWeight.Thin,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
-                Text(text = message.timestamp.toString(), fontWeight = FontWeight.Thin,)
+                Text(
+                    text = getFormattedDate(message.timestamp.toString()),
+                    fontWeight = FontWeight.Thin,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
             }
 
             if (message.previewBitmap != null || message.imagePath != null) {
@@ -237,7 +255,23 @@ fun recipientsList(recipients: List<RecipientsData>, modifier: Modifier = Modifi
                     )
                 }
             }
-
         }
+    }
+}
+
+
+fun getFormattedDate(timeString: String): String {
+    try {
+        val currentDate = Date().time
+        val date = Date(timeString.toLong() * 1000)
+        val compareFormat = SimpleDateFormat("yyyyMM", java.util.Locale.ROOT)
+        val dateformat = when (compareFormat.format(date) == compareFormat.format(currentDate)) {
+            true -> SimpleDateFormat("HH:mm", java.util.Locale.ROOT)
+            false -> SimpleDateFormat("MM-yyyy HH:mm", java.util.Locale.ROOT)
+        }
+
+        return dateformat.format(date)
+    } catch (e: Exception) {
+        return ""
     }
 }

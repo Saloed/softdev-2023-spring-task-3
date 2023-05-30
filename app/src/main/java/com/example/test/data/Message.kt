@@ -22,13 +22,14 @@ import java.time.Instant
 @Entity(tableName = "messages")
 @Serializable
 data class Message(
-    @PrimaryKey
+
     var content: String,
 
     @Ignore //TODO: добавить TypeConverter
     @SerialName("author") val author: Author
 ) {
-
+    @PrimaryKey
+    var id: String = ""
 
     @Transient
     var sender: String = author.username
@@ -50,9 +51,12 @@ data class Message(
     @Transient
     var timestamp: Long = 0
 
+    @Transient
+    var isMe: Boolean = false
+
     init {
 
-        if (timestampISO != ""&&timestamp==0L) {
+        if (timestampISO != "" && timestamp == 0L) {
             val date =
                 SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS+hh:mm").parse(timestampISO)
             if (date != null) {
@@ -64,6 +68,17 @@ data class Message(
     //DAO constructor
     constructor(content: String, chatId: String) : this(content, Author("", "")) {
         this.chatId = chatId
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Message) {
+            return other.timestamp == this.timestamp && other.content == this.content // TdApi может иногда отправлять одни и те же сообщения с разными id
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return 31 * this.id.hashCode()
     }
 }
 

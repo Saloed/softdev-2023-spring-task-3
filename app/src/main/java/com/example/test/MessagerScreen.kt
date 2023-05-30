@@ -25,6 +25,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.foundation.background
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -33,6 +34,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -76,7 +78,8 @@ fun MessengerApp(
                 onSettingsButtonClicked = { navController.navigate(MessengerRoutes.Settings.name) },
                 onNavigateUpButtonClicked = { navController.navigateUp() },
                 onRefreshButtonClicked = { viewModel.updateChats() },
-                text = topBarText
+                text = topBarText,
+                canNavigateBack = navController.previousBackStackEntry != null
             )
         }
     )
@@ -151,9 +154,10 @@ fun TopBar(
     onSettingsButtonClicked: () -> Unit,
     text: String = stringResource(R.string.app_name),
     onNavigateUpButtonClicked: () -> Unit,
-    onRefreshButtonClicked: () -> Unit
+    onRefreshButtonClicked: () -> Unit,
+    canNavigateBack:Boolean
 ) {
-    val canNavigateBack = true
+//    val canNavigateBack = true
     TopAppBar(
         title = { Text(text = text) },
         modifier = modifier,
@@ -183,6 +187,6 @@ fun TopBar(
                     contentDescription = text
                 )
             }
-        }
+        }, backgroundColor = MaterialTheme.colorScheme.primaryContainer, contentColor = MaterialTheme.colorScheme.onSurface
     )
 }

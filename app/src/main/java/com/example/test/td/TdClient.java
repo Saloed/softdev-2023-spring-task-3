@@ -7,7 +7,6 @@ package com.example.test.td;
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-import com.example.test.ChatViewModel;
 import com.example.test.data.Author;
 import com.example.test.data.ChatElement;
 import com.example.test.data.ChatList;
@@ -37,7 +36,7 @@ import java.util.function.Function;
 /**
  * Example class for TDLib usage from Java.
  */
-public final class Example {
+public final class TdClient {
     private static Client client = null;
 
     private static TdApi.AuthorizationState authorizationState = null;
@@ -101,9 +100,9 @@ public final class Example {
 
     private static void onAuthorizationStateUpdated(TdApi.AuthorizationState authorizationState) {
         if (authorizationState != null) {
-            Example.authorizationState = authorizationState;
+            TdClient.authorizationState = authorizationState;
         }
-        switch (Example.authorizationState.getConstructor()) {
+        switch (TdClient.authorizationState.getConstructor()) {
             case TdApi.AuthorizationStateWaitTdlibParameters.CONSTRUCTOR:
                 TdApi.TdlibParameters param = new TdApi.TdlibParameters();
                 param.databaseDirectory = filePath;
@@ -128,7 +127,7 @@ public final class Example {
                 client.send(new TdApi.CheckDatabaseEncryptionKey(), new AuthorizationRequestHandler());
             }
             case TdApi.AuthorizationStateWaitOtherDeviceConfirmation.CONSTRUCTOR: {
-                String link = ((TdApi.AuthorizationStateWaitOtherDeviceConfirmation) Example.authorizationState).link;
+                String link = ((TdApi.AuthorizationStateWaitOtherDeviceConfirmation) TdClient.authorizationState).link;
                 System.out.println("Please confirm this login link on another device: " + link);
                 break;
             }
@@ -174,7 +173,7 @@ public final class Example {
                 }
                 break;
             default:
-                System.err.println("Unsupported authorization state:" + newLine + Example.authorizationState);
+                System.err.println("Unsupported authorization state:" + newLine + TdClient.authorizationState);
         }
     }
 
@@ -314,11 +313,12 @@ public final class Example {
     private static String filePath;
 
     public static void main(String path, Function<String, String> promptCallbackFunction) throws InterruptedException {
-        filePath = path;
-        promptCallback = promptCallbackFunction;
-        // set log message handler to handle only fatal errors (0) and plain log messages (-1)
+        if (client == null) {
+            filePath = path;
+            promptCallback = promptCallbackFunction;
+            // set log message handler to handle only fatal errors (0) and plain log messages (-1)
 //        Client.setLogMessageHandler(0, new LogMessageHandler());
-        Client.setLogVerbosityLevel(0);
+            Client.setLogVerbosityLevel(0);
 //
 //        // disable TDLib log and redirect fatal errors and plain log messages to a file
 //        Client.execute(new TdApi.SetLogVerbosityLevel(0));
@@ -326,31 +326,13 @@ public final class Example {
 //            throw new IOError(new IOException("Write access to the current directory is required"));
 //        }
 
-        // create client
-        client = Client.create(new UpdateHandler(), null, null);
+            // create client
+            client = Client.create(new UpdateHandler(), null, null);
 
-        // test Client.execute
-        defaultHandler.onResult(Client.execute(new TdApi.GetTextEntities("@telegram /test_command https://telegram.org telegram.me @gif @test")));
+            // test Client.execute
+//            defaultHandler.onResult(Client.execute(new TdApi.GetTextEntities("@telegram /test_command https://telegram.org telegram.me @gif @test")));
+        }
 
-        // main loop
-//        while (!needQuit) {
-//            // await authorization
-//            authorizationLock.lock();
-//            try {
-//                while (!haveAuthorization) {
-//                    gotAuthorization.await();
-//                }
-//            } finally {
-//                authorizationLock.unlock();
-//            }
-//
-//            while (haveAuthorization) {
-//                getCommand();
-//            }
-//        }
-//        while (!canQuit) {
-//            Thread.sleep(1);
-//        }
     }
 
     public static RecipientsData getUser(Long id) {
@@ -385,17 +367,17 @@ public final class Example {
                     if (chat.lastMessage.content.getConstructor() == TdApi.MessageText.CONSTRUCTOR) {
                         String messageContent = ((TdApi.MessageText) chat.lastMessage.content).text.text;
 
-                        chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", messageContent, new ArrayList<Message>(Arrays.asList(new Message(messageContent, senderToAuthor(chat.lastMessage.senderId)))), new ArrayList<RecipientsData>()));
+                        chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", messageContent, new ArrayList<Message>(Arrays.asList(convertMessage(chat.lastMessage))), new ArrayList<RecipientsData>()));
 
                     } else if (chat.lastMessage.content.getConstructor() == TdApi.MessagePhoto.CONSTRUCTOR) {
 
                         String messageContent = "Фото";
-                        chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", messageContent, new ArrayList<Message>(Arrays.asList(new Message(messageContent, senderToAuthor(chat.lastMessage.senderId)))), new ArrayList<RecipientsData>()));
+                        chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", messageContent, new ArrayList<Message>(Arrays.asList(convertMessage(chat.lastMessage))), new ArrayList<RecipientsData>()));
 
                     } else if (chat.lastMessage.content.getConstructor() == TdApi.MessageVideo.CONSTRUCTOR) {
 
                         String messageContent = "Видео";
-                        chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", messageContent, new ArrayList<Message>(Arrays.asList(new Message(messageContent, senderToAuthor(chat.lastMessage.senderId)))), new ArrayList<RecipientsData>()));
+                        chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", messageContent, new ArrayList<Message>(Arrays.asList(convertMessage(chat.lastMessage))), new ArrayList<RecipientsData>()));
 
                     } else {
                         chatList.add(new ChatElement(String.valueOf(chat.id), chat.title, "null", "Контент не поддерживается", new ArrayList<Message>(), new ArrayList<RecipientsData>()));
@@ -423,8 +405,13 @@ public final class Example {
         });
     }
 
-    public static void getMessages(String chatId, Function<List<Message>, String> callbackFunc) throws InterruptedException {
+    public static void getMessages(String chatId, Function<List<Message>, String> callbackFunc) {
         client.send(new TdApi.GetChatHistory(Long.parseLong(chatId), 0, 0, 500, false), new CallbackHandler(callbackFunc));
+    }
+
+    public static void getMessagesHistory(String chatId, String lastMessageId, Function<List<Message>, String> callbackFunc) {
+        client.send(new TdApi.GetChatHistory(Long.parseLong(chatId), Long.parseLong(lastMessageId), 0, 500, false), new CallbackHandler(callbackFunc));
+
     }
 
     public static void sendMessageTd(long chatId, String message) {
@@ -513,19 +500,21 @@ public final class Example {
             TdApi.Messages messages = (TdApi.Messages) object;
             List<Message> msgList = new ArrayList<Message>();
             for (TdApi.Message msg : messages.messages) {
-                msgList.add(messageConverter(msg));
+                msgList.add(convertMessage(msg));
 
             }
             func.apply(msgList);
         }
     }
 
-    public static Message messageConverter(TdApi.Message msg) {
+    public static Message convertMessage(TdApi.Message msg) {
         if (msg.content.getConstructor() == TdApi.MessageText.CONSTRUCTOR) {
             String content = ((TdApi.MessageText) msg.content).text.text;
             Message outputMessage = new Message(content, senderToAuthor(msg.senderId));
             outputMessage.setChatId(String.valueOf(msg.chatId));
             outputMessage.setTimestamp(msg.date);
+            outputMessage.setId(String.valueOf(msg.id));
+            outputMessage.setMe(msg.isOutgoing);
             return outputMessage;
 
         } else if (msg.content.getConstructor() == TdApi.MessagePhoto.CONSTRUCTOR) {
@@ -552,6 +541,7 @@ public final class Example {
             outputMessage.setImagePath(photoPath);
             outputMessage.setChatId(String.valueOf(msg.chatId));
             outputMessage.setTimestamp(msg.date);
+            outputMessage.setId(String.valueOf(msg.id));
             return outputMessage;
 //
         } else if (msg.content.getConstructor() == TdApi.MessageVideo.CONSTRUCTOR) {
@@ -560,18 +550,21 @@ public final class Example {
             Message outputMessage = new Message(content, senderToAuthor(msg.senderId));
             outputMessage.setChatId(String.valueOf(msg.chatId));
             outputMessage.setTimestamp(msg.date);
+            outputMessage.setId(String.valueOf(msg.id));
             return outputMessage;
         } else if (msg.content.getConstructor() == TdApi.MessageVoiceNote.CONSTRUCTOR) {
             String content = "Голосовые сообщения не поддерживаются";
             Message outputMessage = new Message(content, senderToAuthor(msg.senderId));
             outputMessage.setChatId(String.valueOf(msg.chatId));
             outputMessage.setTimestamp(msg.date);
+            outputMessage.setId(String.valueOf(msg.id));
             return outputMessage;
         } else {
             String content = "Сообщения этого типа не поддерживаются";
             Message outputMessage = new Message(content, senderToAuthor(msg.senderId));
             outputMessage.setChatId(String.valueOf(msg.chatId));
             outputMessage.setTimestamp(msg.date);
+            outputMessage.setId(String.valueOf(msg.id));
             return outputMessage;
 
         }
@@ -801,9 +794,13 @@ public final class Example {
                     TdApi.UpdateSupergroupFullInfo updateSupergroupFullInfo = (TdApi.UpdateSupergroupFullInfo) object;
                     supergroupsFullInfo.put(updateSupergroupFullInfo.supergroupId, updateSupergroupFullInfo.supergroupFullInfo);
                     break;
-                case TdApi.UpdateNewMessage.CONSTRUCTOR: // Мой код
+                case TdApi.UpdateNewMessage.CONSTRUCTOR: // Мой код начинается здесь
                     TdApi.UpdateNewMessage update = (TdApi.UpdateNewMessage) object;
-                    newMessageCallback.apply(String.valueOf(update.message.chatId), messageConverter(update.message));
+                    newMessageCallback.apply(String.valueOf(update.message.chatId), convertMessage(update.message));
+//                case TdApi.UpdateFile.CONSTRUCTOR:
+//                    TdApi.UpdateFile updateFile = (TdApi.UpdateFile) object;
+//
+
 
                 default:
                     // print("Unsupported update:" + newLine + object);
