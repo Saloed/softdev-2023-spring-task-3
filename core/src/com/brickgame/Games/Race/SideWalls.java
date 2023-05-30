@@ -10,12 +10,13 @@ import java.util.*;
 public class SideWalls {
     private final SpriteBatch batch;
     private float timeUpdatePosition = 0;
-    public static float timeUpdatePositionLimit = 0.4f;
+    public static float timeUpdatePositionLimit;
 
     private final List<Piece> sideWalls;
 
     public SideWalls(SpriteBatch batch) {
         this.batch = batch;
+        timeUpdatePositionLimit = 0.4f;
         sideWalls = new ArrayList<>(Arrays.asList(
                 new Piece(0, 19), new Piece(0, 18), new Piece(0, 17),
                 new Piece(0, 15), new Piece(0, 14), new Piece(0, 13),

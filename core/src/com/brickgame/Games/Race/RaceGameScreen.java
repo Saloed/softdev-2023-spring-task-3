@@ -20,7 +20,7 @@ public class RaceGameScreen implements Screen {
     private SideWalls sideWalls;
     private CarPlayer carPlayer;
     private ArrayList<CarEnemy> carsEnemy;
-    private float timeSpawnCarEnemy, timeSpawnCarEnemyLimit = 3.6f;
+    private float timeSpawnCarEnemy, timeSpawnCarEnemyLimit;
 
     public RaceGameScreen(BrickGame gam) {
         game = gam;
@@ -38,7 +38,7 @@ public class RaceGameScreen implements Screen {
         carPlayer = new CarPlayer(batch);
         carsEnemy = new ArrayList<>();
         timeSpawnCarEnemy = 0;
-
+        timeSpawnCarEnemyLimit = 3.6f;
         stage.addActor(sidePanel.musicButton);
     }
 

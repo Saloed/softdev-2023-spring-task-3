@@ -6,10 +6,12 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.brickgame.Games.Piece;
 
 public class MainMenuScreen implements Screen {
     private final BrickGame brickGame;
     private final Stage stage;
+    int currentButton;
 
     public MainMenuScreen(BrickGame game) {
         brickGame = game;
@@ -28,13 +30,20 @@ public class MainMenuScreen implements Screen {
         brickGame.assetsManager.manager.finishLoading();
         Skin skin = brickGame.assetsManager.manager.get("skin/uiskin.json");
 
+        currentButton = 0;
         //создание кнопок
         TextButton shoot = new TextButton("Shoot", skin);
+        shoot.setSize(5*Piece.SIZE, Piece.SIZE);
         TextButton race = new TextButton("Race", skin);
+        race.setSize(5*Piece.SIZE, Piece.SIZE);
         TextButton snake = new TextButton("Snake", skin);
+        snake.setSize(5*Piece.SIZE, Piece.SIZE);
         TextButton tetris = new TextButton("Tetris", skin);
+        tetris.setSize(5*Piece.SIZE, Piece.SIZE);
         TextButton arcanoid = new TextButton("Arcanoid", skin);
+        arcanoid.setSize(5*Piece.SIZE, Piece.SIZE);
         TextButton exit = new TextButton("Exit", skin);
+        exit.setSize(5*Piece.SIZE, Piece.SIZE);
         final Button musicButton = new Button(null, skin, "music");
 
         //добавление кнопок в таблицу
@@ -89,6 +98,7 @@ public class MainMenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
+        musicButton.setChecked(!brickGame.music.isPlaying());
         musicButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

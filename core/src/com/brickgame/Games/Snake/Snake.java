@@ -9,7 +9,7 @@ import java.util.*;
 
 public class Snake {
     private final SpriteBatch batch;
-    public float timeUpdatePosition = 0, timeUpdatePositionLimit = 0.2f;
+    public float timeUpdatePosition = 0, timeUpdatePositionLimit;
 
     public int direction; // 0 - вверх, 1 - вправо, 2 - вниз, 3 - влево
 
@@ -18,6 +18,7 @@ public class Snake {
 
     public Snake(SpriteBatch batch) {
         this.batch = batch;
+        timeUpdatePositionLimit = 0.2f;
         snake = new ArrayList<>(Arrays.asList(new Piece(2, 0), new Piece(1, 0), new Piece(0, 0)));
         this.direction = 1;
     }

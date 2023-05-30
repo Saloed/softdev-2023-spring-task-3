@@ -24,6 +24,7 @@ public class SidePanel {
         musicButton = new Button(null, game.skin, "music");
         levelLabel.setPosition((BrickGame.GRID_WIDTH + 1) * Piece.SIZE, (BrickGame.GRID_HEIGHT - 5) * Piece.SIZE);
         musicButton.setPosition((BrickGame.GRID_WIDTH + 1) * Piece.SIZE, (BrickGame.GRID_HEIGHT - 7) * Piece.SIZE);
+        musicButton.setChecked(!game.music.isPlaying());
         musicButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

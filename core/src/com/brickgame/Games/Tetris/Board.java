@@ -7,6 +7,7 @@ import com.brickgame.Games.Piece;
 public class Board {
 
     public Piece[][] board = new Piece[BrickGame.GRID_WIDTH][BrickGame.GRID_HEIGHT];
+    public boolean gameOver = false;
     private final SpriteBatch batch;
 
     public Board(SpriteBatch batch) {

@@ -20,7 +20,8 @@ public class ArcanoidGameScreen implements Screen {
     private Blocks blocks;
     private Texture gameGrid;
 
-    private float  timeStepUpdPosPlatfrm, timeStepUpdatePosPlatLimit = 0.1f;
+    private float  timeStepUpdPosPlatfrm;
+    private final float timeStepUpdatePosPlatLimit = 0.1f;
 
     public ArcanoidGameScreen(BrickGame gam) {
         game = gam;

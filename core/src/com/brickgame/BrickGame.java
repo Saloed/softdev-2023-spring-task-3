@@ -42,8 +42,6 @@ public class BrickGame extends Game {
     @Override
     public void create() {
         assetsManager = new AssetsManager();
-        mainMenuScreen = new MainMenuScreen(this);
-        setScreen(mainMenuScreen);
 
         assetsManager.queueAddSounds();
         assetsManager.queueAddMusic();
@@ -58,6 +56,9 @@ public class BrickGame extends Game {
         music.setLooping(true);
         music.setVolume(0.5f);
         music.play();
+
+        mainMenuScreen = new MainMenuScreen(this);
+        setScreen(mainMenuScreen);
     }
 
     @Override

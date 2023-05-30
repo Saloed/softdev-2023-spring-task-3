@@ -10,7 +10,7 @@ import com.brickgame.Games.Piece;
 public class Enemy {
 
     private final SpriteBatch batch;
-    public float timeUpdatePosition, timeUpdatePositionLimit = 0.5f;
+    public float timeUpdatePosition, timeUpdatePositionLimit;
     public boolean killed;
     public Piece[] enemy;
     private int centerX;
@@ -18,6 +18,7 @@ public class Enemy {
 
     public Enemy(SpriteBatch batch, int level) {
         this.batch = batch;
+        timeUpdatePositionLimit = 0.7f;
         killed = false;
         hp = MathUtils.random(1, level);
         centerX = MathUtils.random(1, 8);

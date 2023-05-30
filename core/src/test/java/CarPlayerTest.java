@@ -26,7 +26,7 @@ public class CarPlayerTest {
         batch = mock(SpriteBatch.class);
         carPlayer = new CarPlayer(batch);
         Gdx.graphics = mock(Graphics.class);
-        when(Gdx.graphics.getDeltaTime()).thenReturn(CarEnemy.timeUpdatePositionLimit);
+        when(Gdx.graphics.getDeltaTime()).thenReturn(10f);
     }
 
     @Test

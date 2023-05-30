@@ -20,10 +20,9 @@ public class TetrisGameScreen implements Screen {
     private Stage stage;
     private Texture gameGrid;
     private Tetromino currentTetromino;
-    private static boolean gameOver;
     private static final List<Integer> types = new ArrayList<>();
 
-    private float TIME_MOVE_LIMIT = 0.5f, TIME_MOVE;
+    private float TIME_MOVE_LIMIT, TIME_MOVE;
 
     public TetrisGameScreen(BrickGame gam) {
         game = gam;
@@ -39,7 +38,7 @@ public class TetrisGameScreen implements Screen {
         currentTetromino = new Tetromino(batch, new Piece(MathUtils.random(BrickGame.GRID_WIDTH / 2 - 1, BrickGame.GRID_WIDTH / 2 + 1), BrickGame.GRID_HEIGHT - 2), currenttype, board);
         for (Piece p : currentTetromino.tetromino) {
             if (board.board[(int) p.getX()][(int) p.getY()] != null) {
-                gameOver = true;
+                board.gameOver = true;
                 break;
             }
         }
@@ -52,11 +51,10 @@ public class TetrisGameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         board = new Board(batch);
-        gameOver = false;
         sidePanel = new SidePanel(batch, game);
         gameGrid = new Texture(Gdx.files.internal("background.png"));
         createNewTetromino();
-
+        TIME_MOVE_LIMIT = 0.5f;
         stage.addActor(sidePanel.musicButton);
     }
 
@@ -111,7 +109,7 @@ public class TetrisGameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) game.changeScreen(0);
 
         // проигрыш
-        if (gameOver) {
+        if (board.gameOver) {
             game.changeScreen(6);
             game.endGameScreen.beforeGameScreen = 5;
         }

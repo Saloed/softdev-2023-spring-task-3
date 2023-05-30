@@ -13,10 +13,11 @@ public class Gun {
     public List<Piece> gun;
     public List<Bullet> bullets;
     private final SpriteBatch batch;
-    public float timeUpdatePositions, timeUpdatePositionLimit = 0.1f;
+    public float timeUpdatePositions, timeUpdatePositionLimit;
     public boolean isNeedPlayHit, isNeedPlayBroke, isNeedIncreaseScore;
 
     public Gun(SpriteBatch batch) {
+        timeUpdatePositionLimit = 0.1f;
         this.batch = batch;
         gun = new ArrayList<>(Arrays.asList(new Piece((float) (BrickGame.GRID_WIDTH / 2 - 1), 0), new Piece((float) (BrickGame.GRID_WIDTH / 2), 0), new Piece((float) (BrickGame.GRID_WIDTH / 2) + 1, 0), new Piece((float) (BrickGame.GRID_WIDTH / 2), 1)));
         bullets = new ArrayList<>();
@@ -40,8 +41,8 @@ public class Gun {
     }
 
     public void shoot() {
-            bullets.add(new Bullet(batch, this));
-            isNeedPlayHit = true;
+        bullets.add(new Bullet(batch, this));
+        isNeedPlayHit = true;
     }
 
     public void deleteBullet() {
@@ -60,12 +61,12 @@ public class Gun {
             for (Bullet b : bullets) {
                 if (b.bullet.getX() == e.getX() && b.bullet.getY() == e.getY()) {
                     enemy.hp--;
+                    b.needToDelete = true;
                     isNeedPlayBroke = true;
                     if (enemy.hp == 0) {
                         isNeedIncreaseScore = true;
                         enemy.killed = true;
                     }
-                    b.bullet.setY(BrickGame.GRID_HEIGHT + 5);
                     break;
                 }
             }

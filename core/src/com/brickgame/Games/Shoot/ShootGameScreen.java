@@ -19,7 +19,7 @@ public class ShootGameScreen implements Screen {
     private SpriteBatch batch;
     private Texture gameGrid;
     private ArrayList<Enemy> enemies;
-    private float timeSpawn,timeStepShoot, timeShootLimit = 1f, timeSpawnLimit = 1.5f;
+    private float timeSpawn,timeStepShoot, timeShootLimit, timeSpawnLimit;
     private Gun gun;
     private SidePanel sidePanel;
 
@@ -38,6 +38,8 @@ public class ShootGameScreen implements Screen {
         enemies = new ArrayList<>();
         gun = new Gun(batch);
         timeSpawn = 0;
+        timeShootLimit = 1f;
+        timeSpawnLimit = 2.1f;
         stage.addActor(sidePanel.musicButton);
     }
 
@@ -49,13 +51,6 @@ public class ShootGameScreen implements Screen {
         //Обновление времен
         timeStepShoot += Gdx.graphics.getDeltaTime();
         timeSpawn += Gdx.graphics.getDeltaTime();
-
-
-        // удаление улетевших за экран пуль и убитых врагов
-        for (int i = enemies.size() - 1; i >= 0; --i) {
-            if (enemies.get(i).killed) enemies.remove(i);
-        }
-        gun.deleteBullet();
 
         //спавн врагов
         if (timeSpawn >= timeSpawnLimit) {
@@ -86,6 +81,12 @@ public class ShootGameScreen implements Screen {
             if (gun.isNeedIncreaseScore) sidePanel.score.increaseScore();
         }
 
+        // удаление улетевших за экран пуль и убитых врагов
+        for (int i = enemies.size() - 1; i >= 0; --i) {
+            if (enemies.get(i).killed) enemies.remove(i);
+        }
+        gun.deleteBullet();
+
         // отрисовка игровых объектов
         batch.begin();
         sidePanel.draw();
@@ -96,9 +97,9 @@ public class ShootGameScreen implements Screen {
         batch.end();
 
         // переход на следующий уровень
-        if (sidePanel.isNextLevel()) {
+        if (sidePanel.level< 10 && sidePanel.isNextLevel()) {
             game.achives.play();
-            timeShootLimit -= 0.2f;
+            if(timeShootLimit > 0.1f) timeShootLimit-= 0.1f;
         }
 
         // принудительный выход из игры

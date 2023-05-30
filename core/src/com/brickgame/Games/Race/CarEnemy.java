@@ -10,11 +10,12 @@ import com.brickgame.Games.Piece;
 public class CarEnemy {
     private final SpriteBatch batch;
     private float timeUpdatePosition = 0;
-    public static float timeUpdatePositionLimit = 0.4f;
+    public static float timeUpdatePositionLimit;
     public Piece[] car;
 
     public CarEnemy(SpriteBatch batch) {
         this.batch = batch;
+        timeUpdatePositionLimit = 0.4f;
         int centerCar = MathUtils.random(1);
         if (centerCar == 1) centerCar = 3;
         else centerCar = 6;
