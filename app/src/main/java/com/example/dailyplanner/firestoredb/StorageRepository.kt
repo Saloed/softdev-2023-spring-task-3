@@ -1,26 +1,22 @@
 package com.example.dailyplanner.firestoredb
 
-import androidx.compose.runtime.MutableState
 import com.example.dailyplanner.Plan
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.flow.Flow
+
 const val PLANS_COLLECTION_REF = "plans"
 
 class StorageRepository() {
     private val firestore = FirebaseFirestore.getInstance()
-    fun user() = Firebase.auth.currentUser
-    fun hasUser(): Boolean = Firebase.auth.currentUser != null
-    fun getUserId(): String = Firebase.auth.currentUser?.uid.orEmpty()
+
     private val plansRef = firestore.collection(PLANS_COLLECTION_REF)
 
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     fun getUserPlans(
         userId: String,
     ): Flow<Resources<List<Plan>>> = callbackFlow {
@@ -60,7 +56,7 @@ class StorageRepository() {
         onSuccess: (Plan?) -> Unit
     ) {
         plansRef
-            .document("planId")
+            .document(planId)
             .get()
             .addOnSuccessListener {
                 onSuccess.invoke(it?.toObject(Plan::class.java))
@@ -97,21 +93,17 @@ class StorageRepository() {
 
     }
 
-    fun deleteNote(planId: String) {
-        plansRef.document(planId)
-            .delete()
-    }
 
-    fun updateNote(
-        planId: String,
-        planDone: Boolean
-    ) {
-        val updateData = hashMapOf<String, Any>(
-            "planDone" to planDone,
-        )
-
-        plansRef.document("plans/$planId").set(updateData)
-    }
+//    fun updateNote(
+//        planId: String,
+//        planDone: Boolean
+//    ) {
+//        val updateData = hashMapOf<String, Any>(
+//            "planDone" to planDone,
+//        )
+//
+//        plansRef.document("plans/$planId").set(updateData)
+//    }
     fun signOut() = Firebase.auth.signOut()
 
 

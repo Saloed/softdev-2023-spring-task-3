@@ -1,5 +1,9 @@
 package com.example.dailyplanner.appbotnav
 
+import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
 import androidx.activity.compose.ManagedActivityResultLauncher
@@ -51,6 +55,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dailyplanner.Plan
 import com.example.dailyplanner.R
@@ -69,7 +75,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.time.Clock
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -93,14 +101,14 @@ fun rememberFirebaseAuthLauncher(
     }
 }
 
+@SuppressLint("MissingPermission")
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Plans(
-    plans: List<Plan>?,
-    onAddPlan: (Plan) -> Unit,
     viewModel: PlansViewModel = viewModel(),
-    onCheckPlan: (String) -> Unit
+    onCheckPlan: (String) -> Unit,
+    onAddNotify: NotificationManager
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.loadPlans()
@@ -139,6 +147,21 @@ fun Plans(
     val token = stringResource(R.string.default_web_client_id)
     val context = LocalContext.current
     var idGenerator = remember { "0".toInt() }
+    val NOTIFICATION_ID = 999
+    val CHANNEL_ID = "channelID"
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        // Create the NotificationChannel.
+        val name = stringResource(R.string.channel_name)
+        val descriptionText = stringResource(R.string.channel_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
+        mChannel.description = descriptionText
+        // Register the channel with the system. You can't change the importance
+        // or other notification behaviors after this.
+        onAddNotify.createNotificationChannel(mChannel)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -236,6 +259,9 @@ fun Plans(
 
     }
 
+
+
+
     if (openDialog.value) {
         LaunchedEffect(key1 = Unit) {
 
@@ -250,7 +276,7 @@ fun Plans(
                 Text(text = "Добавить план")
             },
             text = {
-                Column() {
+                Column {
 
                     Button(
                         onClick = { timeDialogState.show() },
@@ -296,9 +322,38 @@ fun Plans(
                         onClick = {
                             viewModel.onTimeChange(formattedTime)
                             viewModel.onDateChange(formattedDate)
-                            openDialog.value = false;
-                            viewModel.addPlan();
+                            openDialog.value = false
+                            viewModel.addPlan()
                             viewModel.loadPlans()
+                            val intent = Intent(context, Plan::class.java).apply {
+                                flags =
+                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            }
+                            val pendingIntent: PendingIntent = PendingIntent.getActivity(
+                                context,
+                                0,
+                                intent,
+                                PendingIntent.FLAG_MUTABLE
+                            )
+
+                            val startOfDay = LocalDateTime.of(pickedDate, LocalTime.MIN)
+                            val millis =
+                                startOfDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+                                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                                .setContentTitle("План через час")
+                                .setContentText("Вы запланировали через час ${viewModel.planUiState.planText}")
+                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                .setWhen(pickedTime.toNanoOfDay() / 1000000 + millis - 1000 * 60 * 60)
+                                .setContentIntent(pendingIntent)
+                                .setGroupSummary(true)
+
+
+                            with(NotificationManagerCompat.from(context)) {
+                                notify(NOTIFICATION_ID, builder.build()) // посылаем уведомление
+                            }
+
+
                         }
                     ) {
                         Text("Добавить")
@@ -308,78 +363,6 @@ fun Plans(
         )
 
     }
-    if (openChangeDialog.value) {
-        LaunchedEffect(key1 = Unit) {
-
-            viewModel.getPlan(viewModel.planUiState.documentId)
-
-
-        }
-        AlertDialog(
-            onDismissRequest = {
-                openChangeDialog.value = false
-            },
-            title = {
-                Text(text = "Отредактировать план")
-            },
-            text = {
-                Column() {
-
-                    Button(
-                        onClick = { },
-                        modifier = Modifier
-                            .size(height = 40.dp, width = 70.dp)
-                            .padding(bottom = 5.dp), colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.LightGray,
-                            contentColor = Color.Black
-                        )
-                    ) {
-                        Text(text = viewModel.planUiState.time, style = MaterialTheme.typography.body2)
-                    }
-                    TextField(
-                        value = viewModel.planUiState.planText,
-                        onValueChange = { viewModel.onTextChange(it) }
-                    )
-
-                    Row(modifier = Modifier.wrapContentSize()) {
-                        Checkbox(
-                            checked = viewModel.planUiState.useful_habit,
-                            onCheckedChange = { viewModel.onHabitChange(it) })
-                        Text(text = "Полезная привычка", modifier = Modifier.padding(top = 10.dp))
-                    }
-                    Row(modifier = Modifier.wrapContentSize()) {
-                        Checkbox(
-                            checked = viewModel.planUiState.planDone,
-                            onCheckedChange = { viewModel.onPlanDoneChange(it) })
-                        Text(text = "План выполнен", modifier = Modifier.padding(top = 10.dp))
-
-                    }
-                }
-            },
-            buttons = {
-                Row(
-                    modifier = Modifier.padding(all = 8.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Button(
-                        modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Green,
-                            contentColor = Color.Black
-                        ),
-                        onClick = {
-                            openDialog.value = false;
-                            viewModel.updateNote(viewModel.planUiState.documentId );
-                            viewModel.loadPlans()
-                        }
-                    ) {
-                        Text("Сохранить")
-                    }
-                }
-            }
-        )
-
-    }
-
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom
@@ -397,7 +380,7 @@ fun Plans(
                             .requestEmail()
                             .build()
                     val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                    launcher.launch(googleSignInClient.signInIntent);
+                    launcher.launch(googleSignInClient.signInIntent)
                 }) {
                     Image(
                         painter = painterResource(
@@ -409,7 +392,7 @@ fun Plans(
                 }
             } else {
                 Button(onClick = {
-                    Firebase.auth.signOut()
+                    viewModel.signOut()
                     user = null
                 }) {
                     Image(
@@ -469,7 +452,7 @@ fun Plans(
                             contentColor = Color.Black
                         ),
                         onClick = {
-                            openProfile.value = false;
+                            openProfile.value = false
                         }
                     ) {
                         Text("Закрыть")
@@ -517,7 +500,8 @@ fun ListItem(
 //                    checked = viewModel.planUiState.planDone,
 //                    onCheckedChange = {viewModel.onPlanDoneChange(viewModel.planUiState.documentId, it)})
                 Button(onClick = {
-                    openChangeDialog.value = true; viewModel.getPlan(plan.documentId); onCheckPlan.invoke(plan.documentId)
+                    openChangeDialog.value =
+                        true; viewModel.getPlan(plan.documentId); onCheckPlan.invoke(plan.documentId)
                 }) {
                     Image(
                         painter = painterResource(id = R.drawable.check),

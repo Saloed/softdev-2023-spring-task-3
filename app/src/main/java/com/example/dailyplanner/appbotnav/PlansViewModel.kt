@@ -9,18 +9,13 @@ import com.example.dailyplanner.Plan
 import com.example.dailyplanner.firestoredb.StorageRepository
 
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class PlansViewModel(private val repository: StorageRepository = StorageRepository()) :
     ViewModel() {
-    private val firestore = FirebaseFirestore.getInstance()
-    fun user() = Firebase.auth.currentUser
-    fun userId() = if (user()?.uid?.isNotBlank() == true) user()!!.uid else ""
-    fun hasUser(): Boolean = Firebase.auth.currentUser != null
-    fun getUserId(): String = Firebase.auth.currentUser?.uid.orEmpty()
+    private fun userId() = Firebase.auth.currentUser?.uid.orEmpty()
+    private fun hasUser(): Boolean = Firebase.auth.currentUser != null
 
     var planListUiState by mutableStateOf(PlanListUiState())
     var planUiState by mutableStateOf(PlanUiState())
@@ -78,16 +73,16 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
 
             )
     }
-    fun updateNote(
-        noteId: String,
-    ){
-        repository.updateNote(
-           planId = planUiState.documentId,
-            planDone = planUiState.planDone
-        )
-
-       repository.updateNote(noteId, planUiState.planDone)
-    }
+//    fun updateNote(
+//        noteId: String,
+//    ){
+//        repository.updateNote(
+//           planId = planUiState.documentId,
+//            planDone = planUiState.planDone
+//        )
+//
+//       repository.updateNote(noteId, planUiState.planDone)
+//    }
 
 
     fun getCurrentDayPlans(date: String): List<Plan> =
@@ -101,9 +96,6 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
     fun habitCheckedPlans(day: String): Int =
         (getCurrentDayPlans(day).filter { it.planDone && it.useful_habit }.size)
 
-    companion object {
-        private const val PLANS_COLLECTION_REF = "plans"
-    }
 
 }
 
@@ -118,5 +110,5 @@ data class PlanUiState(
 )
 
 data class PlanListUiState(
-    public val planList: StorageRepository.Resources<List<Plan>> = StorageRepository.Resources.Loading(),
+    val planList: StorageRepository.Resources<List<Plan>> = StorageRepository.Resources.Loading(),
 )

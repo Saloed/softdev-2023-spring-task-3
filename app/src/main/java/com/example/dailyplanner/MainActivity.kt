@@ -1,12 +1,13 @@
 package com.example.dailyplanner
 
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.mutableStateOf
 import com.example.dailyplanner.appbotnav.Plans
 import com.example.dailyplanner.appbotnav.PlansViewModel
 import com.example.dailyplanner.ui.theme.DailyPlannerTheme
@@ -24,12 +25,13 @@ class MainActivity : ComponentActivity() {
         auth = Firebase.auth
         setContent {
             DailyPlannerTheme {
+                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 Plans(
-                    plansViewModel.planListUiState.planList.data,
-                    onAddPlan = {plansViewModel.addPlan()},
                     viewModel = plansViewModel,
-                    onCheckPlan = { plansViewModel.onPlanDoneChange(plansViewModel.planUiState.planDone)}
+                    onCheckPlan = { plansViewModel.onPlanDoneChange(plansViewModel.planUiState.planDone)},
+                    onAddNotify = notificationManager
                 )
+
             }
         }
     }
