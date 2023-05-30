@@ -5,14 +5,15 @@ import java.awt.*;
 
 public class App {
 
-    private static GameBoard gameBoard;
+    private GameBoard gameBoard;
     private static Geometry geometry = new Geometry(10, 16, 32);
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(App::createGUI);
+        var app = new App();
+        SwingUtilities.invokeLater(app::createGUI);
     }
 
-    private static void createGUI() {
+    private void createGUI() {
         var frame = new JFrame("Hexagonal Minesweeper");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -34,18 +35,18 @@ public class App {
         frame.setResizable(false);
     }
 
-    private static void createGameBoard(JFrame frame) {
+    private void createGameBoard(JFrame frame) {
         gameBoard = new GameBoard(geometry);
         frame.add(gameBoard, BorderLayout.CENTER);
         frame.pack();
     }
 
-    private static void recreateGameBoard(JFrame frame) {
+    private void recreateGameBoard(JFrame frame) {
         frame.remove(gameBoard);
         createGameBoard(frame);
     }
 
-    private static void showSettingsDialog(JFrame frame) {
+    private void showSettingsDialog(JFrame frame) {
         var title = "Game parameters";
         var settingsPanel = new SettingsPanel();
         settingsPanel.rows.setValue(geometry.numOfRows);
