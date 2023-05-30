@@ -12,6 +12,7 @@ public class MainLogic {
     private HexGrid grid;
     private HexGrid previous;
     private int preScore;
+    private FieldOptions fieldOp;
 
     public HexGrid getGrid(){
         return grid;
@@ -23,7 +24,7 @@ public class MainLogic {
     }
 
     public boolean isItEnd() {
-        HexGrid save = new HexGrid();
+        HexGrid save = new HexGrid(fieldOp);
         grid.copyTo(save);
         if(shift(Direction.DOWN_RIGHT)) {
             grid = save;
@@ -47,12 +48,13 @@ public class MainLogic {
         return true;
     }
 
-    public void init(){
+    public void init(FieldOptions fieldOptions){
+        this.fieldOp = fieldOptions;
         score = 0;
         isThere16384 = false;
         direction = Direction.AWAITING;
-        grid = new HexGrid();
-        previous = new HexGrid();
+        grid = new HexGrid(fieldOp);
+        previous = new HexGrid(fieldOp);
     }
 
     public void returnPrevious() {
@@ -63,7 +65,7 @@ public class MainLogic {
     public boolean move() {
         boolean wasMoved = false;
         if(direction != Direction.AWAITING) {
-            HexGrid t = new HexGrid();
+            HexGrid t = new HexGrid(fieldOp);
             grid.copyTo(t);
             int tS = score;
             if(shift(direction)) {
@@ -102,7 +104,7 @@ public class MainLogic {
         switch (direction) {
             case UP_RIGHT:
             case DOWN_LEFT:
-                for(int q = Constants.getArraySide() - 1; q > 1; q--) {
+                for(int q = fieldOp.getArraySide() - 1; q > 1; q--) {
                     int[] oldRow = grid.getUpperDiagonal(q);
                     if(direction == Direction.UP_RIGHT) {
                         oldRow = reverse(oldRow);
@@ -114,7 +116,7 @@ public class MainLogic {
                     grid.setUpperDiagonal(q, result.shiftedRow);
                     ret = ret || result.didItMoved;
                 }
-                for(int q = 1; q < Constants.getArraySide(); q++) {
+                for(int q = 1; q < fieldOp.getArraySide(); q++) {
                     int[] oldRow = grid.getLowerDiagonal(q);
                     if(direction == Direction.DOWN_LEFT) {
                         oldRow = reverse(oldRow);
@@ -129,7 +131,7 @@ public class MainLogic {
                 break;
             case UP_LEFT:
             case DOWN_RIGHT:
-                for (int q = 0; q < Constants.getArraySide(); q++) {
+                for (int q = 0; q < fieldOp.getArraySide(); q++) {
                     int[] oldRow = grid.getColumn(q);
                     if(direction == Direction.DOWN_RIGHT) {
                         oldRow = reverse(oldRow);
@@ -144,7 +146,7 @@ public class MainLogic {
                 break;
             case LEFT:
             case RIGHT:
-                for (int q = 0; q < Constants.getArraySide(); q++) {
+                for (int q = 0; q < fieldOp.getArraySide(); q++) {
                     int[] oldRow = grid.getLine(q);
                     if(direction == Direction.RIGHT) {
                         oldRow = reverse(oldRow);
@@ -231,10 +233,10 @@ public class MainLogic {
 
         int randQ, randR;
 
-        randQ = new Random().nextInt(Constants.getArraySide());
+        randQ = new Random().nextInt(fieldOp.getArraySide());
         int curQ = randQ;
 
-        randR = new Random().nextInt(Constants.getArraySide());
+        randR = new Random().nextInt(fieldOp.getArraySide());
         int curR = randR;
 
         boolean placed = false;
@@ -244,11 +246,11 @@ public class MainLogic {
                 Controller.setAnim(curQ, curR, 1);
                 placed = true;
             } else {
-                if(curQ+1 < Constants.getArraySide()) {
+                if(curQ+1 < fieldOp.getArraySide()) {
                     curQ++;
                 } else {
                     curQ = 0;
-                    if(curR+1 < Constants.getArraySide()) {
+                    if(curR+1 < fieldOp.getArraySide()) {
                         curR++;
                     } else {
                         curR = 0;

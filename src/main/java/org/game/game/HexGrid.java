@@ -1,29 +1,28 @@
 package org.game.game;
 
-import java.util.Arrays;
-
 public class HexGrid {
-
     private final int[][] grid;
+    private final FieldOptions fieldOp;
 
-    public HexGrid() {
-        this.grid = new int[Constants.getArraySide()][Constants.getArraySide()];
+    public HexGrid(FieldOptions fieldOp) {
+        this.fieldOp = fieldOp;
+        this.grid = new int[fieldOp.getArraySide()][fieldOp.getArraySide()];
         filling();
     }
 
     private void filling() {
-        int i = Constants.getSideLength() - 1;
-        int j = Constants.getSideLength() - 1;
+        int i = fieldOp.getSideLength() - 1;
+        int j = fieldOp.getSideLength() - 1;
         for (int q = 0; q < i; q++) {
             for (int r = 0; r < j; r++) {
                 this.grid[q][r] = -1;
             }
             j--;
         }
-        i = Constants.getSideLength() - 1;
-        j = Constants.getSideLength() - 1;
-        for (int q = Constants.getArraySide() - 1; q > i; q--) {
-            for (int r = Constants.getArraySide() - 1; r > j; r--) {
+        i = fieldOp.getSideLength() - 1;
+        j = fieldOp.getSideLength() - 1;
+        for (int q = fieldOp.getArraySide() - 1; q > i; q--) {
+            for (int r = fieldOp.getArraySide() - 1; r > j; r--) {
                 this.grid[q][r] = -1;
             }
             j++;
@@ -47,15 +46,15 @@ public class HexGrid {
     }
 
     public int[] getColumn(int r) {
-        int[] ret = new int[Constants.getArraySide()];
-        for(int q = 0; q < Constants.getArraySide(); q++) {
+        int[] ret = new int[fieldOp.getArraySide()];
+        for(int q = 0; q < fieldOp.getArraySide(); q++) {
             ret[q] = grid[q][r];
         }
         return ret;
     }
 
     public void setColumn(int r, int[] newColumn) {
-        for (int q = 0; q < Constants.getArraySide(); q++) {
+        for (int q = 0; q < fieldOp.getArraySide(); q++) {
             grid[q][r] = newColumn[q];
         }
     }
@@ -70,8 +69,8 @@ public class HexGrid {
     }
 
     public int[] getLowerDiagonal(int q) {
-        int[] ret = new int[Constants.getArraySide() - q];
-        int r = Constants.getArraySide() - 1;
+        int[] ret = new int[fieldOp.getArraySide() - q];
+        int r = fieldOp.getArraySide() - 1;
         for (int i = 0; i < ret.length; i++) {
             ret[i] = grid[q][r];
             q++; r--;
@@ -80,7 +79,7 @@ public class HexGrid {
     }
 
     public void setLowerDiagonal(int q, int[] newDiagonal) {
-        int r = Constants.getArraySide() - 1;
+        int r = fieldOp.getArraySide() - 1;
         for (int j : newDiagonal) {
             grid[q][r] = j;
             q++; r--;
@@ -99,18 +98,12 @@ public class HexGrid {
     }
 
     public void copyTo(HexGrid copy) {
-        for (int q = 0; q < Constants.getArraySide(); q++) {
-            for (int r = 0; r < Constants.getArraySide(); r++) {
+        for (int q = 0; q < fieldOp.getArraySide(); q++) {
+            for (int r = 0; r < fieldOp.getArraySide(); r++) {
                 copy.setState(q, r, this.getState(q, r));
             }
         }
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if(!(obj instanceof HexGrid)) return false;
-        HexGrid o = (HexGrid) obj;
-        return Arrays.deepEquals(getArray(), o.getArray());
-    }
 }
 

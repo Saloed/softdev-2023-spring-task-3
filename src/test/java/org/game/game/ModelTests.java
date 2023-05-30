@@ -5,6 +5,12 @@ import org.junit.jupiter.api.Assertions;
 
 public class ModelTests {
 
+    private final FieldOptions fieldOptions = new FieldOptions();
+    {
+        fieldOptions.setSideLength(3);
+        fieldOptions.setArraySide(2 * fieldOptions.getSideLength() - 1);
+    }
+
     @Test
     public void test1() {
         Assertions.assertEquals(16, 4*4);
@@ -12,10 +18,8 @@ public class ModelTests {
 
     @Test
     public void shiftTest() {
-        Constants.setSideLength(3);
-        Constants.setArraySide( 2 * Constants.getSideLength() - 1);
         MainLogic logic = new MainLogic();
-        logic.init();
+        logic.init(fieldOptions);
         logic.getGrid().setState(0,4, 2);
         logic.getGrid().setState(4, 0, 2);
         logic.shift(Direction.UP_RIGHT);
@@ -54,10 +58,8 @@ public class ModelTests {
 
     @Test
     public void winTest() {
-        Constants.setSideLength(3);
-        Constants.setArraySide(2 * Constants.getSideLength() - 1);
         MainLogic logic = new MainLogic();
-        logic.init();
+        logic.init(fieldOptions);
         logic.getGrid().setState(0,4, 8192);
         logic.getGrid().setState(4, 0, 8192);
         logic.shift(Direction.UP_RIGHT);
@@ -66,10 +68,8 @@ public class ModelTests {
 
     @Test
     public void failTest() {
-        Constants.setSideLength(3);
-        Constants.setArraySide(2 * Constants.getSideLength() - 1);
         MainLogic logic = new MainLogic();
-        logic.init();
+        logic.init(fieldOptions);
         logic.getGrid().setState(0, 2, 2);
         logic.getGrid().setState(0, 3, 4);
         logic.getGrid().setState(0, 4, 8);

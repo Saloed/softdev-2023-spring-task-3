@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import org.game.game.Constants;
+import org.game.game.FieldOptions;
 import org.game.game.MainLogic;
 
 public class Controller {
@@ -36,6 +37,7 @@ public class Controller {
     private Boolean wasTheFirstMove;
     private MainLogic logic;
     private static int[][] anim;
+    public static FieldOptions fieldOptions = new FieldOptions();
 
     public static void setAnim(int i, int j, int value) {
         anim[i][j] = value;
@@ -50,16 +52,16 @@ public class Controller {
 
     public void getSide() {
         if(sideLength.getText().equals("")) {
-            Constants.setSideLength(Integer.parseInt(sideLength.getPromptText()));
-            Constants.setArraySide(2 * Constants.getSideLength() - 1);
-            Constants.setDiameter(700.0 / Constants.getArraySide() * 0.7);
+            fieldOptions.setSideLength(Integer.parseInt(sideLength.getPromptText()));
+            fieldOptions.setArraySide(2 * fieldOptions.getSideLength() - 1);
+            fieldOptions.setDiameter(700.0 / fieldOptions.getArraySide() * 0.7);
         } else {
             if (!sideLength.getText().matches("[0-9]")) {
                 warningAnimation();
             } else {
-                Constants.setSideLength(Integer.parseInt(sideLength.getText()));
-                Constants.setArraySide(2 * Constants.getSideLength() - 1);
-                Constants.setDiameter(700.0 / Constants.getArraySide() * 0.7);
+                fieldOptions.setSideLength(Integer.parseInt(sideLength.getText()));
+                fieldOptions.setArraySide(2 * fieldOptions.getSideLength() - 1);
+                fieldOptions.setDiameter(700.0 / fieldOptions.getArraySide() * 0.7);
             }
         }
     }
@@ -67,39 +69,39 @@ public class Controller {
     @FXML
     public void drawTheField() {
         getSide();
-        if (Constants.getSideLength() > 9 || Constants.getSideLength() < 3) {
+        if (fieldOptions.getSideLength() > 9 || fieldOptions.getSideLength() < 3) {
             warningAnimation();
             return;
         }
         start();
-        gameField = new Label[Constants.getArraySide()][Constants.getArraySide()];
+        gameField = new Label[fieldOptions.getArraySide()][fieldOptions.getArraySide()];
 
-        double x = Constants.getDiameter() * (Constants.getArraySide() / 2);
-        double y = 230.0 - Constants.getDiameter() * Math.sin(Math.PI/3) * (Constants.getArraySide() / 2);
-        for (int q = 0; q < Constants.getArraySide(); q++) {
+        double x = fieldOptions.getDiameter() * (double)(fieldOptions.getArraySide() / 2);
+        double y = 230.0 - fieldOptions.getDiameter() * Math.sin(Math.PI/3) * (double)(fieldOptions.getArraySide() / 2);
+        for (int q = 0; q < fieldOptions.getArraySide(); q++) {
             int c = 0;
-            for (int r = 0; r < Constants.getArraySide(); r++) {
+            for (int r = 0; r < fieldOptions.getArraySide(); r++) {
                 if(logic.getGrid().getState(q, r) != -1) {
                     Label tile = new Label();
                     Pane tileCell = new StackPane();
-                    tileCell.setPrefSize(Constants.getDiameter(), Constants.getDiameter());
+                    tileCell.setPrefSize(fieldOptions.getDiameter(), fieldOptions.getDiameter());
                     tileCell.setLayoutX(x);
                     tileCell.setLayoutY(y);
                     tileCell.setStyle("-fx-background-color: #ccb69f; -fx-background-radius: 50%; -fx-border-width: " +
-                            Constants.getDiameter() * 0.05 + "; -fx-border-color: #331b09; -fx-border-radius: 50%;");
-                    tile.setPrefSize(Constants.getDiameter(), Constants.getDiameter());
+                            fieldOptions.getDiameter() * 0.05 + "; -fx-border-color: #331b09; -fx-border-radius: 50%;");
+                    tile.setPrefSize(fieldOptions.getDiameter(), fieldOptions.getDiameter());
                     tile.setStyle("-fx-background-color: transparent; -fx-background-radius: 50%;");
                     tile.setAlignment(Pos.CENTER);
                     tileCell.getChildren().add(tile);
                     fieldPane.getChildren().add(tileCell);
-                    x = x + Constants.getDiameter();
+                    x = x + fieldOptions.getDiameter();
                     gameField[q][r] = tile;
                     c++;
                 }
             }
-            y = y + Math.sin(Math.PI/3) * Constants.getDiameter();
-            if(q < Constants.getArraySide() / 2) x = x - c * Constants.getDiameter() - Constants.getDiameter() / 2;
-            else x = x - c * Constants.getDiameter() + Constants.getDiameter() / 2;
+            y = y + Math.sin(Math.PI/3) * fieldOptions.getDiameter();
+            if(q < fieldOptions.getArraySide() / 2) x = x - c * fieldOptions.getDiameter() - fieldOptions.getDiameter() / 2;
+            else x = x - c * fieldOptions.getDiameter() + fieldOptions.getDiameter() / 2;
         }
         updateField();
         fieldPane.setOnKeyPressed(this::keyPressed);
@@ -132,13 +134,13 @@ public class Controller {
     }
 
     public void updateField() {
-        for (int q = 0; q < Constants.getArraySide(); q++) {
-            for (int r = 0; r < Constants.getArraySide(); r++) {
+        for (int q = 0; q < fieldOptions.getArraySide(); q++) {
+            for (int r = 0; r < fieldOptions.getArraySide(); r++) {
                 if(gameField[q][r] != null) {
                     int valOfTile = logic.getGrid().getState(q, r);
                     String style = "-fx-background-color: " + Colors.valueOf("TILE" + valOfTile).getColor() +
                             "; -fx-background-radius: 50%; -fx-text-fill: #fafafa; " +
-                            "-fx-font-family: Harpseal; -fx-font-size: " + Constants.getDiameter() * 0.27;
+                            "-fx-font-family: Harpseal; -fx-font-size: " + fieldOptions.getDiameter() * 0.27;
                     gameField[q][r].setStyle(style);
                     if(valOfTile != 0) {
                         gameField[q][r].setText(String.valueOf(valOfTile));
@@ -150,13 +152,13 @@ public class Controller {
                 }
             }
         }
-        anim = new int[Constants.getArraySide()][Constants.getArraySide()];
+        anim = new int[fieldOptions.getArraySide()][fieldOptions.getArraySide()];
     }
 
     public void start() {
-        anim = new int[Constants.getArraySide()][Constants.getArraySide()];
+        anim = new int[fieldOptions.getArraySide()][fieldOptions.getArraySide()];
         logic = new MainLogic();
-        logic.init();
+        logic.init(fieldOptions);
         for (int i = 0; i < Constants.COUNT_INITIAL_TILES; i++) {
             logic.generateNewTile();
         }
@@ -180,7 +182,7 @@ public class Controller {
         sideLength.requestFocus();
         scoreLabel.setText("0");
         warningLabel.setVisible(false);
-        Constants.setSideLength(0);
+        fieldOptions.setSideLength(0);
     }
 
     @FXML
