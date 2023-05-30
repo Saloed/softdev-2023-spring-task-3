@@ -20,6 +20,7 @@ import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -95,10 +96,8 @@ public class BarcodeFragment extends Fragment {
     }
 
     public Bitmap decodeBase64ToBitmap(String base64String) throws UnsupportedEncodingException {
-        byte[] decodedBytes = Base64.decode(base64String.getBytes("UTF-8"), Base64.DEFAULT);
-        System.out.println(Arrays.toString(decodedBytes));
-        Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-        return bitmap;
+        byte[] decodedBytes = Base64.decode(base64String.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
     void checkFormat(String code) throws WriterException, UnsupportedEncodingException {
@@ -131,9 +130,6 @@ public class BarcodeFragment extends Fragment {
                     break;
                 case "CODE_93":
                     format = BarcodeFormat.CODE_93;
-                    break;
-                case "CODE_128":
-                    format = BarcodeFormat.CODE_128;
                     break;
                 case "CODABAR":
                     format = BarcodeFormat.CODABAR;

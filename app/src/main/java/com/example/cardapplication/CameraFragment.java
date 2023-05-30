@@ -27,7 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Camera_Fragment extends Fragment{
+public class CameraFragment extends Fragment{
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private ImageView imageView;
@@ -68,14 +68,14 @@ public class Camera_Fragment extends Fragment{
 
     public void onSaveButtonClick(View view) {
         if (imageBitmap == null) {
-            Toast.makeText(getActivity(), "Сначала нужно сделать фото", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.make_photo_pls, Toast.LENGTH_SHORT).show();
             return;
         }
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-        Toast.makeText(getActivity(), "Фото сохранено в base64 формате", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.photo_saved, Toast.LENGTH_SHORT).show();
         setDataToDataBase(encoded);
     }
     private void setDataToDataBase(String s) {
@@ -90,7 +90,7 @@ public class Camera_Fragment extends Fragment{
             public void onSuccess(Void unused) {
             }
         });
-        getActivity().getSupportFragmentManager().beginTransaction().remove(Camera_Fragment.this).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().remove(CameraFragment.this).commit();
         Intent intent = new Intent(getContext(), Scanner.class);
         startActivity(intent);
     }

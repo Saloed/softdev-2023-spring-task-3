@@ -62,14 +62,14 @@ public class Register extends AppCompatActivity {
             email = editTextemail.getText().toString();
             password = editTextPassword.getText().toString();
             if (email.isEmpty())
-                Toast.makeText(Register.this, "Enter email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Register.this, R.string.enter_email, Toast.LENGTH_SHORT).show();
             if (password.isEmpty())
-                Toast.makeText(Register.this, "Enter password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Register.this, R.string.enter_password, Toast.LENGTH_SHORT).show();
 
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
-                    Toast.makeText(Register.this, "Authentication success.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Register.this, R.string.authentication_success, Toast.LENGTH_SHORT).show();
                     SharedPreferences sharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("loginCheck", true).commit();
@@ -78,7 +78,7 @@ public class Register extends AppCompatActivity {
                     finish();
                     addToUsersList(email);
                 } else {
-                    Toast.makeText(Register.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Register.this, R.string.authentication_failed, Toast.LENGTH_SHORT).show();
                 }
             });
         });
@@ -91,24 +91,14 @@ public class Register extends AppCompatActivity {
         db.collection(email).document("friends").collection("friends_collection").document("test").set(info).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
-                Toast.makeText(getApplicationContext(), "зарегистрирован + создан файл", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.user_registr, Toast.LENGTH_SHORT).show();
             }
         });
         Map<String, Integer> card = new HashMap<>();
         card.put("test_friend", 123456);
-        db.collection(email).document("card").collection("card_collection").document("test").set(card).addOnSuccessListener(new OnSuccessListener() {
-            @Override
-            public void onSuccess(Object o) {
-                Toast.makeText(getApplicationContext(), "зарегистрирован + создан файл", Toast.LENGTH_SHORT).show();
-            }
-        });
+        db.collection(email).document("card").collection("card_collection").document("test").set(card);
         Map<String, Boolean> user = new HashMap<>();
         user.put(email, true);
-        db.collection("users").document(email).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(getApplicationContext(), "зарегистрирован + создан файл", Toast.LENGTH_SHORT).show();
-            }
-        });
+        db.collection("users").document(email).set(user);
     }
 }

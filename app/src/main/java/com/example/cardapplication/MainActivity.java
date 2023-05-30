@@ -55,7 +55,7 @@ public class MainActivity extends Menu {
             startActivity(intent);
             finish();
         } else {
-            Toast.makeText(this, "Нажмите еще раз, чтобы выйти", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.exit_two_click, Toast.LENGTH_SHORT).show();
             backPressTime = System.currentTimeMillis();
         }
     }
@@ -78,8 +78,6 @@ public class MainActivity extends Menu {
                         adapter.updateMovieList(names);
                         recyclerView.setAdapter(adapter);
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
         });

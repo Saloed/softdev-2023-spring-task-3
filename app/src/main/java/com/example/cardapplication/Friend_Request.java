@@ -55,11 +55,7 @@ public class Friend_Request extends AppCompatActivity {
                                             .collection("friends_collection").document(name).set(map);
                                     Intent intent=new Intent(getApplicationContext(),MainActivity.class);
                                     startActivity(intent);
-                            } else {
-                                Log.d(TAG, "Document does not exist!");
                             }
-                        } else {
-                            Log.d(TAG, "Failed with: ", task.getException());
                         }
                     }
                 });

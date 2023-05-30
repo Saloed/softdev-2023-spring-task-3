@@ -67,8 +67,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MyViewHolder> 
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
-
-        private static final String TAG = "MyViewHolder";
         TextView textView;
         ImageButton imageButton;
 

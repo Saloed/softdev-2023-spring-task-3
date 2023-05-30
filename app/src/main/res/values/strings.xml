@@ -14,4 +14,14 @@
     <string name="title_activity_barcode_image">Barcode_image</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="enter_email">Enter email</string>
+    <string name="enter_password">Enter password</string>
+    <string name="authentication_success">Authentication success</string>
+    <string name="authentication_failed">Authentication failed.</string>
+    <string name="user_registr">Пользователь зарегистрирован</string>
+    <string name="camera_permission">Нужно ваше разрешение на использование камеры</string>
+    <string name="exit_two_click">Нажмите еще раз, чтобы выйти</string>
+    <string name="add_card">Карта добавлена</string>
+    <string name="make_photo_pls">Сначала нужно сделать фото</string>
+    <string name="photo_saved">Фото сохранено</string>
 </resources>

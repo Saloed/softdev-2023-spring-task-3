@@ -72,7 +72,7 @@ public class Login extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(Login.this, "Authentication success.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Login.this, R.string.authentication_success, Toast.LENGTH_SHORT).show();
                                     SharedPreferences sharedPreferences =  getSharedPreferences("Login", Context.MODE_PRIVATE);;
                                     SharedPreferences.Editor editor=sharedPreferences.edit();
                                     editor.putBoolean("loginCheck",true).commit();
@@ -80,8 +80,7 @@ public class Login extends AppCompatActivity {
                                     startActivity(intent);
                                     finish();
                                 } else {
-                                    // If sign in fails, display a message to the user.
-                                    Toast.makeText(Login.this, "Authentication failed.",
+                                    Toast.makeText(Login.this, R.string.authentication_failed,
                                             Toast.LENGTH_SHORT).show();
 
                                 }

@@ -63,7 +63,7 @@ public class CardSave extends Fragment {
                 .document(nameString).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Toast.makeText(getActivity(), "ура победа должны появиться карты", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.add_card, Toast.LENGTH_LONG).show();
             }
         });
         getActivity().getSupportFragmentManager().beginTransaction().remove(CardSave.this).commit();

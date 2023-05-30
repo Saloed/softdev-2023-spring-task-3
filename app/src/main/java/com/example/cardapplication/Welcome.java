@@ -23,7 +23,6 @@ FirebaseAuth firebaseAuth;
     }
     void checkAuth(){
         Intent intent;
-        System.out.println("идет проверка");
         SharedPreferences sharedPreferences =  getSharedPreferences("Login", Context.MODE_PRIVATE);
         boolean check=false;
         try {
@@ -31,7 +30,6 @@ FirebaseAuth firebaseAuth;
         }
         catch (Exception e){
         }
-
         if (check==false){
 
             intent= new Intent(this, Login.class);

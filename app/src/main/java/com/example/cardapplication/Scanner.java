@@ -43,7 +43,7 @@ public class Scanner extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Camera_Fragment fragment=new Camera_Fragment();
+                CameraFragment fragment=new CameraFragment();
                 setFragment(fragment);
             }
         });
@@ -77,19 +77,19 @@ public class Scanner extends AppCompatActivity {
         }
     }
 
-    private void requestCameraPermission(final Activity activity) { // принимаем активити вместо контекста
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)) { // передаем активити вместо контекста
-            Snackbar.make(mScannerView, "Нужно ваше разрешение на использование камеры", Snackbar.LENGTH_INDEFINITE)
+    private void requestCameraPermission(final Activity activity) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)) {
+            Snackbar.make(mScannerView, R.string.camera_permission, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ActivityCompat.requestPermissions(activity, // передаем активити вместо контекста
+                            ActivityCompat.requestPermissions(activity,
                                     new String[]{Manifest.permission.CAMERA},
                                     CAMERA_PERMISSION_REQUEST_CODE);
                         }
                     }).show();
         } else {
-            ActivityCompat.requestPermissions(activity, // передаем активити вместо контекста
+            ActivityCompat.requestPermissions(activity,
                     new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
         }
     }
