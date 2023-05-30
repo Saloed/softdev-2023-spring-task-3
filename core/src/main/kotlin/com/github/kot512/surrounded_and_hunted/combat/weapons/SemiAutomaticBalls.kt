@@ -2,7 +2,7 @@ package com.github.kot512.surrounded_and_hunted.combat.weapons
 
 import com.github.kot512.surrounded_and_hunted.combat.ammo.BallProjectile
 import com.github.kot512.surrounded_and_hunted.combat.ammo.Projectile
-import com.github.kot512.surrounded_and_hunted.entities.Player
+import com.github.kot512.surrounded_and_hunted.entities_and_objects.Player
 import com.github.kot512.surrounded_and_hunted.screens.playable_screens.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import kotlin.math.pow

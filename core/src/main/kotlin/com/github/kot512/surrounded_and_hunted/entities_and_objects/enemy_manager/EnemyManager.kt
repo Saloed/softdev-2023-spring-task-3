@@ -1,12 +1,11 @@
-package com.github.kot512.surrounded_and_hunted.entities.enemy_manager
+package com.github.kot512.surrounded_and_hunted.entities_and_objects.enemy_manager
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.github.kot512.surrounded_and_hunted.entities.enemies.BallerEnemy
-import com.github.kot512.surrounded_and_hunted.entities.enemies.EnemyEntity
-import com.github.kot512.surrounded_and_hunted.entities.Player
-import com.github.kot512.surrounded_and_hunted.entities.enemies.GiantEnemy
-import com.github.kot512.surrounded_and_hunted.entities.enemies.TriangleEnemy
+import com.github.kot512.surrounded_and_hunted.entities_and_objects.enemies.BallerEnemy
+import com.github.kot512.surrounded_and_hunted.entities_and_objects.enemies.EnemyEntity
+import com.github.kot512.surrounded_and_hunted.entities_and_objects.enemies.GiantEnemy
+import com.github.kot512.surrounded_and_hunted.entities_and_objects.enemies.TriangleEnemy
 import com.github.kot512.surrounded_and_hunted.screens.playable_screens.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import ktx.math.random
@@ -15,7 +14,6 @@ import kotlin.random.Random
 
 class EnemyManager(
     private val screen: BaseLocationScreen,
-    private val player: Player
 ) {
 
     enum class EnemyType {
@@ -73,17 +71,17 @@ class EnemyManager(
                     EnemyType.NORMAL -> BallerEnemy(
                         screen,
                         randomiseSpawn(),
-                        player
+                        screen.player
                     )
                     EnemyType.FAST -> TriangleEnemy(
                         screen,
                         randomiseSpawn(),
-                        player
+                        screen.player
                     )
                     EnemyType.GIANT -> GiantEnemy(
                         screen,
                         randomiseSpawn(),
-                        player
+                        screen.player
                     )
                 }
         }

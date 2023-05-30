@@ -10,8 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.CONST_AND_VAR
-import com.github.kot512.surrounded_and_hunted.entities.Player
-import com.github.kot512.surrounded_and_hunted.entities.enemy_manager.EnemyManager
+import com.github.kot512.surrounded_and_hunted.entities_and_objects.Player
+import com.github.kot512.surrounded_and_hunted.entities_and_objects.bonuses.BonusesManager
+import com.github.kot512.surrounded_and_hunted.entities_and_objects.enemy_manager.EnemyManager
 import com.github.kot512.surrounded_and_hunted.hud.UIManager
 import ktx.app.KtxScreen
 import ktx.assets.disposeSafely
@@ -33,12 +34,8 @@ abstract class BaseLocationScreen : KtxScreen {
 //    интерфейс
     private val uiManager: UIManager = UIManager(this)
     val stage: Stage = Stage(viewport) // сцена, ответственная за рендер UI
-//    private val movJoystick: MovementJoystick =
-//        MovementJoystick(L_JOYSTICK_POS)
-//    private val aimJoystick: AimJoystick =
-//        AimJoystick(R_JOYSTICK_POS)
 
-//    игровые сущности
+//    инициализация игровых сущностей/объектов
     val player: Player =
         Player(
             this,
@@ -46,10 +43,8 @@ abstract class BaseLocationScreen : KtxScreen {
             uiManager.movJoystick,
             uiManager.aimJoystick
         )
-
-    val enemyManager: EnemyManager = EnemyManager(
-        this, player
-    )
+    val enemyManager: EnemyManager = EnemyManager(this)
+    val bonusesManager: BonusesManager = BonusesManager(this)
 
     init {
         Gdx.input.inputProcessor = stage
@@ -60,7 +55,7 @@ abstract class BaseLocationScreen : KtxScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_CLEAR_VALUE)
 
 //        рендер игровых объектов
-        batch.begin() // начало рендера
+        batch.begin() // начало рендера объектов
         batch.projectionMatrix = camera.combined
 
         camera.position.set(player.originBasedX, player.originBasedY, 0f)  // обновление позиции камеры
@@ -69,8 +64,9 @@ abstract class BaseLocationScreen : KtxScreen {
         batch.draw(locationTexture, 0f, 0f, locationWidth, locationHeight) // рендерим текстуру локации
         player.draw(batch)
         enemyManager.draw(batch)
+        bonusesManager.draw(batch)
 
-        batch.end() // конец рендера
+        batch.end() // конец рендера объектов
 
 //        рендер HUD
         stage.draw()

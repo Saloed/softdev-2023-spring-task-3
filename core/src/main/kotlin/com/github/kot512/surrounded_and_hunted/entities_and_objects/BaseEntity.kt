@@ -1,4 +1,4 @@
-package com.github.kot512.surrounded_and_hunted.entities
+package com.github.kot512.surrounded_and_hunted.entities_and_objects
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -17,7 +17,6 @@ abstract class BaseEntity(
     collisionCoeff: Float = 1f, // коэффициент рамера коллизии (0..1)
     ) : Sprite(entityTexture) {
     abstract var health: Float
-    protected abstract val damage: Float
     protected abstract val movementSpeed: Float
 
     protected var velocity: Point = Point(0f, 0f)

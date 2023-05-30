@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.Actor
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.CONST_AND_VAR
 import com.github.kot512.surrounded_and_hunted.hud.controls.AimJoystick
 import com.github.kot512.surrounded_and_hunted.hud.controls.MovementJoystick

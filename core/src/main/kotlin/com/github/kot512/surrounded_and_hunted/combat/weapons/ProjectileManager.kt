@@ -17,7 +17,7 @@ abstract class ProjectileManager(
     abstract var projDamage: Float
 
 //    параметры менеджера
-    var launchedProjs: MutableList<Projectile> = mutableListOf() // список запущенных снарядов
+    val launchedProjs: MutableList<Projectile> = mutableListOf() // список запущенных снарядов
 
     protected abstract val cooldown: Float // время перерыва между выстрелами
     private var currentCooldown: Float = 0f // время до следующего выстрела
@@ -31,7 +31,7 @@ abstract class ProjectileManager(
     private var projsCounter: Int = 0 // кол-во запущенных снарядов за выстрел
 
     fun draw(batch: Batch) {
-        launchedProjs = launchedProjs.filter { !it.disposable }.toMutableList()
+        launchedProjs.removeIf { it.disposable }
 
         for (proj in launchedProjs)
              proj.draw(batch)

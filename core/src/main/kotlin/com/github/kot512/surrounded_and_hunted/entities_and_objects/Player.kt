@@ -1,4 +1,4 @@
-package com.github.kot512.surrounded_and_hunted.entities
+package com.github.kot512.surrounded_and_hunted.entities_and_objects
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -55,7 +55,7 @@ class Player(
 
     var maxHealth = 100f * 1.2f.pow(healthLevel)
     override var health = maxHealth
-    override var damage = 10f
+//    override var damage = 10f
     override var movementSpeed = 400f * 1.2f.pow(speedLevel)
 
     private val combatManager: ProjectileManager =

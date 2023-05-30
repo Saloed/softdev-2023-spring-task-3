@@ -1,9 +1,8 @@
-package com.github.kot512.surrounded_and_hunted
+package com.github.kot512.surrounded_and_hunted.tools
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.github.kot512.surrounded_and_hunted.tools.Point
 import ktx.assets.disposeSafely
 
 class ConstantsAndVariables {
