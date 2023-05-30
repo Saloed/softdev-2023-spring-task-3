@@ -103,9 +103,23 @@ class EntitySpawnSystem(
                     if (isShip) add<ProjectileComponent>()
                     {
                         prevTime = TimeUtils.nanoTime()
-                        prjType = when (type) {
-                            EntityType.Player -> EntityType.BP
-                            else -> EntityType.RP
+                        when (type) {
+                            EntityType.Player -> {
+                                prjType = EntityType.BP
+                                prjMultiplier = 1.2f
+                            }
+                            EntityType.S -> {
+                                prjType = EntityType.RP
+                                prjMultiplier = 1.0f
+                            }
+                            EntityType.M -> {
+                                prjType = EntityType.RP
+                                prjMultiplier = 1.2f
+                            }
+                            else -> {
+                                prjType = EntityType.RP
+                                prjMultiplier = 1.5f
+                            }
                         }
                     }
                     add<LifeComponent>() {lType = type}
