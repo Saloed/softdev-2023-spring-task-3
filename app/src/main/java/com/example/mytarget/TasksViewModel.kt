@@ -29,22 +29,10 @@ private val _tasks: SnapshotStateList<Task> = mutableStateListOf()
     }
 
     fun removeTask(id: Long, task: Task) {
-//        _tasks.update { tasks ->
-//            val updTask = tasks.first {it.id == id}
-//            tasks.remove(updTask)
-//            tasks
-//        }
         val task = tasks.first { it.id == id }
         _tasks.remove(task)
     }
 
-//    fun taskIsSuccessful(id: Long, isMarked: Boolean) {
-//        _tasks.update { tasks ->
-//            val updTask = tasks.first { it.id == id }
-//            updTask.isComplete.value = isMarked
-//            tasks
-//        }
-//    }
 
     fun taskIsSuccessful(id: Long, isMarked: Boolean) {
         val task = tasks.first { it.id == id }
@@ -60,7 +48,6 @@ private val _tasks: SnapshotStateList<Task> = mutableStateListOf()
 
 
     fun getTaskByDate(date: LocalDate): List<Task> = tasks.filter { it.date == date }
-    //fun getTaskByDate(date: LocalDate): List<Task> = tasks.filter { it.date == date }
 
     fun getTaskByColor(color: Color): List<Task> = tasks.filter { it.taskColor == color }
 

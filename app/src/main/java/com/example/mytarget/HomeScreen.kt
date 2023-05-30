@@ -1,30 +1,18 @@
 package com.example.mytarget
 
 import android.content.Intent
-import android.graphics.drawable.shapes.RoundRectShape
-import android.graphics.drawable.shapes.Shape
-import android.os.Build
-import android.os.Bundle
 import android.util.Log
-import android.view.RoundedCorner
-import android.widget.DatePicker
-import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,30 +21,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ButtonDefaults.shape
-import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,20 +42,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.DialogProperties
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.mytarget.ui.theme.MyTargetTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -92,14 +61,12 @@ import com.vanpra.composematerialdialogs.color.ColorPalette
 import com.vanpra.composematerialdialogs.color.colorChooser
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTargetApp(
@@ -120,7 +87,6 @@ fun MyTargetApp(
     val context = LocalContext.current
     var pickedColor by remember { mutableStateOf(Color.Blue) }
     var showSortDialog by remember{ mutableStateOf(false) }
-    //var sortType = TypeOfSort.DAY
     var sortType by remember{ mutableStateOf(TypeOfSort.DAY) }
 
 
@@ -171,8 +137,7 @@ fun MyTargetApp(
                 pickedDateCalendar = it
             }
         }
-
-        TaskList(viewModel = viewModel(), date = pickedDateCalendar, onMarkTask = onMarkTask, onRemoveTask = onRemoveTask, sort = sortType)
+        TaskList(viewModel = viewModel(), date = pickedDateCalendar, sort = sortType)
         Box(Modifier.fillMaxSize()) {
             Column(
                 Modifier
@@ -409,9 +374,7 @@ fun rememberFirebaseAuthLauncher(
 @Composable
 fun TasksListItem(
     task: Task,
-    viewModel: TasksViewModel,
-    onMarkTask: (Task) -> Unit,
-    onRemoveTask: (Task) -> Unit
+    viewModel: TasksViewModel
 ) {
     var showDialogDescription by remember { mutableStateOf(false) }
     var showDeleteConfirm by remember{ mutableStateOf(false) }
@@ -492,7 +455,7 @@ fun TasksListItem(
 }
 
 @Composable
-fun TaskList(viewModel: TasksViewModel,date: LocalDate, onMarkTask: (Task) -> Unit, onRemoveTask: (Task) -> Unit, sort: TypeOfSort) {
+fun TaskList(viewModel: TasksViewModel,date: LocalDate, sort: TypeOfSort) {
     val tasks = viewModel.tasks
 
     LazyColumn {
@@ -505,9 +468,7 @@ fun TaskList(viewModel: TasksViewModel,date: LocalDate, onMarkTask: (Task) -> Un
                         task.date,
                         task.isComplete,
                         task.taskColor),
-                    viewModel = viewModel,
-                    onMarkTask = onMarkTask,
-                    onRemoveTask = onRemoveTask
+                    viewModel = viewModel
                 )
             }
         }
@@ -521,9 +482,7 @@ fun TaskList(viewModel: TasksViewModel,date: LocalDate, onMarkTask: (Task) -> Un
                         task.date,
                         task.isComplete,
                         task.taskColor),
-                    viewModel = viewModel,
-                    onMarkTask = onMarkTask,
-                    onRemoveTask = onRemoveTask
+                    viewModel = viewModel
                 )
             }
         }
@@ -537,9 +496,7 @@ fun TaskList(viewModel: TasksViewModel,date: LocalDate, onMarkTask: (Task) -> Un
                         task.date,
                         task.isComplete,
                         task.taskColor),
-                    viewModel = viewModel,
-                    onMarkTask = onMarkTask,
-                    onRemoveTask = onRemoveTask
+                    viewModel = viewModel
                 )
             }
         }
