@@ -84,6 +84,7 @@ public class Game implements Runnable {
         double timeOfLastFrame = 1000000000.0 / FPS;
         double timeOfLastUpdate = 1000000000.0 / UPS;
         long lastCheck = System.currentTimeMillis();
+        long currentCheck = System.currentTimeMillis();
         long lastTime = System.nanoTime();
 
         while (true) {
@@ -102,8 +103,8 @@ public class Game implements Runnable {
                 deltaFPS--;
             }
 
-            if (System.currentTimeMillis() - lastCheck >= 1000) {
-                lastCheck = System.currentTimeMillis();
+            if (currentCheck - lastCheck >= 1000) {
+                lastCheck = currentCheck;
             }
         }
     }
