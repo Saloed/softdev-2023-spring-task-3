@@ -9,11 +9,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class EmailSender {
     private Message msg;
-    public EmailSender() {
 
+    private ExecutorService executorService;
+
+    private final int messagesSimultaneously = 5;
+
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
+    public EmailSender() {
+        executorService = Executors.newFixedThreadPool(messagesSimultaneously);
     }
     public void setBasic(Session session, String subject) {
         try {
@@ -72,4 +82,7 @@ public class EmailSender {
         }
     }
 
+    public void closeConnection() {
+        if (executorService != null && !executorService.isShutdown()) executorService.shutdownNow();
+    }
 }

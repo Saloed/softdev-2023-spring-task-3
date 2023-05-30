@@ -15,11 +15,13 @@ public class LaunchApplication extends Application {
 
     private List<EmailReceiver> receiver;
 
+    private EmailSender sender;
+
     @Override
     public void start(Stage mainStage) {
         addReceiver();
 
-        EmailSender sender = new EmailSender();
+        sender = new EmailSender();
         MainPane mainPane = new MainPane(receiver, sender);
         MainScene mainScene = new MainScene(mainPane);
 
@@ -44,6 +46,7 @@ public class LaunchApplication extends Application {
     @Override
     public void stop() {
         for (EmailReceiver i : receiver) i.closeConnection();
+        sender.closeConnection();
     }
 
     public static void main(String[] args) {

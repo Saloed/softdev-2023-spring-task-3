@@ -142,34 +142,36 @@ public class MessageCreator extends Stage {
         GridPane.setHalignment(topicField, HPos.RIGHT);
         GridPane.setValignment(topicField, VPos.CENTER);
         send.setOnAction((ActionEvent e) -> {
-            sender.setBasic(session, topicField.getText());
-            sender.setRecipients(checkTo.getCheckModel().getCheckedItems().stream()
-                            .map(obj -> {
-                                try {
-                                    return new InternetAddress(obj);
-                                } catch (AddressException ex) {
-                                    throw new RuntimeException(ex);
-                                }
-                            }).collect(Collectors.toList()),
-                    checkCc.getCheckModel().getCheckedItems().stream()
-                            .map(obj -> {
-                                try {
-                                    return new InternetAddress(obj);
-                                } catch (AddressException ex) {
-                                    throw new RuntimeException(ex);
-                                }
-                            }).collect(Collectors.toList()),
-                    checkBcc.getCheckModel().getCheckedItems().stream()
-                            .map(obj -> {
-                                try {
-                                    return new InternetAddress(obj);
-                                } catch (AddressException ex) {
-                                    throw new RuntimeException(ex);
-                                }
-                            }).collect(Collectors.toList()));
-            sender.addFilesAndText(filesAdded.getItems(), text.getText());
             this.close();
-            sender.sendEmail(session);
+            sender.getExecutorService().execute(() -> {
+                sender.setBasic(session, topicField.getText());
+                sender.setRecipients(checkTo.getCheckModel().getCheckedItems().stream()
+                                .map(obj -> {
+                                    try {
+                                        return new InternetAddress(obj);
+                                    } catch (AddressException ex) {
+                                        throw new RuntimeException(ex);
+                                    }
+                                }).collect(Collectors.toList()),
+                        checkCc.getCheckModel().getCheckedItems().stream()
+                                .map(obj -> {
+                                    try {
+                                        return new InternetAddress(obj);
+                                    } catch (AddressException ex) {
+                                        throw new RuntimeException(ex);
+                                    }
+                                }).collect(Collectors.toList()),
+                        checkBcc.getCheckModel().getCheckedItems().stream()
+                                .map(obj -> {
+                                    try {
+                                        return new InternetAddress(obj);
+                                    } catch (AddressException ex) {
+                                        throw new RuntimeException(ex);
+                                    }
+                                }).collect(Collectors.toList()));
+                sender.addFilesAndText(filesAdded.getItems(), text.getText());
+                sender.sendEmail(session);
+            });
         });
     }
 }
