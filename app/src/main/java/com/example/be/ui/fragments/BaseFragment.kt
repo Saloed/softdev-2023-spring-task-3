@@ -1,11 +1,7 @@
 package com.example.be.ui.fragments
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.be.activity.APP_ACTIVITY
+import com.example.be.utilits.APP_ACTIVITY
 
 open class BaseFragment(layout: Int) : Fragment(layout) {
 

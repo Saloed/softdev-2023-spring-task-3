@@ -3,7 +3,7 @@ package com.example.be.ui.fragments.change_fragments
 import android.widget.Button
 import android.widget.EditText
 import com.example.be.R
-import com.example.be.activity.APP_ACTIVITY
+import com.example.be.utilits.APP_ACTIVITY
 import com.example.be.ui.fragments.BaseFragment
 import com.example.be.utilits.CHILD_FULLNAME
 import com.example.be.utilits.CURRENT_UID

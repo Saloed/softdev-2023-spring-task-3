@@ -2,7 +2,6 @@ package com.example.be.ui.fragments
 
 import android.os.AsyncTask
 import com.example.be.R
-import com.example.be.activity.URL_FIRST_LECTURE
 import com.example.be.utilits.showToast
 import com.github.barteksc.pdfviewer.PDFView
 import java.io.BufferedInputStream

@@ -4,7 +4,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.be.activity.APP_ACTIVITY
 
 const val RECORD_AUDIO = android.Manifest.permission.RECORD_AUDIO
 const val PERMISSION_REQUEST = 200

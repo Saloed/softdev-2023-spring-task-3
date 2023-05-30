@@ -2,7 +2,7 @@ package com.example.be.ui.fragments.voice_message
 
 import android.media.MediaRecorder
 import android.util.Log
-import com.example.be.activity.APP_ACTIVITY
+import com.example.be.utilits.APP_ACTIVITY
 import com.example.be.utilits.showToast
 import java.io.File
 

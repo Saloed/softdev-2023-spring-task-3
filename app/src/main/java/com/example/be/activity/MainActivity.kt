@@ -7,6 +7,7 @@ import com.example.be.databinding.ActivityMainBinding
 import com.example.be.models.User
 import com.example.be.ui.fragments.MainFragment
 import com.example.be.ui.objects.AppDrawer
+import com.example.be.utilits.APP_ACTIVITY
 import com.example.be.utilits.AUTH
 import com.example.be.utilits.CURRENT_UID
 import com.example.be.utilits.NODE_USERS

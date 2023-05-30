@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.example.be.R
-import com.example.be.activity.COUNT_SNAPSHOT_PLUS
+import com.example.be.utilits.COUNT_SNAPSHOT_PLUS
 import com.example.be.activity.Registration
 import com.example.be.ui.fragments.change_fragments.ChangeFullnameFragment
 import com.example.be.utilits.AUTH

@@ -16,9 +16,8 @@ import androidx.core.content.ContextCompat
 import com.example.be.ui.fragments.voice_message.AppVoiceRecorder
 import com.example.be.R
 import com.example.be.utilits.RECORD_AUDIO
-import com.example.be.activity.APP_ACTIVITY
-import com.example.be.activity.COUNT_MESSAGE
-import com.example.be.activity.COUNT_SNAPSHOT
+import com.example.be.utilits.APP_ACTIVITY
+import com.example.be.utilits.COUNT_SNAPSHOT
 import com.example.be.utilits.checkAppPermission
 import com.example.be.models.Message
 import com.example.be.utilits.CHILD_FOLDERS
@@ -27,7 +26,6 @@ import com.example.be.utilits.FOLDER
 import com.example.be.utilits.FOLDER_VOICE_RECORDER
 import com.example.be.utilits.ID_MESSAGE
 import com.example.be.utilits.MESSAGE
-import com.example.be.utilits.NODE_ALLMESSAGE
 import com.example.be.utilits.NODE_USERS
 import com.example.be.utilits.REF_DATABASE_ROOT
 import com.example.be.utilits.REF_STORAGE_ROOT

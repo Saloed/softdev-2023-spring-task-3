@@ -1,10 +1,8 @@
-package com.example.be.activity
+package com.example.be.utilits
 
-import com.example.be.utilits.FOLDER_LECTURES
-import com.example.be.utilits.REF_STORAGE_ROOT
-import com.example.be.utilits.showToast
+import com.example.be.activity.MainActivity
 
-lateinit var APP_ACTIVITY:MainActivity
+lateinit var APP_ACTIVITY: MainActivity
 var COUNT_SNAPSHOT = 0
 var COUNT_MESSAGE = 0
 var COUNT_SNAPSHOT_PLUS = 0

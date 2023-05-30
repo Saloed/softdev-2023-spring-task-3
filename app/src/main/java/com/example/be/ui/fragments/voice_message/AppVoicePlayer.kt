@@ -1,12 +1,9 @@
 package com.example.be.ui.fragments.voice_message
 
 import android.media.MediaPlayer
-import com.example.be.activity.APP_ACTIVITY
-import com.example.be.utilits.FOLDER_VOICE_RECORDER
-import com.example.be.utilits.MESSAGE
+import com.example.be.utilits.APP_ACTIVITY
 import com.example.be.utilits.REF_STORAGE_ROOT
 import com.example.be.utilits.showToast
-import java.beans.IndexedPropertyChangeEvent
 import java.io.File
 
 class AppVoicePlayer {

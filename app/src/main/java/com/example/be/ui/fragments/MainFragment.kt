@@ -17,13 +17,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.be.R
-import com.example.be.activity.APP_ACTIVITY
-import com.example.be.activity.COUNT_MESSAGE
-import com.example.be.activity.COUNT_SNAPSHOT
-import com.example.be.activity.COUNT_SNAPSHOT_PLUS
+import com.example.be.utilits.APP_ACTIVITY
+import com.example.be.utilits.COUNT_SNAPSHOT_PLUS
 import com.example.be.activity.Registration
 import com.example.be.models.Folder
-import com.example.be.models.Message
 import com.example.be.ui.fragments.adapters.FolderAdapter
 import com.example.be.ui.fragments.change_fragments.ChangeFolderNameFragment
 import com.example.be.utilits.AUTH
