@@ -67,7 +67,6 @@ class DebtsViewPagerAdapter(
                 }
             }
             if (oldPair != Pair("", 0)) whoDebt.add("${oldPair.first}    ${oldPair.second}P")
-            //if (whoDebt.isEmpty() && youDebt.isEmpty()) return
             item.paid.forEach { (s, strings) ->
                 paid.addAll(strings)
                 events.forEach {

@@ -6,7 +6,7 @@
         android:icon="@drawable/baseline_calendar_month_24"
         android:orderInCategory="1"
         android:title="Выбрать поездку"
-        android:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
     <item
         android:title="Добавить поездку"
         android:id="@+id/addEvent"

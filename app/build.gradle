@@ -11,6 +11,10 @@ android {
     namespace 'com.example.dacha'
     compileSdk 33
 
+    lintOptions {
+        disable 'NotificationPermission'
+    }
+
     defaultConfig {
         applicationId "com.example.dacha"
         minSdk 26

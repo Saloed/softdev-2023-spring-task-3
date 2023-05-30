@@ -27,7 +27,7 @@ import java.time.LocalDateTime
 class GalleryFragment : Fragment() {
 
     private val viewModel: DashboardViewModel by viewModels()
-    val homeVM: HomeViewModel by viewModels()
+    private val homeVM: HomeViewModel by viewModels()
     lateinit var binding: FragmentGalleryBinding
     var album: AlbumModel? = null
     var imageUris: MutableList<String> = arrayListOf()

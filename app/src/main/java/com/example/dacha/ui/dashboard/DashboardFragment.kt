@@ -68,7 +68,7 @@ class DashboardFragment : Fragment() {
         val editText = dialog.findViewById<EditText>(R.id.name_dialog_et)
         editText.hint = "Введите название альбома"
         button.setOnClickListener {
-            if (editText.text.toString().isNullOrEmpty()) {
+            if (editText.text.toString().isEmpty()) {
                 toast("Введите название альбома")
             } else {
                 val text = editText.text.toString()
@@ -84,13 +84,22 @@ class DashboardFragment : Fragment() {
     }
 
     private fun showUpdateAlbumDialog(album: AlbumModel) {
-        val dialog = requireContext().createDialog(R.layout.add_person_dialog, true)
-        val button = dialog.findViewById<MaterialButton>(R.id.name_dialog_btn)
-        val editText = dialog.findViewById<EditText>(R.id.name_dialog_et)
+        val dialog = requireContext().createDialog(R.layout.change_album_dialog, true)
+        val button = dialog.findViewById<MaterialButton>(R.id.album_dialog_btn)
+        val delete = dialog.findViewById<MaterialButton>(R.id.delete_album_btn)
+        val editText = dialog.findViewById<EditText>(R.id.album_dialog_et)
         editText.hint = album.name.toString()
         button.text = "Изменить"
+        delete.setOnClickListener {
+            viewModel.deleteAlbum(album)
+            homeVM.addNews(
+                news(person, "Удалил(а) альбом ${album.name}")
+            )
+            viewModel.getAlbums()
+            dialog.dismiss()
+        }
         button.setOnClickListener {
-            if (editText.text.toString().isNullOrEmpty()) {
+            if (editText.text.toString().isEmpty()) {
                 toast("Введите название альбома")
             } else {
                 val text = editText.text.toString()

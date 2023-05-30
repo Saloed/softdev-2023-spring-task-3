@@ -6,12 +6,11 @@
         android:icon="@drawable/baseline_payment_24"
         android:orderInCategory="1"
         android:title="Переводы"
-        android:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/history_info"
         android:icon="@drawable/baseline_history"
         android:orderInCategory="1"
         android:title="История"
-        android:showAsAction="ifRoom" />
-
+        app:showAsAction="ifRoom" />
 </menu>

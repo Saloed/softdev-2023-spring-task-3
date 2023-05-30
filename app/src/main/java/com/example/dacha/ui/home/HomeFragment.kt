@@ -41,52 +41,41 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        val btnAddName: Button = binding.addName
-        val btnChooseName: Button = binding.chooseName
-        val iVGif: ImageView = binding.iVGif
         val iVPoster: ImageView = binding.iVPoster
-        val btgLogin: MaterialButtonToggleGroup = binding.btgLogin
-        iVPoster.visibility = View.INVISIBLE
-        val btnPoster: Button = binding.btnPoster
         var invisible = false
-        btgLogin.visibility = View.GONE
-        val btnLogout: Button = binding.btnLogout
-        btnLogout.visibility = View.GONE
 
+        viewModel.getPeople()
+        observer()
 
-
-
-        btnAddName.setOnClickListener {
+        binding.addName.setOnClickListener {
             showAddPersonDialog()
         }
 
-        btnLogout.setOnClickListener {
+        binding.chooseName.setOnClickListener {
+            showChoosePersonDialog()
+        }
+
+        binding.btnLogout.setOnClickListener {
             person?.let { it1 ->
                 viewModel.logout(it1)
                 updateUI("logout", "")
             }
         }
 
-        btnChooseName.setOnClickListener {
-            showChoosePersonDialog()
-        }
-        viewModel.getPeople()
-        observer()
+
         Glide.with(this)
             .load(R.drawable.video_dacha)
-            .into(iVGif)
-        btnPoster.setOnClickListener {
-            if (!invisible) {
-                iVPoster.visibility = View.VISIBLE
-                invisible = true
+            .into(binding.iVGif)
+        binding.btnPoster.setOnClickListener {
+            invisible = if (!invisible) {
+                iVPoster.show()
+                true
             } else {
-                iVPoster.visibility = View.INVISIBLE
-                invisible = false
+                iVPoster.hide()
+                false
             }
         }
     }
-
 
     private fun observer() {
         viewModel.person.observe(viewLifecycleOwner) { state ->
@@ -132,7 +121,7 @@ class HomeFragment : Fragment() {
                 }
                 is UiState.Success -> {
                     binding.progressBar.hide()
-                    updatePeople(state.data)
+                    list = state.data.toMutableList()
                 }
                 else -> {
                     binding.progressBar.show()
@@ -145,30 +134,26 @@ class HomeFragment : Fragment() {
         when (state) {
             "add" -> {
                 binding.progressBar.hide()
-                binding.btgLogin.visibility = View.GONE
-                binding.tvGlobalName.visibility = View.VISIBLE
-                binding.btnLogout.visibility = View.VISIBLE
+                binding.btgLogin.hide()
+                binding.tvGlobalName.show()
+                binding.btnLogout.show()
                 binding.tvGlobalName.text = data
             }
             "choose" -> {
                 binding.progressBar.hide()
-                binding.btgLogin.visibility = View.GONE
-                binding.tvGlobalName.visibility = View.VISIBLE
-                binding.btnLogout.visibility = View.VISIBLE
+                binding.btgLogin.hide()
+                binding.tvGlobalName.show()
+                binding.btnLogout.show()
                 binding.tvGlobalName.text = data
             }
             "logout" -> {
                 binding.progressBar.hide()
                 person = null
-                binding.btgLogin.visibility = View.VISIBLE
-                binding.tvGlobalName.visibility = View.GONE
-                binding.btnLogout.visibility = View.GONE
+                binding.btgLogin.show()
+                binding.tvGlobalName.hide()
+                binding.btnLogout.hide()
             }
         }
-    }
-
-    private fun updatePeople(list: List<PersonModel>) {
-        this.list = list.toMutableList()
     }
 
     private fun showAddPersonDialog() {
@@ -176,7 +161,7 @@ class HomeFragment : Fragment() {
         val button = dialog.findViewById<MaterialButton>(R.id.name_dialog_btn)
         val editText = dialog.findViewById<EditText>(R.id.name_dialog_et)
         button.setOnClickListener {
-            if (editText.text.toString().isNullOrEmpty()) {
+            if (editText.text.toString().isEmpty()) {
                 toast("Введите имя")
             } else {
                 val text = editText.text.toString()
