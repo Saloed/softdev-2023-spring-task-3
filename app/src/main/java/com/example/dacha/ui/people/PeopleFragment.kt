@@ -74,11 +74,9 @@ class PeopleFragment : Fragment() {
                         btn.setOnClickListener {
                             debtsVM.deleteTransaction(transactions[i])
                             homeVM.addNews(
-                                NewsModel(
-                                    null,
+                                news(
                                     person,
-                                    "Удалил(а) перевод ${transactions[i].from?.name} - ${transactions[i].to?.name} (${transactions[i].howMuch}P)",
-                                    LocalDateTime.now().toString().split(".")[0]
+                                    "Удалил(а) перевод ${transactions[i].from?.name} - ${transactions[i].to?.name} (${transactions[i].howMuch}P)"
                                 )
                             )
                             transactionsAdapter.remove(showTransactions[i])
@@ -113,7 +111,7 @@ class PeopleFragment : Fragment() {
                     val transactionsAdapter = ArrayAdapter(
                         this.requireContext(),
                         R.layout.transaction_item,
-                        showNews
+                        showNews.reversed()
                     )
                     listView.adapter = transactionsAdapter
                     val button = newsDialog.findViewById<Button>(R.id.transactions_dialog_btn)
@@ -236,11 +234,9 @@ class PeopleFragment : Fragment() {
                 is UiState.Success -> {
                     binding.progressBar.hide()
                     homeVM.addNews(
-                        NewsModel(
-                            null,
+                        news(
                             person,
-                            "Удалил(а) ${state.data.first.name}",
-                            LocalDateTime.now().toString().split(".")[0]
+                            "Удалил(а) ${state.data.first.name}"
                         )
                     )
                     if (deleteItemPos > -1) {

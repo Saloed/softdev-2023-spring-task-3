@@ -166,11 +166,9 @@ class DebtsFragment : Fragment() {
         button.setOnClickListener {
             viewModel.addTransaction(transaction = transaction)
             homeVM.addNews(
-                NewsModel(
-                    null,
+                news(
                     person,
-                    "Добавил(а) перевод ${transaction.from?.name} - ${transaction.to?.name} (${transaction.howMuch}P)",
-                    LocalDateTime.now().toString().split(".")[0]
+                    "Добавил(а) перевод ${transaction.from?.name} - ${transaction.to?.name} (${transaction.howMuch}P)"
                 )
             )
             viewModel.getTransactions()

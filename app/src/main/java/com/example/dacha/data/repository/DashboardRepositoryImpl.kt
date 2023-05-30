@@ -82,7 +82,7 @@ class DashboardRepositoryImpl(
     ) {
         try {
             val urls = mutableMapOf<Uri, String>()
-            val uri: List<Uri> = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 fileUri.map { image ->
                     async {
                         storageReference
@@ -99,7 +99,6 @@ class DashboardRepositoryImpl(
                 }.awaitAll()
             }
             onResult.invoke(UiState.Success(urls))
-            Log.e("URLS", urls.toString())
         } catch (e: FirebaseException) {
             onResult.invoke(UiState.Failure(e.message))
         } catch (e: Exception) {

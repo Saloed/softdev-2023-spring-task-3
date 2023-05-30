@@ -15,10 +15,7 @@ import com.example.dacha.data.model.PlanProductModel
 import com.example.dacha.data.model.SimplePersonModel
 import com.example.dacha.databinding.PlanProductBottomSheetLayoutBinding
 import com.example.dacha.ui.home.HomeViewModel
-import com.example.dacha.utils.UiState
-import com.example.dacha.utils.hide
-import com.example.dacha.utils.show
-import com.example.dacha.utils.toast
+import com.example.dacha.utils.*
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
@@ -141,11 +138,9 @@ class PlanProductBottomFragment(
                     isSuccessAddTask = true
                     binding.progressBar.hide()
                     homeVM.addNews(
-                        NewsModel(
-                            null,
-                            person,
-                            "Добавил(а) продукт ${state.data.first.pProduct}",
-                            LocalDateTime.now().toString().split(".")[0]
+                        news(
+                            person!!,
+                            "Добавил(а) продукт ${state.data.first.pProduct}"
                         )
                     )
                     toast(state.data.second)
@@ -166,11 +161,9 @@ class PlanProductBottomFragment(
                     isSuccessAddTask = true
                     binding.progressBar.hide()
                     homeVM.addNews(
-                        NewsModel(
-                            null,
-                            person,
-                            "Обновил(а) продукт ${state.data.first.pProduct}",
-                            LocalDateTime.now().toString().split(".")[0]
+                        news(
+                            person!!,
+                            "Обновил(а) продукт ${state.data.first.pProduct}"
                         )
                     )
                     toast(state.data.second)
@@ -191,11 +184,9 @@ class PlanProductBottomFragment(
                     isSuccessAddTask = true
                     binding.progressBar.hide()
                     homeVM.addNews(
-                        NewsModel(
-                            null,
-                            person,
-                            "Удалил(а) продукт ${state.data.first.pProduct}",
-                            LocalDateTime.now().toString().split(".")[0]
+                        news(
+                            person!!,
+                            "Удалил(а) продукт ${state.data.first.pProduct}"
                         )
                     )
                     toast(state.data.second)

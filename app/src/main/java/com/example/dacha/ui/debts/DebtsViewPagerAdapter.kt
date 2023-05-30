@@ -1,5 +1,6 @@
 package com.example.dacha.ui.debts
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,7 @@ class DebtsViewPagerAdapter(
                     youDebt.add("${it.dPerson}    ${it.dAmount.toInt()}P")
                 }
             }
+            var oldPair = Pair("", 0)
             item.needToGet.forEach {
                 var toDelete = false
                 transactions.forEach { trans ->
@@ -55,9 +57,17 @@ class DebtsViewPagerAdapter(
                         return@forEach
                     }
                 }
-                if (!toDelete) whoDebt.add("${it.first}    ${it.second.dAmount.toInt()}P")
+                if (!toDelete) {
+                    oldPair = if (oldPair.first == "") Pair(it.first, it.second.dAmount.toInt())
+                    else if (it.first == oldPair.first) Pair(it.first, oldPair.second + it.second.dAmount.toInt())
+                    else {
+                        whoDebt.add("${oldPair.first}    ${oldPair.second}P")
+                        Pair(it.first, it.second.dAmount.toInt())
+                    }
+                }
             }
-
+            if (oldPair != Pair("", 0)) whoDebt.add("${oldPair.first}    ${oldPair.second}P")
+            //if (whoDebt.isEmpty() && youDebt.isEmpty()) return
             item.paid.forEach { (s, strings) ->
                 paid.addAll(strings)
                 events.forEach {
@@ -93,7 +103,7 @@ class DebtsViewPagerAdapter(
             lvYouDebt.setOnItemClickListener { _, _, i, _ ->
                 onDebtClicked?.invoke(position, item.needToSend[i].dPerson.toString())
             }
-            lvYouDebt.setOnItemLongClickListener { adapterView, view, i, l ->
+            lvYouDebt.setOnItemLongClickListener { _, _, i, _ ->
                 onDebtLongClicked?.invoke(position, item.name, item.needToSend[i])
                 true
             }

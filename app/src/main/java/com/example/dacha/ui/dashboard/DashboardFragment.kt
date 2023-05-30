@@ -34,9 +34,9 @@ class DashboardFragment : Fragment() {
     val adapter by lazy {
         AlbumAdapter(onAlbumClicked = { pos, album ->
             findNavController().navigate(
-                R.id.action_dashboardFragment_to_galleryFragment ,
+                R.id.action_dashboardFragment_to_galleryFragment,
                 Bundle().apply { putParcelable("album", album) })
-        }, onAlbumLongClicked = {pos, album -> showUpdateAlbumDialog(album)})
+        }, onAlbumLongClicked = { pos, album -> showUpdateAlbumDialog(album) })
     }
 
     override fun onCreateView(
@@ -74,12 +74,7 @@ class DashboardFragment : Fragment() {
                 val text = editText.text.toString()
                 viewModel.addAlbum(AlbumModel(text, null, emptyList()))
                 homeVM.addNews(
-                    NewsModel(
-                        null,
-                        person,
-                        "Добавил(а) альбом $text",
-                        LocalDateTime.now().toString().split(".")[0]
-                    )
+                    news(person, "Добавил(а) альбом $text")
                 )
                 viewModel.getAlbums()
                 dialog.dismiss()
@@ -101,12 +96,7 @@ class DashboardFragment : Fragment() {
                 val text = editText.text.toString()
                 viewModel.updateAlbum(AlbumModel(text, album.key, album.photos))
                 homeVM.addNews(
-                    NewsModel(
-                        null,
-                        person,
-                        "Обновил(а) альбом $text",
-                        LocalDateTime.now().toString().split(".")[0]
-                    )
+                    news(person, "Обновил(а) альбом $text")
                 )
                 viewModel.getAlbums()
                 dialog.dismiss()

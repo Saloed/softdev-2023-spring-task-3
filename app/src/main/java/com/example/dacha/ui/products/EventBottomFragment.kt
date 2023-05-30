@@ -1,7 +1,6 @@
 package com.example.dacha.ui.products
 
 import android.content.DialogInterface
-import android.media.tv.PesRequest
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,29 +9,24 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.util.forEach
 import androidx.fragment.app.viewModels
 import com.example.dacha.R
 import com.example.dacha.data.model.*
 import com.example.dacha.databinding.EventChangeBottomSheetBinding
 import com.example.dacha.ui.home.HomeViewModel
-import com.example.dacha.utils.UiState
-import com.example.dacha.utils.hide
-import com.example.dacha.utils.show
-import com.example.dacha.utils.toast
+import com.example.dacha.utils.*
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDateTime
-import java.time.YearMonth
+import java.util.*
 
 @AndroidEntryPoint
 class EventBottomFragment(
     private val event: EventModel?,
     private val toDelete: Boolean,
     val people: List<SimplePersonModel>,
-    val person: PersonModel?
+    val person: PersonModel
 ) : BottomSheetDialogFragment() {
 
     lateinit var binding: EventChangeBottomSheetBinding
@@ -41,11 +35,11 @@ class EventBottomFragment(
     var closeFunction: ((Boolean) -> Unit)? = null
     var isSuccessAddTask: Boolean = false
 
-    private var date: String = "00.00.2000"
+    private var date: String? = event?.eInfo?.eDate
 
-    var day = "00"
-    var month = "00"
-    var year = "2000"
+//    var day = "00"
+//    var month = "00"
+//    var year = "2000"
 
 
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
@@ -66,42 +60,21 @@ class EventBottomFragment(
 
         val tvTop: TextView = binding.tvEventTop
         val tfName: TextInputLayout = binding.tvNameEvent
-        val eventDatePicker: ConstraintLayout = binding.eventDatePicker
-
-        val dayPicker = binding.dayFilledExposed
-        val monthPicker = binding.monthFilledExposed
-        val yearPicker = binding.yearFilledExposed
+        val datePicker = binding.datePicker
         val lvPeoplePicker: ListView = binding.eventPeoplePicker
         val btnDone = binding.eventChangeBtn
-
         val listOfPeople = mutableListOf<String>()
 
-        val days = mutableListOf<Int>()
-        for (i in 1..31) days.add(i)
-        val months = mutableMapOf<Int, String>()
-        months[0] = "Январь"
-        months[1] = "Февраль"
-        months[2] = "Март"
-        months[3] = "Апрель"
-        months[4] = "Май"
-        months[5] = "Июнь"
-        months[6] = "Июль"
-        months[7] = "Август"
-        months[8] = "Сентябрь"
-        months[9] = "Октябрь"
-        months[10] = "Ноябрь"
-        months[11] = "Декабрь"
-        val years = mutableListOf<Int>()
-        for (i in 2023..2033) years.add(i)
+
 
 
         if (toDelete) {
             tvTop.text = "Удалить поездку?"
-            tfName.visibility = View.GONE
-            eventDatePicker.visibility = View.GONE
-            lvPeoplePicker.visibility = View.GONE
-            binding.tvEventPeople.visibility = View.GONE
-            binding.eventAllPeopleBtn.visibility = View.GONE
+            tfName.hide()
+            datePicker.hide()
+            lvPeoplePicker.hide()
+            binding.tvEventPeople.hide()
+            binding.eventAllPeopleBtn.hide()
             btnDone.text = "Удалить"
         } else {
             people.forEach {
@@ -113,20 +86,28 @@ class EventBottomFragment(
                 listOfPeople
             )
             lvPeoplePicker.adapter = lvAdapter
+            val today = Calendar.getInstance()
             if (event == null) {
-                binding.etNameEvent.hint = "Поездка"
-                binding.dayFilledExposed.hint = "День"
-                binding.monthFilledExposed.hint = "Месяц"
-                binding.yearFilledExposed.hint = "Год"
+                datePicker.init(
+                    today.get(Calendar.YEAR), today.get(Calendar.MONTH),
+                    today.get(Calendar.DAY_OF_MONTH)
+                ) { _, year, month, day ->
+                    date = "${String.format("%02d", day)}.${String.format("%02d", month + 1)}.$year"
+                }
                 tvTop.text = "Добавить"
             } else {
-                date = event.eInfo?.eDate.toString()
-                day = event.eInfo?.eDate.toString().split(".")[0]
-                month = event.eInfo?.eDate.toString().split(".")[1]
-                year = event.eInfo?.eDate.toString().split(".")[2]
-                binding.dayFilledExposed.hint = day
-                binding.monthFilledExposed.hint = months[month.toInt() - 1]
-                binding.yearFilledExposed.hint = year
+
+                val dateSplit = event.eInfo?.eDate.toString().split(".")
+                val oldDay = dateSplit[0]
+                val oldMonth = dateSplit[1]
+                val oldYear = dateSplit[2]
+                datePicker.init(
+                    oldYear.toInt(),
+                    oldMonth.toInt() - 1,
+                    oldDay.toInt()
+                ) { _, year, month, day ->
+                    date = "${String.format("%02d", day)}.${String.format("%02d", month + 1)}.$year"
+                }
                 binding.etNameEvent.hint = event.eInfo?.eName.toString()
                 tvTop.text = "Изменить данные"
                 event.ePeople?.forEach {
@@ -140,30 +121,6 @@ class EventBottomFragment(
             }
         }
 
-        val daysAdapter = ArrayAdapter(this.requireContext(), R.layout.drop_down_item, days)
-        dayPicker.setAdapter(daysAdapter)
-
-        val monthsAdapter = ArrayAdapter(
-            this.requireContext(),
-            R.layout.drop_down_item,
-            months.values.toTypedArray()
-        )
-        monthPicker.setAdapter(monthsAdapter)
-
-        val yearAdapter = ArrayAdapter(this.requireContext(), R.layout.drop_down_item, years)
-        yearPicker.setAdapter(yearAdapter)
-
-        dayPicker.setOnItemClickListener { _, _, i, _ ->
-            day = String.format("%02d", days[i])
-        }
-
-        monthPicker.setOnItemClickListener { _, _, i, _ ->
-            month = String.format("%02d", i + 1)
-        }
-        yearPicker.setOnItemClickListener { _, _, i, _ ->
-            year = years[i].toString()
-        }
-
         binding.eventAllPeopleBtn.setOnClickListener {
             if (lvPeoplePicker.checkedItemCount != listOfPeople.size) {
                 for (i in listOfPeople.indices) {
@@ -174,7 +131,6 @@ class EventBottomFragment(
                     lvPeoplePicker.setItemChecked(i, false)
                 }
             }
-
         }
 
         return binding.root
@@ -184,14 +140,12 @@ class EventBottomFragment(
         super.onViewCreated(view, savedInstanceState)
 
         binding.eventChangeBtn.setOnClickListener {
-            if (event == null && validation(day, month, year)) viewModel.addEvent(getEvent())
+            if (event == null) viewModel.addEvent(getEvent())
             else {
                 if (toDelete) {
-                    if (event != null) {
-                        viewModel.deleteEvent(event)
-                    }
+                    viewModel.deleteEvent(event)
                 } else {
-                    if (validation(day, month, year)) viewModel.updateEvent(getEvent())
+                    viewModel.updateEvent(getEvent())
                 }
             }
             observer()
@@ -212,14 +166,11 @@ class EventBottomFragment(
                     isSuccessAddTask = true
                     viewModel.chooseEvent(state.data.first)
                     homeVM.addNews(
-                        NewsModel(
-                            null,
+                        news(
                             person,
-                            "Добавил(а) поездку: ${state.data.first.eInfo?.eName}",
-                            LocalDateTime.now().toString().split(".")[0]
+                            "Добавил(а) поездку: ${state.data.first.eInfo?.eName}"
                         )
                     )
-                    Log.e("ADD", "Добавил(а) поездку: ${state.data.first.eInfo?.eName}")
                     binding.progressBar.hide()
                     toast(state.data.second)
                     this.dismiss()
@@ -239,11 +190,9 @@ class EventBottomFragment(
                     isSuccessAddTask = true
                     viewModel.chooseEvent(state.data.first)
                     homeVM.addNews(
-                        NewsModel(
-                            null,
+                        news(
                             person,
-                            "Обновил(а) поездку: ${state.data.first.eInfo?.eName}",
-                            LocalDateTime.now().toString().split(".")[0]
+                            "Обновил(а) поездку: ${state.data.first.eInfo?.eName}"
                         )
                     )
                     binding.progressBar.hide()
@@ -265,11 +214,9 @@ class EventBottomFragment(
                     isSuccessAddTask = true
                     binding.progressBar.hide()
                     homeVM.addNews(
-                        NewsModel(
-                            null,
+                        news(
                             person,
-                            "Удалил(а) поездку: ${state.data.first.eInfo?.eName}",
-                            LocalDateTime.now().toString().split(".")[0]
+                            "Удалил(а) поездку: ${state.data.first.eInfo?.eName}"
                         )
                     )
                     toast(state.data.second)
@@ -281,16 +228,7 @@ class EventBottomFragment(
 
     private fun getEvent(): EventModel {
         val name = binding.etNameEvent.text.toString().ifEmpty { event?.eInfo?.eName }
-        val thisDate: String = if (event?.eInfo?.eDate == null) {
-            "$day.$month.$year"
-        } else {
-            if (day != "00" || month != "00" || year != "2000") {
-                "$day.$month.$year"
-            } else {
-                event.eInfo?.eDate.toString()
-            }
-        }
-
+        val thisDate = date
         val chosenPeople = mutableListOf<SimplePersonModel>()
         binding.eventPeoplePicker.checkedItemPositions.forEach { key, value ->
             if (value) {
@@ -312,10 +250,5 @@ class EventBottomFragment(
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         closeFunction?.invoke(isSuccessAddTask)
-    }
-
-    private fun validation(day: String, month: String, year: String): Boolean {
-        val yearMonth = YearMonth.of(year.toInt(), month.toInt())
-        return day.toInt() <= yearMonth.lengthOfMonth()
     }
 }

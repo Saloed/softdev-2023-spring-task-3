@@ -12,10 +12,7 @@ import com.example.dacha.data.model.NewsModel
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.databinding.BottomSheetLayoutBinding
 import com.example.dacha.ui.home.HomeViewModel
-import com.example.dacha.utils.UiState
-import com.example.dacha.utils.hide
-import com.example.dacha.utils.show
-import com.example.dacha.utils.toast
+import com.example.dacha.utils.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -138,11 +135,9 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
                     binding.progressBar.hide()
                     toast(state.data.second)
                     homeVM.addNews(
-                        NewsModel(
-                            null,
-                            person,
-                            "Добавил ${state.data.first.name}",
-                            LocalDateTime.now().toString().split(".")[0]
+                        news(
+                            person!!,
+                            "Добавил ${state.data.first.name}"
                         )
                     )
                     this.dismiss()
@@ -163,11 +158,9 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
                     binding.progressBar.hide()
                     toast(state.data.second)
                     homeVM.addNews(
-                        NewsModel(
-                            null,
-                            person,
-                            "Обновил ${state.data.first.name}",
-                            LocalDateTime.now().toString().split(".")[0]
+                        news(
+                            person!!,
+                            "Обновил ${state.data.first.name}"
                         )
                     )
                     this.dismiss()

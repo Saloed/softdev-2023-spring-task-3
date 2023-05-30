@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
+import androidx.core.util.forEach
 import androidx.fragment.app.viewModels
 import com.esafirm.imagepicker.features.ImagePickerConfig
 import com.esafirm.imagepicker.features.ImagePickerMode
@@ -33,7 +35,7 @@ class PurchaseBottomFragment(
     private val purchase: PurchaseModel?,
     private val listOfPP: List<PlanProductModel>,
     val people: List<SimplePersonModel>,
-    private val eventId: String,
+    private val event: EventModel,
     val person: PersonModel
 ) : BottomSheetDialogFragment() {
 
@@ -55,6 +57,9 @@ class PurchaseBottomFragment(
     private val pProdToDelete = mutableMapOf<String, PlanProductModel>()
     private val pProdToAdd = mutableMapOf<String, PlanProductModel>()
 
+    var fullList = mutableListOf<String>()
+
+    private lateinit var lvAdapter: ArrayAdapter<String>
 
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
 
@@ -78,20 +83,15 @@ class PurchaseBottomFragment(
             resultProducts[it.value.rProduct.toString()] = it.value
         }
 
+        fullList.addAll(resultProducts.keys)
+        fullList.addAll(planProducts.keys)
 
-        val fullList = resultProducts.keys.toList() + planProducts.keys.toList()
-        val lvAdapter = ArrayAdapter(
-            this.requireContext(),
-            android.R.layout.simple_list_item_multiple_choice,
-            fullList
-        )
         val payerPicker = binding.personFilledExposed
         val tvMarket = binding.etPurchaseMarket
         if (purchase == null) {
             tvMarket.hint = "Магазин"
             payerPicker.hint = "Кто оплатил"
-        }
-        else {
+        } else {
             tvMarket.hint = purchase.purchaseInfo?.market
             payerPicker.hint = purchase.purchaseInfo?.paid?.name
         }
@@ -111,7 +111,11 @@ class PurchaseBottomFragment(
         payerPicker.setOnItemClickListener { _, _, i, _ ->
             payer = mapOfPeople[mapOfPeople.keys.toList()[i]]
         }
-
+        lvAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_list_item_multiple_choice,
+            fullList
+        )
         lvProducts.adapter = lvAdapter
 
         if (fullList.size > 8) {
@@ -146,7 +150,7 @@ class PurchaseBottomFragment(
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnDeletePurchase.setOnClickListener {
-            viewModel.deletePurchase(eventId, getPurchases())
+            viewModel.deletePurchase(event.eInfo?.eKey.toString(), getPurchases())
         }
 
         binding.btnAddCheck.setOnClickListener {
@@ -166,10 +170,16 @@ class PurchaseBottomFragment(
         }
 
         binding.purchaseDoneBtn.setOnClickListener {
-            if (purchase == null) viewModel.addPurchase(eventId, getPurchases())
-            else viewModel.updatePurchase(eventId, getPurchases())
+            if (purchase == null) viewModel.addPurchase(
+                event.eInfo?.eKey.toString(),
+                getPurchases()
+            )
+            else viewModel.updatePurchase(event.eInfo?.eKey.toString(), getPurchases())
         }
 
+        binding.addResultDialogBtn.setOnClickListener {
+            showAddNewProductDialog()
+        }
         observer()
     }
 
@@ -189,11 +199,9 @@ class PurchaseBottomFragment(
                     toast(state.data.second)
                     updatePlans(pProdToDelete.values.toList(), pProdToAdd.values.toList())
                     homeVM.addNews(
-                        NewsModel(
-                            null,
+                        news(
                             person,
-                            "Добавил(а) покупку в магазине ${state.data.first.purchaseInfo?.market}",
-                            LocalDateTime.now().toString().split(".")[0]
+                            "Добавил(а) покупку в магазине ${state.data.first.purchaseInfo?.market}"
                         )
                     )
                     this.dismiss()
@@ -215,11 +223,9 @@ class PurchaseBottomFragment(
                     toast(state.data.second)
                     updatePlans(pProdToDelete.values.toList(), pProdToAdd.values.toList())
                     homeVM.addNews(
-                        NewsModel(
-                            null,
+                        news(
                             person,
-                            "Обновил(а) покупку в магазине ${state.data.first.purchaseInfo?.market}",
-                            LocalDateTime.now().toString().split(".")[0]
+                            "Обновил(а) покупку в магазине ${state.data.first.purchaseInfo?.market}"
                         )
                     )
                     this.dismiss()
@@ -249,11 +255,9 @@ class PurchaseBottomFragment(
                     }
                     updatePlans(pProdToDelete.values.toList(), pProdToAdd.values.toList())
                     homeVM.addNews(
-                        NewsModel(
-                            null,
+                        news(
                             person,
-                            "Удалил(а) покупку в магазине ${state.data.first.purchaseInfo?.market}",
-                            LocalDateTime.now().toString().split(".")[0]
+                            "Удалил(а) покупку в магазине ${state.data.first.purchaseInfo?.market}"
                         )
                     )
                     this.dismiss()
@@ -276,11 +280,9 @@ class PurchaseBottomFragment(
                     binding.progressBar.hide()
                     checkImage = state.data.second
                     homeVM.addNews(
-                        NewsModel(
-                            null,
+                        news(
                             person,
-                            "Добавил(а) чек покупки в магазине ${purchase?.purchaseInfo?.market}",
-                            LocalDateTime.now().toString().split(".")[0]
+                            "Добавил(а) чек покупки в магазине ${purchase?.purchaseInfo?.market}"
                         )
                     )
                 }
@@ -289,7 +291,53 @@ class PurchaseBottomFragment(
     }
 
     private fun showAddNewProductDialog() {
+        val dialog = requireContext().createDialog(R.layout.add_new_result_product_dialog, true)
+        val nameEt = dialog.findViewById<EditText>(R.id.name_result_dialog_et)
+        val amountEt = dialog.findViewById<EditText>(R.id.amount_result_dialog_et)
+        val priceEt = dialog.findViewById<EditText>(R.id.price_result_dialog_et)
+        val listView = dialog.findViewById<ListView>(R.id.new_result_picker)
+        val allPeople = event.ePeople!!
+        val adapter = ArrayAdapter(
+            this.requireContext(),
+            android.R.layout.simple_list_item_multiple_choice,
+            (allPeople).map { it.name }
+        )
+        listView.adapter = adapter
+        val button = dialog.findViewById<MaterialButton>(R.id.add_new_result_dialog_btn)
+        val btnAll = dialog.findViewById<MaterialButton>(R.id.new_product_all_people_btn)
+        val people = mutableListOf<SimplePersonModel>()
+        btnAll.setOnClickListener {
+            for (i in allPeople.indices)
+                listView.setItemChecked(i, true)
+        }
+        button.setOnClickListener {
+            if (nameEt.text.toString().isNotEmpty() && amountEt.text.toString()
+                    .isNotEmpty() && priceEt.text.toString()
+                    .isNotEmpty() && listView.checkedItemCount > 0
+            ) {
+                listView.checkedItemPositions.forEach { key, value ->
+                    if (value) {
+                        people.add(allPeople[key])
+                    }
+                }
+                fullList.add(nameEt.text.toString())
+                resultProducts[nameEt.text.toString()] = ResultProductModel(
+                    amountEt.text.toString().toDouble(),
+                    null,
+                    priceEt.text.toString().toDouble(),
+                    nameEt.text.toString(),
+                    people
+                )
 
+                lvAdapter.notifyDataSetChanged()
+                binding.resultProductsPicker.setItemChecked(
+                    fullList.indexOf(nameEt.text.toString()),
+                    true
+                )
+                dialog.dismiss()
+            }
+        }
+        dialog.show()
     }
 
     private fun showAddResultDialog(lvProducts: ListView, fullList: List<String>, i: Int) {
@@ -375,10 +423,10 @@ class PurchaseBottomFragment(
         toAdd: List<PlanProductModel>
     ) {
         toDelete.forEach {
-            viewModel.deletePlanProduct(eventId, it)
+            viewModel.deletePlanProduct(event.eInfo?.eKey.toString(), it)
         }
         toAdd.forEach {
-            viewModel.addPlanProduct(eventId, it)
+            viewModel.addPlanProduct(event.eInfo?.eKey.toString(), it)
         }
     }
 
@@ -390,7 +438,10 @@ class PurchaseBottomFragment(
         resultProducts.forEach { (_, product) ->
             result[product.rKey.toString()] = product
         }
-        return PurchaseModel(PurchaseInfo(purchase?.purchaseInfo?.key, market, checkImage, paid), result)
+        return PurchaseModel(
+            PurchaseInfo(purchase?.purchaseInfo?.key, market, checkImage, paid),
+            result
+        )
     }
 
     fun setDismissListener(function: ((Boolean) -> Unit)?) {

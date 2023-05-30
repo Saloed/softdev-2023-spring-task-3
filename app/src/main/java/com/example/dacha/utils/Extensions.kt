@@ -10,6 +10,9 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.dacha.data.model.NewsModel
+import com.example.dacha.data.model.PersonModel
+import java.time.LocalDateTime
 
 fun View.hide() {
     visibility = View.GONE
@@ -22,6 +25,13 @@ fun View.show() {
 fun Fragment.toast(msg: String?) {
     Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
 }
+
+fun news(person: PersonModel, news: String) = NewsModel(
+    null,
+    person,
+    news,
+    LocalDateTime.now().toString().split(".")[0]
+)
 
 fun Context.createDialog(layout: Int, cancelable: Boolean): Dialog {
     val dialog = Dialog(this, android.R.style.Theme_Dialog)

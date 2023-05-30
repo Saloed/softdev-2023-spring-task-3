@@ -18,10 +18,7 @@ import com.example.dacha.data.model.NewsModel
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.databinding.FragmentGalleryBinding
 import com.example.dacha.ui.home.HomeViewModel
-import com.example.dacha.utils.UiState
-import com.example.dacha.utils.hide
-import com.example.dacha.utils.show
-import com.example.dacha.utils.toast
+import com.example.dacha.utils.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
@@ -51,7 +48,6 @@ class GalleryFragment : Fragment() {
 
         homeVM.getPerson()
         activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.hide()
-        if (activity == null) Log.e("NULL", "NULL")
         album = arguments?.getParcelable("album")
 
         binding.rcGallery.layoutManager = LinearLayoutManager(requireContext())
@@ -79,7 +75,7 @@ class GalleryFragment : Fragment() {
     }
 
     private fun uploadImages(images: List<Uri>) {
-        homeVM.person.observe(viewLifecycleOwner){ state ->
+        homeVM.person.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
                     binding.progressBar.show()
@@ -108,12 +104,7 @@ class GalleryFragment : Fragment() {
                     imageUris.addAll(state.data.values.toList())
                     adapter.updateList(imageUris)
                     homeVM.addNews(
-                        NewsModel(
-                            null,
-                            person,
-                            "Обновил(а) фотографии в альбоме ${album?.name}",
-                            LocalDateTime.now().toString().split(".")[0]
-                        )
+                        news(person, "Обновил(а) фотографии в альбоме ${album?.name}")
                     )
                     if (album != null) {
                         viewModel.updateAlbum(AlbumModel(album!!.name, album!!.key, imageUris))
@@ -129,12 +120,7 @@ class GalleryFragment : Fragment() {
         viewModel.updateAlbum(AlbumModel(album!!.name, album!!.key, imageUris))
 
         homeVM.addNews(
-            NewsModel(
-                null,
-                person,
-                "Удалил(а) фотографию в альбоме ${album?.name}",
-                LocalDateTime.now().toString().split(".")[0]
-            )
+            news(person, "Удалил(а) фотографию в альбоме ${album?.name}")
         )
     }
 }

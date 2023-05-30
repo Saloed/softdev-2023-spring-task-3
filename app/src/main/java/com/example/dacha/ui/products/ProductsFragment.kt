@@ -91,6 +91,8 @@ class ProductsFragment : Fragment() {
                     eventBottomFragment.setDismissListener {
                         if (it) {
                             viewModel.getEvents()
+                            adapter.updateList(emptyList<PlanProductModel>().toMutableList())
+                            purchaseAdapter.updateList(emptyList<PurchaseModel>().toMutableList())
                         }
                     }
                     eventBottomFragment.show(childFragmentManager, "delete event")
@@ -141,7 +143,7 @@ class ProductsFragment : Fragment() {
                 null,
                 planProducts,
                 chosenEvent?.ePeople ?: emptyList(),
-                chosenEventId.toString(),
+                chosenEvent as EventModel,
                 person
             )
             purchaseBottomFragment.setDismissListener {
@@ -301,7 +303,7 @@ class ProductsFragment : Fragment() {
             item,
             planProducts,
             chosenEvent?.ePeople ?: emptyList(),
-            chosenEventId.toString(),
+            chosenEvent as EventModel,
             person
         )
         purchaseBottomFragment.setDismissListener {
