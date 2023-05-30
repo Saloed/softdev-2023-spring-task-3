@@ -22,8 +22,7 @@ class CollisionSpawnSystem(
     private val oWorld: World
 ): EventListener, IteratingSystem() {
 
-    override fun onTickEntity(entity: Entity) {
-    }
+    override fun onTickEntity(entity: Entity) = Unit
 
     override fun handle(event: Event?): Boolean {
         when(event) {
