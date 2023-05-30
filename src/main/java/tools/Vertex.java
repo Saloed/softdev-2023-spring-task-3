@@ -4,8 +4,20 @@ package tools;
 import com.mokiat.data.front.parser.OBJTexCoord;
 import com.mokiat.data.front.parser.OBJVertex;
 
-public class Vertex {
+public class Vertex extends OBJVertex {
     double x; double y; double z;
+
+    public double getX() {
+        return x;
+    }
+
+    public double getZ() {
+        return z;
+    }
+
+    public double getY() {
+        return y;
+    }
 
     public Vertex() {}
     public Vertex(OBJTexCoord texCoord){
@@ -28,17 +40,17 @@ public class Vertex {
         if (m.rows > 3 || m.colomns > 1) {
             throw new IllegalArgumentException("неккоректая матрица");
         } else {
-            this.x = m.getValue(1, 1);
-            this.y = m.getValue(2, 1);
-            this.z = m.getValue(3, 1);
+            this.x = m.getValue(0, 0);
+            this.y = m.getValue(1, 0);
+            this.z = m.getValue(2, 0);
         }
     }
 
     public Matrix getMatrix(){
         Matrix res = new Matrix(3, 1);
-        res.addValue(1, 1, this.x);
-        res.addValue(2, 1, this.y);
-        res.addValue(3, 1, this.z);
+        res.addValue(0, 0, this.x);
+        res.addValue(1, 0, this.y);
+        res.addValue(2, 0, this.z);
         return res;
     }
 
@@ -71,6 +83,39 @@ public class Vertex {
         Matrix transformation = new Matrix(array);
         Matrix res = oldVer.getMatrix().multiply(transformation);
         return new Vertex(res);
+    }
+
+    public static Vertex transform(Vertex old, double a, double b, double c){
+        double sinA = Math.sin(Math.toRadians(a));
+        double sinB = Math.sin(Math.toRadians(b));
+        double sinC = Math.sin(Math.toRadians(c));
+        double cosA = Math.cos(Math.toRadians(a));
+        double cosB = Math.cos(Math.toRadians(b));
+        double cosC = Math.cos(Math.toRadians(c));
+        double[][] array = {{cosB*cosC, -sinC*cosB, sinB},
+                {sinA*sinB*cosC + sinC * cosA, -sinA*sinB*sinC + cosA * cosC, -sinA*cosB},
+                {sinA*sinC - sinB*cosA*cosC, sinA*cosC + sinB *sinC*cosA, cosA*cosB}};
+        Matrix matrix = new Matrix(array);
+        Matrix res = matrix.multiply(old.getMatrix());
+        Vertex result = new Vertex(res);
+        return result;
+    }
+
+    public static Vertex transformOBJ(OBJVertex old, double a, double b, double c){
+        Vertex oldVer = new Vertex(old);
+        double sinA = Math.sin(Math.toRadians(a));
+        double sinB = Math.sin(Math.toRadians(b));
+        double sinC = Math.sin(Math.toRadians(c));
+        double cosA = Math.cos(Math.toRadians(a));
+        double cosB = Math.cos(Math.toRadians(b));
+        double cosC = Math.cos(Math.toRadians(c));
+        double[][] array = {{cosB*cosC, -sinC*cosB, sinB},
+                {sinA*sinB*cosC + sinC * cosA, -sinA*sinB*sinC + cosA * cosC, -sinA*cosB},
+                {sinA*sinC - sinB*cosA*cosC, sinA*cosC + sinB *sinC*cosA, cosA*cosB}};
+        Matrix matrix = new Matrix(array);
+        Matrix res = matrix.multiply(oldVer.getMatrix());
+        Vertex result = new Vertex(res);
+        return result;
     }
     @Override
     public boolean equals(Object o){
