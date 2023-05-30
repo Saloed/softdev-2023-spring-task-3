@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Game {
 
-    ArrayList<Card> dealerHand;
-    ArrayList<Card> playerHand;
+    List<Card> dealerHand;
+    List<Card> playerHand;
 
     public boolean faceDown;
     public boolean dealerWon;
@@ -205,7 +205,7 @@ public class Game {
                 for (int i = 0; i < aceCountInHand(hand); i++) {
                     sumOfHand = getSumWithHighAce(hand)-(i+1)*10;
                     if(sumOfHand <= 21) {
-                        return sumOfHand;
+                        break;
                     }
                 }
             }
@@ -214,9 +214,8 @@ public class Game {
             for (Card card : hand) {
                 sumOfHand += card.getValue();
             }
-            return sumOfHand;
         }
-        return 22;
+        return sumOfHand;
     }
 
     public  double decision (List<Card> phand, List<Card> dhand) {

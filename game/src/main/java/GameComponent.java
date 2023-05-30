@@ -1,26 +1,24 @@
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
-
-
+import java.util.List;
 
 public class GameComponent extends JComponent implements MouseListener {
     public BufferedImage backgroundImage;
     public BufferedImage chip;
-    private final ArrayList<Card> dealerHand;
-    private final ArrayList<Card> playerHand;
+    private final List<Card> dealerHand;
+    private final List<Card> playerHand;
     private int dealerScore;
     private int playerScore;
     public boolean faceDown = true;
     public static boolean betMade = false;
     private int currentBalance;
     public static int currentBet;
-    public GameComponent(ArrayList<Card> dH, ArrayList<Card> pH) {
+    public GameComponent(List<Card> dH, List<Card> pH) {
         dealerHand = dH;
         playerHand = pH;
         dealerScore = 0;
@@ -121,8 +119,8 @@ public class GameComponent extends JComponent implements MouseListener {
                     JOptionPane.showMessageDialog(frame, "YOU can't bet that much.");
                 }
             }
-            Tester.newGame.startGame();
-            Tester.newGame.activatingBtns();
+            Tester.tester.newGame.startGame();
+            Tester.tester.newGame.activatingBtns();
         }
     }
     public void mouseExited(MouseEvent e) {

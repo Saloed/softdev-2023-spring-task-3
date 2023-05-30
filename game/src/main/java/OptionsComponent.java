@@ -13,7 +13,6 @@ public class OptionsComponent extends JComponent implements ActionListener{
     public OptionsComponent() {
         btnPlay.addActionListener(this);
         btnExit.addActionListener(this);
-
     }
 
     public void paintComponent(Graphics g) {
@@ -54,8 +53,7 @@ public class OptionsComponent extends JComponent implements ActionListener{
             System.exit(0);
         }
         else if(selectedButton == btnPlay) {
-            Tester tester = new Tester();
-            tester.btnPlay();
+            Tester.tester.btnPlay();
         }
     }
 

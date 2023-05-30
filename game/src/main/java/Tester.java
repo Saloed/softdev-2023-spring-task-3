@@ -1,12 +1,12 @@
 import javax.swing.*;
 
-public class Tester {
+public class Tester extends JComponent {
     public JFrame menuFrame = new JFrame();
-    public static JFrame gameFrame = new JFrame();
+    public JFrame gameFrame = new JFrame();
     private int playerScore = 0;
     private int dealerScore = 0;
     public int currentBalance = 100;
-    public static Game newGame = new Game(gameFrame);
+    public Game newGame = new Game(gameFrame);
     private boolean isFirstTime = true;
 
     public enum STATE{
@@ -14,14 +14,18 @@ public class Tester {
         GAME
     }
 
-    public static STATE currentState = STATE.MENU;
+    public STATE currentState = STATE.MENU;
 
+
+
+    static Tester tester = new Tester();
     public static void main(String[] args) {
-        Tester tester = new Tester();
-        if(currentState == STATE.MENU) {
+        if(tester.currentState == STATE.MENU) {
             tester.openMenu();
         }
     }
+
+
 
     public void openMenu() {
         menuFrame.setTitle("BLACKJACK");
@@ -29,14 +33,13 @@ public class Tester {
         menuFrame.setLocationRelativeTo(null);
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         menuFrame.setResizable(false);
-
         OptionsComponent beginningComponent = new OptionsComponent();
         menuFrame.add(beginningComponent);
         menuFrame.setVisible(true);
     }
 
     public void btnPlay() {
-        currentState = Tester.STATE.GAME;
+        currentState = STATE.GAME;
         menuFrame.dispose();
         gameRefreshThread.start();
         gameCheckThread.start();
