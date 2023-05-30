@@ -1,6 +1,5 @@
 package com.go;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,11 +9,11 @@ public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
 
     private final Set<Stone> visitedPositions = new HashSet<>();
     private List<Stone> stoneGroup = new ArrayList<>();
-    private Color colorGroup;
+    private Game.PlayerColor colorGroup;
 
     @Override
     public boolean check(Stone stone, Board board) {
-        colorGroup = stone.color();// Установка цвета группы
+        colorGroup = stone.playerColor();// Установка цвета группы
 
         // Находит группу камней, к которой принадлежит переданный stone
         stoneGroup = findStoneGroup(stone, board);
@@ -39,7 +38,7 @@ public class SameColorSurvivalRule implements ICheckSurvivalGroupRule {
 
         Stone position = board.getPosition(x, y);
 
-        if (position == null || visitedPositions.contains(position) || position.color() != colorGroup) {
+        if (position == null || visitedPositions.contains(position) || position.playerColor() != colorGroup) {
             return;
         }
 

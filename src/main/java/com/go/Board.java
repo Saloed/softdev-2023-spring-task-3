@@ -1,15 +1,14 @@
 package com.go;
 
-import java.awt.*;
 import java.util.List;
 
 public class Board implements IBoard {
     public final static int BOARD_SIZE = 13; // Размер игрового поля
     private Stone[][] positions; // Хранит состояние игровой доски
 
-    public double capturedStonesWhite = 6.5; // Количество выигранных белых очков
-    public int capturedStonesBlack = 0; //Количество выигранных черных очков
-    private boolean repeatPosition;
+    private double capturedStonesWhite = 0; // Количество выигранных белых очков
+    private int capturedStonesBlack = 0; //Количество выигранных черных очков
+    private boolean repeatPosition; // Проверка повторяющейся позиции
 
 
     // Конструктор
@@ -62,7 +61,7 @@ public class Board implements IBoard {
             if (isValidBoundary(nx, ny)) {
                 Stone neighbor = getPosition(nx, ny);
 
-                if (neighbor != null && neighbor.color() != stone.color()) {
+                if (neighbor != null && neighbor.playerColor() != stone.playerColor()) {
                     if (!(checkLiberties.check(neighbor, this) || checkSameColor.check(neighbor, this))) {
                         SameColorSurvivalRule survivalRule = new SameColorSurvivalRule();
                         survivalRule.check(neighbor, this);
@@ -84,14 +83,13 @@ public class Board implements IBoard {
     // Метод осуществляющий удаление группы с доски
     private void removeStoneGroup(List<Stone> stoneGroup) {
         for (Stone stone : stoneGroup) {
-            if (stone.color() == Color.WHITE)
+            if (stone.playerColor() == Game.PlayerColor.WHITE)
                 capturedStonesBlack++;
             else {
                 capturedStonesWhite++;
             }
             removeStone(stone);
         }
-        System.out.println(capturedStonesWhite + " " + capturedStonesBlack);
     }
 
 
@@ -99,7 +97,7 @@ public class Board implements IBoard {
     @Override
     public void clearBoard() {
         positions = new Stone[BOARD_SIZE][BOARD_SIZE];
-        capturedStonesWhite = 6.5;
+        capturedStonesWhite = 1.5;
         capturedStonesBlack = 0;
     }
 
@@ -143,5 +141,13 @@ public class Board implements IBoard {
     @Override
     public Stone[][] getPositions() {
         return positions;
+    }
+
+    public double getCapturedStonesWhite() {
+        return capturedStonesWhite;
+    }
+
+    public int getCapturedStonesBlack() {
+        return capturedStonesBlack;
     }
 }

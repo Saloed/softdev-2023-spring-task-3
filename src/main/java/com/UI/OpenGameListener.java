@@ -2,6 +2,9 @@ package com.UI;
 
 import com.go.Game;
 
+import javax.swing.*;
+import java.io.File;
+
 class OpenGameListener implements GameButtonsControlPanel.OpenGameListener {
 
     private final Game game;
@@ -14,8 +17,12 @@ class OpenGameListener implements GameButtonsControlPanel.OpenGameListener {
 
     @Override
     public void onOpenGameClick() {
-        game.returnGame();
-        gamePanel.repaint();
+        JFileChooser fileChooser = new JFileChooser("./Save games");
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            game.returnGame(selectedFile);
+            gamePanel.repaint();
+        }
     }
 }
-

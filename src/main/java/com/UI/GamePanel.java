@@ -73,7 +73,8 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
         for (Stone[] stones : boardContent) {
             for (Stone stone : stones) {
                 if (stone != null) {
-                    g.setColor(stone.color());
+                    Color stoneColor = stone.playerColor() == Game.PlayerColor.BLACK ? Color.BLACK : Color.WHITE;
+                    g.setColor(stoneColor);
                     g.fillOval(getStoneCordByIndent(xIndent, stone.x()),
                             getStoneCordByIndent(yIndent, stone.y()), getStoneSize(), getStoneSize());
                 }
@@ -83,11 +84,6 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
 
     private int mouseCordToStoneCord(int cord, int indent) {
         return (cord - indent + getCellSize() / 2) / getCellSize();
-    }
-
-    private void showErrorMessageDialog(String title, String message) {
-        JOptionPane.showMessageDialog(null, message, title,
-                JOptionPane.ERROR_MESSAGE);
     }
 
     // Считывает клики мыши и добавляет камень в массив
@@ -104,7 +100,7 @@ class GamePanel extends JPanel implements GameButtonsControlPanel.NewGameListene
                 boolean isStoneAdd = game.addStoneByCords(x, y);
 
                 if (!isStoneAdd) {
-                    showErrorMessageDialog("Опачки!", "Не угадал!");
+                    GameDisplay.showErrorMessageDialog("Опачки!", "Не угадал!");
                 }
 
                 repaint();

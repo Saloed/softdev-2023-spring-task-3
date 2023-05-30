@@ -48,4 +48,9 @@ public class GameDisplay {
         frame.setVisible(true); // Делает фрейм видимым
         gamePanel.repaint(); // Рисует игровую панель
     }
+
+    public static void showErrorMessageDialog(String title, String message) {
+        JOptionPane.showMessageDialog(null, message, title,
+                JOptionPane.ERROR_MESSAGE);
+    }
 }

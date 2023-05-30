@@ -5,13 +5,12 @@ import com.go.Game;
 import com.go.Champion;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class PassMoveListener implements GameButtonsControlPanel.PassMoveListener {
 
     private final Game game;
     private final Board board;
-    private Color previousPlayer;
+    private Game.PlayerColor previousPlayer;
     private int consecutivePasses = 0;
 
     PassMoveListener(Game game, Board board) {
@@ -21,7 +20,7 @@ public class PassMoveListener implements GameButtonsControlPanel.PassMoveListene
 
     @Override
     public void onPassMoveClick() {
-        Color currentPlayer = game.getCurrentPlayer();
+        Game.PlayerColor currentPlayer = game.getCurrentPlayer();
 
         game.turn();
 
@@ -34,10 +33,10 @@ public class PassMoveListener implements GameButtonsControlPanel.PassMoveListene
         if (consecutivePasses == 2) {
 
             Champion winner = new Champion(board);
-            Color winnerColor = winner.getChampion();
+            Game.PlayerColor winnerColor = winner.getChampion();
             String champion;
             double score = winner.getScore();
-            if (winnerColor == Color.BLACK) {
+            if (winnerColor == Game.PlayerColor.BLACK) {
                 champion = "Черные";
             } else {
                 champion = "Белые";
@@ -46,6 +45,7 @@ public class PassMoveListener implements GameButtonsControlPanel.PassMoveListene
             JOptionPane.showMessageDialog(null, champion + " победили с отрывом в... \n" +
                     score + " очков! Учитесь!", "Игра завершена!", JOptionPane.INFORMATION_MESSAGE);
             consecutivePasses = 0;
+            game.newGame();
         }
         previousPlayer = currentPlayer;
     }

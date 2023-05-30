@@ -17,7 +17,7 @@ class RemoveStoneListener implements GameButtonsControlPanel.RemoveStoneListener
 
     @Override
     public void onRemoveStoneClick() {
-        board.removeStone(game.lastFixedStone);
+        board.removeStone(game.getLastFixedStone());
         gamePanel.repaint();
         game.turn();
     }

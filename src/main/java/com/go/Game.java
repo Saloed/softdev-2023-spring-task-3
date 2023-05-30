@@ -1,26 +1,32 @@
 package com.go;
 
-import javax.swing.*;
-import java.awt.*;
+import com.UI.GameDisplay;
+
 import java.io.*;
 
 
 public class Game implements IGame {
 
     private final Board board; // Состояние доски
-    private Color currentPlayer; // Текущий игрок
-    public Stone lastFixedStone; // Предыдущий установленный камень
+    private PlayerColor currentPlayer; // Текущий игрок
+
+    public enum PlayerColor {
+        BLACK,
+        WHITE
+    }
+
+    private Stone lastFixedStone; // Предыдущий установленный камень
 
     public Game(Board board) {
         this.board = board;
-        currentPlayer = Color.BLACK;
+        currentPlayer = PlayerColor.BLACK;
     }
 
     // Метод, который создает новую игру
     @Override
     public void newGame() {
         board.clearBoard();
-        currentPlayer = Color.BLACK;
+        currentPlayer = PlayerColor.BLACK;
     }
 
     // Метод, который добавляет камень на доску
@@ -38,7 +44,7 @@ public class Game implements IGame {
     // Меняет цвет текущего игрока
     @Override
     public void turn() {
-        currentPlayer = (currentPlayer == Color.BLACK) ? Color.WHITE : Color.BLACK;
+        currentPlayer = (currentPlayer == PlayerColor.BLACK) ? PlayerColor.WHITE : PlayerColor.BLACK;
     }
 
     // Возвращает состояние игровой доски
@@ -53,34 +59,32 @@ public class Game implements IGame {
         return Board.BOARD_SIZE;
     }
 
-    // Метод, который сохраняет игру
+    // Возвращает последний зафиксированный камень
     @Override
-    public void saveGame() {
-        saveArrayToFile(board.getPositions());
+    public Stone getLastFixedStone() {
+        return lastFixedStone;
     }
 
-    // Метод, который возвращает сохраненную игру
+    // Метод, который сохраняет игру
     @Override
-    public void returnGame() {
-        Stone[][] loadedStones = loadArrayFromFile();
-        board.setPositions(loadedStones);
+    public void saveGame(File file) {
+        saveArrayToFile(file, board.getPositions());
+    }
+
+    // Метод, который возвращает сохраненную игру из файла
+    @Override
+    public void returnGame(File file) {
+        board.setPositions(loadArrayFromFile(file));
     }
 
     // Метод, который возвращает текущего игрока
-    public Color getCurrentPlayer() {
+    public PlayerColor getCurrentPlayer() {
         return currentPlayer;
     }
 
-    // Метод, который сохраняет игру в файл
-    private void saveArrayToFile(Stone[][] arr) {
-        JFileChooser fileChooser = new JFileChooser("./Save games");
-        int result = fileChooser.showSaveDialog(null);
-        if (result != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-
-        File selectedFile = fileChooser.getSelectedFile();
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(selectedFile))) {
+    // Метод, который записывает игру в файл
+    private void saveArrayToFile(File file, Stone[][] arr) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             bw.write(String.valueOf(arr.length));
             bw.newLine();
             bw.write(String.valueOf(arr[0].length));
@@ -88,7 +92,7 @@ public class Game implements IGame {
             for (Stone[] stones : arr) {
                 for (int j = 0; j < arr[0].length; j++) {
                     if (stones[j] != null) {
-                        bw.write(stones[j].color().getRGB() + " ");
+                        bw.write(stones[j].playerColor() + " ");
                     } else {
                         bw.write("null ");
                     }
@@ -96,20 +100,13 @@ public class Game implements IGame {
                 bw.newLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            GameDisplay.showErrorMessageDialog("Опачки!", "Ошибка записи в файл, попробуйте еще раз.");
         }
     }
 
-    // Метод, который возвращает игру из файла
-    private Stone[][] loadArrayFromFile() {
-        JFileChooser fileChooser = new JFileChooser("./Save games");
-        int result = fileChooser.showOpenDialog(null);
-        if (result != JFileChooser.APPROVE_OPTION) {
-            return board.getPositions();
-        }
-
-        File selectedFile = fileChooser.getSelectedFile();
-        try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
+    // Метод, который читает игру из файла
+    private Stone[][] loadArrayFromFile(File file) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             int rows = Integer.parseInt(br.readLine());
             int cols = Integer.parseInt(br.readLine());
             Stone[][] savePositions = new Stone[rows][cols];
@@ -120,15 +117,19 @@ public class Game implements IGame {
                     if (cell.equals("null")) {
                         savePositions[i][j] = null;
                     } else {
-                        int rgb = Integer.parseInt(cell);
-                        savePositions[i][j] = new Stone(new Color(rgb), i, j);
+                        if (cell.equals("WHITE")) {
+                            savePositions[i][j] = new Stone(PlayerColor.WHITE, i, j);
+                        } else {
+                            savePositions[i][j] = new Stone(PlayerColor.BLACK, i, j);
+                        }
                     }
                 }
             }
             return savePositions;
         } catch (IOException e) {
-            e.printStackTrace();
+            GameDisplay.showErrorMessageDialog("Опачки!", "Ошибка чтения из файла, попробуйте еще раз.");
             return new Stone[getBoardSize()][getBoardSize()];
         }
     }
+
 }

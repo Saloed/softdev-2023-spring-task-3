@@ -1,11 +1,11 @@
 package com.go;
 
+import java.io.File;
+
 interface IGame {
     void newGame();
 
-    void saveGame();
-
-    void returnGame();
+    Stone getLastFixedStone();
 
     boolean addStoneByCords(int x, int y);
 
@@ -14,4 +14,10 @@ interface IGame {
     Stone[][] getBoardContent(Board board);
 
     int getBoardSize();
+
+    // Метод, который сохраняет игру
+    void saveGame(File file);
+
+    // Метод, который возвращает сохраненную игру из файла
+    void returnGame(File file);
 }

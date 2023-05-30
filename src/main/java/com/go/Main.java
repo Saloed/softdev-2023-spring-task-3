@@ -7,4 +7,3 @@ public class Main {
         GameDisplay gameDisplay = new GameDisplay();
     }
 }
-

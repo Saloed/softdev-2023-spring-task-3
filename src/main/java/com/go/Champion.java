@@ -1,6 +1,6 @@
 package com.go;
 
-import java.awt.*;
+import com.go.Game.PlayerColor;
 
 public class Champion {
     private final Board board;
@@ -11,8 +11,9 @@ public class Champion {
     public Champion(Board board) {
         this.board = board;
         this.boardSize = board.getPositions().length;
-        this.blackStonesCount = 0;
-        this.whiteStonesCount = 1.5;
+        this.blackStonesCount = board.getCapturedStonesBlack();
+        this.whiteStonesCount = 1.5 + board.getCapturedStonesWhite();
+        System.out.println(blackStonesCount + " " + whiteStonesCount);
         countStones();
     }
 
@@ -21,9 +22,9 @@ public class Champion {
             for (int y = 0; y < boardSize; y++) {
                 Stone position = board.getPosition(x, y);
                 if (!board.isEmptyPosition(x, y)) {
-                    if (position.color() == Color.BLACK) {
+                    if (position.playerColor() == PlayerColor.BLACK) {
                         blackStonesCount++;
-                    } else if (position.color() == Color.WHITE) {
+                    } else if (position.playerColor() == PlayerColor.WHITE) {
                         whiteStonesCount++;
                     }
                 }
@@ -35,7 +36,7 @@ public class Champion {
         return Math.abs(blackStonesCount - (whiteStonesCount));
     }
 
-    public Color getChampion() {
-        return (blackStonesCount > whiteStonesCount) ? Color.BLACK : Color.WHITE;
+    public PlayerColor getChampion() {
+        return (blackStonesCount > whiteStonesCount) ? PlayerColor.BLACK : PlayerColor.WHITE;
     }
 }
