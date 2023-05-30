@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<ScrollPane maxHeight="600.0" maxWidth="700.0" prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demoapp.MainController">
+   <content>
+      <AnchorPane prefHeight="700.0" prefWidth="700.0">
+         <children>
+            <Circle fx:id="circle" fill="RED" layoutX="349.0" layoutY="341.0" radius="220.0" stroke="WHITE" strokeType="INSIDE" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="135.0" />
+            <MenuBar accessibleRole="MENU_BUTTON" layoutX="-2.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="50.0" prefWidth="700.0" style="-fx-background-color: white; -fx-border-color: black;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <menus>
+                <Menu fx:id="settingsButton" mnemonicParsing="false" onAction="#switchToSettings">
+                     <graphic>
+                        <Button fx:id="settings2" graphicTextGap="3.0" mnemonicParsing="false" onAction="#switchToSettings" style="-fx-background-color: white; -fx-border-color: red;" text="settings">
+                           <font>
+                              <Font name="Century Gothic" size="15.0" />
+                           </font>
+                        </Button>
+                     </graphic>
+                  </Menu>
+                  <Menu mnemonicParsing="false">
+                     <graphic>
+                        <Button fx:id="plannerButton" mnemonicParsing="false" onAction="#switchToPlanner" style="-fx-background-color: white; -fx-border-color: red;" text="planner">
+                           <font>
+                              <Font name="Century Gothic" size="15.0" />
+                           </font>
+                        </Button>
+                     </graphic>
+                  </Menu>
+              </menus>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets bottom="10.0" left="20.0" top="10.0" />
+               </padding>
+            </MenuBar>
+            <Text fx:id="taskName" fill="WHITE" layoutX="51.0" layoutY="375.0" strokeType="OUTSIDE" strokeWidth="0.0" text="важное задание" textAlignment="CENTER" wrappingWidth="591.2">
+               <font>
+                  <Font name="Century Gothic" size="25.0" />
+               </font>
+            </Text>
+            <Text fx:id="time" boundsType="LOGICAL_VERTICAL_CENTER" fill="WHITE" layoutX="128.0" layoutY="337.0" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00" textAlignment="CENTER" wrappingWidth="446.13671875">
+               <font>
+                  <Font name="Century Gothic" size="96.0" />
+               </font>
+            </Text>
+            <Arc fill="#33c712" layoutX="346.0" layoutY="172.0" length="270.0" radiusX="70.0" radiusY="64.0" startAngle="-45.0" stroke="#29e72c" strokeLineCap="ROUND" strokeLineJoin="BEVEL" strokeMiterLimit="0.0" type="ROUND">
+               <effect>
+                  <DropShadow blurType="TWO_PASS_BOX" />
+               </effect>
+            </Arc>
+            <Pane layoutX="165.0" layoutY="348.0" prefHeight="196.0" prefWidth="394.0">
+               <children>
+                  <Button fx:id="stop" layoutX="205.0" layoutY="51.0" mnemonicParsing="false" onAction="#onStopButtonClick" prefHeight="47.0" prefWidth="145.0" style="-fx-background-color: red; -fx-border-color: white;" text="stop" textFill="WHITE">
+                     <font>
+                        <Font name="Century Gothic" size="23.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="pause" layoutX="38.0" layoutY="51.0" mnemonicParsing="false" onAction="#onPauseButtonClick" prefHeight="47.0" prefWidth="142.0" style="-fx-background-color: red; -fx-border-color: white;" text="pause" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Century Gothic" size="23.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="start" layoutX="37.0" layoutY="51.0" mnemonicParsing="false" onAction="#onStartButtonClick" prefHeight="47.0" prefWidth="145.0" style="-fx-background-color: red; -fx-border-color: white;" text="start" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Century Gothic" size="23.0" />
+                     </font>
+                  </Button>
+               </children>
+            </Pane>
+            <Line endX="-50.999969482421875" endY="-41.79997253417969" layoutX="397.0" layoutY="135.0" startX="-50.999969482421875" stroke="#33c712" strokeWidth="10.0" />
+            <Pane layoutX="443.0" layoutY="4.0" prefHeight="126.0" prefWidth="251.0">
+               <children>
+                  <Text layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pomodoro Tracker">
+                     <font>
+                        <Font name="Century Gothic" size="22.0" />
+                     </font>
+                  </Text>
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
+   </content>
+</ScrollPane>
