@@ -48,13 +48,13 @@ class AnimationSystem(
             if (regions.isEmpty) {
                 gdxError("No such texture regions!")
             }
-            Animation(default_duration, regions.map { TextureRegionDrawable(it) }) // map from ktx.collection
+            Animation(defaultDuration, regions.map { TextureRegionDrawable(it) }) // map from ktx.collection
                                 // ^ 16fps
         }
     }
 
     companion object {
         private val log = logger<AnimationSystem>()
-        private const val default_duration = 1/16f
+        private const val defaultDuration = 1/16f
     }
 }
