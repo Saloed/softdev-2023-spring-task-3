@@ -4,6 +4,7 @@ import com.mokiat.data.front.parser.*;
 import tools.Vertex;
 
 
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,23 @@ public class OBGLoader {
                     }
                     res.add(actFace);
                 }
+            }
+        }
+        return res;
+    }
+
+    public static List<Triangle> getTriangles(List<List<OBJVertex>> pol){
+        List<Triangle> res = new ArrayList<>();
+        for (List<OBJVertex> polygon: pol){
+            if (polygon.size()== 3){
+                Triangle triangle = new Triangle(polygon.get(0), polygon.get(1), polygon.get(2), Color.BLUE);
+                res.add(triangle);
+            } else {
+                for (int i = 1; i < polygon.size() - 1; ++i){
+                    Triangle triangle1 = new Triangle(polygon.get(0), polygon.get(i), polygon.get(i+1), Color.BLUE);
+                    res.add(triangle1);
+                }
+
             }
         }
         return res;
