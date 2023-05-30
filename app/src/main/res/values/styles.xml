@@ -1,0 +1,21 @@
+<resources>
+
+    <style name="Widget.Theme.Material3.Light.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="Widget.Theme.Material3.Light.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">#000000</item>
+        <item name="colorAccent">#dfe0e5</item>
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="android:textColorSecondary">#c5c0c9</item>
+        <item name="android:windowBackground">#ffffff</item>
+    </style>
+
+
+</resources>
