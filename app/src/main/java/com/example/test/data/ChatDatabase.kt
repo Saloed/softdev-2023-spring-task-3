@@ -12,7 +12,6 @@ abstract class ChatDatabase : RoomDatabase() {
     abstract fun messageElementDAO(): MessageDao
 
     companion object {
-        @Volatile
         private var Instance: ChatDatabase? = null
         fun getDatabase(context: Context): ChatDatabase {
             return Instance ?: synchronized(this) {

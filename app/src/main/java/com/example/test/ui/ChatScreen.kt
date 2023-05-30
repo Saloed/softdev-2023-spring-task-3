@@ -215,14 +215,15 @@ fun messageDisplay(
                             message.previewBitmap!!.size
                         )
                     }
+
                     Image(
                         bitmap = bitmap.asImageBitmap(),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .fillMaxSize()
-                            .height(400.dp)
-                            .width(300.dp)
+                            .height(if (bitmap.height >= 100) kotlin.math.min(bitmap.height,400).dp else 400.dp)
+                            .width(if (bitmap.width >= 100) kotlin.math.min(bitmap.height,300).dp else 300.dp)
                     )
 
                 }
