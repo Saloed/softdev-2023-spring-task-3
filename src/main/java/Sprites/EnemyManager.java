@@ -46,7 +46,6 @@ public class EnemyManager {
                         (int) octopus.getHitbox().y - OctopusOffsetY,
                         OctopusWidthScaled * octopus.flipW(),
                         OctopusHeightScaled, null);
-            octopus.drawAttackHitbox(g, xLvlOffset);
         }
     }
 
@@ -58,8 +57,6 @@ public class EnemyManager {
                         (int) crab.getHitbox().y - CrabOffsetY,
                         CrabWidthScaled * crab.flipW(),
                         CrabHeightScaled, null);
-            //crab.drawHitbox(g, xLvlOffset);
-           //
         }
     }
 
