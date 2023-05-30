@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Test</string>
+    <string name="chat">Чат</string>
+    <string name="settings">Настройки</string>
+    <string name="font_size">Размер шрифта</string>
+    <string name="back_button">Назад</string>
+    <string name="discord_token">Токен Discord</string>
+    <string name="discord_id">ID Discord</string>
+    <string name="submit">Отправить</string>
+    <string name="manual_tg_init">Запустить TdLib</string>
+    <string name="notification_channel_name">Сообщения</string>
+    <string name="notification_channel_description">Уведомления о сообщениях</string>
+    <string name="db_loading_error">Не удалось обновить сообщения</string>
+</resources>
