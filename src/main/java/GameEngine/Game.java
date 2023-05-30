@@ -2,8 +2,6 @@ package GameEngine;
 
 import GameStates.Menu;
 import GameStates.Playing;
-import Scenes.GamePanel;
-import Scenes.GameWindow;
 
 import java.awt.*;
 
@@ -27,7 +25,7 @@ public class Game implements Runnable {
         init();
 
         gamePanel = new GamePanel(this);
-        GameWindow gameWindow = new GameWindow(gamePanel);
+        new GameWindow(gamePanel);
         gamePanel.setFocusable(true);
         gamePanel.requestFocus();
 

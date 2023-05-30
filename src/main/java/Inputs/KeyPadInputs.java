@@ -1,21 +1,17 @@
 package Inputs;
 
 import GameStates.GameState;
-import Scenes.GamePanel;
+import GameEngine.GamePanel;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class KeyPadInputs extends KeyAdapter {
-    private GamePanel gamePanel;
+    private final GamePanel gamePanel;
 
     public KeyPadInputs(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
     }
-    /*@Override
-    public void keyTyped(KeyEvent e) {
-
-    }*/
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -29,20 +25,20 @@ public class KeyPadInputs extends KeyAdapter {
             default:
                 break;
         }
-        }
+    }
 
-        @Override
-        public void keyReleased (KeyEvent e){
-            switch (GameState.gameState) {
-                case MENU:
-                    gamePanel.getGame().getMenu().keyReleased(e);
-                    break;
-                case PLAYING:
-                    gamePanel.getGame().getPlaying().keyReleased(e);
-                    break;
-                default:
-                    break;
-            }
+    @Override
+    public void keyReleased(KeyEvent e) {
+        switch (GameState.gameState) {
+            case MENU:
+                gamePanel.getGame().getMenu().keyReleased(e);
+                break;
+            case PLAYING:
+                gamePanel.getGame().getPlaying().keyReleased(e);
+                break;
+            default:
+                break;
         }
+    }
 
 }

@@ -1,11 +1,9 @@
-package UI;
-
-import Scenes.DataProcessing;
+package HelperClasses;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static Sprites.Constants.UI.UrmButtons.*;
+import static HelperClasses.Constants.UI.UrmButtons.*;
 
 public class UrmButtons{
     private BufferedImage[] images;
@@ -48,10 +46,6 @@ public class UrmButtons{
         mousePressed = false;
     }
 
-    public boolean isMouseOver() {
-        return mouseOver;
-    }
-
     public void setMouseOver(boolean mouseOver) {
         this.mouseOver = mouseOver;
     }
@@ -66,10 +60,6 @@ public class UrmButtons{
 
     public Rectangle getBorders() {
         return borders;
-    }
-
-    public void setBorders(Rectangle borders) {
-        this.borders = borders;
     }
 
 }

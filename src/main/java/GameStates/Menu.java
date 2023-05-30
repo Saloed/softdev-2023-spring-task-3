@@ -1,8 +1,9 @@
 package GameStates;
 
 import GameEngine.Game;
-import Scenes.DataProcessing;
-import UI.MenuButtons;
+import HelperClasses.DataProcessing;
+import HelperClasses.MenuButtons;
+import HelperClasses.StateMethods;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

@@ -4,11 +4,11 @@ import java.awt.geom.Rectangle2D;
 
 import static GameEngine.Game.Scale;
 import static GameEngine.Game.TileSize;
-import static Scenes.HelpMethods.*;
-import static Sprites.Constants.Directions.Left;
-import static Sprites.Constants.Directions.Right;
-import static Sprites.Constants.Enemy.*;
-import static Sprites.Constants.Gravity;
+import static HelperClasses.HelpMethods.*;
+import static HelperClasses.Constants.Directions.Left;
+import static HelperClasses.Constants.Directions.Right;
+import static HelperClasses.Constants.Enemy.*;
+import static HelperClasses.Constants.Gravity;
 
 public abstract class Enemy extends Entity {
 
@@ -25,6 +25,7 @@ public abstract class Enemy extends Entity {
     //Attack
 
     protected int attackRange = TileSize;
+    protected int attackHitboxOffsetX;
 
     //Health
 
@@ -35,13 +36,12 @@ public abstract class Enemy extends Entity {
         this.enemyType = enemyType;
         maxHealth = GetMaxHealth(enemyType);
         currentHealth = maxHealth;
-        speed = 0.4f * Scale;
     }
 
     protected void updateAnimation() {
         animationTick++;
-        int speed = 25;
-        if (animationTick >= speed) {
+        animationSpeed = 25;
+        if (animationTick >= animationSpeed) {
             animationTick = 0;
             animationIndex++;
             if (animationIndex >= AmountOfFrames(enemyType, action)) {
@@ -73,6 +73,23 @@ public abstract class Enemy extends Entity {
             hitbox.y = GetYPos(hitbox, airSpeed);
             tileY = (int) (hitbox.y / TileSize);
         }
+    }
+
+    protected void createAttackHitbox(int w, int h, int attackHitboxOffsetX) {
+        attackHitbox = new Rectangle2D.Float(x, y, (int) (w * Scale), (int) (h * Scale));
+        this.attackHitboxOffsetX = (int) (attackHitboxOffsetX * Scale);
+    }
+
+    protected void updateAttackHitbox() {
+        attackHitbox.x = hitbox.x - attackHitboxOffsetX;
+        attackHitbox.y = hitbox.y;
+    }
+
+    protected void flipAttackHitbox() {
+        if (dir == Right)
+            attackHitbox.x = hitbox.x + hitbox.width + Math.abs(hitbox.width - attackHitboxOffsetX);
+        else attackHitbox.x = hitbox.x - attackHitboxOffsetX;
+        attackHitbox.y = hitbox.y;
     }
 
     protected void move(int[][] lvlData) {

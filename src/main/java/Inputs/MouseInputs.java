@@ -1,7 +1,7 @@
 package Inputs;
 
 import GameStates.GameState;
-import Scenes.GamePanel;
+import GameEngine.GamePanel;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

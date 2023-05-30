@@ -1,4 +1,4 @@
-package Sprites;
+package HelperClasses;
 
 
 import static GameEngine.Game.Scale;
@@ -35,7 +35,8 @@ public class Constants {
     }
 
     public static class Enemy {
-        public static final int Octopus = 0;
+        public static final int Crab = 0;
+        public static final int Octopus = 1;
 
         public static final int Idle = 0;
         public static final int Run = 1;
@@ -43,27 +44,49 @@ public class Constants {
         public static final int Hit = 3;
         public static final int Dead = 4;
 
-        public static final int OctopusWidth = 72;
-        public static final int OctopusHeight = 32;
-        public static final int OctopusWidthScaled = (int) (OctopusWidth * Scale);
-        public static final int OctopusHeightScaled = (int) (OctopusHeight * Scale);
+        public static final int CrabWidth = 72;
+        public static final int CrabHeight = 32;
+        public static final int CrabWidthScaled = (int) (CrabWidth * Scale);
+        public static final int CrabHeightScaled = (int) (CrabHeight * Scale);
 
-        public static final int OctopusOffsetX = (int) (26 * Scale);
-        public static final int OctopusOffsetY = (int) (9 * Scale);
+        public static final int CrabOffsetX = (int) (26 * Scale);
+        public static final int CrabOffsetY = (int) (9 * Scale);
+
+        public static final int OctopusWidth = 32;
+        public static final int OctopusHeight = 32;
+        public static final int OctopusWidthScaled = (int) (OctopusWidth * Scale * 1.85);
+        public static final int OctopusHeightScaled = (int) (OctopusHeight * Scale * 1.85);
+
+        public static final int OctopusOffsetX = (int) (16 * Scale);
+        public static final int OctopusOffsetY = (int) (14 * Scale);
 
         public static int AmountOfFrames(int enemyType, int enemyAction) {
             switch (enemyType) {
-                case Octopus:
+                case Crab:
                     switch (enemyAction) {
                         case Run:
-                        case Dead:
                             return 6;
+                        case Dead:
+                            return 5;
                         case Idle:
                             return 9;
                         case Attack:
-                            return 4;
+                            return 7;
                         case Hit:
-                            return 5;
+                            return 4;
+                        default:
+                            return 1;
+                    }
+                case Octopus:
+                    switch (enemyAction) {
+                        case Attack:
+                        case Dead:
+                            return 7;
+                        case Hit:
+                            return 6;
+                        case Run:
+                        case Idle:
+                            return 4;
                         default:
                             return 1;
                     }
@@ -73,8 +96,10 @@ public class Constants {
 
         public static int GetMaxHealth(int enemyType) {
             switch (enemyType) {
+                case Crab:
+                    return 20;
                 case Octopus:
-                    return 10;
+                    return 30;
                 default:
                     return 1;
             }
@@ -82,10 +107,36 @@ public class Constants {
 
         public static int GetAmountOfDamage(int enemyType) {
             switch (enemyType) {
+                case Crab:
+                    return 15;
                 case Octopus:
-                    return 10;
+                    return 30;
                 default:
                     return 0;
+            }
+        }
+    }
+
+    public static class Objects {
+        public static final int Money = 0;
+        public static final int Spike = 1;
+
+        public static final int Value = 1;
+        public static final int MoneySize = 16;
+        public static final int MoneySizeScaled = (int) (MoneySize * Scale);
+
+        public static final int SpikeWidth = 32;
+        public static final int SpikeHeight = 32;
+        public static final int SpikeWidthScaled = (int) (SpikeWidth * Scale);
+        public static final int SpikeHeightScaled = (int) (SpikeHeight * Scale);
+
+        public static int AmountOfFrames(int objectType) {
+            switch (objectType) {
+                case Money:
+                    return 6;
+                case Spike:
+                default:
+                    return 1;
             }
         }
     }
@@ -114,16 +165,21 @@ public class Constants {
             }
         }
 
-        public static class Health {
+        public static class StatusBar {
             public static final int StatusBarWidth = (int) (192 * Scale);
-            public static final int StatusBarHeight = (int) (30 * Scale);
+            public static final int StatusBarHeight = (int) (60 * Scale);
             public static final int StatusBarX = (int) (10 * Scale);
             public static final int StatusBarY = (int) (30 * Scale);
 
             public static final int HealthBarWidth = (int) (152 * Scale);
-            public static final int HealthBarHeight = (int) (23 * Scale);
+            public static final int HealthBarHeight = (int) (20 * Scale);
             public static final int HealthBarX = (int) (34 * Scale);
-            public static final int HealthBarY = (int) (5 * Scale);
+            public static final int HealthBarY = (int) (6 * Scale);
+
+            public static final int MoneyBarWidth = (int) (158 * Scale);
+            public static final int MoneyBarHeight = (int) (15 * Scale);
+            public static final int MoneyBarX = (int) (28 * Scale);
+            public static final int MoneyBarY = (int) (38 * Scale);
         }
     }
 

@@ -1,73 +1,104 @@
 package Sprites;
 
-import GameStates.Playing;
 import Levels.Level;
-import Scenes.DataProcessing;
+import HelperClasses.DataProcessing;
 
-import static Sprites.Constants.Enemy.*;
+import static HelperClasses.Constants.Enemy.*;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class EnemyManager {
-    private final Playing playing;
+    private BufferedImage[][] crabImg;
     private BufferedImage[][] octopusImg;
-    private ArrayList<Octopus> octopuses = new ArrayList<>();
+    private Level level;
 
-    public EnemyManager(Playing playing) {
-        this.playing = playing;
+    public EnemyManager() {
         loadImage();
     }
 
     public void loadEnemies(Level level) {
-        octopuses = level.getOctopuses();
+        this.level = level;
     }
 
     public void update(int[][] lvlData, MainCharacter mainCharacter) {
-        boolean isActive = false;
-        for (Octopus octopus : octopuses)
+        for (Crab crab : level.getCrabs())
+            if (crab.isActive()) {
+                crab.update(lvlData, mainCharacter);
+            }
+        for (Octopus octopus : level.getOctopuses())
             if (octopus.isActive()) {
                 octopus.update(lvlData, mainCharacter);
-                isActive = true;
             }
-        if (!isActive) playing.setLevelCompleted(true);
     }
 
     public void draw(Graphics g, int xLvlOffset) {
+        drawCrabs(g, xLvlOffset);
         drawOctopuses(g, xLvlOffset);
     }
 
     private void drawOctopuses(Graphics g, int xLvlOffset) {
-        for (Octopus octopus : octopuses) {
+        for (Octopus octopus : level.getOctopuses()) {
             if (octopus.isActive())
-                g.drawImage(octopusImg[octopus.getState()][octopus.getAnimationIndex()],
+                g.drawImage(octopusImg[octopus.getAction()][octopus.getAnimationIndex()],
                         (int) octopus.getHitbox().x - OctopusOffsetX - xLvlOffset + octopus.flipX(),
                         (int) octopus.getHitbox().y - OctopusOffsetY,
                         OctopusWidthScaled * octopus.flipW(),
                         OctopusHeightScaled, null);
-            //octopus.drawHitbox(g, xLvlOffset);
-            //octopus.drawAttackHitbox(g, xLvlOffset);
+            octopus.drawAttackHitbox(g, xLvlOffset);
+        }
+    }
+
+    private void drawCrabs(Graphics g, int xLvlOffset) {
+        for (Crab crab : level.getCrabs()) {
+            if (crab.isActive())
+                g.drawImage(crabImg[crab.getAction()][crab.getAnimationIndex()],
+                        (int) crab.getHitbox().x - CrabOffsetX - xLvlOffset + crab.flipX(),
+                        (int) crab.getHitbox().y - CrabOffsetY,
+                        CrabWidthScaled * crab.flipW(),
+                        CrabHeightScaled, null);
+            //crab.drawHitbox(g, xLvlOffset);
+           //
         }
     }
 
     public void checkEnemyHit(Rectangle2D.Float attackHitbox) {
-        for (Octopus octopus : octopuses)
+        for (Crab crab : level.getCrabs())
+            if (crab.isActive())
+                if (crab.getCurrentHealth() > 0) {
+                    if (attackHitbox.intersects(crab.getHitbox())) {
+                        crab.hurt(10);
+                        return;
+                    }
+                }
+        for (Octopus octopus : level.getOctopuses())
             if (octopus.isActive())
-                if (attackHitbox.intersects(octopus.getHitbox())) octopus.hurt(10);
+                if (octopus.getCurrentHealth() > 0) {
+                    if (attackHitbox.intersects(octopus.getHitbox())) {
+                        octopus.hurt(10);
+                        return;
+                    }
+                }
     }
 
     private void loadImage() {
-        octopusImg = new BufferedImage[5][9];
-        BufferedImage temp = DataProcessing.GetSprite(DataProcessing.OctopusImages);
-        for (int j = 0; j < octopusImg.length; j++)
-            for (int i = 0; i < octopusImg[j].length; i++)
-                octopusImg[j][i] = temp.getSubimage(i * OctopusWidth, j * OctopusHeight, OctopusWidth, OctopusHeight);
+        crabImg = GetImages(DataProcessing.GetSprite(DataProcessing.CrabImage), 9, 5, CrabWidth, CrabHeight);
+        octopusImg = GetImages(DataProcessing.GetSprite(DataProcessing.OctopusImages), 8, 5, OctopusWidth, OctopusHeight);
+    }
+
+    private BufferedImage[][] GetImages(BufferedImage img, int x, int y, int w, int h) {
+        BufferedImage[][] temp = new BufferedImage[y][x];
+        for (int j = 0; j < temp.length; j++)
+            for (int i = 0; i < temp[j].length; i++)
+                temp[j][i] = img.getSubimage(i * w, j * h, w, h);
+        return temp;
     }
 
     public void resetAll() {
-        for (Octopus octopus : octopuses)
+        for (Crab crab : level.getCrabs())
+            crab.resetEnemy();
+        for (Octopus octopus : level.getOctopuses())
             octopus.resetEnemy();
     }
 }

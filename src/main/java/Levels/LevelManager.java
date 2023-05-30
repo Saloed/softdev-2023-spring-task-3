@@ -1,9 +1,8 @@
 package Levels;
 
 import GameEngine.Game;
-import GameStates.GameState;
 import GameStates.Playing;
-import Scenes.DataProcessing;
+import HelperClasses.DataProcessing;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,17 +11,20 @@ import java.util.ArrayList;
 import static GameEngine.Game.TileSize;
 
 public class LevelManager {
-    private final Game game;
+    private final Playing playing;
     private BufferedImage[] levelImage;
+    private BufferedImage[] water;
     private final ArrayList<Level> levels;
-    private int lvlIndex = 0;
+    public int lvlIndex = 0, animationIndex, animationTick;
 
-    public LevelManager(Game game) {
-        this.game = game;
+    public LevelManager(Playing playing) {
+        this.playing = playing;
         importImageForLevels();
+        createWater();
         levels = new ArrayList<>();
         createAllLevels();
     }
+
 
     private void createAllLevels() {
         BufferedImage[] allLevels = DataProcessing.GetAllLevels();
@@ -31,16 +33,14 @@ public class LevelManager {
     }
 
     public void loadNextLvl() {
-        lvlIndex++;
-        if (lvlIndex >= levels.size()) {
-            lvlIndex = 0; //game completed and all lvls replay
-            GameState.gameState = GameState.MENU;
-        }
-        if (lvlIndex == 1) game.getPlaying().backgroundImage = DataProcessing.GetSprite(DataProcessing.PlayingBackgroundNight);
+        if (lvlIndex == 1) playing.backgroundImage = DataProcessing.GetSprite(DataProcessing.PlayingBackgroundNight);
+        else playing.backgroundImage = DataProcessing.GetSprite(DataProcessing.PlayingBackgroundDay);
         Level nextLevel = levels.get(lvlIndex);
-        game.getPlaying().getEnemyManager().loadEnemies(nextLevel);
-        game.getPlaying().getMainCharacter().lvlData(nextLevel.getLevelData());
-        game.getPlaying().setMaxTilesOffsetX(nextLevel.getLvlOffset());
+        playing.getMainCharacter().lvlData(nextLevel.getLevelData());
+        playing.getMainCharacter().setMaxMoneyWidth(nextLevel);
+        playing.setMaxTilesOffsetX(nextLevel.getLvlOffset());
+        playing.getEnemyManager().loadEnemies(nextLevel);
+        playing.getObjectManager().loadObjects(nextLevel);
     }
 
     private void importImageForLevels() {
@@ -53,11 +53,26 @@ public class LevelManager {
             }
     }
 
+    private void createWater() {
+        BufferedImage image = DataProcessing.GetSprite(DataProcessing.WaterAnimation);
+        water = new BufferedImage[5];
+        for (int i = 0; i < 4; i++)
+            water[i] = image.getSubimage(i * 32, 0, 32, 32);
+        water[4] = DataProcessing.GetSprite(DataProcessing.Water);
+    }
+
     public void draw(Graphics g, int xLvlOffset) {
         for (int j = 0; j < Game.TilesInHeight; j++) {
             for (int i = 0; i < levels.get(lvlIndex).getLevelData()[0].length; i++) {
                 int index = levels.get(lvlIndex).getIndex(i, j);
-                g.drawImage(levelImage[index], i * TileSize - xLvlOffset, j * TileSize, TileSize, TileSize, null);
+                int x = TileSize * i - xLvlOffset;
+                int y = TileSize * j;
+                if (index == 48)
+                    g.drawImage(water[animationIndex], x, y, TileSize, TileSize, null);
+                else if (index == 49)
+                    g.drawImage(water[4], x, y, TileSize, TileSize, null);
+                else
+                    g.drawImage(levelImage[index], x, y, TileSize, TileSize, null);
             }
         }
     }
@@ -66,10 +81,29 @@ public class LevelManager {
         return levels.get(lvlIndex);
     }
 
-    public void update() {
+    public int getLvlIndex() {
+        return lvlIndex;
     }
 
-    /*public int getAmountOfLevels() {
+    public void setLvlIndex(int lvlIndex) {
+        this.lvlIndex = lvlIndex;
+    }
+
+    public void update() {
+        updateWater();
+    }
+
+    private void updateWater() {
+        animationTick++;
+        if (animationTick >= 50) {
+            animationTick = 0;
+            animationIndex++;
+            if (animationIndex >= 4)
+                animationIndex = 0;
+        }
+    }
+
+    public int getAmountOfLevels() {
         return levels.size();
-    }*/
+    }
 }

@@ -1,4 +1,4 @@
-package Scenes;
+package HelperClasses;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -18,12 +18,18 @@ public class DataProcessing {
     public static final String PlayingBackgroundNight = "images/backgroundImageNight.png";
     public static final String BigClouds = "images/bigCloud.png";
     public static final String SmallClouds = "images/smallCloud.png";
-    //public static final String OctopusImages = "images/OctopusSprite.png";
-    public static final String OctopusImages = "images/crabby_sprite.png";
-    public static final String HealthBar = "images/Health.png";
+    public static final String OctopusImages = "images/OctopusSprite.png";
+    public static final String CrabImage = "images/CrabSprite.png";
+    public static final String HealthMoneyBar = "images/HealthMoney.png";
     public static final String ButtonsForPause = "images/ButtonsForPause.png";
     public static final String PauseBackground = "images/PauseBackground.png";
     public static final String LevelCompletedBackground = "images/LevelCompletedBackground.png";
+    public static final String GameOverBackground = "images/GameOverBackground.png";
+    public static final String GameWinBackground = "images/GameWinBackground.png";
+    public static final String Money = "images/money.png";
+    public static final String Spike = "images/spike.png";
+    public static final String Water = "images/water.png";
+    public static final String WaterAnimation = "images/waterAnimation.png";
 
     public static BufferedImage GetSprite(String fileName) {
         BufferedImage image = null;
@@ -48,7 +54,9 @@ public class DataProcessing {
             e.printStackTrace();
         }
 
+        assert file != null;
         File[] files = file.listFiles();
+        assert files != null;
         Arrays.sort(files);
 
         BufferedImage[] images = new BufferedImage[files.length];

@@ -1,12 +1,11 @@
-package UI;
+package HelperClasses;
 
 import GameStates.GameState;
-import Scenes.DataProcessing;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static Sprites.Constants.UI.Buttons.*;
+import static HelperClasses.Constants.UI.Buttons.*;
 
 public class MenuButtons {
     private final int x, y, line;
@@ -46,10 +45,6 @@ public class MenuButtons {
         index = 0;
         if (mouseOver) index = 1;
         if (mousePressed) index = 2;
-    }
-
-    public boolean isMouseOver() {
-        return mouseOver;
     }
 
     public void setMouseOver(boolean mouseOver) {

@@ -1,12 +1,10 @@
-package Scenes;
+package GameEngine;
 
 import Inputs.KeyPadInputs;
 import Inputs.MouseInputs;
 
 import javax.swing.*;
 import java.awt.*;
-
-import GameEngine.Game;
 
 import static GameEngine.Game.GameHeight;
 import static GameEngine.Game.GameWidth;

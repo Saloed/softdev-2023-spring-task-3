@@ -12,7 +12,7 @@ public abstract class Entity {
     protected Rectangle2D.Float hitbox;
     protected Rectangle2D.Float attackHitbox;
 
-    protected int animationIndex, animationTick;
+    protected int animationIndex, animationTick, animationSpeed;
     protected int action;
 
     protected float airSpeed;
@@ -48,11 +48,15 @@ public abstract class Entity {
         return hitbox;
     }
 
-    public int getState() {
+    public int getAction() {
         return action;
     }
 
     public int getAnimationIndex() {
         return animationIndex;
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
     }
 }

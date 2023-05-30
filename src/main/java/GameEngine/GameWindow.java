@@ -1,4 +1,4 @@
-package Scenes;
+package GameEngine;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;

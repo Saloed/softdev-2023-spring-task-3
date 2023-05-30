@@ -1,8 +1,7 @@
-package UI;
+package GameStates;
 
-import GameStates.GameState;
-import GameStates.Playing;
-import Scenes.DataProcessing;
+import HelperClasses.DataProcessing;
+import HelperClasses.UrmButtons;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -73,8 +72,11 @@ public class Pause {
 
     public void mouseReleased(MouseEvent e) {
         if (isInUrmButton(e, menu)) {
-            if (menu.isMousePressed())
+            if (menu.isMousePressed()) {
                 GameState.gameState = GameState.MENU;
+                playing.unpauseGame();
+                playing.resetAll();
+            }
         } else if (isInUrmButton(e, replay)) {
             if (replay.isMousePressed()) {
                 playing.resetAll();

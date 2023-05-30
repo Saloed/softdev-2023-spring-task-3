@@ -1,8 +1,7 @@
-package UI;
+package GameStates;
 
-import GameStates.GameState;
-import GameStates.Playing;
-import Scenes.DataProcessing;
+import HelperClasses.DataProcessing;
+import HelperClasses.UrmButtons;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -67,6 +66,8 @@ public class LevelCompleted {
         if (isInUrmButton(e, menu)) {
             if (menu.isMousePressed())
                 GameState.gameState = GameState.MENU;
+            playing.resetAll();
+
         } else if (isInUrmButton(e, nextLvl)) {
             if (nextLvl.isMousePressed()) {
                 playing.loadNextLvl();

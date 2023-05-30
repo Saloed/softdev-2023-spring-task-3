@@ -1,12 +1,6 @@
-package Scenes;
+package HelperClasses;
 
-import Sprites.Constants;
-import Sprites.Octopus;
-
-import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import static GameEngine.Game.*;
 
@@ -31,9 +25,28 @@ public class HelpMethods {
         return IsTileSolid(xIndex, yIndex, lvlData);
     }
 
+    public static boolean IsInWater(Rectangle2D.Float hitbox, int[][] lvlData) {
+        if (GetTile(hitbox.x, hitbox.y + hitbox.height, lvlData) != 48)
+            return GetTile(hitbox.x + hitbox.width, hitbox.y + hitbox.height, lvlData) == 48;
+        return true;
+    }
+
+    private static int GetTile(float xPos, float yPos, int[][] lvlData) {
+        int x = (int) (xPos / TileSize);
+        int y = (int) (yPos / TileSize);
+        return lvlData[y][x];
+    }
+
     public static boolean IsTileSolid(int tileX, int tileY, int[][] lvlData) {
         int value = lvlData[tileY][tileX];
-        return value != 11;
+        switch (value) {
+            case 11:
+            case 48:
+            case 49:
+                return false;
+            default:
+                return true;
+        }
     }
 
     public static float GetXPosNextToWall(Rectangle2D.Float hitbox, float xSpeed) {
@@ -80,38 +93,5 @@ public class HelpMethods {
             return IsAllTileClear(anotherTileX, mcTileX, tileY, lvlData);
         else
             return IsAllTileClear(mcTileX, anotherTileX, tileY, lvlData);
-    }
-
-    public static int[][] GetLevelData(BufferedImage image) {
-        int[][] levelData = new int[image.getHeight()][image.getWidth()];
-        for (int j = 0; j < image.getHeight(); j++)
-            for (int i = 0; i < image.getWidth(); i++) {
-                Color color = new Color(image.getRGB(i, j));
-                int value = color.getRed();
-                if (value >= 48) value = 0;
-                levelData[j][i] = value;
-            }
-        return levelData;
-    }
-
-    public static ArrayList<Octopus> GetOctopuses(BufferedImage image) {
-        ArrayList<Octopus> list = new ArrayList<>();
-        for (int j = 0; j < image.getHeight(); j++)
-            for (int i = 0; i < image.getWidth(); i++) {
-                Color color = new Color(image.getRGB(i, j));
-                int value = color.getGreen();
-                if (value == Constants.Enemy.Octopus) list.add(new Octopus(i * TileSize, j * TileSize));
-            }
-        return list;
-    }
-
-    public static Point GetSpawnPoint(BufferedImage image) {
-        for (int j = 0; j < image.getHeight(); j++)
-            for (int i = 0; i < image.getWidth(); i++) {
-                Color color = new Color(image.getRGB(i, j));
-                int value = color.getGreen();
-                if (value == 100) return new Point(i * TileSize, j * TileSize);
-            }
-        return new Point(TileSize, TileSize);
     }
 }
