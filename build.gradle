@@ -9,8 +9,6 @@ buildscript {
         google()
     }
     dependencies {
-        
-
     }
 }
 
@@ -38,7 +36,6 @@ allprojects {
         maven { url "https://jitpack.io" }
     }
 }
-
 project(":desktop") {
     apply plugin: "java-library"
 

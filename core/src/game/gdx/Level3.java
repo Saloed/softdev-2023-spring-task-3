@@ -7,15 +7,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import javax.swing.Timer;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Level3 implements gdx2, Screen {
     Start game;
-    Music music;
     Texture background;
     Texture fon;
     OrthographicCamera camera;
@@ -31,8 +26,6 @@ public class Level3 implements gdx2, Screen {
         enemy32 = new Enemy32();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1280, 720);
-//        music = Gdx.audio.newMusic(Gdx.files.internal("X2Download.app - Let's Go Dababy Meme [1 HOUR] (128 kbps).mp3"));
-//        music.setLooping(true);
 
         fon = new Texture(Gdx.files.internal("1616711132_33-p-zadnii-fon-dlya-igri-38.jpg"));
         background = new Texture(Gdx.files.internal("map_rendered_size_7872_1.png"));
@@ -85,7 +78,6 @@ public class Level3 implements gdx2, Screen {
 
     @Override
     public void show() {
-//        music.play();
     }
 
     @Override

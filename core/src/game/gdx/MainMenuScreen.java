@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class MainMenuScreen implements Screen {
 
     Start game;
-    Texture screensaver;
+    public Texture screensaver;
 
     OrthographicCamera camera;
 

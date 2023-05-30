@@ -15,7 +15,6 @@ import java.awt.event.ActionListener;
 
 public class Level1 implements gdx, Screen {
     Start game;
-    Music music;
     Texture background;
     Texture fon;
     OrthographicCamera camera;

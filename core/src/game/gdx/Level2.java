@@ -19,7 +19,7 @@ public class Level2 implements gdx2, Screen {
     Texture fon;
     OrthographicCamera camera;
     KeyboardAdapter inputProcessor = new KeyboardAdapter();
-    Hero2 me;
+    public Hero2 me;
     Enemy21 enemy;
     Enemy22 enemy2;
     Enemy23 enemy3;
@@ -29,7 +29,7 @@ public class Level2 implements gdx2, Screen {
     Enemy27 enemy7;
     Enemy28 enemy8;
     Enemy29 enemy9;
-    Boolean flag;
+    public Boolean flag;
     Timer timer;
     Vulnerability vulnerability;
     public Level2(Start gam) {
