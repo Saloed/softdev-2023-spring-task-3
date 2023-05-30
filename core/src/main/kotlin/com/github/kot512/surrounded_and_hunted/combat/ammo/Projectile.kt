@@ -1,11 +1,11 @@
-package com.github.kot512.surrounded_and_hunted.combat_system.ammo
+package com.github.kot512.surrounded_and_hunted.combat.ammo
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.PROJECTILE_BASE_TXTR
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.CONST_AND_VAR
+import com.github.kot512.surrounded_and_hunted.screens.playable_screens.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.CircleBounds
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import kotlin.math.cos
@@ -20,7 +20,7 @@ abstract class Projectile(
     private val projMaxDistance: Float,// макс. расстояние для снаряда, после которого тот удалится
     val projDamage: Float,
     spawnPoint: Point, // место спавна снаряда
-    texture: TextureRegion = PROJECTILE_BASE_TXTR // текстура снаряда
+    texture: TextureRegion = CONST_AND_VAR.PROJECTILE_BASE_TXTR // текстура снаряда
 ) : Sprite(texture) {
     protected open val rotationAngle = 0f // угол для корректной отрисовки спрайта
     private var passedDistance: Float = 0f

@@ -1,4 +1,4 @@
-package com.github.kot512.surrounded_and_hunted.screen.image_screens
+package com.github.kot512.surrounded_and_hunted.screens.image_screens
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
@@ -9,10 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_HEIGHT
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_WIDTH
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.MainLocationScreen
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.CONST_AND_VAR
+import com.github.kot512.surrounded_and_hunted.screens.playable_screens.MainLocationScreen
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 
@@ -22,16 +20,16 @@ class MainMenuImageScreen : BaseImageScreen(
 ) {
 //    загрузка текстур для кнопок
     private val startButtonTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_begin_button")
+        CONST_AND_VAR.TEXTURE_ATLAS.findRegion("menu_begin_button")
     )
     private val startButtonPressedTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_begin_button_pressed")
+        CONST_AND_VAR.TEXTURE_ATLAS.findRegion("menu_begin_button_pressed")
     )
     private val upgradeButtonTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_upgrades_button")
+        CONST_AND_VAR.TEXTURE_ATLAS.findRegion("menu_upgrades_button")
     )
     private val upgradeButtonPressedTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_upgrades_button_pressed")
+        CONST_AND_VAR.TEXTURE_ATLAS.findRegion("menu_upgrades_button_pressed")
     )
 
 
@@ -57,7 +55,10 @@ class MainMenuImageScreen : BaseImageScreen(
             }
         )
         setSize(this.width * 0.3f * scaleCoeff, this.height * 0.3f * scaleCoeff)
-        setPosition(SCREEN_WIDTH / 2 - width / 2, SCREEN_HEIGHT / 2 - height / 2)
+        setPosition(
+            CONST_AND_VAR.SCREEN_WIDTH / 2 - width / 2,
+            CONST_AND_VAR.SCREEN_HEIGHT / 2 - height / 2
+        )
     }
 
 //    кнопка для перехода на экран перманентной прокачки
@@ -81,7 +82,10 @@ class MainMenuImageScreen : BaseImageScreen(
             }
         )
         setSize(this.width * 0.3f * scaleCoeff, this.height * 0.3f * scaleCoeff)
-        setPosition(SCREEN_WIDTH / 2 - width / 2, SCREEN_HEIGHT / 2 - 1.5f * height)
+        setPosition(
+            CONST_AND_VAR.SCREEN_WIDTH / 2 - width / 2,
+            CONST_AND_VAR.SCREEN_HEIGHT / 2 - 1.5f * height
+        )
     }
 
     override fun show() {

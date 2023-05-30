@@ -3,19 +3,14 @@ package com.github.kot512.surrounded_and_hunted.entities
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.CURRENT_SCORE
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.RECORD_SCORE
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.UPGRADE_POINTS
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SAVE_DATA
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_HEIGHT
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_WIDTH
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.CONST_AND_VAR
 import com.github.kot512.surrounded_and_hunted.hud.controls.AimJoystick
 import com.github.kot512.surrounded_and_hunted.hud.controls.MovementJoystick
-import com.github.kot512.surrounded_and_hunted.combat_system.weapons.ProjectileManager
-import com.github.kot512.surrounded_and_hunted.combat_system.weapons.SemiAutomaticBalls
-import com.github.kot512.surrounded_and_hunted.screen.image_screens.DeathImageScreen
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.MainLocationScreen
+import com.github.kot512.surrounded_and_hunted.combat.weapons.ProjectileManager
+import com.github.kot512.surrounded_and_hunted.combat.weapons.SemiAutomaticBalls
+import com.github.kot512.surrounded_and_hunted.screens.image_screens.DeathImageScreen
+import com.github.kot512.surrounded_and_hunted.screens.playable_screens.BaseLocationScreen
+import com.github.kot512.surrounded_and_hunted.screens.playable_screens.MainLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
@@ -28,7 +23,7 @@ class Player(
     private val aimController: AimJoystick,
 ) : BaseEntity(
     screen, characterTexture,
-    Point(SCREEN_WIDTH, SCREEN_HEIGHT),
+    Point(CONST_AND_VAR.SCREEN_WIDTH, CONST_AND_VAR.SCREEN_HEIGHT),
     160f, 160f
 ) {
 //    обновление уровней прокачки
@@ -36,23 +31,23 @@ class Player(
     var gunLevel = 1
     var speedLevel = 1
     init {
-        if (SAVE_DATA.contains("hp_lvl"))
-            healthLevel = SAVE_DATA.getInteger("hp_lvl")
-        else SAVE_DATA.apply {
+        if (CONST_AND_VAR.SAVE_DATA.contains("hp_lvl"))
+            healthLevel = CONST_AND_VAR.SAVE_DATA.getInteger("hp_lvl")
+        else CONST_AND_VAR.SAVE_DATA.apply {
             putInteger("hp_lvl", 1)
             flush()
         }
 
-        if (SAVE_DATA.contains("speed_lvl"))
-            speedLevel = SAVE_DATA.getInteger("speed_lvl")
-        else SAVE_DATA.apply {
+        if (CONST_AND_VAR.SAVE_DATA.contains("speed_lvl"))
+            speedLevel = CONST_AND_VAR.SAVE_DATA.getInteger("speed_lvl")
+        else CONST_AND_VAR.SAVE_DATA.apply {
             putInteger("speed_lvl", 1)
             flush()
         }
 
-        if (SAVE_DATA.contains("gun_lvl"))
-            gunLevel = SAVE_DATA.getInteger("gun_lvl")
-        else SAVE_DATA.apply {
+        if (CONST_AND_VAR.SAVE_DATA.contains("gun_lvl"))
+            gunLevel = CONST_AND_VAR.SAVE_DATA.getInteger("gun_lvl")
+        else CONST_AND_VAR.SAVE_DATA.apply {
             putInteger("gun_lvl", 1)
             flush()
         }
@@ -123,11 +118,12 @@ class Player(
     }
 
     override fun die() {
-        if (CURRENT_SCORE > RECORD_SCORE) RECORD_SCORE = CURRENT_SCORE
-        UPGRADE_POINTS += CURRENT_SCORE / 10
-        SAVE_DATA.apply {
-            putInteger("record", RECORD_SCORE)
-            putInteger("upgrade", UPGRADE_POINTS)
+        if (CONST_AND_VAR.CURRENT_SCORE > CONST_AND_VAR.RECORD_SCORE)
+            CONST_AND_VAR.RECORD_SCORE = CONST_AND_VAR.CURRENT_SCORE
+        CONST_AND_VAR.UPGRADE_POINTS += CONST_AND_VAR.CURRENT_SCORE / 10
+        CONST_AND_VAR.SAVE_DATA.apply {
+            putInteger("record", CONST_AND_VAR.RECORD_SCORE)
+            putInteger("upgrade", CONST_AND_VAR.UPGRADE_POINTS)
             flush()
         }
 

@@ -1,9 +1,9 @@
-package com.github.kot512.surrounded_and_hunted.combat_system.weapons
+package com.github.kot512.surrounded_and_hunted.combat.weapons
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.github.kot512.surrounded_and_hunted.combat_system.ammo.Projectile
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
+import com.github.kot512.surrounded_and_hunted.combat.ammo.Projectile
+import com.github.kot512.surrounded_and_hunted.screens.playable_screens.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 
 abstract class ProjectileManager(

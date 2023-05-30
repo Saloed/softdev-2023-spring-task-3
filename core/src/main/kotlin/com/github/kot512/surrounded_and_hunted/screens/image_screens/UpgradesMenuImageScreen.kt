@@ -1,8 +1,7 @@
-package com.github.kot512.surrounded_and_hunted.screen.image_screens
+package com.github.kot512.surrounded_and_hunted.screens.image_screens
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
@@ -13,11 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_HEIGHT
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_WIDTH
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.UPGRADE_POINTS
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SAVE_DATA
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.CONST_AND_VAR
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 
@@ -31,22 +26,22 @@ class UpgradesMenuImageScreen() : BaseImageScreen(
 
     //    загрузка текстур
     private val returnButtonTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_dead_return")
+        CONST_AND_VAR.TEXTURE_ATLAS.findRegion("menu_dead_return")
     )
     private val returnButtonPressedTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_dead_return_pressed")
+        CONST_AND_VAR.TEXTURE_ATLAS.findRegion("menu_dead_return_pressed")
     )
     private val upgradeBarBaseTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("hud_choose_upgrade_base")
+        CONST_AND_VAR.TEXTURE_ATLAS.findRegion("hud_choose_upgrade_base")
     )
     private val healthUpgradeTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("upgrade_health")
+        CONST_AND_VAR.TEXTURE_ATLAS.findRegion("upgrade_health")
     )
     private val speedUpgradeTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("upgrade_movement_speed")
+        CONST_AND_VAR.TEXTURE_ATLAS.findRegion("upgrade_movement_speed")
     )
     private val gunUpgradeTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("upgrade_gunfire")
+        CONST_AND_VAR.TEXTURE_ATLAS.findRegion("upgrade_gunfire")
     )
 
 
@@ -72,7 +67,7 @@ class UpgradesMenuImageScreen() : BaseImageScreen(
             }
         )
         setSize(this.width * 0.3f * scaleCoeff, this.height * 0.3f * scaleCoeff)
-        setPosition(SCREEN_WIDTH / 2 - width / 2, height / 4)
+        setPosition(CONST_AND_VAR.SCREEN_WIDTH / 2 - width / 2, height / 4)
     }
 
 //    отрисовка базы для прокачки
@@ -81,8 +76,8 @@ class UpgradesMenuImageScreen() : BaseImageScreen(
             width = upgradeBarBaseTexture.texture.width / 5f * scaleCoeff
             height = upgradeBarBaseTexture.texture.height / 10f * scaleCoeff
             setPosition(
-                SCREEN_WIDTH / 2 - width / 2,
-                SCREEN_HEIGHT - height
+                CONST_AND_VAR.SCREEN_WIDTH / 2 - width / 2,
+                CONST_AND_VAR.SCREEN_HEIGHT - height
             )
         }
 
@@ -98,26 +93,26 @@ class UpgradesMenuImageScreen() : BaseImageScreen(
     private var gunPrice = 5
 
     init {
-        if (!SAVE_DATA.contains("hp_price"))
-            SAVE_DATA.apply {
+        if (!CONST_AND_VAR.SAVE_DATA.contains("hp_price"))
+            CONST_AND_VAR.SAVE_DATA.apply {
                 putInteger("hp_price", 5)
                 flush()
             }
-        else hpPrice = SAVE_DATA.getInteger("hp_price")
+        else hpPrice = CONST_AND_VAR.SAVE_DATA.getInteger("hp_price")
 
-        if (!SAVE_DATA.contains("speed_price"))
-        SAVE_DATA.apply {
+        if (!CONST_AND_VAR.SAVE_DATA.contains("speed_price"))
+            CONST_AND_VAR.SAVE_DATA.apply {
             putInteger("speed_price", 5)
             flush()
         }
-        else speedPrice = SAVE_DATA.getInteger("speed_price")
+        else speedPrice = CONST_AND_VAR.SAVE_DATA.getInteger("speed_price")
 
-        if (!SAVE_DATA.contains("gun_price"))
-            SAVE_DATA.apply {
+        if (!CONST_AND_VAR.SAVE_DATA.contains("gun_price"))
+            CONST_AND_VAR.SAVE_DATA.apply {
                 putInteger("gun_price", 5)
                 flush()
             }
-        else gunPrice = SAVE_DATA.getInteger("gun_price")
+        else gunPrice = CONST_AND_VAR.SAVE_DATA.getInteger("gun_price")
     }
 
 //    кнопка увеличения хп
@@ -126,12 +121,12 @@ class UpgradesMenuImageScreen() : BaseImageScreen(
             addListener(
                 object : ClickListener() {
                     override fun clicked(event: InputEvent?, x: Float, y: Float) {
-                        if (UPGRADE_POINTS >= hpPrice) {
-                            UPGRADE_POINTS -= hpPrice
+                        if (CONST_AND_VAR.UPGRADE_POINTS >= hpPrice) {
+                            CONST_AND_VAR.UPGRADE_POINTS -= hpPrice
                             hpPrice *= 2
 
-                            SAVE_DATA.apply {
-                                putInteger("upgrade", UPGRADE_POINTS)
+                            CONST_AND_VAR.SAVE_DATA.apply {
+                                putInteger("upgrade", CONST_AND_VAR.UPGRADE_POINTS)
                                 putInteger("hp_price", hpPrice)
                                 putInteger("hp_lvl", getInteger("hp_lvl") + 1)
                                 flush()
@@ -156,12 +151,12 @@ class UpgradesMenuImageScreen() : BaseImageScreen(
             addListener(
                 object : ClickListener() {
                     override fun clicked(event: InputEvent?, x: Float, y: Float) {
-                        if (UPGRADE_POINTS >= speedPrice) {
-                            UPGRADE_POINTS -= speedPrice
+                        if (CONST_AND_VAR.UPGRADE_POINTS >= speedPrice) {
+                            CONST_AND_VAR.UPGRADE_POINTS -= speedPrice
                             speedPrice *= 2
 
-                            SAVE_DATA.apply {
-                                putInteger("upgrade", UPGRADE_POINTS)
+                            CONST_AND_VAR.SAVE_DATA.apply {
+                                putInteger("upgrade", CONST_AND_VAR.UPGRADE_POINTS)
                                 putInteger("speed_price", speedPrice)
                                 putInteger("speed_lvl", getInteger("speed_lvl") + 1)
                                 flush()
@@ -186,12 +181,12 @@ class UpgradesMenuImageScreen() : BaseImageScreen(
             addListener(
                 object : ClickListener() {
                     override fun clicked(event: InputEvent?, x: Float, y: Float) {
-                        if (UPGRADE_POINTS >= gunPrice) {
-                            UPGRADE_POINTS -= gunPrice
+                        if (CONST_AND_VAR.UPGRADE_POINTS >= gunPrice) {
+                            CONST_AND_VAR.UPGRADE_POINTS -= gunPrice
                             gunPrice *= 2
 
-                            SAVE_DATA.apply {
-                                putInteger("upgrade", UPGRADE_POINTS)
+                            CONST_AND_VAR.SAVE_DATA.apply {
+                                putInteger("upgrade", CONST_AND_VAR.UPGRADE_POINTS)
                                 putInteger("gun_price", gunPrice)
                                 putInteger("gun_lvl", getInteger("gun_lvl") + 1)
                                 flush()
@@ -218,18 +213,21 @@ class UpgradesMenuImageScreen() : BaseImageScreen(
         }
 
         override fun draw(batch: Batch?, parentAlpha: Float) {
-            val hpText = """LEVEL: ${SAVE_DATA.getInteger("hp_lvl")}
+            val hpText = """LEVEL: ${CONST_AND_VAR.SAVE_DATA.getInteger("hp_lvl")}
                     |PRICE: $hpPrice
                 """.trimMargin()
-            val speedText = """LEVEL: ${SAVE_DATA.getInteger("speed_lvl")}
+            val speedText = """LEVEL: ${CONST_AND_VAR.SAVE_DATA.getInteger("speed_lvl")}
                     |PRICE: $speedPrice
                 """.trimMargin()
-            val gunText = """LEVEL: ${SAVE_DATA.getInteger("gun_lvl")}
+            val gunText = """LEVEL: ${CONST_AND_VAR.SAVE_DATA.getInteger("gun_lvl")}
                     |PRICE: $gunPrice
                 """.trimMargin()
 
             font.apply {
-                draw(batch, "YOUR POINTS: $UPGRADE_POINTS", 0f, SCREEN_HEIGHT - 10f)
+                draw(
+                    batch, "YOUR POINTS: ${CONST_AND_VAR.UPGRADE_POINTS}",
+                    0f, CONST_AND_VAR.SCREEN_HEIGHT - 10f
+                )
                 draw(batch, hpText, healthUpgrade.x, upgradeBase.y - 10f)
                 draw(batch, speedText, speedUpgrade.x, upgradeBase.y - 10f)
                 draw(batch, gunText, gunUpgrade.x, upgradeBase.y - 10f)
@@ -248,28 +246,4 @@ class UpgradesMenuImageScreen() : BaseImageScreen(
 
         stage.addActor(textActor)
     }
-
-//    override fun render(delta: Float) {
-//        Gdx.gl.glClearColor(0.82353f, 0.27843f, 0.14902f, 1f)
-//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-//
-//        super.batch.begin()
-//        super.batch.draw(
-//            backgroundTexture,
-//            backgroundPosition.x - scaledWidth / 2,
-//            backgroundPosition.y - scaledHeight / 2,
-//            scaledWidth, scaledHeight
-//        )
-//        super.batch.draw(
-//            upgradeBarBaseTexture,
-//            SCREEN_WIDTH / 2 - upgradeBarBaseTexture.texture.width / 10f * scaleCoeff,
-//            SCREEN_HEIGHT - upgradeBarBaseTexture.texture.height / 8f * scaleCoeff,
-//            upgradeBarBaseTexture.texture.width / 5f * scaleCoeff,
-//            upgradeBarBaseTexture.texture.height / 10f * scaleCoeff
-//        )
-//        super.batch.end()
-//
-//        stage.act()
-//        stage.draw()
-//    }
 }

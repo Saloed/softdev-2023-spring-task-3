@@ -7,7 +7,7 @@ import com.github.kot512.surrounded_and_hunted.entities.enemies.EnemyEntity
 import com.github.kot512.surrounded_and_hunted.entities.Player
 import com.github.kot512.surrounded_and_hunted.entities.enemies.GiantEnemy
 import com.github.kot512.surrounded_and_hunted.entities.enemies.TriangleEnemy
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
+import com.github.kot512.surrounded_and_hunted.screens.playable_screens.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import ktx.math.random
 import kotlin.math.pow

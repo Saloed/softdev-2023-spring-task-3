@@ -1,4 +1,4 @@
-package com.github.kot512.surrounded_and_hunted.screen.playable_screens
+package com.github.kot512.surrounded_and_hunted.screens.playable_screens
 
 import com.badlogic.gdx.graphics.Texture
 

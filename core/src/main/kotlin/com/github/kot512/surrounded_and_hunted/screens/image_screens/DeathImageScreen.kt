@@ -1,4 +1,4 @@
-package com.github.kot512.surrounded_and_hunted.screen.image_screens
+package com.github.kot512.surrounded_and_hunted.screens.image_screens
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
@@ -12,10 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.CURRENT_SCORE
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.RECORD_SCORE
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_HEIGHT
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.SCREEN_WIDTH
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.CONST_AND_VAR
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 
@@ -24,10 +21,10 @@ class DeathImageScreen : BaseImageScreen(
 ) {
 //    кнопка возвращения к главному меню
     private val returnButtonTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_dead_return")
+    CONST_AND_VAR.TEXTURE_ATLAS.findRegion("menu_dead_return")
     )
     private val returnButtonPressedTexture = TextureRegion(
-        SurroundedAndHunted.TEXTURE_ATLAS.findRegion("menu_dead_return_pressed")
+        CONST_AND_VAR.TEXTURE_ATLAS.findRegion("menu_dead_return_pressed")
     )
 
     private val returnButtonStyle = TextButton.TextButtonStyle().apply {
@@ -40,7 +37,7 @@ class DeathImageScreen : BaseImageScreen(
         addListener(
             object : ClickListener() {
                 override fun clicked(event: InputEvent, x: Float, y: Float) {
-                    CURRENT_SCORE = 0
+                    CONST_AND_VAR.CURRENT_SCORE = 0
 
                     (Gdx.app.applicationListener as KtxGame<KtxScreen>).apply {
                         addScreen(MainMenuImageScreen())
@@ -52,7 +49,7 @@ class DeathImageScreen : BaseImageScreen(
             }
         )
         setSize(this.width * 0.3f * scaleCoeff, this.height * 0.3f * scaleCoeff)
-        setPosition(SurroundedAndHunted.SCREEN_WIDTH / 2 - width / 2, height / 2 * scaleCoeff)
+        setPosition(CONST_AND_VAR.SCREEN_WIDTH / 2 - width / 2, height / 2 * scaleCoeff)
     }
 
 //    вывод счета и рекорда на экран
@@ -64,21 +61,21 @@ class DeathImageScreen : BaseImageScreen(
 
         init {
             setPosition(
-                SurroundedAndHunted.SCREEN_WIDTH / 2 + 120f,
-                SurroundedAndHunted.SCREEN_HEIGHT - 600f
+                CONST_AND_VAR.SCREEN_WIDTH / 2 + 120f,
+                CONST_AND_VAR.SCREEN_HEIGHT - 600f
             )
             width = 200f
             height = 200f
         }
 
         override fun draw(batch: Batch, parentAlpha: Float) {
-            val score = """YOUR SCORE: $CURRENT_SCORE
-                |YOUR RECORD: $RECORD_SCORE
+            val score = """YOUR SCORE: ${CONST_AND_VAR.CURRENT_SCORE}
+                |YOUR RECORD: ${CONST_AND_VAR.RECORD_SCORE}
             """.trimMargin()
             font.draw(
                 batch, score,
-                SCREEN_WIDTH / 2 + width / 2 - 15f * score.length,
-                SCREEN_HEIGHT / 2 + 125f,
+                CONST_AND_VAR.SCREEN_WIDTH / 2 + width / 2 - 15f * score.length,
+                CONST_AND_VAR.SCREEN_HEIGHT / 2 + 125f,
             )
         }
     }

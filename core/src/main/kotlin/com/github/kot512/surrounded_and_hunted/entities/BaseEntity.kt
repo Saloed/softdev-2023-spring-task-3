@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
+import com.github.kot512.surrounded_and_hunted.screens.playable_screens.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.CircleBounds
 import com.github.kot512.surrounded_and_hunted.tools.Point
 

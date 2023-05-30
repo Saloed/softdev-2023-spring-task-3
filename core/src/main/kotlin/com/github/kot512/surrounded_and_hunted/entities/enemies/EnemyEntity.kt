@@ -1,10 +1,10 @@
 package com.github.kot512.surrounded_and_hunted.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.CURRENT_SCORE
+import com.github.kot512.surrounded_and_hunted.SurroundedAndHunted.Companion.CONST_AND_VAR
 import com.github.kot512.surrounded_and_hunted.entities.BaseEntity
 import com.github.kot512.surrounded_and_hunted.entities.Player
-import com.github.kot512.surrounded_and_hunted.screen.playable_screens.BaseLocationScreen
+import com.github.kot512.surrounded_and_hunted.screens.playable_screens.BaseLocationScreen
 import com.github.kot512.surrounded_and_hunted.tools.Point
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -60,6 +60,6 @@ abstract class EnemyEntity(
 
     override fun die() {
         disposable = true
-        CURRENT_SCORE += scoreReward
+        CONST_AND_VAR.CURRENT_SCORE += scoreReward
     }
 }

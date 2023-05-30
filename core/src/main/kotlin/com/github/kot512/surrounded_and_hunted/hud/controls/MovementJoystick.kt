@@ -1,6 +1,5 @@
 package com.github.kot512.surrounded_and_hunted.hud.controls
 
-import com.badlogic.gdx.graphics.Texture
 import com.github.kot512.surrounded_and_hunted.tools.Point
 
 class MovementJoystick(
