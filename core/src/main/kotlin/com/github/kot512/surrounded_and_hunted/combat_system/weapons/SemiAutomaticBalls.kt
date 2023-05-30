@@ -18,7 +18,7 @@ class SemiAutomaticBalls(
 
     override val cooldown: Float = 0.4f * 0.95f.pow(gunLevel)
 
-    override var projectileSpeed: Float = 400f
+    override var projectileSpeed: Float = 800f
     override var projMaxDistance: Float = 500f * 1.2f.pow(gunLevel)
     override var projDamage: Float = 20f * 1.2f.pow(gunLevel)
 

@@ -27,7 +27,9 @@ class SurroundedAndHunted : KtxGame<KtxScreen>() {
         lateinit var JOYSTICK_BASE_TXTR:  TextureRegion
         lateinit var PROJECTILE_BASE_TXTR: TextureRegion
         lateinit var PLAYER_TXTR: TextureRegion
-        lateinit var BASIC_ENEMY_TXTR: TextureRegion
+        lateinit var BALLER_ENEMY_TXTR: TextureRegion
+        lateinit var TRIANGLE_ENEMY_TXTR: TextureRegion
+        lateinit var GIANT_ENEMY_TXTR: TextureRegion
 
 //        выгрузка сохраненных переменных
         lateinit var SAVE_DATA: Preferences
@@ -80,10 +82,15 @@ class SurroundedAndHunted : KtxGame<KtxScreen>() {
         PLAYER_TXTR = TextureRegion(
             TEXTURE_ATLAS.findRegion("entity_player")
         )
-        BASIC_ENEMY_TXTR =
-            TextureRegion(
+        BALLER_ENEMY_TXTR = TextureRegion(
                 TEXTURE_ATLAS.findRegion("entity_enemy_basic")
             )
+        TRIANGLE_ENEMY_TXTR = TextureRegion(
+                TEXTURE_ATLAS.findRegion("entity_enemy_fast")
+            )
+        GIANT_ENEMY_TXTR = TextureRegion(
+            TEXTURE_ATLAS.findRegion("entity_enemy_big")
+        )
 
 //        активируем экран главного меню
         addScreen(MainMenuImageScreen())
@@ -92,19 +99,5 @@ class SurroundedAndHunted : KtxGame<KtxScreen>() {
 
     override fun dispose() {
         TEXTURE_ATLAS.disposeSafely()
-    }
-
-
-    override fun pause() {
-        super.pause()
-    }
-
-    override fun render() {
-        super.render()
-    }
-
-
-    override fun resume() {
-        super.resume()
     }
 }

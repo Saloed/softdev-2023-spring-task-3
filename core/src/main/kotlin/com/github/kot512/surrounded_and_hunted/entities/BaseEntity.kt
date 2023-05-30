@@ -12,7 +12,9 @@ abstract class BaseEntity(
     val screen: BaseLocationScreen,
     entityTexture: TextureRegion,
     spawnPosition: Point,
-    collisionCoeff: Float = 1f // коэффициент рамера коллизии (0..1)
+    private val spriteWidth: Float,
+    private val spriteHeight: Float,
+    collisionCoeff: Float = 1f, // коэффициент рамера коллизии (0..1)
     ) : Sprite(entityTexture) {
     abstract var health: Float
     protected abstract val damage: Float
@@ -27,8 +29,8 @@ abstract class BaseEntity(
         get() = y + originY
 
     //    автоматическая настройка спрайта сущности
-    fun setup(spawnPosition: Point) {
-        setSize(160f, 160f)
+    private fun setup(spawnPosition: Point) {
+        setSize(spriteWidth, spriteHeight)
         setOrigin(width / 2, height / 2) // определяет центр объекта модели
         setPosition(spawnPosition.x, spawnPosition.y) // определяет позицию объекта в пространстве
         setCenter(spawnPosition.x, spawnPosition.y)

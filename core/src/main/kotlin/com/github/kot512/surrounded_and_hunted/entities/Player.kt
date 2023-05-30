@@ -28,11 +28,10 @@ class Player(
     private val aimController: AimJoystick,
 ) : BaseEntity(
     screen, characterTexture,
-    Point(
-        SCREEN_WIDTH,
-        SCREEN_HEIGHT
-    )
+    Point(SCREEN_WIDTH, SCREEN_HEIGHT),
+    160f, 160f
 ) {
+//    обновление уровней прокачки
     var healthLevel = 1
     var gunLevel = 1
     var speedLevel = 1
@@ -61,10 +60,10 @@ class Player(
 
     var maxHealth = 100f * 1.2f.pow(healthLevel)
     override var health = maxHealth
-    override var movementSpeed = 400f * 1.2f.pow(speedLevel)
     override var damage = 10f
+    override var movementSpeed = 400f * 1.2f.pow(speedLevel)
 
-    val combatManager: ProjectileManager =
+    private val combatManager: ProjectileManager =
         SemiAutomaticBalls(this, screen, viewAngle, Point(originBasedX, originBasedY))
 
     override fun draw(batch: Batch) {
