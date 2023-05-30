@@ -3,6 +3,11 @@ description: 'Run gradle test'
 runs:
   using: "composite"
   steps:
+    - name: 'Set up latest Oracle JDK 17'
+      uses: oracle-actions/setup-java@v1
+      with:
+        website: oracle.com
+        release: 17
     - name: Make gradlew executable
       shell: bash
       run: chmod +x ./gradlew
@@ -10,3 +15,11 @@ runs:
       uses: gradle/gradle-build-action@v2
       with:
         arguments: test
+    - name: Check test report exists # if project has no tests then report is not generated
+      shell: bash
+      run: |
+        if [[ -z $(find . -path "*build/test-results/test/TEST-*.xml") ]]
+        then
+          echo "No tests found"
+          exit 1
+        fi
