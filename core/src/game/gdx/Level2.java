@@ -2,7 +2,7 @@ package game.gdx;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
@@ -31,6 +31,8 @@ public class Level2 implements gdx2, Screen {
     Enemy29 enemy9;
     public Boolean flag;
     Timer timer;
+    Sound sound;
+    Sound soundVulnerability;
     Vulnerability vulnerability;
     public Level2(Start gam) {
         this.game = gam;
@@ -51,6 +53,8 @@ public class Level2 implements gdx2, Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1280, 720);
 
+        sound = Gdx.audio.newSound(Gdx.files.internal("fa4811c6c7e5a78.mp3"));
+        soundVulnerability = Gdx.audio.newSound(Gdx.files.internal("496a510f031d863.mp3"));
         fon = new Texture(Gdx.files.internal("1616711132_33-p-zadnii-fon-dlya-igri-38.jpg"));
         background = new Texture(Gdx.files.internal("map_rendered_size_7788_1.png"));
         enemy.enemies = new Array<Rectangle>();
@@ -112,6 +116,7 @@ public class Level2 implements gdx2, Screen {
         game.batch.end();
         me.moveTo(inputProcessor.getDirection());
         if((me.getPositionX() > 900 || me.getPositionX() + 80 > 900) && (me.getPositionX() < 920 || me.getPositionX() + 80 < 920) && (me.getPositionY() > 200 || me.getPositionY() + 80 > 200) && (me.getPositionY() < 220 || me.getPositionY() + 80 < 220)) {
+            soundVulnerability.play();
             flag = false;
             vulnerability.swap();
             timer.start();
@@ -121,38 +126,47 @@ public class Level2 implements gdx2, Screen {
             if ((me.getPositionX() > enemy.getPositionX() || me.getPositionX() + 80 > enemy.getPositionX()) && (me.getPositionX() < enemy.getPositionX() + 55 || me.getPositionX() + 80 < enemy.getPositionX() + 55) && (me.getPositionY() > enemy.getPositionY() || me.getPositionY() + 80 > enemy.getPositionY()) && (me.getPositionY() < enemy.getPositionY() + 55 || me.getPositionY() + 80 < enemy.getPositionY() + 55)) {
                 me.setPositionX(120);
                 me.setPositionY(350);
+                sound.play();
             }
             if ((me.getPositionX() > enemy2.getPositionX() || me.getPositionX() + 80 > enemy2.getPositionX()) && (me.getPositionX() < enemy2.getPositionX() + 55 || me.getPositionX() + 80 < enemy2.getPositionX() + 55) && (me.getPositionY() > enemy2.getPositionY() || me.getPositionY() + 80 > enemy2.getPositionY()) && (me.getPositionY() < enemy2.getPositionY() + 55 || me.getPositionY() + 80 < enemy2.getPositionY() + 55)) {
                 me.setPositionX(120);
                 me.setPositionY(350);
+                sound.play();
             }
             if ((me.getPositionX() > enemy3.getPositionX() || me.getPositionX() + 80 > enemy3.getPositionX()) && (me.getPositionX() < enemy3.getPositionX() + 55 || me.getPositionX() + 80 < enemy3.getPositionX() + 55) && (me.getPositionY() > enemy3.getPositionY() || me.getPositionY() + 80 > enemy3.getPositionY()) && (me.getPositionY() < enemy3.getPositionY() + 55 || me.getPositionY() + 80 < enemy3.getPositionY() + 55)) {
                 me.setPositionX(120);
                 me.setPositionY(350);
+                sound.play();
             }
             if ((me.getPositionX() > enemy4.getPositionX() || me.getPositionX() + 80 > enemy4.getPositionX()) && (me.getPositionX() < enemy4.getPositionX() + 55 || me.getPositionX() + 80 < enemy4.getPositionX() + 55) && (me.getPositionY() > enemy4.getPositionY() || me.getPositionY() + 80 > enemy4.getPositionY()) && (me.getPositionY() < enemy4.getPositionY() + 55 || me.getPositionY() + 80 < enemy4.getPositionY() + 55)) {
                 me.setPositionX(120);
                 me.setPositionY(350);
+                sound.play();
             }
             if ((me.getPositionX() > enemy5.getPositionX() || me.getPositionX() + 80 > enemy5.getPositionX()) && (me.getPositionX() < enemy5.getPositionX() + 55 || me.getPositionX() + 80 < enemy5.getPositionX() + 55) && (me.getPositionY() > enemy5.getPositionY() || me.getPositionY() + 80 > enemy5.getPositionY()) && (me.getPositionY() < enemy5.getPositionY() + 55 || me.getPositionY() + 80 < enemy5.getPositionY() + 55)) {
                 me.setPositionX(120);
                 me.setPositionY(350);
+                sound.play();
             }
             if ((me.getPositionX() > enemy6.getPositionX() || me.getPositionX() + 80 > enemy6.getPositionX()) && (me.getPositionX() < enemy6.getPositionX() + 55 || me.getPositionX() + 80 < enemy6.getPositionX() + 55) && (me.getPositionY() > enemy6.getPositionY() || me.getPositionY() + 80 > enemy6.getPositionY()) && (me.getPositionY() < enemy6.getPositionY() + 55 || me.getPositionY() + 80 < enemy6.getPositionY() + 55)) {
                 me.setPositionX(120);
                 me.setPositionY(350);
+                sound.play();
             }
             if ((me.getPositionX() > enemy7.getPositionX() || me.getPositionX() + 80 > enemy7.getPositionX()) && (me.getPositionX() < enemy7.getPositionX() + 55 || me.getPositionX() + 80 < enemy7.getPositionX() + 55) && (me.getPositionY() > enemy7.getPositionY() || me.getPositionY() + 80 > enemy7.getPositionY()) && (me.getPositionY() < enemy7.getPositionY() + 55 || me.getPositionY() + 80 < enemy7.getPositionY() + 55)) {
                 me.setPositionX(120);
                 me.setPositionY(350);
+                sound.play();
             }
             if ((me.getPositionX() > enemy8.getPositionX() || me.getPositionX() + 80 > enemy8.getPositionX()) && (me.getPositionX() < enemy8.getPositionX() + 55 || me.getPositionX() + 80 < enemy8.getPositionX() + 55) && (me.getPositionY() > enemy8.getPositionY() || me.getPositionY() + 80 > enemy8.getPositionY()) && (me.getPositionY() < enemy8.getPositionY() + 55 || me.getPositionY() + 80 < enemy8.getPositionY() + 55)) {
                 me.setPositionX(120);
                 me.setPositionY(350);
+                sound.play();
             }
             if ((me.getPositionX() > enemy9.getPositionX() || me.getPositionX() + 80 > enemy9.getPositionX()) && (me.getPositionX() < enemy9.getPositionX() + 55 || me.getPositionX() + 80 < enemy9.getPositionX() + 55) && (me.getPositionY() > enemy9.getPositionY() || me.getPositionY() + 80 > enemy9.getPositionY()) && (me.getPositionY() < enemy9.getPositionY() + 55 || me.getPositionY() + 80 < enemy9.getPositionY() + 55)) {
                 me.setPositionX(120);
                 me.setPositionY(350);
+                sound.play();
             }
             if (me.getPositionX() > 1070) {
                 game.setScreen(new Level3(game));
@@ -203,5 +217,6 @@ public class Level2 implements gdx2, Screen {
         fon.dispose();
         background.dispose();
         timer.stop();
+        sound.dispose();
     }
 }

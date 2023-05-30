@@ -1,6 +1,5 @@
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
+import game.gdx.Hero1;
 import game.gdx.Start;
 import org.junit.jupiter.api.Test;
 

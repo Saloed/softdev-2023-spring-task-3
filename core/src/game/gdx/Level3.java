@@ -2,7 +2,7 @@ package game.gdx;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
@@ -18,6 +18,7 @@ public class Level3 implements gdx2, Screen {
     Hero3 me;
     Enemy31 enemy31;
     Enemy32 enemy32;
+    Sound sound;
     public Level3(Start gam) {
         this.game = gam;
         Gdx.input.setInputProcessor(inputProcessor);
@@ -27,6 +28,7 @@ public class Level3 implements gdx2, Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1280, 720);
 
+        sound = Gdx.audio.newSound(Gdx.files.internal("fa4811c6c7e5a78.mp3"));
         fon = new Texture(Gdx.files.internal("1616711132_33-p-zadnii-fon-dlya-igri-38.jpg"));
         background = new Texture(Gdx.files.internal("map_rendered_size_7872_1.png"));
         enemy31.enemies = new Array<Rectangle>();
@@ -54,18 +56,22 @@ public class Level3 implements gdx2, Screen {
         if ((me.getPositionX() > enemy31.getPositionX() || me.getPositionX() + 80 > enemy31.getPositionX()) && (me.getPositionX() < enemy31.getPositionX() + 55 || me.getPositionX() + 80 < enemy31.getPositionX() + 55) && (me.getPositionY() > enemy31.getPositionY() || me.getPositionY() + 80 > enemy31.getPositionY()) && (me.getPositionY() < enemy31.getPositionY() + 55 || me.getPositionY() + 80 < enemy31.getPositionY() + 55)) {
             me.setPositionX(70);
             me.setPositionY(570);
+            sound.play();
         }
         if ((me.getPositionX() > enemy31.getPositionX2() || me.getPositionX() + 80 > enemy31.getPositionX2()) && (me.getPositionX() < enemy31.getPositionX2() + 55 || me.getPositionX() + 80 < enemy31.getPositionX2() + 55) && (me.getPositionY() > enemy31.getPositionY2() || me.getPositionY() + 80 > enemy31.getPositionY2()) && (me.getPositionY() < enemy31.getPositionY2() + 55 || me.getPositionY() + 80 < enemy31.getPositionY2() + 55)) {
             me.setPositionX(70);
             me.setPositionY(570);
+            sound.play();
         }
         if ((me.getPositionX() > enemy32.getPositionX() || me.getPositionX() + 80 > enemy32.getPositionX()) && (me.getPositionX() < enemy32.getPositionX() + 55 || me.getPositionX() + 80 < enemy32.getPositionX() + 55) && (me.getPositionY() > enemy32.getPositionY() || me.getPositionY() + 80 > enemy32.getPositionY()) && (me.getPositionY() < enemy32.getPositionY() + 55 || me.getPositionY() + 80 < enemy32.getPositionY() + 55)) {
             me.setPositionX(70);
             me.setPositionY(570);
+            sound.play();
         }
         if ((me.getPositionX() > enemy32.getPositionX2() || me.getPositionX() + 80 > enemy32.getPositionX2()) && (me.getPositionX() < enemy32.getPositionX2() + 55 || me.getPositionX() + 80 < enemy32.getPositionX2() + 55) && (me.getPositionY() > enemy32.getPositionY2() || me.getPositionY() + 80 > enemy32.getPositionY2()) && (me.getPositionY() < enemy32.getPositionY2() + 55 || me.getPositionY() + 80 < enemy32.getPositionY2() + 55)) {
             me.setPositionX(70);
             me.setPositionY(570);
+            sound.play();
         }
         if(me.getPositionY() < 240 && me.getPositionY() > 190 && me.getPositionX() > 100 && me.getPositionX() < 530){
             game.setScreen(new WinScreen(game));
@@ -99,5 +105,7 @@ public class Level3 implements gdx2, Screen {
         me.dispose();
         fon.dispose();
         background.dispose();
+        sound.dispose();
+        Level1.music.dispose();
     }
 }

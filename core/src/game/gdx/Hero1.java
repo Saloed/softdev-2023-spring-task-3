@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Hero1 {
     private final Vector2 position = new Vector2();
-    private final Texture texture;
+    public final Texture texture;
 
     public Hero1(float x, float y) {
         texture = new Texture("pngwing.com.png");
