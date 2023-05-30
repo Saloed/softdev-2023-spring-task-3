@@ -103,9 +103,9 @@ fun MyTargetApp(
             Login()
 
             when (sortType) {
-                TypeOfSort.DAY -> Text(text = DateTimeFormatter.ofPattern("dd MMM yyyy").format(pickedDateCalendar), modifier = Modifier.padding(0.dp,16.dp))
-                TypeOfSort.WEEK -> Text(text = "Задачи на эту неделю", modifier = Modifier.padding(0.dp,16.dp))
-                else -> Text(text = "Задачи на этот месяц", modifier = Modifier.padding(0.dp,16.dp))
+                TypeOfSort.DAY -> Text(DateTimeFormatter.ofPattern("dd MMM yyyy").format(pickedDateCalendar), modifier = Modifier.padding(0.dp,16.dp))
+                TypeOfSort.WEEK -> Text(stringResource(id = R.string.taskOnWeek), modifier = Modifier.padding(0.dp,16.dp))
+                else -> Text(stringResource(id = R.string.taskOnMonth), modifier = Modifier.padding(0.dp,16.dp))
             }
 
             Button(
@@ -123,17 +123,17 @@ fun MyTargetApp(
         MaterialDialog(
             dialogState = calendarDialogState,
             buttons = {
-                positiveButton("Выбрать"){
+                positiveButton(stringResource(id = R.string.choose)){
 
                 }
-                negativeButton("Отмена"){
+                negativeButton(stringResource(id = R.string.cancel)){
 
                 }
             }
         ){
             datepicker(
                 initialDate = LocalDate.now(),
-                title = "Выберите на какое число показать задачи"
+                title = stringResource(id = R.string.whichDate)
             ) {
                 pickedDateCalendar = it
             }
@@ -165,7 +165,7 @@ fun MyTargetApp(
                     }
 
                     Button(onClick = { showDialog = true }, shape = CircleShape)
-                    { Text("+", fontSize = 40.sp) }
+                    { Text(stringResource(id = R.string.plus), fontSize = 40.sp) }
                 }
             }
         }
@@ -173,7 +173,7 @@ fun MyTargetApp(
         if (showSortDialog) {
             AlertDialog(
                 onDismissRequest = {showSortDialog = false},
-                title = { Text(text = "За какой срок показать задачи")},
+                title = { Text(stringResource(id = R.string.typeSort))},
                 text = {
                     Column(verticalArrangement = Arrangement.Top) {
                         Button(onClick = {sortType = TypeOfSort.DAY},
@@ -181,27 +181,27 @@ fun MyTargetApp(
                                 Color.White,
                                 contentColor = Color.Black
                             )) {
-                            Text(text = "День")
+                            Text(stringResource(id = R.string.day))
                         }
                         Button(onClick = {sortType = TypeOfSort.WEEK},
                             colors = ButtonDefaults.buttonColors(
                                 Color.White,
                                 contentColor = Color.Black
                             )) {
-                            Text(text = "Неделя")
+                            Text(stringResource(id = R.string.week))
                         }
                         Button(onClick = {sortType = TypeOfSort.MONTH},
                             colors = ButtonDefaults.buttonColors(
                                 Color.White,
                                 contentColor = Color.Black
                             )) {
-                            Text(text = "Месяц")
+                            Text(stringResource(id = R.string.month))
                         }
                     }
                 },
             confirmButton = {
                 Button(onClick = { showSortDialog = false }) {
-                    Text(text = "OK")
+                    Text(stringResource(id = R.string.ok))
                 }
             })
         }
@@ -209,7 +209,7 @@ fun MyTargetApp(
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
-                title = { Text(text = "Добавить задачу") },
+                title = { Text(stringResource(id = R.string.addTask)) },
                 text = {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -219,7 +219,7 @@ fun MyTargetApp(
                             value = textFieldHeader,
                             onValueChange = { textFieldHeader = it },
                             singleLine = true,
-                            placeholder = { Text("Название задачи") }
+                            placeholder = { stringResource(id = R.string.taskName) }
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -227,17 +227,17 @@ fun MyTargetApp(
                         TextField(
                             value = textFieldDescription,
                             onValueChange = { textFieldDescription = it },
-                            placeholder = { Text("Описание задачи") }
+                            placeholder = { stringResource(id = R.string.taskDescription) }
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Button(onClick = { dateDialogState.show() }) {
-                            Text(text = "Выберите дату")
+                            Text(stringResource(id = R.string.chooseDate1))
                         }
 
                         Button(onClick = { colorDialogState.show() }) {
-                            Text(text = "Выберите цвет")
+                            Text(stringResource(id = R.string.chooseColor))
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -246,17 +246,17 @@ fun MyTargetApp(
                     MaterialDialog(
                         dialogState = dateDialogState,
                         buttons = {
-                            positiveButton("Выбрать"){
+                            positiveButton(stringResource(id = R.string.choose)){
 
                             }
-                            negativeButton("Отмена"){
+                            negativeButton(stringResource(id = R.string.cancel)){
 
                             }
                         }
                     ){
                         datepicker(
                             initialDate = LocalDate.now(),
-                            title = "Выбор даты"
+                            title = stringResource(id = R.string.chooseDate)
 
                         ) {
                             pickedDate = it
@@ -265,10 +265,10 @@ fun MyTargetApp(
 
                     MaterialDialog(dialogState = colorDialogState,
                         buttons = {
-                            positiveButton("Выбрать"){
+                            positiveButton(stringResource(id = R.string.choose)){
 
                             }
-                            negativeButton("Отмена"){
+                            negativeButton(stringResource(id = R.string.cancel)){
 
                             }
                         }) {
@@ -292,9 +292,10 @@ fun MyTargetApp(
                             resetFields()
                             pickedColor = Color.Blue
                             pickedDate = LocalDate.now()
-                        }
+                        },
+                        enabled = textFieldHeader.isNotEmpty()
                     ) {
-                        Text(text = "OK")
+                        Text(stringResource(id = R.string.ok))
                     }
                 }
             )
@@ -408,7 +409,7 @@ fun TasksListItem(
     if (showDialogDescription) {
         AlertDialog(
             onDismissRequest = { showDialogDescription = false },
-            title = { Text(text = "Описание") },
+            title = { stringResource(id = R.string.description) },
             text = {
                 Text(text = task.taskDescription)
             },
@@ -419,7 +420,7 @@ fun TasksListItem(
 
                     }
                 ) {
-                    Text(text = "OK")
+                    Text(stringResource(id = R.string.ok))
                 }
             }
         )
@@ -428,9 +429,9 @@ fun TasksListItem(
     if (showDeleteConfirm) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirm = false },
-            title = { Text(text = "Подтверждение") },
+            title = { stringResource(id = R.string.approve) },
             text = {
-                Text(text = "Подтвердить удаление заметки?")
+                Text(stringResource(id = R.string.approveDel))
             },
             confirmButton = {
                 Button(
@@ -441,14 +442,14 @@ fun TasksListItem(
 
                     }
                 ) {
-                    Text(text = "OK")
+                    Text(stringResource(id = R.string.ok))
                 }
             },
             dismissButton = {
                 Button(onClick = {
                     showDeleteConfirm = false
                 }) {
-                    Text(text = "Отменить")
+                    Text(stringResource(id = R.string.cancel))
                 }
             }
         )
