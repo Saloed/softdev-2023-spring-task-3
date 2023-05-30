@@ -173,7 +173,6 @@ fun Plans(
             progress = viewModel.daysCheckedPlans(formattedDate),
             color = Color.Green
         )
-        Text(text = viewModel.planUiState.toString())
         Row(
             modifier = Modifier
                 .width(220.dp)
@@ -263,11 +262,6 @@ fun Plans(
 
 
     if (openDialog.value) {
-        LaunchedEffect(key1 = Unit) {
-
-            viewModel.getPlan(viewModel.planUiState.documentId)
-
-        }
         AlertDialog(
             onDismissRequest = {
                 openDialog.value = false
@@ -299,13 +293,6 @@ fun Plans(
                             checked = viewModel.planUiState.useful_habit,
                             onCheckedChange = { viewModel.onHabitChange(it) })
                         Text(text = "Полезная привычка", modifier = Modifier.padding(top = 10.dp))
-                    }
-                    Row(modifier = Modifier.wrapContentSize()) {
-                        Checkbox(
-                            checked = viewModel.planUiState.planDone,
-                            onCheckedChange = { viewModel.onPlanDoneChange(it) })
-                        Text(text = "План выполнен", modifier = Modifier.padding(top = 10.dp))
-
                     }
                 }
             },
@@ -472,7 +459,9 @@ fun ListItem(
     openChangeDialog: MutableState<Boolean>
 ) {
     val expanded = remember { mutableStateOf(false) }
-
+    val checkboxChanged = remember {
+        mutableStateOf(false)
+    }
     val planText by animateDpAsState(
         if (expanded.value) 24.dp else 0.dp,
         animationSpec = spring(
@@ -480,7 +469,6 @@ fun ListItem(
             stiffness = Spring.StiffnessHigh
         )
     )
-
     Surface(
         color = Color.LightGray,
         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
@@ -496,20 +484,18 @@ fun ListItem(
 
                 }
 
-//                Checkbox(
-//                    checked = viewModel.planUiState.planDone,
-//                    onCheckedChange = {viewModel.onPlanDoneChange(viewModel.planUiState.documentId, it)})
-                Button(onClick = {
-                    openChangeDialog.value =
-                        true; viewModel.getPlan(plan.documentId); onCheckPlan.invoke(plan.documentId)
-                }) {
-                    Image(
-                        painter = painterResource(id = R.drawable.check),
-                        contentDescription = "Image"
-                    )
-                }
+                Checkbox(
+                    checked = viewModel.getPlan(plan.documentId).planDone,
+                    onCheckedChange = { viewModel.getPlan(plan.documentId).planDone = it; checkboxChanged.value = true }
+                )
+//
             }
-
+            if (checkboxChanged.value) {
+                viewModel.updateNote(
+                    viewModel.getPlan(plan.documentId).documentId,
+                )
+                checkboxChanged.value = false
+            }
             Column(
                 modifier = Modifier.padding(
                     bottom = planText.coerceAtLeast(0.dp)

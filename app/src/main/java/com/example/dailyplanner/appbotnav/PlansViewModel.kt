@@ -40,7 +40,10 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
     }
 
     fun signOut() = repository.signOut()
-    fun getPlan(id: String) = repository.getPLan(planId = id, onError = {}, onSuccess = {})
+    fun getPlan(id: String): Plan {
+       val planList =  planListUiState.planList.data!!
+        return planList.first{it.documentId == id}
+    }
     fun onDateChange(date: String) {
         planUiState = planUiState.copy(date = date)
     }
@@ -73,16 +76,15 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
 
             )
     }
-//    fun updateNote(
-//        noteId: String,
-//    ){
-//        repository.updateNote(
-//           planId = planUiState.documentId,
-//            planDone = planUiState.planDone
-//        )
-//
-//       repository.updateNote(noteId, planUiState.planDone)
-//    }
+    fun updateNote(
+        planId: String,
+
+    ){
+        repository.updateNote(
+           planId = planId,
+            planDone = getPlan(planId).planDone
+        )
+    }
 
 
     fun getCurrentDayPlans(date: String): List<Plan> =

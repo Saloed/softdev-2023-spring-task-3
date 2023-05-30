@@ -56,7 +56,7 @@ class StorageRepository() {
         onSuccess: (Plan?) -> Unit
     ) {
         plansRef
-            .document(planId)
+            .document("/$planId")
             .get()
             .addOnSuccessListener {
                 onSuccess.invoke(it?.toObject(Plan::class.java))
@@ -94,16 +94,16 @@ class StorageRepository() {
     }
 
 
-//    fun updateNote(
-//        planId: String,
-//        planDone: Boolean
-//    ) {
-//        val updateData = hashMapOf<String, Any>(
-//            "planDone" to planDone,
-//        )
-//
-//        plansRef.document("plans/$planId").set(updateData)
-//    }
+    fun updateNote(
+        planId: String,
+        planDone: Boolean
+    ) {
+        val updateData = hashMapOf<String, Any>(
+            "planDone" to planDone,
+        )
+
+        plansRef.document("/$planId").update(updateData)
+    }
     fun signOut() = Firebase.auth.signOut()
 
 
