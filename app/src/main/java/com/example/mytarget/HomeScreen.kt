@@ -69,10 +69,7 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTargetApp(
-    tasks: List<Task>,
     onAddTask: (Task) -> Unit,
-    onMarkTask: (Task) -> Unit,
-    onRemoveTask: (Task) -> Unit,
     viewModel: TasksViewModel = viewModel()
 ) {
     var showDialog by remember { mutableStateOf(false) }
@@ -83,7 +80,6 @@ fun MyTargetApp(
     val dateDialogState = rememberMaterialDialogState()
     val calendarDialogState = rememberMaterialDialogState()
     val colorDialogState = rememberMaterialDialogState()
-    val context = LocalContext.current
     var pickedColor by remember { mutableStateOf(Color.Blue) }
     var showSortDialog by remember{ mutableStateOf(false) }
     var sortType by remember{ mutableStateOf(TypeOfSort.DAY) }
@@ -391,7 +387,7 @@ fun TasksListItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            viewModel.getTaskByTask(task)?.isComplete?.let { Checkbox(checked = it.value, onCheckedChange = { viewModel.taskIsSuccessful(task.id, it) }, modifier = Modifier.weight(1f)) }
+            viewModel.getTaskByTask(task)?.isComplete?.let { it -> Checkbox(checked = it.value, onCheckedChange = { viewModel.taskIsSuccessful(task.id, it) }, modifier = Modifier.weight(1f)) }
 
             IconButton(onClick = { showDialogDescription = true }, modifier = Modifier.weight(1f)) {
                 Icon(imageVector = Icons.Default.MoreVert , contentDescription = "description")
