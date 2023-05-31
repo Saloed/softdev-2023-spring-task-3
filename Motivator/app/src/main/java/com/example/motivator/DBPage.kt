@@ -7,8 +7,8 @@ import android.view.View
 import androidx.lifecycle.asLiveData
 import com.example.motivator.databinding.ActivityDbBinding
 
-class DB : AppCompatActivity() {
-    lateinit var binding: ActivityDbBinding
+class DBPage : AppCompatActivity() {
+    private lateinit var binding: ActivityDbBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDbBinding.inflate(layoutInflater)

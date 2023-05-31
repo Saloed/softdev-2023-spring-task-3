@@ -18,7 +18,7 @@ class DeletePage : AppCompatActivity() {
                     .deleteNote(binding.editTextNumber.text.toString().toInt())
             }.start()
             Toast.makeText(applicationContext,"Напоминание удалено!", Toast.LENGTH_SHORT).show()
-            val i = Intent(this, DB::class.java)
+            val i = Intent(this, DBPage::class.java)
             startActivity(i)
         }
     }

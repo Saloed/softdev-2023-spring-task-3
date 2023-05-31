@@ -25,7 +25,7 @@ class SavingPage : AppCompatActivity() {
                 db.userDao().addNote(note)
             }.start()
             Toast.makeText(applicationContext,"Напоминание создано!", Toast.LENGTH_SHORT).show()
-            val i = Intent(this, DB::class.java)
+            val i = Intent(this, DBPage::class.java)
             startActivity(i)
         }
     }

@@ -18,7 +18,7 @@
             android:label="@string/title_activity_delete_page"
             android:theme="@style/Theme.Motivator" />
         <activity
-            android:name=".DB"
+            android:name=".DBPage"
             android:exported="false" />
         <activity
             android:name=".SavingPage"

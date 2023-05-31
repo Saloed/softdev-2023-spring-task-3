@@ -13,5 +13,4 @@ interface UserDao {
 
     @Query("Select * from Note")
     fun getAllNotes(): Flow<List<Note>>
-
 }

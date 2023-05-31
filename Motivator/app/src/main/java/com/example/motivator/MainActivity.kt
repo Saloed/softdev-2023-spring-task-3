@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(i)
     }
     fun goDB(view: View) {
-        val i = Intent(this,DB::class.java)
+        val i = Intent(this,DBPage::class.java)
         startActivity(i)
     }
 }
