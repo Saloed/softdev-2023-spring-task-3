@@ -8,7 +8,7 @@ data class Task(
     var taskName: String = "",
     var taskDescription: String = "",
     var date: Timestamp = Timestamp(Date()),
-    var isComplete: Boolean = false,
+    var taskDone: Boolean = false,
     var taskColor: Int,
     var documentId: String = ""
 ){

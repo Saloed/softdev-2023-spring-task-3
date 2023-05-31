@@ -52,7 +52,7 @@ class NewTasksViewModel(private val repository: StorageRepo = StorageRepo()):Vie
                 date = taskUiState.date,
                 taskName = taskUiState.taskName,
                 taskDescription = taskUiState.taskDescription,
-                isComplete = taskUiState.isComplete,
+                taskDone = taskUiState.taskDone,
                 taskColor = taskUiState.taskColor
             )
         }
@@ -64,13 +64,14 @@ class NewTasksViewModel(private val repository: StorageRepo = StorageRepo()):Vie
         ){
         repository.updateTask(
             taskId = taskId,
-            isComplete = getTask(taskId).isComplete
+            taskDone = getTask(taskId).taskDone
         )
     }
 
      fun getTask(id: String): Task {
-        val taskList =  taskListUiState.taskList.data!!
-        return taskList.first{it.documentId == id}
+
+         val taskList =  taskListUiState.taskList.data!!
+         return taskList.first{it.documentId == id}
     }
 
     fun onDateChange(date: Timestamp) {
@@ -85,8 +86,8 @@ class NewTasksViewModel(private val repository: StorageRepo = StorageRepo()):Vie
         taskUiState = taskUiState.copy(taskDescription = description)
     }
 
-    fun onComplete(isComplete: Boolean) {
-        taskUiState = taskUiState.copy(isComplete = isComplete)
+    fun onComplete(taskDone: Boolean) {
+        taskUiState = taskUiState.copy(taskDone = taskDone)
     }
 
     fun onColorChange(color: Int) {
@@ -137,7 +138,7 @@ data class TaskUiState(
     var taskName: String = "",
     var taskDescription: String = "",
     var date: Timestamp = Timestamp(Date()),
-    var isComplete: Boolean = false,
+    var taskDone: Boolean = false,
     var taskColor: Int = 0,
     var documentId: String = ""
 )

@@ -106,7 +106,7 @@ fun MyTargetApp(
             Login()
 
             when (sortType) {
-                TypeOfSort.DAY -> Text(DateTimeFormatter.ofPattern("dd MMM yyyy").format(pickedDateCalendar), modifier = Modifier.padding(0.dp,16.dp))
+                TypeOfSort.DAY -> Text(DateTimeFormatter.ofPattern("dd-MM-yyyy").format(pickedDateCalendar), modifier = Modifier.padding(0.dp,16.dp))
                 TypeOfSort.WEEK -> Text(stringResource(id = R.string.taskOnWeek), modifier = Modifier.padding(0.dp,16.dp))
                 else -> Text(stringResource(id = R.string.taskOnMonth), modifier = Modifier.padding(0.dp,16.dp))
             }
@@ -398,21 +398,19 @@ fun TasksListItem(
             modifier = Modifier.fillMaxWidth(),
         ) {
 
-//            Checkbox(
-//                checked = viewModel.taskUiState.isComplete,
-//                onCheckedChange = { isChecked ->
-//                    viewModel.onComplete(isChecked)
-//                    viewModel.updateTask(task.documentId)
-//                }
-//            )
-
             Checkbox(
-                checked = viewModel.getTask(task.documentId).isComplete, onCheckedChange = {
-                    viewModel.getTask(task.documentId).isComplete = it; checkboxChanged.value =
-                    true
+                checked = run {
+                    println(viewModel.getTask(task.documentId).taskDone)
+                    viewModel.getTask(task.documentId).taskDone
+                },
+                onCheckedChange = {
+                    println("onCheckedChange")
+                    viewModel.getTask(task.documentId).taskDone = it
+                    checkboxChanged.value = true
+
+                    viewModel.onComplete(it)
                 }
             )
-
             if (checkboxChanged.value) {
                 viewModel.updateTask(
                     viewModel.getTask(task.documentId).documentId,
@@ -503,7 +501,7 @@ fun TaskList(
                     task.taskName,
                     task.taskDescription,
                     task.date,
-                    task.isComplete,
+                    task.taskDone,
                     task.taskColor,
                     task.documentId
                 ),

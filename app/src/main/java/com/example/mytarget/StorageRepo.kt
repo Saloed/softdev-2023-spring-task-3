@@ -53,8 +53,8 @@ class StorageRepo {
         taskName: String,
         taskDescription: String,
         date: Timestamp,
-        isComplete: Boolean = false,
-        taskColor: Int,
+        taskDone: Boolean = false,
+        taskColor: Int
     ) {
         val documentId = tasksRef.document().id
         val taskAdd = Task(
@@ -62,7 +62,7 @@ class StorageRepo {
             date = date,
             taskName = taskName,
             taskDescription = taskDescription,
-            isComplete = isComplete,
+            taskDone = taskDone,
             taskColor = taskColor,
             documentId = documentId
         )
@@ -78,10 +78,10 @@ class StorageRepo {
 
     fun updateTask(
         taskId: String,
-        isComplete: Boolean
+        taskDone: Boolean
     ) {
         val updateData = hashMapOf<String, Any>(
-            "isComplete" to isComplete,
+            "taskDone" to taskDone,
         )
 
         tasksRef.document("/$taskId").update(updateData)
