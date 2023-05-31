@@ -64,7 +64,6 @@ public class EnemiesManager {
     public void reset() {
         distanceBetweenEnemies = ORIGINAL_DISTANCE;
         enemyList.clear();
-        addRandomEnemy();
     }
 
     private void addRandomCactus() {

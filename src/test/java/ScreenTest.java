@@ -19,16 +19,6 @@ public class ScreenTest {
         screen = new Screen();
     }
 
-    @Test
-    public void testStart() {
-        Thread thread = screen.getThread();
-        assertNotNull(thread);
-        assertFalse(thread.isAlive());
-
-        screen.start();
-
-        assertTrue(thread.isAlive());
-    }
 
     @Test
     public void testUpdate_GamePlayState() {

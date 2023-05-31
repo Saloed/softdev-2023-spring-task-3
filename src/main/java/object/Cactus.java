@@ -23,9 +23,9 @@ public class Cactus extends Enemy{
 
     public void update() {
         posX -= mainCharacter.getSpeedX();
-        rectangle.x = posX;
+        rectangle.x = posX + 5;
         rectangle.y = posY;
-        rectangle.width = image.getWidth();
+        rectangle.width = image.getWidth() - 10;
         rectangle.height = image.getHeight();
     }
 

@@ -42,12 +42,12 @@ public class Bird extends Enemy{
         posX -= mainCharacter.getSpeedX();
         if (flyingBird.getFrame().getHeight() == 51) {
             rectangle.x = posX + 12;
-            rectangle.y = posY + 10;
+            rectangle.y = posY + 15;
             rectangle.width = flyingBird.getFrame().getWidth() - 25;
             rectangle.height = flyingBird.getFrame().getHeight() - 25;
         } else {
             rectangle.x = posX + 12;
-            rectangle.y = posY + 10;
+            rectangle.y = posY + 15;
             rectangle.width = flyingBird.getFrame().getWidth() - 25;
             rectangle.height = flyingBird.getFrame().getHeight() - 13;
         }
