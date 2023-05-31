@@ -97,11 +97,11 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
             day
         ).size.toFloat()) else 0f
 
-    fun habitCheckedPlans(day: String): Int =
+    fun habitDayCheckedPlans(day: String): Int =
         (getCurrentDayPlans(day).filter { it.planDone && it.useful_habit }.size)
 
-
-}
+    fun allDaysHabit() : Int = if (planListUiState.planList.data != null) (planListUiState.planList.data!!.filter { it.planDone && it.useful_habit }.size) else 0
+    }
 
 
 data class PlanUiState(

@@ -215,24 +215,24 @@ fun Plans(
         )
     }
     MaterialDialog(dialogState = timeDialogState, buttons = {
-        positiveButton(text = "Ok") {}
-        negativeButton(text = "Cancel")
+        positiveButton(text = stringResource(R.string.ok))
+        negativeButton(text = stringResource(R.string.cancel))
     }) {
         timepicker(
 
-            title = "Pick a time", is24HourClock = true
+            title = stringResource(R.string.PickTime), is24HourClock = true
         ) {
             pickedTime = it
         }
     }
 
     MaterialDialog(dialogState = dateDialogState, buttons = {
-        positiveButton(text = "Ok")
-        negativeButton(text = "Cancel")
+        positiveButton(text = stringResource(R.string.ok))
+        negativeButton(text = stringResource(R.string.cancel))
     }) {
         datepicker(
             initialDate = LocalDate.now(),
-            title = ("Выберите день"),
+            title = (stringResource(R.string.pickDay)),
         ) {
             pickedDate = it
         }
@@ -246,7 +246,7 @@ fun Plans(
         AlertDialog(onDismissRequest = {
             openDialog.value = false
         }, title = {
-            Text(text = "Добавить план")
+            Text(text = stringResource(R.string.addPlan))
         }, text = {
             Column {
 
@@ -273,7 +273,7 @@ fun Plans(
                             checkmarkColor = Color(43, 0, 61)
                         )
                     )
-                    Text(text = "Полезная привычка", modifier = Modifier.padding(top = 10.dp))
+                    Text(text = stringResource(R.string.usefulHabit), modifier = Modifier.padding(top = 10.dp))
                 }
             }
         }, buttons = {
@@ -302,7 +302,7 @@ fun Plans(
                     val delay = pickedTime.toNanoOfDay()/1000000 + millis - System.currentTimeMillis() - 1000*60*60
                     val builder = NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setContentTitle("План через час")
+                        .setContentTitle(R.string.PlanInHour.toString())
                         .setContentText("Вы запланировали через час ${viewModel.planUiState.planText}")
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setContentIntent(pendingIntent).setGroupSummary(true)
@@ -379,12 +379,12 @@ fun Plans(
             openDialog.value = false
         }, modifier = Modifier.wrapContentSize(), title = {
             Text(
-                if (user != null) user!!.displayName.toString() else "Войдите в аккаунт",
+                if (user != null) user!!.displayName.toString() else stringResource(R.string.signIn),
                 style = MaterialTheme.typography.h5,
                 textDecoration = TextDecoration.Underline
             )
         }, text = {
-            Text(text = "За сегодня вы выполнили ${viewModel.habitCheckedPlans(formattedDate)} полезных привычек")
+            Text(text = "Вы выполнили ${viewModel.allDaysHabit()} (Сегодня: ${viewModel.habitDayCheckedPlans(formattedDate)}) полезных привычек")
         }, buttons = {
             Row(
                 modifier = Modifier.padding(all = 8.dp),

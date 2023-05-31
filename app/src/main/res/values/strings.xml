@@ -1,5 +1,13 @@
 <resources>
-    <string name="app_name">DailyPlanner</string>
+    <string name="app_name">Daily Planner</string>
     <string name="channel_name"> 314</string>
     <string name="channel_description">description</string>
+    <string name="signIn">Войдите в аккаунт</string>
+    <string name="PlanInHour">План через час</string>
+    <string name="usefulHabit">Полезная привычка</string>
+    <string name="addPlan">Добавить план</string>
+    <string name="pickDay">Выберите день</string>
+    <string name="cancel">Отмена</string>
+    <string name="ok"><![CDATA[ОК]]></string>
+    <string name="PickTime">Выберите время</string>
 </resources>
