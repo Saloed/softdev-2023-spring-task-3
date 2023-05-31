@@ -13,6 +13,7 @@ public class MainLogic {
     private HexGrid previous;
     private int preScore;
     private FieldOptions fieldOp;
+    private Controller controller;
 
     public HexGrid getGrid(){
         return grid;
@@ -20,7 +21,7 @@ public class MainLogic {
 
     private void merged16384() {
         isThere16384 = true;
-        Controller.win = true;
+        if(controller != null) controller.win = true;
     }
 
     public boolean isItEnd() {
@@ -48,8 +49,17 @@ public class MainLogic {
         return true;
     }
 
+    public void init(FieldOptions fieldOptions, Controller controller){
+        fieldOp = fieldOptions;
+        score = 0;
+        isThere16384 = false;
+        direction = Direction.AWAITING;
+        grid = new HexGrid(fieldOp);
+        previous = new HexGrid(fieldOp);
+        this.controller = controller;
+    }
     public void init(FieldOptions fieldOptions){
-        this.fieldOp = fieldOptions;
+        fieldOp = fieldOptions;
         score = 0;
         isThere16384 = false;
         direction = Direction.AWAITING;
@@ -243,7 +253,7 @@ public class MainLogic {
         while(!placed) {
             if(grid.getState(curQ, curR) == 0) {
                 grid.setState(curQ, curR, state);
-                Controller.setAnim(curQ, curR, 1);
+                if(controller != null) controller.setAnim(curQ, curR, 1);
                 placed = true;
             } else {
                 if(curQ+1 < fieldOp.getArraySide()) {

@@ -26,7 +26,7 @@ public class Controller {
     public Pane startPane;
     @FXML
     private Label scoreLabel;
-    public static Boolean win = false;
+    public Boolean win = false;
     private Label[][] gameField;
     @FXML
     private TextField sideLength;
@@ -36,10 +36,10 @@ public class Controller {
     private Label warningLabel;
     private Boolean wasTheFirstMove;
     private MainLogic logic;
-    private static int[][] anim;
-    public static FieldOptions fieldOptions = new FieldOptions();
+    private int[][] anim;
+    private final FieldOptions fieldOptions = new FieldOptions();
 
-    public static void setAnim(int i, int j, int value) {
+    public void setAnim(int i, int j, int value) {
         anim[i][j] = value;
     }
 
@@ -158,7 +158,7 @@ public class Controller {
     public void start() {
         anim = new int[fieldOptions.getArraySide()][fieldOptions.getArraySide()];
         logic = new MainLogic();
-        logic.init(fieldOptions);
+        logic.init(fieldOptions, this);
         for (int i = 0; i < Constants.COUNT_INITIAL_TILES; i++) {
             logic.generateNewTile();
         }

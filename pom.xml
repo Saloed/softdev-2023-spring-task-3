@@ -6,7 +6,7 @@
 
     <groupId>org.game</groupId>
     <artifactId>game</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>Hexagonal 16384</name>
 
     <properties>
