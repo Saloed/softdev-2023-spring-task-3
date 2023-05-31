@@ -30,6 +30,8 @@ public class PlayState extends State {
 //    public static float actionTime;
 //    public static float stateTime;
 //    public static float trainingTime;
+    // const
+    private static final int textureSize = 16, inventoryTextureSize = 64;
     // Переменные диалогового окна
     public static boolean isDialog;
     protected int dialogNumber;
@@ -117,8 +119,6 @@ public class PlayState extends State {
 
         this.shop = shop;
         time = new ActionTime();
-//        actionTime = 0f;
-//        stateTime = 0f;
         progressBarTexture = (new Pixmap(Gdx.files.getFileHandle("playWindow/progressBar.png",
                 Files.FileType.Internal)));
         progressBar = new Texture(progressBarTexture, Pixmap.Format.RGB888, false);
@@ -146,16 +146,16 @@ public class PlayState extends State {
         trees1List = new ArrayList<>();
         trees2List = new ArrayList<>();
         castle = new Rectangle();
-        castle.width = 32;
-        castle.height = 32;
+        castle.width = textureSize * 2;
+        castle.height = textureSize * 2;
         quest = new Rectangle();
         quest.x = questPositions.get(storyLevel).x;
         quest.y = questPositions.get(storyLevel).y;
-        quest.height = 16;
-        quest.width = 16;
+        quest.height = textureSize;
+        quest.width = textureSize;
         enemyRectangle = new Rectangle();
-        enemyRectangle.width = 16;
-        enemyRectangle.height = 16;
+        enemyRectangle.width = textureSize;
+        enemyRectangle.height = textureSize;
         testRectangle = new Rectangle();
         List<String> currentLevel = new ArrayList<>();
         trainingCountKeyPressed = 0;
@@ -180,49 +180,49 @@ public class PlayState extends State {
         for (String raw : currentLevel) {
             for (int symbolNumber = 0; symbolNumber < raw.length(); symbolNumber++) {
                 if (raw.charAt(symbolNumber) == '0') {
-                    testRectangle.x = symbolNumber * 16 + symbolNumber;
-                    testRectangle.y = countString * 16 + countString;
-                    testRectangle.width = 16;
-                    testRectangle.height = 16;
+                    testRectangle.x = symbolNumber * textureSize + symbolNumber;
+                    testRectangle.y = countString * textureSize + countString;
+                    testRectangle.width = textureSize;
+                    testRectangle.height = textureSize;
                     grassList.add(new Rectangle(testRectangle));
                 }
                 if (raw.charAt(symbolNumber) == '1') {
-                    testRectangle.x = symbolNumber * 16 + symbolNumber;
-                    testRectangle.y = countString * 16 + countString;
-                    testRectangle.width = 16;
-                    testRectangle.height = 16;
+                    testRectangle.x = symbolNumber * textureSize + symbolNumber;
+                    testRectangle.y = countString * textureSize + countString;
+                    testRectangle.width = textureSize;
+                    testRectangle.height = textureSize;
                     trees1List.add(new Rectangle(testRectangle));
                 }
                 if (raw.charAt((symbolNumber)) == '2') {
-                    castle.x = symbolNumber * 16 + symbolNumber;
-                    castle.y = countString * 16 + countString;
+                    castle.x = symbolNumber * textureSize + symbolNumber;
+                    castle.y = countString * textureSize + countString;
                 }
                 if (raw.charAt(symbolNumber) == '3') {
-                    testRectangle.x = symbolNumber * 16 + symbolNumber;
-                    testRectangle.y = countString * 16 + countString;
-                    testRectangle.width = 16;
-                    testRectangle.height = 16;
+                    testRectangle.x = symbolNumber * textureSize + symbolNumber;
+                    testRectangle.y = countString * textureSize + countString;
+                    testRectangle.width = textureSize;
+                    testRectangle.height = textureSize;
                     houseList.add(new Rectangle(testRectangle));
                 }
                 if (raw.charAt(symbolNumber) == '4') {
-                    testRectangle.x = symbolNumber * 16 + symbolNumber;
-                    testRectangle.y = countString * 16 + countString;
-                    testRectangle.width = 16;
-                    testRectangle.height = 16;
+                    testRectangle.x = symbolNumber * textureSize + symbolNumber;
+                    testRectangle.y = countString * textureSize + countString;
+                    testRectangle.width = textureSize;
+                    testRectangle.height = textureSize;
                     roadList.add(new Rectangle(testRectangle));
                 }
                 if (raw.charAt(symbolNumber) == '5') {
-                    testRectangle.x = symbolNumber * 16 + symbolNumber;
-                    testRectangle.y = countString * 16 + countString;
-                    testRectangle.width = 16;
-                    testRectangle.height = 16;
+                    testRectangle.x = symbolNumber * textureSize + symbolNumber;
+                    testRectangle.y = countString * textureSize + countString;
+                    testRectangle.width = textureSize;
+                    testRectangle.height = textureSize;
                     trees2List.add(new Rectangle(testRectangle));
                 }
                 if (raw.charAt(symbolNumber) == '6') {
-                    testRectangle.x = symbolNumber * 16 + symbolNumber;
-                    testRectangle.y = countString * 16 + countString;
-                    testRectangle.width = 16;
-                    testRectangle.height = 16;
+                    testRectangle.x = symbolNumber * textureSize + symbolNumber;
+                    testRectangle.y = countString * textureSize + countString;
+                    testRectangle.width = textureSize;
+                    testRectangle.height = textureSize;
                     wheatList.add(new Rectangle(testRectangle));
                 }
             }
@@ -235,8 +235,8 @@ public class PlayState extends State {
 
         if (storyLevel == 0) dialogNumber = 1;
         if (storyLevel == 1) dialogNumber = 2;
-        testRectangle.height = 64;
-        testRectangle.width = 64;
+        testRectangle.height = inventoryTextureSize;
+        testRectangle.width = inventoryTextureSize;
         this.hero = hero;
         hero.setMenu(menu);
         hero.setTime(time);
@@ -336,7 +336,7 @@ public class PlayState extends State {
                 }
                 selectedNumber = 0;
                 for (int symbol = 0; symbol < 3; symbol++) {
-                    testRectangle.x = IndieGame.WIDTH / 4 - 100 + 64 * symbol;
+                    testRectangle.x = IndieGame.WIDTH / 4 - 100 + inventoryTextureSize * symbol;
                     testRectangle.y = 100 + 96;
                     if (testRectangle.contains(Gdx.input.getX() / 2,
                             (IndieGame.HEIGHT - Gdx.input.getY()) / 2)) {
@@ -367,8 +367,8 @@ public class PlayState extends State {
             selectedNumber = 0;
             for (int raw = 0; raw < 5; raw++) {
                 for (int symbol = 0; symbol < 5; symbol++) {
-                    testRectangle.x = IndieGame.WIDTH / 4 - 160 + 64 * symbol;
-                    testRectangle.y = 10 + 64 * raw;
+                    testRectangle.x = IndieGame.WIDTH / 4 - 160 + inventoryTextureSize * symbol;
+                    testRectangle.y = 10 + inventoryTextureSize * raw;
                     if (testRectangle.contains(Gdx.input.getX() / 2,
                             (IndieGame.HEIGHT - Gdx.input.getY()) / 2) && Gdx.input.justTouched() &&
                             selectedNumber < inventory.getSwordsNames().size()) {
@@ -484,23 +484,23 @@ public class PlayState extends State {
             font.draw(sb, "buy", 347, 65);
 //            for (int raw = 0; raw < 2; raw++) {
             for (int symbol = 0; symbol < 3; symbol++) {
-                sb.draw(shop.getItemBackgroundTexture(), IndieGame.WIDTH / 4 - 100 + 64 * symbol,
+                sb.draw(shop.getItemBackgroundTexture(), IndieGame.WIDTH / 4 - 100 + inventoryTextureSize * symbol,
                         100 + 96);
                 if (itemNumber < shop.getPrices().size()) {
                     sb.draw(swords.getSwordTexture(shop.getProductsNames().get(itemNumber)),
-                            IndieGame.WIDTH / 4 - 100 + 64
+                            IndieGame.WIDTH / 4 - 100 + inventoryTextureSize
                                     * symbol + 32 - swords.getSwordTexture(
                                     shop.getProductsNames().get(itemNumber)).getWidth() / 2,
                             100 + 96 + 32 - swords.getSwordTexture(
                                     shop.getProductsNames().get(itemNumber)).getHeight() / 2);
                     font.draw(sb, shop.getPrices().get(itemNumber).toString(), IndieGame.WIDTH / 4
-                            - 80 + 64 * symbol, 90 + 96);
+                            - 80 + inventoryTextureSize * symbol, 90 + 96);
                 }
                 if (shop.isSelect() && shop.selectedNumber() == itemNumber) {
                     sb.draw(shop.getSelectedTexture(),
-                            IndieGame.WIDTH / 4 - 100 + 64 * symbol, 100 + 96);
+                            IndieGame.WIDTH / 4 - 100 + inventoryTextureSize * symbol, 100 + 96);
                     if (shop.getSoldNames().contains(shop.getProductsNames().get(shop.selectedNumber())))
-                        sb.draw(shop.getSoldTexture(), IndieGame.WIDTH / 4 - 100 + 64 * symbol,
+                        sb.draw(shop.getSoldTexture(), IndieGame.WIDTH / 4 - 100 + inventoryTextureSize * symbol,
                                 100 + 96);
                 }
                 itemNumber++;
@@ -515,21 +515,21 @@ public class PlayState extends State {
             sb.draw(inventory.getBackgroundTexture(), IndieGame.WIDTH / 4 - 160, 10);
             for (int raw = 0; raw < 5; raw++) {
                 for (int symbol = 0; symbol < 5; symbol++) {
-                    sb.draw(inventory.getSlotTexture(), IndieGame.WIDTH / 4 - 160 + 64 * symbol,
-                            10 + 64 * raw);
+                    sb.draw(inventory.getSlotTexture(), IndieGame.WIDTH / 4 - 160 + inventoryTextureSize * symbol,
+                            10 + inventoryTextureSize * raw);
                     if (itemNumber < swordsList.size()) {
                         sb.draw(swords.getSwordTexture(inventory.getSwordsNames().get(itemNumber)),
-                                IndieGame.WIDTH / 4 - 160 + 64 * symbol + 32 -
+                                IndieGame.WIDTH / 4 - 160 + inventoryTextureSize * symbol + 32 -
                                         swords.getSwordTexture(inventory.getSwordsNames()
                                                 .get(itemNumber)).getWidth() / 2,
-                                10 + 64 * raw + 32 -
+                                10 + inventoryTextureSize * raw + 32 -
                                         swords.getSwordTexture(inventory.getSwordsNames()
                                                 .get(itemNumber)).getHeight() / 2);
                         if (Objects.equals(inventory.getSwordName(),
                                 inventory.getSwordsNames().get(itemNumber))) sb.draw(
                                 inventory.getEquippedText(), IndieGame.WIDTH / 4 - 160 +
-                                        64 * symbol,
-                                10 + 64 * raw);
+                                        inventoryTextureSize * symbol,
+                                10 + inventoryTextureSize * raw);
                         itemNumber++;
                     }
                 }

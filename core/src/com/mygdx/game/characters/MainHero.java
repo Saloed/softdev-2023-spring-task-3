@@ -13,6 +13,7 @@ import com.mygdx.game.states.PlayState;
 
 
 public class MainHero {
+    private static final int textureSize = 16;
     protected int enemyKills;
     protected int money;
     private final Vector2 position;
@@ -34,8 +35,8 @@ public class MainHero {
         heroHitBox = new Rectangle();
         heroHitBox.x = position.x;
         heroHitBox.y = position.y;
-        heroHitBox.height = 16;
-        heroHitBox.width = 16;
+        heroHitBox.height = textureSize;
+        heroHitBox.width = textureSize;
         heroTexture = new Texture("characters/farmer.png");
         this.healthMax = health;
         this.health = health;
@@ -46,7 +47,7 @@ public class MainHero {
         if (!PlayState.isDialog && !inventory.isOpen() && !menu.isOpen() && !shop.isOpen()
                 && time.getActionTime() + 0.5 < time.getStateTime()) {
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                position.x += 17;
+                position.x += (textureSize + 1);
                 time.setActionTime(time.getStateTime());
                 if (PlayState.isTraining) {
                     if (!PlayState.isRightPressed) {
@@ -56,7 +57,7 @@ public class MainHero {
                 }
             }
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                position.x -= 17;
+                position.x -= (textureSize + 1);
                 time.setActionTime(time.getStateTime());
                 if (PlayState.isTraining) {
                     if (!PlayState.isLeftPressed) {
@@ -66,7 +67,7 @@ public class MainHero {
                 }
             }
             if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                position.y += 17;
+                position.y += (textureSize + 1);
                 time.setActionTime(time.getStateTime());
                 if (PlayState.isTraining) {
                     if (!PlayState.isUpPressed) if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -76,7 +77,7 @@ public class MainHero {
                 }
             }
             if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                position.y -= 17;
+                position.y -= (textureSize + 1);
                 time.setActionTime(time.getStateTime());
                 if (PlayState.isTraining) {
                     if (!PlayState.isDownPressed) if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
