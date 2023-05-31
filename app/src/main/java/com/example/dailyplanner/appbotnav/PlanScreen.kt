@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
 import android.os.Handler
+import android.os.Looper
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
@@ -302,11 +303,11 @@ fun Plans(
                     val delay = pickedTime.toNanoOfDay()/1000000 + millis - System.currentTimeMillis() - 1000*60*60
                     val builder = NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setContentTitle(R.string.PlanInHour.toString())
-                        .setContentText("Вы запланировали через час ${viewModel.planUiState.planText}")
+                        .setContentTitle(":)")
+                        .setContentText("Вы запланировали в ${viewModel.planUiState.time} ${viewModel.planUiState.planText}")
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setContentIntent(pendingIntent).setGroupSummary(true)
-                    val handler = Handler()
+                    val handler = Handler(Looper.getMainLooper())
                     handler.postDelayed({
                         with(NotificationManagerCompat.from(context)) {
                             notify(notificationId, builder.build()) // посылаем уведомление
