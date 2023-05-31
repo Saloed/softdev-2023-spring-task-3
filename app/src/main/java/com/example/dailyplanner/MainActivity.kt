@@ -29,7 +29,6 @@ class MainActivity : ComponentActivity() {
                 val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 Plans(
                     viewModel = plansViewModel,
-                    onCheckPlan = { plansViewModel.onPlanDoneChange(plansViewModel.planUiState.planDone)},
                     onAddNotify = notificationManager
                 )
 

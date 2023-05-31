@@ -49,25 +49,6 @@ class StorageRepository() {
 
     }
 
-
-    fun getPLan(
-        planId: String,
-        onError: (Throwable?) -> Unit,
-        onSuccess: (Plan?) -> Unit
-    ) {
-        plansRef
-            .document("/$planId")
-            .get()
-            .addOnSuccessListener {
-                onSuccess.invoke(it?.toObject(Plan::class.java))
-            }
-            .addOnFailureListener { result ->
-                onError.invoke(result.cause)
-            }
-
-
-    }
-
     fun addPlan(
         userId : String,
         date : String,

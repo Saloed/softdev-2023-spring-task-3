@@ -61,10 +61,7 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
     fun onHabitChange(habit: Boolean) {
         planUiState = planUiState.copy(useful_habit = habit)
     }
-
-    fun onPlanDoneChange(planDone: Boolean) {
-        planUiState = planUiState.copy(planDone = planDone)
-    }
+    
 
 
     fun addPlan() {
@@ -78,7 +75,7 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
 
             )
     }
-    fun updateNote(
+    fun updatePlan(
         planId: String,
 
     ){
@@ -90,7 +87,7 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
 
 
     fun getCurrentDayPlans(date: String): List<Plan> =
-        if (planListUiState.planList.data != null) planListUiState.planList.data!!.filter { it.date == date } else listOf()
+        if (planListUiState.planList.data != null) planListUiState.planList.data!!.filter { it.date == date }.sortedBy { it.time.split(":").toString() } else listOf()
 
     fun daysCheckedPlans(day: String): Float =
         if (getCurrentDayPlans(day).isNotEmpty()) (getCurrentDayPlans(day).filter { it.planDone }.size.toFloat() / getCurrentDayPlans(

@@ -35,12 +35,12 @@ import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -107,7 +107,6 @@ fun rememberFirebaseAuthLauncher(
 @Composable
 fun Plans(
     viewModel: PlansViewModel = viewModel(),
-    onCheckPlan: (String) -> Unit,
     onAddNotify: NotificationManager
 ) {
     LaunchedEffect(key1 = Unit) {
@@ -121,7 +120,6 @@ fun Plans(
     }
     val dateDialogState = rememberMaterialDialogState()
     val openDialog = remember { mutableStateOf(false) }
-    val openChangeDialog = remember { mutableStateOf(false) }
     val openProfile = remember { mutableStateOf(false) }
 
     var pickedTime by remember {
@@ -160,7 +158,6 @@ fun Plans(
         // or other notification behaviors after this.
         onAddNotify.createNotificationChannel(mChannel)
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -168,9 +165,9 @@ fun Plans(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LinearProgressIndicator(
-            modifier = Modifier.height(16.dp),
+            modifier = Modifier.height(16.dp).padding(bottom = 2.dp),
             progress = viewModel.daysCheckedPlans(formattedDate),
-            color = Color.Green
+            color = Color(150, 100, 255)
         )
         Row(
             modifier = Modifier
@@ -183,7 +180,7 @@ fun Plans(
                 onClick = { dateDialogState.show() }, modifier = Modifier
                     .size(width = 150.dp, height = 35.dp)
                     .padding(start = 10.dp), colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.LightGray,
+                    backgroundColor = Color.White,
                     contentColor = Color.Black
                 )
             ) {
@@ -199,7 +196,8 @@ fun Plans(
                 shape = RoundedCornerShape(10),
                 modifier = Modifier
                     .size(width = 60.dp, height = 35.dp)
-                    .padding(start = 10.dp)
+                    .padding(start = 10.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(150, 100, 255))
             ) {
                 Image(
                     painter = painterResource(
@@ -221,8 +219,6 @@ fun Plans(
         RecyclerView(
             currentDay = formattedDate,
             viewModel = viewModel(),
-            onCheckPlan = onCheckPlan,
-            openChangeDialog = openChangeDialog
         )
     }
     MaterialDialog(
@@ -276,7 +272,7 @@ fun Plans(
                         modifier = Modifier
                             .size(height = 40.dp, width = 70.dp)
                             .padding(bottom = 5.dp), colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.LightGray,
+                            backgroundColor = Color(150, 100, 255),
                             contentColor = Color.Black
                         )
                     ) {
@@ -290,7 +286,12 @@ fun Plans(
                     Row(modifier = Modifier.wrapContentSize()) {
                         Checkbox(
                             checked = viewModel.planUiState.useful_habit,
-                            onCheckedChange = { viewModel.onHabitChange(it) })
+                            onCheckedChange = { viewModel.onHabitChange(it) },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = Color(255, 255, 255),
+                                checkmarkColor = Color(43, 0, 61)
+                            )
+                        )
                         Text(text = "Полезная привычка", modifier = Modifier.padding(top = 10.dp))
                     }
                 }
@@ -302,7 +303,7 @@ fun Plans(
                 ) {
                     Button(
                         modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Green,
+                            backgroundColor = Color(150, 100, 255),
                             contentColor = Color.Black
                         ),
                         onClick = {
@@ -367,10 +368,10 @@ fun Plans(
                             .build()
                     val googleSignInClient = GoogleSignIn.getClient(context, gso)
                     launcher.launch(googleSignInClient.signInIntent)
-                }) {
+                }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(150, 100, 255))) {
                     Image(
                         painter = painterResource(
-                            id = R.drawable.google_logo
+                            id = R.drawable.google
                         ),
                         contentDescription = "Image",
                         modifier = Modifier.size(20.dp)
@@ -380,10 +381,10 @@ fun Plans(
                 Button(onClick = {
                     viewModel.signOut()
                     user = null
-                }) {
+                }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(150, 100, 255))) {
                     Image(
                         painter = painterResource(
-                            id = R.drawable.google_logo
+                            id = R.drawable.google
                         ),
                         contentDescription = "Image",
                         modifier = Modifier.size(20.dp)
@@ -393,7 +394,7 @@ fun Plans(
             Button(
                 onClick = { openProfile.value = true },
                 shape = RoundedCornerShape(10),
-                modifier = Modifier
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(150, 100, 255))
             ) {
                 Image(
                     painter = painterResource(
@@ -434,7 +435,7 @@ fun Plans(
                 ) {
                     Button(
                         modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Green,
+                            backgroundColor = Color(150, 100, 255),
                             contentColor = Color.Black
                         ),
                         onClick = {
@@ -454,8 +455,6 @@ fun Plans(
 fun ListItem(
     plan: Plan,
     viewModel: PlansViewModel,
-    onCheckPlan: (String) -> Unit,
-    openChangeDialog: MutableState<Boolean>
 ) {
     val expanded = remember { mutableStateOf(false) }
     val checkboxChanged = remember {
@@ -469,7 +468,7 @@ fun ListItem(
         )
     )
     Surface(
-        color = Color.LightGray,
+        color = Color(200, 208, 255),
         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
     ) {
         Column(
@@ -485,12 +484,18 @@ fun ListItem(
 
                 Checkbox(
                     checked = viewModel.getPlan(plan.documentId).planDone,
-                    onCheckedChange = { viewModel.getPlan(plan.documentId).planDone = it; checkboxChanged.value = true }
+                    onCheckedChange = {
+                        viewModel.getPlan(plan.documentId).planDone = it; checkboxChanged.value =
+                        true
+                    },
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = Color(255, 255, 255),
+                        checkmarkColor = Color(43, 0, 61)
+                    )
                 )
-//
             }
             if (checkboxChanged.value) {
-                viewModel.updateNote(
+                viewModel.updatePlan(
                     viewModel.getPlan(plan.documentId).documentId,
                 )
                 checkboxChanged.value = false
@@ -504,11 +509,11 @@ fun ListItem(
 
                 Text(text = plan.planText)
                 if (plan.useful_habit)
-                    Text(
-                        text = "Полезная привычка",
-                        style = MaterialTheme.typography.h6,
-                        color = Color.Green
+                    Image(
+                        painter = painterResource(id = R.drawable.usefulhabit),
+                        contentDescription = "Image",
                     )
+
             }
         }
     }
@@ -521,8 +526,6 @@ fun ListItem(
 fun RecyclerView(
     currentDay: String,
     viewModel: PlansViewModel = viewModel(),
-    onCheckPlan: (String) -> Unit,
-    openChangeDialog: MutableState<Boolean>
 ) {
 
     LazyColumn(
@@ -539,8 +542,7 @@ fun RecyclerView(
                 ),
 
                 viewModel = viewModel,
-                onCheckPlan = onCheckPlan,
-                openChangeDialog = openChangeDialog
+
             )
         }
     }
