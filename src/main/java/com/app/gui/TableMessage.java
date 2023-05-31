@@ -3,28 +3,28 @@ package com.app.gui;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import javax.mail.Message;
 import javax.mail.internet.MimeMessage;
 
 public class TableMessage {
     private final SimpleStringProperty date;
     private final SimpleStringProperty from;
-
     private final SimpleStringProperty to;
     private final SimpleStringProperty subject;
 
-    public Object getMessage() {
+    public Message getMessage() {
         return message.get();
     }
 
-    public SimpleObjectProperty messageProperty() {
-        return message;
-    }
-
-    public void setMessage(Object message) {
+    public void setMessage(Message message) {
         this.message.set(message);
     }
 
-    private final SimpleObjectProperty message;
+    public SimpleObjectProperty<Message> messageProperty() {
+        return message;
+    }
+
+    private final SimpleObjectProperty<Message> message;
 
 
     public String getTo() {
@@ -82,7 +82,7 @@ public class TableMessage {
         this.to = new SimpleStringProperty(to);
         this.subject = new SimpleStringProperty(subject);
         this.date = new SimpleStringProperty(date);
-        this.message = new SimpleObjectProperty(message);
+        this.message = new SimpleObjectProperty<>(message);
     }
 
 }

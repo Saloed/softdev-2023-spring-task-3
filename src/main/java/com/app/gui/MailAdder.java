@@ -137,7 +137,7 @@ public class MailAdder extends Stage {
                 store.close();
                 // Creation of user
                 UserData.saveUser(new Mail(props));
-                receiver.add(new EmailReceiver().startNotifications(new Mail(props)));
+                receiver.add(new EmailReceiver(new Mail(props)));
                 // Adding to users.txt
                 List<String> cached = UserData.getCachedUsers();
                 cached.add(props.getProperty("username"));

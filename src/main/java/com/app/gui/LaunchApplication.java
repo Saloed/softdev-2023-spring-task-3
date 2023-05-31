@@ -18,9 +18,13 @@ public class LaunchApplication extends Application {
     private EmailSender sender;
 
     @Override
-    public void start(Stage mainStage) {
+    public void init() {
+        UserData.setConfigFiles();
         addReceiver();
+    }
 
+    @Override
+    public void start(Stage mainStage) {
         sender = new EmailSender();
         MainPane mainPane = new MainPane(receiver, sender);
         MainScene mainScene = new MainScene(mainPane);
@@ -34,19 +38,18 @@ public class LaunchApplication extends Application {
         mainStage.show();
     }
 
-    private void addReceiver() {
-        Mail[] users = UserData.getAllUsers();
-        receiver = new ArrayList<>();
-        for (int i = 0; i < users.length; i++) {
-            receiver.add(new EmailReceiver());
-            receiver.get(i).startNotifications(users[i]);
-        }
-    }
-
     @Override
     public void stop() {
         for (EmailReceiver i : receiver) i.closeConnection();
         sender.closeConnection();
+    }
+
+    private void addReceiver() {
+        Mail[] users = UserData.getAllUsers();
+        receiver = new ArrayList<>();
+        for (Mail user : users) {
+            if (user != null) receiver.add(new EmailReceiver(user));
+        }
     }
 
     public static void main(String[] args) {

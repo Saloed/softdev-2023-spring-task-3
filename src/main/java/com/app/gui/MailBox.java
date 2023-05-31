@@ -39,8 +39,6 @@ public class MailBox extends VBox {
 
     private TableView<TableMessage> table;
 
-    private ObservableList<TableMessage> messages;
-
     private void addTreeView(String username) {
         mainMail = new Mail(username);
         // Ugly way of constructing treeview
@@ -77,7 +75,7 @@ public class MailBox extends VBox {
     }
 
     private void addTableWithMessages(Message[] allMessages) {
-        messages = FXCollections.observableArrayList();
+        ObservableList<TableMessage> messages = FXCollections.observableArrayList();
         for (Message message : allMessages) {
             try {
                 TableMessage tableMessage = new TableMessage(
@@ -99,10 +97,8 @@ public class MailBox extends VBox {
                 new MessageReceiver(msg);
             }
             else {
-                Platform.runLater(() -> {
-                    new PopupNotification(msg, mainMail.getSession(),
-                            "Delete", receiver);
-                });
+                Platform.runLater(() -> new PopupNotification(msg, mainMail.getSession(),
+                        "Delete", receiver));
             }
             refreshTable();
         });
@@ -127,7 +123,7 @@ public class MailBox extends VBox {
 
     public void refreshTable() {
         addTableWithMessages(receiver.downloadMessagesFromFolder(
-                (IMAPFolder) ((MimeMessage)table.getSelectionModel().getSelectedItem().getMessage()).getFolder(),
+                (IMAPFolder) table.getSelectionModel().getSelectedItem().getMessage().getFolder(),
                 nowPage * messageOnOnePage, messageOnOnePage * (nowPage + 1)));
         table.refresh();
     }
@@ -138,7 +134,7 @@ public class MailBox extends VBox {
         msm.selectedItemProperty().addListener((changed, oldValue, newValue) -> {
             if (!newValue.getValue().equals(mainMail.getUserName())) {
                 // If another folder is seleceted => nowPage = 0
-                IMAPFolder folder = receiver.getInnerFolder(newValue);
+                IMAPFolder folder = getInnerFolder(newValue);
                 if (lastFolder[0] == null || !folder.equals(lastFolder[0])) nowPage = 0;
                 lastFolder[0] = folder;
 
@@ -180,5 +176,17 @@ public class MailBox extends VBox {
                 });
             }
         });
+    }
+    public IMAPFolder getInnerFolder(TreeItem<String> name) {
+        String sb = name.getValue();
+        while (name.getParent().getParent() != null) {
+            name = name.getParent();
+            sb = name.getValue() + "/" + sb;
+        }
+        try {
+            return (IMAPFolder) receiver.getStore().getFolder(sb);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

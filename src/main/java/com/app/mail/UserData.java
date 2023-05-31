@@ -18,8 +18,8 @@ public class UserData {
         Properties props = new Properties();
         Mail user;
         try {
-            props.load(new FileReader(Paths.get("").toRealPath() +
-                    "/src/main/resources/props/" + userName + ".properties"));
+            props.load(new FileReader(System.getProperty("user.home") +
+                    File.separator + ".mail" + File.separator + userName + ".properties"));
             user = new Mail(props);
         } catch (IOException e) {
             System.out.println("Can't get user");
@@ -29,8 +29,8 @@ public class UserData {
     }
 
     public static void saveUser(Mail user) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter((Paths.get("").toRealPath() +
-                "/src/main/resources/props/" + user + ".properties")))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter((System.getProperty("user.home") +
+                File.separator + ".mail" + File.separator + user + ".properties")))) {
             for (Object props : user.getSession().getProperties().keySet()) {
                 writer.write(props + "=" + user.getSession().getProperties().getProperty((String) props) + "\n");
             }
@@ -43,7 +43,7 @@ public class UserData {
     public static Mail[] getAllUsers() {
         Mail[] allUsers;
         List<Path> listOfUsers = getPathsOfUsers();
-        allUsers = new Mail[listOfUsers.size() - 1];
+        allUsers = new Mail[listOfUsers.size() - 2];
         for (int i = 0; i < listOfUsers.size(); i++) {
             String file = "";
             String toWork = listOfUsers.get(i).toString();
@@ -52,6 +52,7 @@ public class UserData {
                 file = toWork.charAt(j) + file;
             }
             if (file.equals("basicConfigs.properties")) continue;
+            if (file.equals("users.txt")) continue;
             allUsers[i - 1] = getUser(file.replace(".properties", ""));
         }
         return allUsers;
@@ -60,7 +61,7 @@ public class UserData {
     public static List<Path> getPathsOfUsers() {
         try {
             return Files.list(Paths
-                    .get(Paths.get("").toRealPath() + "/src/main/resources/props")).toList();
+                    .get(System.getProperty("user.home") + File.separator + ".mail")).toList();
         } catch (IOException e) {
             System.out.println("Can't get paths of users");
             throw new RuntimeException(e);
@@ -70,7 +71,8 @@ public class UserData {
     public static List<String> getCachedUsers() {
         List<String> cachedUsers = new ArrayList<>();
         try (BufferedReader file = new BufferedReader(
-                new FileReader(Paths.get("").toRealPath() + "/src/main/resources/configs/users.txt"))) {
+                new FileReader(System.getProperty("user.home") + File.separator + ".mail"
+                        + File.separator + "users.txt"))) {
             while (true) {
                 String user = file.readLine();
                 if (user == null) break;
@@ -84,7 +86,8 @@ public class UserData {
 
     public static void setCachedUsers(List<String> users) {
         try (FileWriter cachedUser = new FileWriter(
-                Paths.get("").toRealPath() + "/src/main/resources/configs/users.txt")) {
+                System.getProperty("user.home") + File.separator + ".mail"
+                        + File.separator + "users.txt")) {
             for (String user : users) {
                 cachedUser.write(user + "\n");
             }
@@ -101,6 +104,29 @@ public class UserData {
             else bytes = str.getBytes(StandardCharsets.UTF_8);
             return new String(bytes, StandardCharsets.UTF_8);
         } catch (ParseException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void setConfigFiles() {
+        if (Files.exists(Path.of(System.getProperty("user.home") + File.separator + ".mail"))) return;
+        Properties basicConfigs = new Properties();
+        basicConfigs.setProperty("mail.smtp.auth", "true\n");
+        basicConfigs.setProperty("mail.smtp.ssl.enable", "true\n");
+        basicConfigs.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory\n");
+        basicConfigs.setProperty("mail.smtp.host", "smtp.gmail.com\n");
+        basicConfigs.setProperty("mail.smtp.port", "465\n");
+        basicConfigs.setProperty("mail.imap.host", "imap.gmail.com\n");
+        basicConfigs.setProperty("mail.imap.port", "993");
+        new File(System.getProperty("user.home") + File.separator + ".mail").mkdirs();
+        try (FileWriter users = new FileWriter(System.getProperty("user.home") +
+                File.separator + ".mail" + File.separator + "users.txt");
+             FileWriter configs = new FileWriter(System.getProperty("user.home") +
+                     File.separator + ".mail" + File.separator + "basicConfigs.properties")) {
+            for (Object key : basicConfigs.keySet()) {
+                configs.write(key + "=" + basicConfigs.getProperty((String) key));
+            }
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

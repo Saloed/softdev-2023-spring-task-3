@@ -15,14 +15,13 @@ import java.util.concurrent.Executors;
 public class EmailSender {
     private Message msg;
 
-    private ExecutorService executorService;
-
-    private final int messagesSimultaneously = 5;
+    private final ExecutorService executorService;
 
     public ExecutorService getExecutorService() {
         return executorService;
     }
     public EmailSender() {
+        int messagesSimultaneously = 5;
         executorService = Executors.newFixedThreadPool(messagesSimultaneously);
     }
     public void setBasic(Session session, String subject) {

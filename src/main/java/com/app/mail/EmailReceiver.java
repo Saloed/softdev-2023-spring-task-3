@@ -1,16 +1,11 @@
 package com.app.mail;
 
 
+import com.app.gui.ListenerOfMessages;
 import com.app.gui.Mail;
-import com.app.gui.PopupNotification;
 import com.sun.mail.imap.IMAPFolder;
-import javafx.application.Platform;
-import javafx.scene.control.TreeItem;
 
 import javax.mail.*;
-import javax.mail.event.MessageCountEvent;
-import javax.mail.event.MessageCountListener;
-import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -25,11 +20,8 @@ public class EmailReceiver {
 
     private ExecutorService executorService;
 
-    public EmailReceiver() {
-    }
-
-    private EmailReceiver getItSelf() {
-        return this;
+    public Store getStore() {
+        return store;
     }
 
 
@@ -41,47 +33,32 @@ public class EmailReceiver {
         return nowSession;
     }
 
-    public EmailReceiver setNowSession(Session nowSession) {
+    public void setNowSession(Session nowSession) {
         this.nowSession = nowSession;
-        return this;
     }
 
 
     public void setNotifications() {
         this.executorService = Executors.newFixedThreadPool(getMainFolders().size() + 1);
         for (IMAPFolder folder : this.getMainFolders()) {
-            setNotificationOnFolder(folder);
+            openFolderConnection(folder);
+            executorService.execute(() -> {
+                folder.addMessageCountListener(new ListenerOfMessages(this, folder));
+                try {
+                    while (true) {
+                        folder.idle(true);
+                    }
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
     }
 
-    public void setNotificationOnFolder(IMAPFolder folder) {
-        openFolderConnection(folder);
-        executorService.execute(() -> {
-            folder.addMessageCountListener(new MessageCountListener() {
-                @Override
-                public void messagesAdded(MessageCountEvent messageCountEvent) {
-                    MimeMessage msg = (MimeMessage) getLatestMessage(folder);
-                    Platform.runLater(() -> new PopupNotification(msg, nowSession, "New message", getItSelf()));
-                }
-
-                @Override
-                public void messagesRemoved(MessageCountEvent messageCountEvent) {}
-            });
-            try {
-                while (true) {
-                    folder.idle(true);
-                }
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    public EmailReceiver startNotifications(Mail mail) {
+    public EmailReceiver(Mail mail) {
         setNowSession(mail.getSession());
         openStoreConnection();
         setNotifications();
-        return this;
     }
 
     public void deleteMessageFromFolder(Message message) {
@@ -183,18 +160,5 @@ public class EmailReceiver {
             throw new RuntimeException(e);
         }
         return allFolders;
-    }
-
-    public IMAPFolder getInnerFolder(TreeItem<String> name) {
-        String sb = name.getValue();
-        while (name.getParent().getParent() != null) {
-            name = name.getParent();
-            sb = name.getValue() + "/" + sb;
-        }
-        try {
-            return (IMAPFolder) store.getFolder(sb);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
