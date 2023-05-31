@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Dacha" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/new_colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/new_colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/new_colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/new_colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/new_status_bar</item>
+        <!-- Customize your theme here. -->
+<!--        <item name="windowActionBar">false</item>-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--        <item name="android:windowFullscreen">true</item>-->
+<!--        <item name="android:windowLayoutInDisplayCutoutMode">-->
+<!--            shortEdges &lt;!&ndash; default, shortEdges, or never &ndash;&gt;-->
+<!--        </item>-->
+    </style>
+    <style name="ToggleButtonWithIconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:minWidth">44dp</item>
+    </style>
+
+    <style name="TitleStyle">
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:textColor">@color/new_colorSecondary</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="SubTitleStyle">
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:textColor">@color/new_colorSubSecondary</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="DarkBgTitleStyle">
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:textColor">@color/main_text_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+</resources>

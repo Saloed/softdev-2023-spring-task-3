@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.example.dacha.ui.dashboard.DashboardFragment"
+        android:label="@string/title_gallery"
+        tools:layout="@layout/fragment_dashboard">
+
+        <action
+            android:id="@+id/action_dashboardFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="com.example.dacha.ui.dashboard.GalleryFragment"
+        android:label="fragment_gallery"
+        tools:layout="@layout/fragment_gallery" >
+        <action
+            android:id="@+id/action_galleryFragment_to_navigation_dashboard"
+            app:destination="@id/navigation_dashboard" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_products"
+        android:name="com.example.dacha.ui.products.ProductsFragment"
+        android:label="Покупки"
+        tools:layout="@layout/fragment_products" />
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.dacha.ui.home.HomeFragment"
+        android:label="@string/title_dacha"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/navigation_debts"
+        android:name="com.example.dacha.ui.debts.DebtsFragment"
+        android:label="Долги"
+        tools:layout="@layout/fragment_debts" />
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.example.dacha.ui.people.PeopleFragment"
+        android:label="Люди"
+        tools:layout="@layout/fragment_people" />
+</navigation>

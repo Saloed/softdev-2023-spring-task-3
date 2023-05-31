@@ -1,0 +1,137 @@
+<resources>
+    <string name="app_name">Dacha</string>
+    <integer name="com_vk_sdk_AppId">51583158</integer>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_people">People</string>
+    <string name="title_dacha">Дача</string>
+    <string name="title_gallery">Галерея</string>
+    <string name="debts">Долги</string>
+    <string name="products">Покупки</string>
+    <string name="people_rus">Люди</string>
+    <string name="main_rule">Главное правило</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <!-- Common -->
+    <string name="delete">Удалил(а) %s</string>
+    <string name="add">Добавил(a) %s</string>
+    <string name="update">Обновил(a) %s</string>
+
+    <!-- Transactions -->
+    <string name="add_transaction">Добавил(а) перевод</string>
+    <string name="delete_transaction">Удалил(а) перевод</string>
+
+    <!-- Albums -->
+    <string name="add_album">Добавил(а) альбом %s</string>
+    <string name="update_album">Обновил(а) альбом %s</string>
+    <string name="delete_album">Удалил(а) альбом %s</string>
+
+    <!-- Gallery -->
+    <string name="add_photos">Загрузил(а) фотографии в альбоме %s</string>
+    <string name="delete_photo">Удалил(а) фотографию в альбоме %s</string>
+
+    <!-- Events -->
+    <string name="add_event">Добавил(а) поездку %s</string>
+    <string name="update_event">Обновил(а) поездку %s</string>
+    <string name="delete_event">Удалил(а) поездку %s</string>
+
+    <!-- Products -->
+    <string name="add_product">Добавил(а) продукт %s</string>
+    <string name="update_product">Обновил(а) продукт %s</string>
+    <string name="delete_product">Удалил(а) продукт %s</string>
+
+    <!-- Purchases -->
+    <string name="add_purchase">Добавил(а) покупку в магазине %s</string>
+    <string name="update_purchase">Обновил(а) покупку в магазине %s</string>
+    <string name="delete_purchase">Удалил(а) покупку в магазине %s</string>
+    <string name="add_check">Добавил(а) чек покупки в магазине %s</string>
+
+    <string name="added">успешно добавлен(a)</string>
+    <string name="updated">успешно обновлен(а)</string>
+    <string name="deleted">успешно удален(а)</string>
+    <string name="chosen">выбран(а)</string>
+
+    <string name="event">Поездка </string>
+    <string name="purchase">Покупка </string>
+    <string name="product">Продукт </string>
+    <string name="person">Человек </string>
+    <string name="transaction">Перевод </string>
+    <string name="album">Альбом </string>
+    <string name="photo">Фото</string>
+
+    <string name="uploaded_photos">Фотографии загружены</string>
+    <string name="empty_field">Пустое поле!</string>
+    <string name="nothing_chosen">Ничего не выбрано</string>
+    <string name="go_login">Авторизуйтесь!</string>
+
+    <string name="buy">Оплатил: %s</string>
+    <string name="name">Имя: %s</string>
+    <string name="simple_name">Имя</string>
+    <string name="bank">Банк: %s</string>
+    <string name="simple_bank">Банк</string>
+    <string name="number">Номер: %s</string>
+    <string name="simple_number">Номер</string>
+    <string name="no_info">Неизвестен</string>
+    <string name="input_data">Ввести данные</string>
+    <string name="history">История</string>
+    <string name="no_transaction">Не было такого?</string>
+    <string name="no_event">Удалить поездку?</string>
+    <string name="to_delete">Удалить</string>
+    <string name="to_change">Изменить</string>
+    <string name="to_add">Добавить</string>
+    <string name="to_choose">Выбрать</string>
+    <string name="choose_photo">Выберите фото</string>
+    <string name="done">Готово</string>
+    <string name="where">Куда</string>
+    <string name="title">Название</string>
+    <string name="amount">Количество</string>
+    <string name="market">Магазин</string>
+    <string name="who_buy">Кто оплатил</string>
+    <string name="new_position">Новая позиция</string>
+    <string name="input_title">Введите название</string>
+    <string name="input_amount">Введите количество</string>
+    <string name="input_price">Введите цену за шт.</string>
+    <string name="transfers">Переводы</string>
+    <string name="input_name">Введите имя</string>
+    <string name="delete_from_purchase">Удалить из покупок</string>
+    <string name="send_money">Отправили деньги?</string>
+    <string name="sure_send">Точно отправил</string>
+    <string name="you_debt">Вы должны:</string>
+    <string name="who_debt">Вам должны:</string>
+    <string name="information">Информация</string>
+    <string name="other_buy">Вам купили:</string>
+    <string name="you_buy">Вы купили:</string>
+    <string name="calendar">Календарь</string>
+    <string name="who_go">Кто поедет?</string>
+    <string name="add_all">Добавить всех</string>
+    <string name="to_add_album">Добавить альбом</string>
+    <string name="add_name">Добавить имя</string>
+    <string name="logout">Выйти</string>
+    <string name="hello_text">Добро\nпожаловать\nна дачу!</string>
+    <string name="add_person">Добавить человека</string>
+    <string name="need_to_buy">Нужно купить:</string>
+    <string name="bought">Куплено:</string>
+    <string name="plans">Планы</string>
+    <string name="results">Итоги</string>
+    <string name="for_who">Для кого?</string>
+    <string name="add_position">Добавить позицию</string>
+    <string name="check">Чек</string>
+    <string name="paid">Оплатил</string>
+    <string name="choose_event">Выбрать поездку</string>
+    <string name="add_new_event">Добавить поездку</string>
+    <string name="change_event">Изменить поездку</string>
+    <string name="delete_this_event">Удалить поездку</string>
+
+</resources>
