@@ -4,7 +4,6 @@ package com.yooondooo.WORDLY;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.widget.Button;
 import android.widget.TextView;
@@ -39,7 +38,7 @@ public class Handler {
     private final List<String> file = new ArrayList<>();
     private final int dictSize = 6963;
     private String noDelete = "";
-    private int count;
+    private int countColorButtons;
     private final List<String> copyWords = new ArrayList<>();
     private final String[] yellowLetters = new String[5];
     private boolean active = true;
@@ -73,7 +72,7 @@ public class Handler {
             lenght = 0;
             if (check()) {
                 if (isChecki) {
-                    dialog("Вы победили", false);
+                    dialog(resources.getString(R.string.win), false);
                 }
                 checki = true;
             }
@@ -82,7 +81,7 @@ public class Handler {
         }
         if (height == 6 && !checki) {
             if (isChecki) {
-                dialog("Вы проиграли", true);
+                dialog(resources.getString(R.string.lose), true);
                 checki = true;
                 isChecki = false;
             }
@@ -91,10 +90,10 @@ public class Handler {
 
     private void dialog(String string, boolean bols) {
         String adString = "";
-        String messege = "Отлично";
+        String messege = resources.getString(R.string.good);
         if (bols) {
-            adString += "\nЗагаданное слово: " + word;
-            messege = "Попробую еще раз";
+            adString += "\n" + resources.getString(R.string.corWord) + word;
+            messege = resources.getString(R.string.res);
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(string + adString)
@@ -112,10 +111,10 @@ public class Handler {
     }
 
     public String clue() {
-        String clueW = "нет слова";
-        if (count > 2 && active) {
+        String clueW = resources.getString(R.string.noneWord);
+        if (countColorButtons > 2 && active) {
             clueW = withActive(clueW);
-            if (clueW.equals("нет слова")) {
+            if (clueW.equals(resources.getString(R.string.noneWord))) {
                 clueW = noneActive(clueW);
             }
         } else {
@@ -208,9 +207,10 @@ public class Handler {
     }
 
     public boolean check() {
+        int countGreen = 0;
+        if (correctWord()){
         String[] wordForCheck = word.split("");
         char[] chars = clueWord.toCharArray();
-        int countGreen = 0;
         for (int i = 0; i < 5; i++) {
             if (wordForCheck[i].equals(wordly[i].toLowerCase())) {
                 textView[height][i].setBackgroundResource(R.color.green);
@@ -220,12 +220,12 @@ public class Handler {
                     noDelete += wordly[i].toLowerCase();
                 }
                 Button button = alfButtons.get(wordly[i]);
-                if (!forBut.contains(wordly[i]) && button != null ){
+                if (button != null){
                     button.setBackgroundColor(resources.getColor(R.color.green));
-                    forBut+=wordly[i];
+                    forBut+=wordly[i].toUpperCase();
                 }
                 wordly[i] = "-";
-                count++;
+                countColorButtons++;
                 countGreen++;
 
             } else {
@@ -237,13 +237,13 @@ public class Handler {
                 if (wordly[i].toLowerCase().equals(wordForCheck[j])) {
                     textView[height][i].setBackgroundResource(R.color.yellow);
                     Button button = alfButtons.get(wordly[i].toUpperCase(Locale.ROOT));
-                    if (!forBut.contains(wordly[i]) && button != null ){
+                    if (!forBut.contains(wordly[i].toUpperCase()) && button != null ){
                         button.setBackgroundColor(resources.getColor(R.color.YELLOW));
-                        forBut+=wordly[i];
+                        forBut+=wordly[i].toLowerCase();
                     }
                     wordForCheck[j] = "*";
                     yellowLetters[i] += wordly[i].toLowerCase();
-                    count++;
+                    countColorButtons++;
                     if (!noDelete.contains(wordly[i])) {
                         noDelete += wordly[i].toLowerCase();
                     }
@@ -259,7 +259,6 @@ public class Handler {
                 Button button = alfButtons.get(wordly[i].toUpperCase(Locale.ROOT));
                 if (!forBut.contains(wordly[i]) && button != null ){
                     button.setBackgroundColor(resources.getColor(R.color.grey));
-                    forBut+=wordly[i];
                 }
             }
         }
@@ -267,6 +266,35 @@ public class Handler {
             active = true;
         }
         clueWord = String.valueOf(chars);
+        }else{
+            dialogForUncorretWord();
+        }
         return countGreen == 5;
+    }
+    private boolean correctWord(){
+        String wordWorly = "";
+        for (int i =0;i < 5;i++){
+            wordWorly += wordly[i].toLowerCase();
+        }
+        System.out.println(wordWorly);
+        for (String line: copyWords){
+            System.out.println(line);
+            if (line.equals(wordWorly)) return true;
+        }
+        return false;
+    }
+    private void dialogForUncorretWord(){
+        lenght = 5;
+        for (int i = 0; i < 5; i ++){
+            delete();
+        }
+        height--;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(resources.getString(R.string.iDontKnowWord))
+                .setMessage(resources.getString(R.string.tryAgain))
+                .setCancelable(false)
+                .setPositiveButton(resources.getString(R.string.tryOne), (dialog, which) -> dialog.cancel());
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

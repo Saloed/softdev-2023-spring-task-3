@@ -1,17 +1,13 @@
 package com.yooondooo.WORDLY;
 
-import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -32,7 +28,6 @@ public class PlayScene extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         handler = new Handler(forText(), forButtons(),this);
         Button buttonDelete = findViewById(R.id.buttonDelete);
-//        button5.setBackgroundColor(getResources().getColor(R.color.green));
         clickDelete(buttonDelete);
     }
     private Map<String, Button> forButtons(){
@@ -83,11 +78,11 @@ public class PlayScene extends AppCompatActivity {
 
     public void butReturn(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(PlayScene.this);
-        builder.setTitle("Вы хотите в меню?")
-                .setMessage("Данные не будут сохранены")
+        builder.setTitle(getString(R.string.uWantMenu))
+                .setMessage(getString(R.string.NoData))
                 .setCancelable(false)
-                .setPositiveButton("Да, я уверен", (dialog, which) -> ret())
-                .setNegativeButton("Я еще подумаю", (dialog, which) -> dialog.cancel());
+                .setPositiveButton(getString(R.string.Yes), (dialog, which) -> ret())
+                .setNegativeButton(getString(R.string.No), (dialog, which) -> dialog.cancel());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -99,10 +94,10 @@ public class PlayScene extends AppCompatActivity {
 
     public void newGame(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(PlayScene.this);
-        builder.setTitle("Вы хотите начать новую игру")
-                .setMessage("Данные не будут сохранены")
+        builder.setTitle(getString(R.string.uWantNewGame))
+                .setMessage(getString(R.string.NoData))
                 .setCancelable(false)
-                .setPositiveButton("Да, я уверен", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.Yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (handler.checki) {
@@ -112,26 +107,26 @@ public class PlayScene extends AppCompatActivity {
                         }
                     }
                 })
-                .setNegativeButton("Я еще подумаю", (dialog, which) -> dialog.cancel());
+                .setNegativeButton(getString(R.string.No), (dialog, which) -> dialog.cancel());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     public void clue(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(PlayScene.this);
-        builder.setTitle("Подсказка: " + handler.clue())
+        builder.setTitle(getString(R.string.Clue) + handler.clue())
                 .setCancelable(false)
-                .setNegativeButton("ок", (dialog, which) -> dialog.cancel());
+                .setNegativeButton(getString(R.string.ok), (dialog, which) -> dialog.cancel());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     public void newGameNext() {
         AlertDialog.Builder builder = new AlertDialog.Builder(PlayScene.this);
-        builder.setTitle("Вы хотите узнать загаданное слово?")
+        builder.setTitle(getString(R.string.retWord))
                 .setCancelable(false)
-                .setPositiveButton("Да", (dialog, which) -> word())
-                .setNegativeButton("Нет, новая игра", (dialog, which) -> retNewGame(this));
+                .setPositiveButton(getString(R.string.Y), (dialog, which) -> word())
+                .setNegativeButton(getString(R.string.noNewGame), (dialog, which) -> retNewGame(this));
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -144,9 +139,9 @@ public class PlayScene extends AppCompatActivity {
 
     private void word() {
         AlertDialog.Builder builder = new AlertDialog.Builder(PlayScene.this);
-        builder.setTitle("Загаданное слово: " + handler.word)
+        builder.setTitle(getString(R.string.corWord) + handler.word)
                 .setCancelable(false)
-                .setPositiveButton("Новая игра", (dialog, which) -> retNewGame(this));
+                .setPositiveButton(getString(R.string.NewGame), (dialog, which) -> retNewGame(this));
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -159,13 +154,13 @@ public class PlayScene extends AppCompatActivity {
 
     public void info(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(PlayScene.this);
-        builder.setTitle("Правила:")
-                .setMessage("Вам нужно отгадать слово из 5 букв\n\n" +
-                        "Если буква подсвечивается желтым, то она есть в слове, но стоит не на своем месте\n\n" +
-                        "Если буква подсвечивается зеленым, то вы угадали расположение буквы\n\n" +
-                        "Удачи :)")
+        builder.setTitle(getString(R.string.rules))
+                .setMessage(getString(R.string.rule1) + "\n\n" +
+                        getString(R.string.rule2) + "\n\n" +
+                        getString(R.string.rule3)+"\n\n" +
+                        getString(R.string.rule4))
                 .setCancelable(false)
-                .setPositiveButton("Понятно", (dialog, which) -> dialog.cancel());
+                .setPositiveButton(getString(R.string.ok), (dialog, which) -> dialog.cancel());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
