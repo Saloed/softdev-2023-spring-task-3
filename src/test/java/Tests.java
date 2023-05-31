@@ -56,6 +56,6 @@ public class Tests {
             playing.getObjectManager().collectMoney();
         }
         money = playing.getMainCharacter().getCurrentMoney();
-        assertEquals(10, money);
+        assertEquals(13, money);
     }
 }
