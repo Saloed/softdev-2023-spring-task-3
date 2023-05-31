@@ -1,16 +1,17 @@
 package com.example.mytarget
 
-import android.app.ActivityManager.TaskDescription
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import java.time.LocalDate
+import com.google.firebase.Timestamp
+import java.util.Date
 
 data class Task(
-    var id: Long = 0,
+    val userId: String,
     var taskName: String = "",
     var taskDescription: String = "",
-    var date: LocalDate = LocalDate.now(),
-    var isComplete: MutableState<Boolean> = mutableStateOf(false),
-    var taskColor: Color
-)
+    var date: Timestamp = Timestamp(Date()),
+    var isComplete: Boolean = false,
+    var taskColor: Int,
+    var documentId: String = ""
+){
+    constructor(): this("","","",Timestamp(Date()),false,0,"")
+}

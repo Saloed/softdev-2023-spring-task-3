@@ -34,6 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,15 +43,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mytarget.tryingthisshit.NewTasksViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -63,14 +67,17 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTargetApp(
-    onAddTask: (Task) -> Unit,
-    viewModel: TasksViewModel = viewModel()
+    viewModel: NewTasksViewModel = viewModel(),
+    onAddTask: () -> Unit,
+    onComplete:(Boolean) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var textFieldHeader by remember { mutableStateOf("") }
@@ -88,6 +95,10 @@ fun MyTargetApp(
     val resetFields: () -> Unit = {
         textFieldHeader = ""
         textFieldDescription = ""
+    }
+
+    LaunchedEffect(key1 = Unit){
+        viewModel.loadTasks()
     }
 
     Column(Modifier.fillMaxSize()) {
@@ -256,6 +267,7 @@ fun MyTargetApp(
 
                         ) {
                             pickedDate = it
+
                         }
                     }
 
@@ -270,24 +282,25 @@ fun MyTargetApp(
                         }) {
                         colorChooser(colors = ColorPalette.Primary) {
                             pickedColor = it
+
                         }
                     }
                 },
                 confirmButton = {
                     Button(
                         onClick = {
-                            onAddTask(
-                                Task((viewModel.tasks.size).toLong(),
-                                textFieldHeader,
-                                textFieldDescription,
-                                pickedDate,
-                                mutableStateOf(false),
-                                pickedColor)
-                            )
+                            viewModel.onNameChange(textFieldHeader)
+                            viewModel.onDescriptionChange(textFieldDescription)
+                            viewModel.onColorChange(pickedColor.toArgb())
+                            viewModel.onDateChange(convertToTimestamp(pickedDate))
+                            viewModel.addTask()
+                            viewModel.loadTasks()
                             showDialog = false
                             resetFields()
                             pickedColor = Color.Blue
                             pickedDate = LocalDate.now()
+                            viewModel.taskUiState.taskName = ""
+                            viewModel.taskUiState.taskDescription = ""
                         },
                         enabled = textFieldHeader.isNotEmpty()
                     ) {
@@ -372,13 +385,14 @@ fun rememberFirebaseAuthLauncher(
 @Composable
 fun TasksListItem(
     task: Task,
-    viewModel: TasksViewModel
+    viewModel: NewTasksViewModel
 ) {
     var showDialogDescription by remember { mutableStateOf(false) }
     var showDeleteConfirm by remember{ mutableStateOf(false) }
+    var checkboxChanged = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
-            .background(color = task.taskColor.copy(alpha = 0.5f))
+            .background(color = Color(task.taskColor).copy(0.5f))
             .padding(16.dp)
     ) {
 
@@ -387,7 +401,14 @@ fun TasksListItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            viewModel.getTaskByTask(task)?.isComplete?.let { it -> Checkbox(checked = it.value, onCheckedChange = { viewModel.taskIsSuccessful(task.id, it) }, modifier = Modifier.weight(1f)) }
+            Checkbox(checked = viewModel.getTask(task.documentId).isComplete, onCheckedChange = {viewModel.getTask(task.documentId).isComplete = it; checkboxChanged.value = true})
+
+            if (checkboxChanged.value) {
+                viewModel.updateTask(
+                    viewModel.getTask(task.documentId).documentId
+                )
+                checkboxChanged.value = false
+            }
 
             IconButton(onClick = { showDialogDescription = true }, modifier = Modifier.weight(1f)) {
                 Icon(imageVector = Icons.Default.MoreVert , contentDescription = "description")
@@ -405,7 +426,7 @@ fun TasksListItem(
     if (showDialogDescription) {
         AlertDialog(
             onDismissRequest = { showDialogDescription = false },
-            title = { stringResource(id = R.string.description) },
+            title = { Text(text = stringResource(id = R.string.description))  },
             text = {
                 Text(text = task.taskDescription)
             },
@@ -425,7 +446,7 @@ fun TasksListItem(
     if (showDeleteConfirm) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirm = false },
-            title = { stringResource(id = R.string.approve) },
+            title = { Text(text = stringResource(id = R.string.approve)) },
             text = {
                 Text(stringResource(id = R.string.approveDel))
             },
@@ -434,7 +455,7 @@ fun TasksListItem(
                     onClick = {
 
                         showDeleteConfirm = false
-                        viewModel.removeTask(task.id)
+                        viewModel.deleteTask(task.documentId)
 
                     }
                 ) {
@@ -453,45 +474,48 @@ fun TasksListItem(
 }
 
 @Composable
-fun TaskList(viewModel: TasksViewModel,date: LocalDate, sort: TypeOfSort) {
+fun TaskList(viewModel: NewTasksViewModel,date: LocalDate, sort: TypeOfSort) {
     LazyColumn {
         if (sort == TypeOfSort.DAY) {
-            items(items = viewModel.getTaskByDate(date)) { task ->
+            items(items = viewModel.getCurrentDayPlans(convertToTimestamp(date))) { task ->
                 TasksListItem(
-                    Task(task.id,
+                    Task(task.userId,
                         task.taskName,
                         task.taskDescription,
                         task.date,
                         task.isComplete,
-                        task.taskColor),
+                        task.taskColor,
+                        task.documentId),
                     viewModel = viewModel
                 )
             }
         }
 
         if (sort == TypeOfSort.WEEK) {
-            items(items = viewModel.getTasksForCurrentWeek(viewModel.tasks)) { task ->
+            items(items = viewModel.getTasksForCurrentWeek(viewModel.taskListUiState.taskList.data!!)) { task ->
                 TasksListItem(
-                    Task(task.id,
-                        task.taskName,
-                        task.taskDescription,
-                        task.date,
-                        task.isComplete,
-                        task.taskColor),
+                    Task(task.userId,
+                    task.taskName,
+                    task.taskDescription,
+                    task.date,
+                    task.isComplete,
+                    task.taskColor,
+                    task.documentId),
                     viewModel = viewModel
                 )
             }
         }
 
         if (sort == TypeOfSort.MONTH) {
-            items(items = viewModel.getTasksForCurrentMonth(viewModel.tasks)) { task ->
+            items(items = viewModel.getTasksForCurrentMonth(viewModel.taskListUiState.taskList.data!!)) { task ->
                 TasksListItem(
-                    Task(task.id,
+                    Task(task.userId,
                         task.taskName,
                         task.taskDescription,
                         task.date,
                         task.isComplete,
-                        task.taskColor),
+                        task.taskColor,
+                        task.documentId),
                     viewModel = viewModel
                 )
             }
@@ -499,3 +523,7 @@ fun TaskList(viewModel: TasksViewModel,date: LocalDate, sort: TypeOfSort) {
     }
 }
 
+fun convertToTimestamp(localDate: LocalDate): Timestamp {
+    val milliseconds = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    return Timestamp(milliseconds / 1000, (milliseconds % 1000 * 1000000).toInt())
+}
