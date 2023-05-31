@@ -1,5 +1,3 @@
-import com.badlogic.gdx.graphics.Texture;
-import game.gdx.Hero1;
 import game.gdx.Start;
 import org.junit.jupiter.api.Test;
 
@@ -12,4 +10,5 @@ public class Test1 {
         Start start = new Start();
         assertNotNull(start);
     }
+
 }

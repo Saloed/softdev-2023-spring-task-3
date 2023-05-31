@@ -95,9 +95,9 @@ public class Level1 implements gdx, Screen {
         me.render(game.batch);
         game.batch.end();
         me.moveTo(inputProcessor.getDirection());
-        if((me.getPositionX() > 540 || me.getPositionX() + 78> 540) && (me.getPositionX() < 560 || me.getPositionX() + 78< 560) && (me.getPositionY() > 478|| me.getPositionY() + 78> 480) && (me.getPositionY() < 478|| me.getPositionY() + 78< 480)) {
-            soundSpeed.play();
+        if(((me.getPositionX() > 540 || me.getPositionX() + 78> 540) && (me.getPositionX() < 560 || me.getPositionX() + 78< 560) && (me.getPositionY() > 478|| me.getPositionY() + 78> 480) && (me.getPositionY() < 478|| me.getPositionY() + 78< 480)) && (speed.p)) {
             speed.swap();
+            soundSpeed.play();
             inputProcessor.swap1();
             timer.start();
         }

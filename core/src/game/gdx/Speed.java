@@ -13,7 +13,7 @@ public class Speed {
     }
     public void render(Batch batch) {
         if(p) batch.draw(texture, 540, 480);
-        if(!p) batch.draw(texture, 4400, 200);
+        if(!p) batch.draw(texture, 4400, 2000);
     }
     public void dispose() {
         texture.dispose();

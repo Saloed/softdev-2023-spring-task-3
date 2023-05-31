@@ -115,7 +115,7 @@ public class Level2 implements gdx2, Screen {
         enemy9.render(game.batch);
         game.batch.end();
         me.moveTo(inputProcessor.getDirection());
-        if((me.getPositionX() > 900 || me.getPositionX() + 80 > 900) && (me.getPositionX() < 920 || me.getPositionX() + 80 < 920) && (me.getPositionY() > 200 || me.getPositionY() + 80 > 200) && (me.getPositionY() < 220 || me.getPositionY() + 80 < 220)) {
+        if(((me.getPositionX() > 900 || me.getPositionX() + 80 > 900) && (me.getPositionX() < 920 || me.getPositionX() + 80 < 920) && (me.getPositionY() > 200 || me.getPositionY() + 80 > 200) && (me.getPositionY() < 220 || me.getPositionY() + 80 < 220)) && (vulnerability.p)) {
             soundVulnerability.play();
             flag = false;
             vulnerability.swap();

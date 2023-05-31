@@ -10,7 +10,6 @@ public class MainMenuScreen implements Screen {
 
     Start game;
     public Texture screensaver;
-
     OrthographicCamera camera;
 
     public MainMenuScreen(Start gam) {
