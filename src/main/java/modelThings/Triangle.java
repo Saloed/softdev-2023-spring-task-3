@@ -37,4 +37,17 @@ public class Triangle {
     public Color getColor() {
         return color;
     }
+public static Color getShadow(Color color, double shadowConst){
+        //Color shade = new Color(205, 123, 202);
+    double redLinear = Math.pow(color.getRed(), 2.4) * shadowConst;
+    double greenLinear = Math.pow(color.getGreen(), 2.4) * shadowConst;
+    double blueLinear = Math.pow(color.getBlue(), 2.4) * shadowConst;
+
+    int red = (int) Math.pow(redLinear, 1/2.4);
+    int green = (int) Math.pow(greenLinear, 1/2.4);
+    int blue = (int) Math.pow(blueLinear, 1/2.4);
+
+    return new Color(red, green, blue);
+}
+
 }

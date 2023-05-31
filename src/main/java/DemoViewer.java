@@ -77,7 +77,9 @@ public class DemoViewer {
             add(XY, BorderLayout.EAST);
             ZY.addChangeListener(e -> renderPanel.repaint());
             XY.addChangeListener(e -> renderPanel.repaint());
-            JButton texture = new JButton("Add texture");
+
+
+
 
             renderPanel = new JPanel() {
 
@@ -110,6 +112,17 @@ public class DemoViewer {
                             Vertex newVertex3 = new Vertex(vertex3.getX() + getWidth()/2,
                                     vertex3.getY() + getHeight()/2, vertex3.getZ());
 
+                            Vertex ab = new Vertex(newVertex2.getX() - newVertex1.getX(),
+                                    newVertex2.getY() - newVertex1.getY(), newVertex2.getZ() - newVertex1.getZ());
+                            Vertex ac = new Vertex(newVertex3.getX() - newVertex1.getX(),
+                                    newVertex3.getY() - newVertex1.getY(), newVertex3.getZ() - newVertex1.getZ());
+                            Vertex normal = new Vertex(ab.getY()*ac.getZ() - ab.getZ()*ac.getY(),
+                                    ab.getZ()*ac.getX() - ab.getX() *ac.getZ(),
+                                    ab.getX()*ac.getY() - ab.getY() * ac.getX());
+                            double normalLength = Math.sqrt(normal.getX() * normal.getX() + normal.getY() * normal.getY()
+                                    + normal.getZ() * normal.getZ());
+
+
                             int minX = (int) Math.max(0, Math.ceil(Math.min(newVertex1.getX(),
                                     Math.min(newVertex2.getX(), newVertex3.getX()))));
                             int maxX = (int) Math.min(img.getWidth() - 1, Math.floor(Math.max(newVertex1.getX(),
@@ -134,7 +147,8 @@ public class DemoViewer {
                                         double depth = b1 * newVertex3.getZ() + b2 * newVertex2.getZ() + b3 * newVertex1.getZ();
                                         int zIndex = y * img.getWidth() + x;
                                         if (zBuffer[zIndex] < depth) {
-                                            img.setRGB(x, y, triangle.getColor().getRGB());
+                                            img.setRGB(x, y,
+                                                    modelThings.Triangle.getShadow(triangle.getColor(), normal.getZ()/normalLength).getRGB());
                                             zBuffer[zIndex] = depth;
                                         }
                                     }
