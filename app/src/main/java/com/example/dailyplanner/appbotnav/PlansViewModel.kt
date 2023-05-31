@@ -22,7 +22,7 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
     fun loadPlans() {
         if (hasUser()) {
             if (userId().isNotBlank()) {
-                getUserPlans(userId())
+                getUserPlan(userId())
             }
         } else {
             planListUiState = planListUiState.copy(
@@ -33,7 +33,7 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
         }
     }
 
-    private fun getUserPlans(userId: String) = viewModelScope.launch {
+    private fun getUserPlan(userId: String) = viewModelScope.launch {
         repository.getUserPlans(userId).collect {
             planListUiState = planListUiState.copy(planList = it)
         }

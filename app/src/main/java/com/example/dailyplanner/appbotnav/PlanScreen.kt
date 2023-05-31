@@ -11,9 +11,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -456,17 +453,10 @@ fun ListItem(
     plan: Plan,
     viewModel: PlansViewModel,
 ) {
-    val expanded = remember { mutableStateOf(false) }
+
     val checkboxChanged = remember {
         mutableStateOf(false)
     }
-    val planText by animateDpAsState(
-        if (expanded.value) 24.dp else 0.dp,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioHighBouncy,
-            stiffness = Spring.StiffnessHigh
-        )
-    )
     Surface(
         color = Color(200, 208, 255),
         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
@@ -502,7 +492,6 @@ fun ListItem(
             }
             Column(
                 modifier = Modifier.padding(
-                    bottom = planText.coerceAtLeast(0.dp)
                 )
 
             ) {
