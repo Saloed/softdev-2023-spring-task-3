@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
@@ -298,18 +299,20 @@ fun Plans(
                     val startOfDay = LocalDateTime.of(pickedDate, LocalTime.MIN)
                     val millis =
                         startOfDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    val delay = pickedTime.toNanoOfDay()/1000000 + millis - System.currentTimeMillis() - 1000*60*60
                     val builder = NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setContentTitle("План через час")
                         .setContentText("Вы запланировали через час ${viewModel.planUiState.planText}")
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setWhen(pickedTime.toNanoOfDay() / 1000000 + millis - 1000 * 60 * 60)
                         .setContentIntent(pendingIntent).setGroupSummary(true)
+                    val handler = Handler()
+                    handler.postDelayed({
+                        with(NotificationManagerCompat.from(context)) {
+                            notify(notificationId, builder.build()) // посылаем уведомление
+                        }                    }, delay)
 
 
-                    with(NotificationManagerCompat.from(context)) {
-                        notify(notificationId, builder.build()) // посылаем уведомление
-                    }
                     viewModel.planUiState = PlanUiState()
 
                 }) {
