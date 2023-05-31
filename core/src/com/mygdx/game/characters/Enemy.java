@@ -9,18 +9,20 @@ public class Enemy {
     protected int healthMax;
     protected int attack;
     protected String name;
-    private Texture slimeTexture;
-    private Texture demonTexture;
     protected Texture currentTexture;
+    protected Texture attackSheet;
 
     public Enemy(String name) {
-        demonTexture = new Texture("characters/demon.png");
-        slimeTexture = new Texture("characters/slime.png");
+        Texture demonAttackSheet = new Texture("characters/demonAttack.png");
+        Texture slimeAttackSheet = new Texture("characters/slimeAttack.png");
+        Texture demonTexture = new Texture("characters/demon.png");
+        Texture slimeTexture = new Texture("characters/slime.png");
         if (Objects.equals(name, "slime")) {
             this.name = "slime";
             this.attack = 10;
             this.health = 110;
             this.healthMax = 110;
+            this.attackSheet = slimeAttackSheet;
             currentTexture = slimeTexture;
         }
         if (Objects.equals(name, "demon")) {
@@ -28,6 +30,7 @@ public class Enemy {
             this.attack = 25;
             this.health = 150;
             this.healthMax = 150;
+            this.attackSheet = demonAttackSheet;
             currentTexture = demonTexture;
         }
     }
@@ -48,8 +51,11 @@ public class Enemy {
         return attack;
     }
 
+    public Texture getAttackSheet() {
+        return attackSheet;
+    }
+
     public void setHealth(int newHealth) {
         this.health = newHealth;
     }
-
 }

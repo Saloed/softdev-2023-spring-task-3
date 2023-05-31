@@ -6,21 +6,23 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.IndieGame;
 import com.mygdx.game.characters.MainHero;
+import com.mygdx.game.playStateActivities.Menu;
+import com.mygdx.game.playStateActivities.Shop;
 
 import java.awt.*;
 
 public class MenuState extends State {
     Music backgroundMusic;
     private Texture currentMusicTexture;
-    private Texture musicTrueTexture;
-    private Texture musicFalseTexture;
-    private Texture backgroundTexture;
-    private Texture startButtonTexture;
-    private Texture startTexture;
-    private Texture gameNameTexture;
-    private Texture versionNumberTexture;
-    private Rectangle startButton;
-    private Rectangle musicButton;
+    private final Texture musicTrueTexture;
+    private final Texture musicFalseTexture;
+    private final Texture backgroundTexture;
+    private final Texture startButtonTexture;
+    private final Texture startTexture;
+    private final Texture gameNameTexture;
+    private final Texture versionNumberTexture;
+    private final Rectangle startButton;
+    private final Rectangle musicButton;
 
     public MenuState(GameStateManager stateManager) {
         super(stateManager);
@@ -52,7 +54,8 @@ public class MenuState extends State {
         if (Gdx.input.justTouched() &&
                 startButton.contains(new Point(Gdx.input.getX(), IndieGame.HEIGHT - Gdx.input.getY())))
             stateManager.set(new PlayState(stateManager, true, 0,
-                    new MainHero(50, 50, 100, 15)));
+                    new MainHero(50, 50, 100, 15), new Shop(),
+                    false));
         if (Gdx.input.justTouched()
                 && musicButton.contains(new Point(Gdx.input.getX(), IndieGame.HEIGHT - Gdx.input.getY()))) {
             if (currentMusicTexture == musicTrueTexture) {

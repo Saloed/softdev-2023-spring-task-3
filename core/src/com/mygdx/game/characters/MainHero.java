@@ -5,29 +5,30 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.IndieGame;
-import com.mygdx.game.items.Swords;
+import com.mygdx.game.playStateActivities.ActionTime;
+import com.mygdx.game.playStateActivities.Inventory;
+import com.mygdx.game.playStateActivities.Menu;
+import com.mygdx.game.playStateActivities.Shop;
 import com.mygdx.game.states.PlayState;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 
 public class MainHero {
+    protected int enemyKills;
     protected int money;
-    protected String swordName;
-    protected Swords sword;
-    protected List<String> swords;
-    protected List<Texture> currentSwordTextures;
-    private Vector2 position;
+    private final Vector2 position;
     protected int health;
     protected int attack;
     protected int healthMax;
     protected Rectangle heroHitBox;
-    private Texture heroTexture;
+    private final Texture heroTexture;
+    private Menu menu;
+    private ActionTime time;
+    private Shop shop;
+    private final Inventory inventory;
 
     public MainHero(int x, int y, int health, int attack) {
+        enemyKills = 0;
+        inventory = new Inventory();
         money = 0;
         position = new Vector2(x, y);
         heroHitBox = new Rectangle();
@@ -39,24 +40,14 @@ public class MainHero {
         this.healthMax = health;
         this.health = health;
         this.attack = attack;
-        this.swords = new ArrayList<>();
-        swords.add("startSword");
-        this.swordName = "startSword";
-        sword = new Swords(swordName);
-        currentSwordTextures = new ArrayList<>();
-        currentSwordTextures.add(sword.getEmpty());
-        currentSwordTextures.add(sword.getEmpty());
-        currentSwordTextures.add(sword.getEmpty());
-        currentSwordTextures.add(sword.getEmpty());
-
     }
 
     public void update() {
-        if (!PlayState.isDialog && !PlayState.isInventoryOpen && !PlayState.isMenuOpen
-                && PlayState.actionTime + 0.5 < PlayState.stateTime) {
+        if (!PlayState.isDialog && !inventory.isOpen() && !menu.isOpen() && !shop.isOpen()
+                && time.getActionTime() + 0.5 < time.getStateTime()) {
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 position.x += 17;
-                PlayState.actionTime = PlayState.stateTime;
+                time.setActionTime(time.getStateTime());
                 if (PlayState.isTraining) {
                     if (!PlayState.isRightPressed) {
                         PlayState.trainingCountKeyPressed++;
@@ -66,7 +57,7 @@ public class MainHero {
             }
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 position.x -= 17;
-                PlayState.actionTime = PlayState.stateTime;
+                time.setActionTime(time.getStateTime());
                 if (PlayState.isTraining) {
                     if (!PlayState.isLeftPressed) {
                         PlayState.trainingCountKeyPressed++;
@@ -76,7 +67,7 @@ public class MainHero {
             }
             if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
                 position.y += 17;
-                PlayState.actionTime = PlayState.stateTime;
+                time.setActionTime(time.getStateTime());
                 if (PlayState.isTraining) {
                     if (!PlayState.isUpPressed) if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
                         PlayState.trainingCountKeyPressed++;
@@ -86,7 +77,7 @@ public class MainHero {
             }
             if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                 position.y -= 17;
-                PlayState.actionTime = PlayState.stateTime;
+                time.setActionTime(time.getStateTime());
                 if (PlayState.isTraining) {
                     if (!PlayState.isDownPressed) if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                         PlayState.trainingCountKeyPressed++;
@@ -128,40 +119,38 @@ public class MainHero {
         this.health = newHealth;
     }
 
-    public String getSwordName() {
-        return swordName;
-    }
-
-    public List<Texture> getSwordTextures() {
-        currentSwordTextures.set(0, sword.getSwordTexture(swordName));
-        if (!Objects.equals(this.swordName, "startSword")) {
-            currentSwordTextures.set(1, sword.getSwordIcon());
-            currentSwordTextures.set(2, sword.getSwordEffect());
-            currentSwordTextures.set(3, sword.getFireSwordAttackSheet());
-        } else for (int i = 1; i < 3; i++)
-            currentSwordTextures.set(i, sword.getEmpty());
-        return currentSwordTextures;
-    }
-
-    public void findSword(String swordName) {
-        this.swords.add(swordName);
-    }
-
-    public List<String> getSwordsNames() {
-        return swords;
-    }
-
     public int getMoney() {
         return money;
     }
-    public void earnMoney(int moneyCount){
-        this.money+=moneyCount;
+
+    public void earnMoney(int moneyCount) {
+        this.money += moneyCount;
     }
-    public void spendMoney(int price){
-        this.money-=price;
+
+    public void spendMoney(int price) {
+        this.money -= price;
     }
-    public void setPosition(int x,int y){
+
+    public void setPosition(int x, int y) {
         position.x = x;
         position.y = y;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public void setMenu(Menu newMenu) {
+        menu = newMenu;
+    }
+    public void setTime(ActionTime newTime) {time= newTime;}
+    public void setShop(Shop newShop) {shop = newShop;}
+
+    public int getEnemyKills() {
+        return enemyKills;
+    }
+
+    public void enemyKill() {
+        this.enemyKills++;
     }
 }

@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.IndieGame;
 import com.mygdx.game.characters.Enemy;
 import com.mygdx.game.characters.MainHero;
+import com.mygdx.game.playStateActivities.Inventory;
+import com.mygdx.game.playStateActivities.Shop;
 
 import java.awt.*;
 import java.util.List;
@@ -27,12 +29,14 @@ public class FightState extends State {
     private static final int FRAME_COLS_HERO = 3, FRAME_COLS_ENEMY = 6, FRAME_ROWS = 1, FRAME_COLS_FIRE = 18;
     private final Animation<TextureRegion> farmerAttackAnimation;
     private Animation<TextureRegion> swordAttackAnimation;
+    private Animation<TextureRegion> swordAttackEffectsAnimation;
     private final Animation<TextureRegion> enemyAttackAnimation;
     float notificationTime;
     float startTimeOne;
     float startTimeTwo;
     float stateTime;
     // Считывание всех текстур
+    private final Texture finalFight;
     private final Texture trainingTexture1;
     private final Texture trainingTexture2;
     private final Texture loseButtonTexture;
@@ -50,10 +54,6 @@ public class FightState extends State {
     private final Texture heroTexture;
     private Texture heroCurrentTexture;
     private Texture enemyCurrentTexture;
-    private final Texture enemyAttackSheet;
-    private final Texture farmerAttackSheet;
-    private final Texture swordAttackSheet;
-
     private final Texture emptyTexture;
     private final Texture enemyTexture;
     private final Texture attackIcon;
@@ -66,7 +66,6 @@ public class FightState extends State {
     private final Rectangle exitButton;
     private final Rectangle loseButton1;
     private final Rectangle loseButton2;
-    private List<Texture> swordTextures;
 
     private int fightRound;
     private int attackNumber;
@@ -75,18 +74,22 @@ public class FightState extends State {
     // Создание переменной, определяющей статус битвы
     private int fightStatus;
     private int winStatus;
-    private boolean isStory;
+    private final boolean isStory;
     protected int storyLevel;
     // Герой и враг
-    private MainHero hero;
-    private Enemy enemy;
+    private final MainHero hero;
+    private final Enemy enemy;
+    private final Inventory inventory;
+    private final Shop shop;
 
-    public FightState(GameStateManager stateManager, MainHero hero,
-                      Enemy enemy, boolean isStory, int storyLevel) {
+    public FightState(GameStateManager stateManager, MainHero hero, Enemy enemy,
+                      boolean isStory, int storyLevel, Inventory inventory, Shop shop) {
         super(stateManager);
         camera = new OrthographicCamera();
         camera.setToOrtho(false, IndieGame.WIDTH, IndieGame.HEIGHT);
 
+        this.shop = shop;
+        this.inventory = inventory;
         this.hero = hero;
         this.enemy = enemy;
         this.isStory = isStory;
@@ -133,7 +136,7 @@ public class FightState extends State {
         attackButton1.y = 10;
         attackButton1.width = 64;
         attackButton1.height = 64;
-        if (!Objects.equals(hero.getSwordName(), "startSword")) {
+        if (!Objects.equals(inventory.getSwordName(), "startSword")) {
             attackButton2 = new Rectangle();
             attackButton2.x = 80;
             attackButton2.y = 10;
@@ -150,22 +153,24 @@ public class FightState extends State {
         heroTexture = new Texture("characters/farmerFight.png");
         heroCurrentTexture = heroTexture;
         // Записывание текстур
+        finalFight = new Texture("fight/lastFight.png");
         trainingTexture1 = new Texture("fight/trainingWindow1.png");
         trainingTexture2 = new Texture("fight/trainingWindow2.png");
         loseButtonTexture = new Texture("fight/loseButton.png");
         exitButtonTexture = new Texture("fight/exitButton.png");
         victoryTexture = new Texture("fight/victory.png");
-        swordTextures = hero.getSwordTextures();
+        List<Texture> swordTextures = inventory.getSwordTextures();
         buttonTexture = new Texture("fight/buttonLarge.png");
         emptyEnergyTexture = new Texture("fight/emptyEnergy.png");
         fullEnergyTexture = new Texture("fight/fullEnergy.png");
         emptyTexture = new Texture("fight/empty.png");
         attackIcon = new Texture("fight/attackIcon1.png");
-        swordIcon = swordTextures.get(0);
         defenceIcon = new Texture("fight/defenceIcon.png");
-        enemyAttackSheet = new Texture(Gdx.files.internal("characters/slimeAttack.png"));
-        farmerAttackSheet = new Texture(Gdx.files.internal("fight/farmerAttack.png"));
-        swordAttackSheet = swordTextures.get(3);
+        Texture enemyAttackSheet = enemy.getAttackSheet();
+        Texture farmerAttackSheet = new Texture(Gdx.files.internal("fight/farmerAttack.png"));
+        swordIcon = swordTextures.get(0);
+        Texture swordEffectAttackSheet = swordTextures.get(1);
+        Texture swordAttackSheet = swordTextures.get(2);
         healthBackground = new Texture("fight/healthBackground.png");
         backgroundTexture = new Texture("fight/fightBackground.png");
         // Создание healthbar'а
@@ -200,18 +205,31 @@ public class FightState extends State {
             }
         }
         enemyAttackAnimation = new Animation<>(0.25f, enemyAttackFrames);
-        if (!Objects.equals(hero.getSwordName(), "startSword")) {
+        if (Objects.equals(inventory.getSwordName(), "fireSword")) {
             tmp = TextureRegion.split(swordAttackSheet,
-                    swordAttackSheet.getWidth() / FRAME_COLS_FIRE,
+                    swordAttackSheet.getWidth() / FRAME_COLS_HERO,
                     swordAttackSheet.getHeight() / FRAME_ROWS);
-            TextureRegion[] swordAttackFrames = new TextureRegion[FRAME_COLS_FIRE * FRAME_ROWS];
+            TextureRegion[] swordAttackFrames = new TextureRegion[FRAME_COLS_HERO * FRAME_ROWS];
             index = 0;
             for (int i = 0; i < FRAME_ROWS; i++) {
-                for (int j = 0; j < FRAME_COLS_FIRE; j++) {
+                for (int j = 0; j < FRAME_COLS_HERO; j++) {
                     swordAttackFrames[index++] = tmp[i][j];
                 }
             }
             swordAttackAnimation = new Animation<>(0.2f, swordAttackFrames);
+        }
+        if (Objects.equals(inventory.getSwordName(), "fireSword")) {
+            tmp = TextureRegion.split(swordEffectAttackSheet,
+                    swordEffectAttackSheet.getWidth() / FRAME_COLS_FIRE,
+                    swordEffectAttackSheet.getHeight() / FRAME_ROWS);
+            TextureRegion[] swordAttackEffectsFrames = new TextureRegion[FRAME_COLS_FIRE * FRAME_ROWS];
+            index = 0;
+            for (int i = 0; i < FRAME_ROWS; i++) {
+                for (int j = 0; j < FRAME_COLS_FIRE; j++) {
+                    swordAttackEffectsFrames[index++] = tmp[i][j];
+                }
+            }
+            swordAttackEffectsAnimation = new Animation<>(0.04f, swordAttackEffectsFrames);
         }
 
         startTimeOne = 0f;
@@ -248,7 +266,7 @@ public class FightState extends State {
                         fightStatus = 2;
                         attackNumber = 1;
                     }
-                    if (!Objects.equals(hero.getSwordName(), "startSword")) {
+                    if (Objects.equals(inventory.getSwordName(), "fireSword")) {
                         if (attackButton2.contains(new Point(Gdx.input.getX(),
                                 IndieGame.HEIGHT - Gdx.input.getY())) &&
                                 Gdx.input.justTouched() && energyCount == 3) {
@@ -272,11 +290,12 @@ public class FightState extends State {
                     startTimeTwo = stateTime;
                     fightStatus = 3;
                     if (attackNumber == 1) {
-                        enemy.setHealth(enemy.getHealth() - hero.getAttack());
+                        enemy.setHealth(enemy.getHealth() - (hero.getAttack()
+                                + inventory.getSwordAttack(inventory.getSwordName())));
                         energyCount -= 1;
                     }
                     if (attackNumber == 2) {
-                        enemy.setHealth(enemy.getHealth() - 50);
+                        enemy.setHealth(enemy.getHealth() - 100);
                         energyCount -= 3;
                     }
                     if (attackNumber != 3) attackNumber = 0;
@@ -298,24 +317,35 @@ public class FightState extends State {
             if (enemy.getHealth() == 0) winStatus = 2;
         }
         if (winStatus == 1) {
-            if (loseButton1.contains(new Point(Gdx.input.getX(), IndieGame.HEIGHT - Gdx.input.getY())) &&
-                    Gdx.input.justTouched()) {
+            if (loseButton1.contains(new Point(Gdx.input.getX(), IndieGame.HEIGHT - Gdx.input.getY()))
+                    && Gdx.input.justTouched()) {
                 hero.setHealth(hero.getHealthMax());
                 enemy.setHealth(enemy.getHealthMax());
                 winStatus = 0;
             }
-            if (loseButton2.contains(new Point(Gdx.input.getX(), IndieGame.HEIGHT - Gdx.input.getY())) &&
-                    Gdx.input.justTouched()) {
-                stateManager.set(new PlayState(stateManager, true, storyLevel, hero));
+            if (loseButton2.contains(new Point(Gdx.input.getX(), IndieGame.HEIGHT - Gdx.input.getY()))
+                    && Gdx.input.justTouched()) {
+                hero.setHealth(hero.getHealthMax());
+                stateManager.set(new PlayState(stateManager, true, storyLevel, hero, shop,
+                        false));
                 winStatus = 0;
             }
         }
         if (winStatus == 2) {
-            if (exitButton.contains(new Point(Gdx.input.getX(), IndieGame.HEIGHT - Gdx.input.getY())) &&
-                    Gdx.input.justTouched()) {
-                if (isStory) storyLevel++;
-                hero.earnMoney(10);
-                stateManager.set(new PlayState(stateManager, false, storyLevel,hero));
+            if (exitButton.contains(new Point(Gdx.input.getX(), IndieGame.HEIGHT - Gdx.input.getY()))
+                    && Gdx.input.justTouched()) {
+                if (storyLevel == 3) Gdx.app.exit();
+                if (storyLevel < 3 || storyLevel == 5) {
+                    if (isStory) storyLevel++;
+                    hero.setHealth(hero.getHealthMax());
+                    hero.enemyKill();
+                    if (hero.getEnemyKills() > 20) storyLevel = 2;
+                    hero.earnMoney(10);
+                    if (storyLevel == 2) stateManager.set(new PlayState(stateManager,
+                            PlayState.isTraining, storyLevel, hero, shop,false));
+                    stateManager.set(new PlayState(stateManager, true, storyLevel, hero, shop,
+                            false));
+                }
             }
         }
     }
@@ -342,7 +372,7 @@ public class FightState extends State {
         sb.draw(heroCurrentTexture, 10, 100);
         sb.draw(enemyCurrentTexture, 1100, 100);
         sb.draw(attackIcon, attackButton1.x, attackButton1.y);
-        if (!Objects.equals(hero.getSwordName(), "startSword")) {
+        if (Objects.equals(inventory.getSwordName(), "fireSword")) {
             sb.draw(swordIcon, attackButton2.x, attackButton2.y);
         }
         sb.draw(defenceIcon, attackButton3.x, attackButton3.y);
@@ -354,12 +384,15 @@ public class FightState extends State {
         }
         // Отрисовка атаки героя
         if (fightStatus == 2 && winStatus == 0) {
-            if (attackNumber != 0 || attackNumber != 3) {
+            if (attackNumber == 1 || attackNumber == 2) {
                 heroCurrentTexture = emptyTexture;
-                sb.draw(currentHeroFrame, 1000, 100);
-                if (!Objects.equals(hero.getSwordName(), "startSword")) {
+                if (attackNumber == 1) sb.draw(currentHeroFrame, 1000, 100);
+                if (Objects.equals(inventory.getSwordName(), "fireSword") && attackNumber == 2) {
                     TextureRegion currentSwordFrame = swordAttackAnimation.getKeyFrame(stateTime,
                             true);
+                    TextureRegion currentEffectFrame = swordAttackEffectsAnimation.getKeyFrame(stateTime,
+                            true);
+                    sb.draw(currentEffectFrame, 1000, 100);
                     sb.draw(currentSwordFrame, 1090, 95);
                 }
                 if (stateTime - 0.75 > startTimeOne) {
@@ -398,35 +431,46 @@ public class FightState extends State {
         }
         // Отрисовка описания атак
         if (fightStatus == 1) {
-            if (attackButton1.contains(new Point(Gdx.input.getX(), IndieGame.HEIGHT - Gdx.input.getY()))) {
-                fontAttackDescription.draw(sb, "Attack: " + hero.getAttack() + "\nEnergy cost: 1",
+            if (attackButton1.contains(new Point(Gdx.input.getX(),
+                    IndieGame.HEIGHT - Gdx.input.getY()))) {
+                fontAttackDescription.draw(sb, "Attack: " + (hero.getAttack() +
+                                inventory.getSwordAttack(inventory.getSwordName())) + "\nEnergy cost: 1",
                         IndieGame.WIDTH / 2 - 140, 600);
-
             }
-            if (!Objects.equals(hero.getSwordName(), "startSword")) {
+            if (Objects.equals(inventory.getSwordName(), "fireSword")) {
                 if (attackButton2.contains(new Point(Gdx.input.getX(),
                         IndieGame.HEIGHT - Gdx.input.getY()))) {
-                    fontAttackDescription.draw(sb, "Attack: 50\nEnergy cost: 3",
+                    fontAttackDescription.draw(sb, "Attack: 100\nEnergy cost: 3",
                             IndieGame.WIDTH / 2 - 140, 600);
-
                 }
             }
-            if (attackButton3.contains(new Point(Gdx.input.getX(), IndieGame.HEIGHT - Gdx.input.getY()))) {
+            if (attackButton3.contains(new Point(Gdx.input.getX(),
+                    IndieGame.HEIGHT - Gdx.input.getY()))) {
                 fontAttackDescription.draw(sb, "Save energy and give 5 defence\nEnergy cost: 0",
                         IndieGame.WIDTH / 2 - 140, 600);
             }
         }
         if (winStatus != 0) {
-            sb.draw(victoryTexture, IndieGame.WIDTH / 2 - 90, IndieGame.HEIGHT / 2);
+            if (storyLevel < 3 || storyLevel == 5)
+                sb.draw(victoryTexture, IndieGame.WIDTH / 2 - 90, IndieGame.HEIGHT / 2);
+            if (storyLevel == 3) sb.draw(finalFight, IndieGame.WIDTH / 2 - 140,
+                    IndieGame.HEIGHT / 2 - 20);
             if (winStatus == 1) {
-                fontEnergy.draw(sb, "Lose", IndieGame.WIDTH / 2 - 15, IndieGame.HEIGHT / 2 + 45);
+                fontEnergy.draw(sb, "Lose", IndieGame.WIDTH / 2 - 15,
+                        IndieGame.HEIGHT / 2 + 45);
                 sb.draw(loseButtonTexture, loseButton1.x, loseButton1.y);
                 sb.draw(exitButtonTexture, loseButton2.x, loseButton2.y);
                 fontEnergy.draw(sb, "Exit?", IndieGame.WIDTH / 2 - 15, loseButton1.y - 25);
             }
             if (winStatus == 2) {
-                fontEnergy.draw(sb, "Victory", IndieGame.WIDTH / 2 - 25, IndieGame.HEIGHT / 2 + 45);
-                fontEnergy.draw(sb, "Earn money:10", IndieGame.WIDTH / 2 - 35,  45);
+                if (storyLevel == 3)
+                    fontEnergy.draw(sb, "You end the game",
+                            IndieGame.WIDTH / 2 - 68, IndieGame.HEIGHT / 2 + 45);
+                if (storyLevel < 3 || storyLevel == 5) {
+                    fontEnergy.draw(sb, "Victory", IndieGame.WIDTH / 2 - 25,
+                            IndieGame.HEIGHT / 2 + 45);
+                    fontEnergy.draw(sb, "Earn money:10", IndieGame.WIDTH / 2 - 35, 45);
+                }
                 sb.draw(exitButtonTexture, exitButton.x, exitButton.y);
             }
         }
@@ -452,9 +496,5 @@ public class FightState extends State {
         fontHP.dispose();
         fontEnergy.dispose();
         fontAttackDescription.dispose();
-        if (!Objects.equals(hero.getSwordName(), "startSword")) {
-            swordIcon.dispose();
-            swordAttackSheet.dispose();
-        }
     }
 }
