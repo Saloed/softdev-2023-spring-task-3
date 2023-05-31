@@ -274,7 +274,10 @@ fun Plans(
                             checkmarkColor = Color(43, 0, 61)
                         )
                     )
-                    Text(text = stringResource(R.string.usefulHabit), modifier = Modifier.padding(top = 10.dp))
+                    Text(
+                        text = stringResource(R.string.usefulHabit),
+                        modifier = Modifier.padding(top = 10.dp)
+                    )
                 }
             }
         }, buttons = {
@@ -300,7 +303,8 @@ fun Plans(
                     val startOfDay = LocalDateTime.of(pickedDate, LocalTime.MIN)
                     val millis =
                         startOfDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                    val delay = pickedTime.toNanoOfDay()/1000000 + millis - System.currentTimeMillis() - 1000*60*60
+                    val delay =
+                        pickedTime.toNanoOfDay() / 1000000 + millis - System.currentTimeMillis() - 1000 * 60 * 60
                     val builder = NotificationCompat.Builder(context, channelId)
                         .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setContentTitle(":)")
@@ -311,7 +315,8 @@ fun Plans(
                     handler.postDelayed({
                         with(NotificationManagerCompat.from(context)) {
                             notify(notificationId, builder.build()) // посылаем уведомление
-                        }                    }, delay)
+                        }
+                    }, delay)
 
 
                     viewModel.planUiState = PlanUiState()
@@ -344,10 +349,13 @@ fun Plans(
                         ), contentDescription = "Image", modifier = Modifier.size(20.dp)
                     )
                 }
+                viewModel.loadPlans()
+
             } else {
                 Button(onClick = {
                     viewModel.signOut()
                     user = null
+                    viewModel.loadPlans()
                 }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(150, 100, 255))) {
                     Image(
                         painter = painterResource(
@@ -385,7 +393,13 @@ fun Plans(
                 textDecoration = TextDecoration.Underline
             )
         }, text = {
-            Text(text = "Вы выполнили ${viewModel.allDaysHabit()} (Сегодня: ${viewModel.habitDayCheckedPlans(formattedDate)}) полезных привычек")
+            Text(
+                text = "Вы выполнили ${viewModel.allDaysHabit()} (Сегодня: ${
+                    viewModel.habitDayCheckedPlans(
+                        formattedDate
+                    )
+                }) полезных привычек"
+            )
         }, buttons = {
             Row(
                 modifier = Modifier.padding(all = 8.dp),
