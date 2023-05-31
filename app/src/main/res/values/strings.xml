@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">MyTarget</string>
+    <string name="web_client_id">142245757260-75kfqgh4klj51dcbma27pnkmln0dcbfk.apps.googleusercontent.com</string>
+    <string name="ok">OK</string>
+    <string name="day">День</string>
+    <string name="week">Неделя</string>
+    <string name="month">Месяц</string>
+    <string name="taskOnWeek">Задачи на неделю</string>
+    <string name="taskOnMonth">Задачи на месяц</string>
+    <string name="whichDate">На какое число показывать задачи</string>
+    <string name="typeSort">На какой срок показать задачи</string>
+    <string name="cancel">Отменить</string>
+    <string name="choose">Выбрать</string>
+    <string name="chooseDate">Выбор даты</string>
+    <string name="chooseDate1">Выберите дату</string>
+    <string name="approve">Подтверждение</string>
+    <string name="approveDel">Подтвердить удаление заметки</string>
+    <string name="description">Описание</string>
+    <string name="taskDescription">Описание задачи</string>
+    <string name="taskName">Название задачи</string>
+    <string name="chooseColor">Выберите цвет</string>
+    <string name="addTask">Добавить задачу</string>
+    <string name="plus">+</string>
+</resources>
