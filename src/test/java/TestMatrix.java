@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.*;
 import tools.Matrix;
 
-public class MatrixT {
+public class TestMatrix {
 
     @Test
     public void additiontest(){
