@@ -117,7 +117,10 @@ fun Plans(
         mutableStateOf(LocalDate.now())
     }
     val formattedDate by remember {
-        derivedStateOf { DateTimeFormatter.ofPattern("dd MM yyyy").format(pickedDate) }
+        derivedStateOf { DateTimeFormatter.ofPattern("dd-MM-yyyy").format(pickedDate) }
+    }
+    val formattedDateforButton by remember {
+        derivedStateOf { DateTimeFormatter.ofPattern("dd MMM yyyy").format(pickedDate) }
     }
     val dateDialogState = rememberMaterialDialogState()
     val openDialog = remember { mutableStateOf(false) }
@@ -184,7 +187,7 @@ fun Plans(
             ) {
 
                 Text(
-                    text = formattedDate,
+                    text = formattedDateforButton,
                     modifier = Modifier.padding(0.dp),
                     style = MaterialTheme.typography.body2
                 )
@@ -205,9 +208,7 @@ fun Plans(
             }
 
         }
-        Column(
-            verticalArrangement = Arrangement.SpaceEvenly, horizontalAlignment = Alignment.End
-        ) {}
+
 
 
         RecyclerView(
