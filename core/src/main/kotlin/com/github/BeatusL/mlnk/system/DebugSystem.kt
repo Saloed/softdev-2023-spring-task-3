@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.github.BeatusL.mlnk.system.AttackSystem.Companion.rect
 import com.github.quillraven.fleks.IntervalSystem
 import ktx.assets.disposeSafely
 import ktx.graphics.use
@@ -28,7 +27,7 @@ class DebugSystem(
         physRender.render(oWorld, stage.camera.combined)
         hbRenderer.use(ShapeRenderer.ShapeType.Line, stage.camera.combined) {
             it.setColor(1f, 0f, 0f, 0f)
-            it.rect(rect.x, rect.y, rect.width - rect.x, rect.height - rect.y)
+//            it.rect(rect.x, rect.y, rect.width - rect.x, rect.height - rect.y)
         }
     }
 

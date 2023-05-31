@@ -26,7 +26,7 @@ class AttackSystem (
     private val oWorld: World,
 ): IteratingSystem() {
 
-
+    private val rect = Rectangle()
 
     override fun onTickEntity(entity: Entity) {
         val attackCmp = attacCmps[entity]
@@ -76,6 +76,5 @@ class AttackSystem (
     companion object {
         const val powerUpDuration = 50000000000
         private val log = logger<DeadSystem>()
-        val rect = Rectangle()
     }
 }
