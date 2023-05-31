@@ -27,8 +27,8 @@ class StorageRepository() {
                 .whereEqualTo("userId", userId)
                 .addSnapshotListener { snapshot, e ->
                     val response = if (snapshot != null) {
-                        val notes = snapshot.toObjects(Plan::class.java)
-                        Resources.Success(data = notes)
+                        val plans = snapshot.toObjects(Plan::class.java)
+                        Resources.Success(data = plans)
                     } else {
                         Resources.Error(throwable = e?.cause)
                     }
@@ -73,9 +73,12 @@ class StorageRepository() {
 
 
     }
+    fun deletePlan(planId: String){
+        plansRef.document(planId)
+            .delete()
+    }
 
-
-    fun updateNote(
+    fun updatePlan(
         planId: String,
         planDone: Boolean
     ) {

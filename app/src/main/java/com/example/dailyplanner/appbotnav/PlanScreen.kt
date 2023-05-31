@@ -28,12 +28,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.IconButton
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -79,8 +83,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun rememberFirebaseAuthLauncher(
-    onAuthComplete: (AuthResult) -> Unit,
-    onAuthError: (ApiException) -> Unit
+    onAuthComplete: (AuthResult) -> Unit, onAuthError: (ApiException) -> Unit
 ): ManagedActivityResultLauncher<Intent, ActivityResult> {
     val scope = rememberCoroutineScope()
     return rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -103,8 +106,7 @@ fun rememberFirebaseAuthLauncher(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Plans(
-    viewModel: PlansViewModel = viewModel(),
-    onAddNotify: NotificationManager
+    viewModel: PlansViewModel = viewModel(), onAddNotify: NotificationManager
 ) {
     LaunchedEffect(key1 = Unit) {
         viewModel.loadPlans()
@@ -125,20 +127,15 @@ fun Plans(
     val timeDialogState = rememberMaterialDialogState()
     val formattedTime by remember {
         derivedStateOf {
-            DateTimeFormatter
-                .ofPattern("HH:mm")
-                .format(pickedTime)
+            DateTimeFormatter.ofPattern("HH:mm").format(pickedTime)
         }
     }
     var user by remember { mutableStateOf(Firebase.auth.currentUser) }
-    val launcher = rememberFirebaseAuthLauncher(
-        onAuthComplete = { result ->
-            user = result.user
-        },
-        onAuthError = {
-            user = null
-        }
-    )
+    val launcher = rememberFirebaseAuthLauncher(onAuthComplete = { result ->
+        user = result.user
+    }, onAuthError = {
+        user = null
+    })
     val token = stringResource(R.string.default_web_client_id)
     val context = LocalContext.current
     val notificationId = 999
@@ -156,13 +153,14 @@ fun Plans(
         onAddNotify.createNotificationChannel(mChannel)
     }
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LinearProgressIndicator(
-            modifier = Modifier.height(16.dp).padding(bottom = 2.dp),
+            modifier = Modifier
+                .height(16.dp)
+                .padding(bottom = 2.dp),
             progress = viewModel.daysCheckedPlans(formattedDate),
             color = Color(150, 100, 255)
         )
@@ -174,11 +172,12 @@ fun Plans(
 
 
             Button(
-                onClick = { dateDialogState.show() }, modifier = Modifier
+                onClick = { dateDialogState.show() },
+                modifier = Modifier
                     .size(width = 150.dp, height = 35.dp)
-                    .padding(start = 10.dp), colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.White,
-                    contentColor = Color.Black
+                    .padding(start = 10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.White, contentColor = Color.Black
                 )
             ) {
 
@@ -199,18 +198,14 @@ fun Plans(
                 Image(
                     painter = painterResource(
                         id = R.drawable.add_button
-                    ),
-                    contentDescription = "Image",
-                    modifier = Modifier.size(20.dp)
+                    ), contentDescription = "Image", modifier = Modifier.size(20.dp)
                 )
             }
 
         }
         Column(
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.End
-        ) {
-        }
+            verticalArrangement = Arrangement.SpaceEvenly, horizontalAlignment = Alignment.End
+        ) {}
 
 
         RecyclerView(
@@ -218,29 +213,22 @@ fun Plans(
             viewModel = viewModel(),
         )
     }
-    MaterialDialog(
-        dialogState = timeDialogState,
-        buttons = {
-            positiveButton(text = "Ok") {
-            }
-            negativeButton(text = "Cancel")
-        }
-    ) {
+    MaterialDialog(dialogState = timeDialogState, buttons = {
+        positiveButton(text = "Ok") {}
+        negativeButton(text = "Cancel")
+    }) {
         timepicker(
 
-            title = "Pick a time",
-            is24HourClock = true
+            title = "Pick a time", is24HourClock = true
         ) {
             pickedTime = it
         }
     }
 
-    MaterialDialog(
-        dialogState = dateDialogState,
-        buttons = {
-            positiveButton(text = "Ok")
-            negativeButton(text = "Cancel")
-        }) {
+    MaterialDialog(dialogState = dateDialogState, buttons = {
+        positiveButton(text = "Ok")
+        negativeButton(text = "Cancel")
+    }) {
         datepicker(
             initialDate = LocalDate.now(),
             title = ("Выберите день"),
@@ -254,102 +242,85 @@ fun Plans(
 
 
     if (openDialog.value) {
-        AlertDialog(
-            onDismissRequest = {
-                openDialog.value = false
-            },
-            title = {
-                Text(text = "Добавить план")
-            },
-            text = {
-                Column {
+        AlertDialog(onDismissRequest = {
+            openDialog.value = false
+        }, title = {
+            Text(text = "Добавить план")
+        }, text = {
+            Column {
 
-                    Button(
-                        onClick = { timeDialogState.show() },
-                        modifier = Modifier
-                            .size(height = 40.dp, width = 70.dp)
-                            .padding(bottom = 5.dp), colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(150, 100, 255),
-                            contentColor = Color.Black
-                        )
-                    ) {
-                        Text(text = formattedTime, style = MaterialTheme.typography.body2)
-                    }
-                    TextField(
-                        value = viewModel.planUiState.planText,
-                        onValueChange = { viewModel.onTextChange(it) }
+                Button(
+                    onClick = { timeDialogState.show() },
+                    modifier = Modifier
+                        .size(height = 40.dp, width = 70.dp)
+                        .padding(bottom = 5.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color(150, 100, 255), contentColor = Color.Black
                     )
-
-                    Row(modifier = Modifier.wrapContentSize()) {
-                        Checkbox(
-                            checked = viewModel.planUiState.useful_habit,
-                            onCheckedChange = { viewModel.onHabitChange(it) },
-                            colors = CheckboxDefaults.colors(
-                                checkedColor = Color(255, 255, 255),
-                                checkmarkColor = Color(43, 0, 61)
-                            )
-                        )
-                        Text(text = "Полезная привычка", modifier = Modifier.padding(top = 10.dp))
-                    }
-                }
-            },
-            buttons = {
-                Row(
-                    modifier = Modifier.padding(all = 8.dp),
-                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Button(
-                        modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(150, 100, 255),
-                            contentColor = Color.Black
-                        ),
-                        onClick = {
-                            viewModel.onTimeChange(formattedTime)
-                            viewModel.onDateChange(formattedDate)
-                            openDialog.value = false
-                            viewModel.addPlan()
-                            viewModel.loadPlans()
-                            val intent = Intent(context, Plan::class.java).apply {
-                                flags =
-                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            }
-                            val pendingIntent: PendingIntent = PendingIntent.getActivity(
-                                context,
-                                0,
-                                intent,
-                                PendingIntent.FLAG_MUTABLE
-                            )
+                    Text(text = formattedTime, style = MaterialTheme.typography.body2)
+                }
+                TextField(value = viewModel.planUiState.planText,
+                    onValueChange = { viewModel.onTextChange(it) })
 
-                            val startOfDay = LocalDateTime.of(pickedDate, LocalTime.MIN)
-                            val millis =
-                                startOfDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                            val builder = NotificationCompat.Builder(context, channelId)
-                                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                                .setContentTitle("План через час")
-                                .setContentText("Вы запланировали через час ${viewModel.planUiState.planText}")
-                                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                .setWhen(pickedTime.toNanoOfDay() / 1000000 + millis - 1000 * 60 * 60)
-                                .setContentIntent(pendingIntent)
-                                .setGroupSummary(true)
-
-
-                            with(NotificationManagerCompat.from(context)) {
-                                notify(notificationId, builder.build()) // посылаем уведомление
-                            }
-
-
-                        }
-                    ) {
-                        Text("Добавить")
-                    }
+                Row(modifier = Modifier.wrapContentSize()) {
+                    Checkbox(
+                        checked = viewModel.planUiState.useful_habit,
+                        onCheckedChange = { viewModel.onHabitChange(it) },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = Color(255, 255, 255),
+                            checkmarkColor = Color(43, 0, 61)
+                        )
+                    )
+                    Text(text = "Полезная привычка", modifier = Modifier.padding(top = 10.dp))
                 }
             }
-        )
+        }, buttons = {
+            Row(
+                modifier = Modifier.padding(all = 8.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color(150, 100, 255), contentColor = Color.Black
+                ), onClick = {
+                    viewModel.onTimeChange(formattedTime)
+                    viewModel.onDateChange(formattedDate)
+                    openDialog.value = false
+                    viewModel.addPlan()
+                    viewModel.loadPlans()
+                    val intent = Intent(context, Plan::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    val pendingIntent: PendingIntent = PendingIntent.getActivity(
+                        context, 0, intent, PendingIntent.FLAG_MUTABLE
+                    )
+
+                    val startOfDay = LocalDateTime.of(pickedDate, LocalTime.MIN)
+                    val millis =
+                        startOfDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    val builder = NotificationCompat.Builder(context, channelId)
+                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+                        .setContentTitle("План через час")
+                        .setContentText("Вы запланировали через час ${viewModel.planUiState.planText}")
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setWhen(pickedTime.toNanoOfDay() / 1000000 + millis - 1000 * 60 * 60)
+                        .setContentIntent(pendingIntent).setGroupSummary(true)
+
+
+                    with(NotificationManagerCompat.from(context)) {
+                        notify(notificationId, builder.build()) // посылаем уведомление
+                    }
+                    viewModel.planUiState = PlanUiState()
+
+                }) {
+                    Text("Добавить")
+                }
+            }
+        })
 
     }
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Bottom
+        modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom
     ) {
         Row(
             Modifier.fillMaxWidth(),
@@ -358,20 +329,15 @@ fun Plans(
         ) {
             if (user == null) {
                 Button(onClick = {
-                    val gso =
-                        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                            .requestIdToken(token)
-                            .requestEmail()
-                            .build()
+                    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(token).requestEmail().build()
                     val googleSignInClient = GoogleSignIn.getClient(context, gso)
                     launcher.launch(googleSignInClient.signInIntent)
                 }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(150, 100, 255))) {
                     Image(
                         painter = painterResource(
                             id = R.drawable.google
-                        ),
-                        contentDescription = "Image",
-                        modifier = Modifier.size(20.dp)
+                        ), contentDescription = "Image", modifier = Modifier.size(20.dp)
                     )
                 }
             } else {
@@ -382,9 +348,7 @@ fun Plans(
                     Image(
                         painter = painterResource(
                             id = R.drawable.google
-                        ),
-                        contentDescription = "Image",
-                        modifier = Modifier.size(20.dp)
+                        ), contentDescription = "Image", modifier = Modifier.size(20.dp)
                     )
                 }
             }
@@ -396,9 +360,7 @@ fun Plans(
                 Image(
                     painter = painterResource(
                         id = R.drawable.profile_icon
-                    ),
-                    contentDescription = "Image",
-                    modifier = Modifier.size(20.dp)
+                    ), contentDescription = "Image", modifier = Modifier.size(20.dp)
                 )
             }
 
@@ -410,40 +372,30 @@ fun Plans(
 
 
     if (openProfile.value) {
-        AlertDialog(
-            onDismissRequest = {
-                openDialog.value = false
-            },
-            modifier = Modifier.wrapContentSize(),
-            title = {
-                Text(
-                    if (user != null) user!!.displayName.toString() else "Войдите в аккаунт",
-                    style = MaterialTheme.typography.h5,
-                    textDecoration = TextDecoration.Underline
-                )
-            },
-            text = {
-                Text(text = "За сегодня вы выполнили ${viewModel.habitCheckedPlans(formattedDate)} полезных привычек")
-            },
-            buttons = {
-                Row(
-                    modifier = Modifier.padding(all = 8.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Button(
-                        modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(150, 100, 255),
-                            contentColor = Color.Black
-                        ),
-                        onClick = {
-                            openProfile.value = false
-                        }
-                    ) {
-                        Text("Закрыть")
-                    }
+        AlertDialog(onDismissRequest = {
+            openDialog.value = false
+        }, modifier = Modifier.wrapContentSize(), title = {
+            Text(
+                if (user != null) user!!.displayName.toString() else "Войдите в аккаунт",
+                style = MaterialTheme.typography.h5,
+                textDecoration = TextDecoration.Underline
+            )
+        }, text = {
+            Text(text = "За сегодня вы выполнили ${viewModel.habitCheckedPlans(formattedDate)} полезных привычек")
+        }, buttons = {
+            Row(
+                modifier = Modifier.padding(all = 8.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color(150, 100, 255), contentColor = Color.Black
+                ), onClick = {
+                    openProfile.value = false
+                }) {
+                    Text("Закрыть")
                 }
             }
-        )
+        })
 
     }
 }
@@ -455,6 +407,9 @@ fun ListItem(
 ) {
 
     val checkboxChanged = remember {
+        mutableStateOf(false)
+    }
+    var showDeleteConfirm by remember {
         mutableStateOf(false)
     }
     Surface(
@@ -473,41 +428,70 @@ fun ListItem(
                 }
 
                 Checkbox(
-                    checked = viewModel.getPlan(plan.documentId).planDone,
-                    onCheckedChange = {
+                    checked = viewModel.getPlan(plan.documentId).planDone, onCheckedChange = {
                         viewModel.getPlan(plan.documentId).planDone = it; checkboxChanged.value =
                         true
-                    },
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = Color(255, 255, 255),
-                        checkmarkColor = Color(43, 0, 61)
+                    }, colors = CheckboxDefaults.colors(
+                        checkedColor = Color(255, 255, 255), checkmarkColor = Color(43, 0, 61)
                     )
                 )
+                IconButton(onClick = { showDeleteConfirm = true }) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                }
             }
-            if (checkboxChanged.value) {
-                viewModel.updatePlan(
-                    viewModel.getPlan(plan.documentId).documentId,
-                )
-                checkboxChanged.value = false
-            }
-            Column(
-                modifier = Modifier.padding(
-                )
-
-            ) {
+            Column() {
 
                 Text(text = plan.planText)
-                if (plan.useful_habit)
-                    Image(
-                        painter = painterResource(id = R.drawable.usefulhabit),
-                        contentDescription = "Image",
-                    )
+                if (plan.useful_habit) Image(
+                    painter = painterResource(id = R.drawable.usefulhabit),
+                    contentDescription = "Image",
+                )
 
             }
         }
+
+        if (showDeleteConfirm) {
+            AlertDialog(
+                modifier = Modifier.wrapContentSize(),
+                onDismissRequest = { showDeleteConfirm = false },
+                text = {
+                    Text("Вы дейставительно хотите удалить план?")
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            showDeleteConfirm = false
+                            viewModel.deletePlan(plan.documentId)
+                        }, colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(150, 100, 255)
+                        )
+                    ) {
+                        Text("Да")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            showDeleteConfirm = false
+                        }, colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(150, 100, 255)
+                        )
+                    ) {
+                        Text("Нет")
+                    }
+                }
+            )
+        }
+    }
+    if (checkboxChanged.value) {
+        viewModel.updatePlan(
+            viewModel.getPlan(plan.documentId).documentId,
+        )
+        checkboxChanged.value = false
     }
 
 }
+
 
 //"$day - ${month + 1} - $year"
 
@@ -518,21 +502,23 @@ fun RecyclerView(
 ) {
 
     LazyColumn(
-        modifier = Modifier
-            .padding(bottom = 55.dp)
+        modifier = Modifier.padding(bottom = 55.dp)
     ) {
         items(items = viewModel.getCurrentDayPlans(currentDay)) { plan ->
             ListItem(
                 Plan(
                     plan.userId,
                     currentDay,
-                    plan.time, plan.planText, plan.useful_habit,
-                    plan.planDone, plan.documentId
+                    plan.time,
+                    plan.planText,
+                    plan.useful_habit,
+                    plan.planDone,
+                    plan.documentId
                 ),
 
                 viewModel = viewModel,
 
-            )
+                )
         }
     }
 

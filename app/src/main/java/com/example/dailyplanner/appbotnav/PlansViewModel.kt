@@ -79,10 +79,13 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
         planId: String,
 
     ){
-        repository.updateNote(
+        repository.updatePlan(
            planId = planId,
             planDone = getPlan(planId).planDone
         )
+    }
+    fun deletePlan(id : String){
+        repository.deletePlan(id)
     }
 
 
