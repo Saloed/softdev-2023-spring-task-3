@@ -394,7 +394,7 @@ fun Plans(
             )
         }, text = {
             Text(
-                text = "Вы выполнили ${viewModel.allDaysHabit()} (Сегодня: ${
+                text = "Вы выполнили ${viewModel.allDaysHabit()} (В этот день : ${
                     viewModel.habitDayCheckedPlans(
                         formattedDate
                     )
@@ -510,8 +510,6 @@ fun ListItem(
 
 }
 
-
-//"$day - ${month + 1} - $year"
 
 @Composable
 fun RecyclerView(
