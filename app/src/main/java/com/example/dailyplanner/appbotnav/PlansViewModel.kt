@@ -61,7 +61,7 @@ class PlansViewModel(private val repository: StorageRepository = StorageReposito
     fun onHabitChange(habit: Boolean) {
         planUiState = planUiState.copy(useful_habit = habit)
     }
-    
+
 
 
     fun addPlan() {
