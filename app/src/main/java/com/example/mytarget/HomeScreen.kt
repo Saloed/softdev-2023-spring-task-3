@@ -68,16 +68,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTargetApp(
-    viewModel: NewTasksViewModel = viewModel(),
-    onAddTask: () -> Unit,
-    onComplete:(Boolean) -> Unit
+    viewModel: NewTasksViewModel = viewModel()
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var textFieldHeader by remember { mutableStateOf("") }
@@ -389,7 +386,7 @@ fun TasksListItem(
 ) {
     var showDialogDescription by remember { mutableStateOf(false) }
     var showDeleteConfirm by remember{ mutableStateOf(false) }
-    var checkboxChanged = remember { mutableStateOf(false) }
+    val checkboxChanged = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .background(color = Color(task.taskColor).copy(0.5f))
@@ -401,11 +398,25 @@ fun TasksListItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Checkbox(checked = viewModel.getTask(task.documentId).isComplete, onCheckedChange = {viewModel.getTask(task.documentId).isComplete = it; checkboxChanged.value = true})
+
+//            Checkbox(
+//                checked = viewModel.taskUiState.isComplete,
+//                onCheckedChange = { isChecked ->
+//                    viewModel.onComplete(isChecked)
+//                    viewModel.updateTask(task.documentId)
+//                }
+//            )
+
+            Checkbox(
+                checked = viewModel.getTask(task.documentId).isComplete, onCheckedChange = {
+                    viewModel.getTask(task.documentId).isComplete = it; checkboxChanged.value =
+                    true
+                }
+            )
 
             if (checkboxChanged.value) {
                 viewModel.updateTask(
-                    viewModel.getTask(task.documentId).documentId
+                    viewModel.getTask(task.documentId).documentId,
                 )
                 checkboxChanged.value = false
             }
@@ -474,51 +485,31 @@ fun TasksListItem(
 }
 
 @Composable
-fun TaskList(viewModel: NewTasksViewModel,date: LocalDate, sort: TypeOfSort) {
-    LazyColumn {
-        if (sort == TypeOfSort.DAY) {
-            items(items = viewModel.getCurrentDayPlans(convertToTimestamp(date))) { task ->
-                TasksListItem(
-                    Task(task.userId,
-                        task.taskName,
-                        task.taskDescription,
-                        task.date,
-                        task.isComplete,
-                        task.taskColor,
-                        task.documentId),
-                    viewModel = viewModel
-                )
-            }
-        }
+fun TaskList(
+    viewModel: NewTasksViewModel,
+    date: LocalDate,
+    sort: TypeOfSort
+) {
+    val tasks = when (sort) {
+        TypeOfSort.DAY -> viewModel.getCurrentDayPlans(convertToTimestamp(date))
+        TypeOfSort.WEEK -> viewModel.getTasksForCurrentWeek(viewModel.taskListUiState.taskList.data!!)
+        TypeOfSort.MONTH -> viewModel.getTasksForCurrentMonth(viewModel.taskListUiState.taskList.data!!)
+    }
 
-        if (sort == TypeOfSort.WEEK) {
-            items(items = viewModel.getTasksForCurrentWeek(viewModel.taskListUiState.taskList.data!!)) { task ->
-                TasksListItem(
-                    Task(task.userId,
+    LazyColumn {
+        items(items = tasks) { task ->
+            TasksListItem(
+                Task(
+                    task.userId,
                     task.taskName,
                     task.taskDescription,
                     task.date,
                     task.isComplete,
                     task.taskColor,
-                    task.documentId),
-                    viewModel = viewModel
-                )
-            }
-        }
-
-        if (sort == TypeOfSort.MONTH) {
-            items(items = viewModel.getTasksForCurrentMonth(viewModel.taskListUiState.taskList.data!!)) { task ->
-                TasksListItem(
-                    Task(task.userId,
-                        task.taskName,
-                        task.taskDescription,
-                        task.date,
-                        task.isComplete,
-                        task.taskColor,
-                        task.documentId),
-                    viewModel = viewModel
-                )
-            }
+                    task.documentId
+                ),
+                viewModel = viewModel
+            )
         }
     }
 }

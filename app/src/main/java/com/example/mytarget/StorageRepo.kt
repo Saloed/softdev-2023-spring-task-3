@@ -12,11 +12,8 @@ import kotlinx.coroutines.flow.callbackFlow
 
 const val TASKS_COLLECTION_REF = "tasks"
 
-class StorageRepo() {
-    val user = Firebase.auth.currentUser
+class StorageRepo {
     fun hasUser(): Boolean = Firebase.auth.currentUser != null
-
-    fun getUserId(): String = Firebase.auth.currentUser?.uid.orEmpty()
 
     private val tasksRef: CollectionReference = Firebase.firestore.collection(TASKS_COLLECTION_REF)
 

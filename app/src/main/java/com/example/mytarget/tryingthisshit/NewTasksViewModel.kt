@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import com.example.mytarget.StorageRepo
 import com.example.mytarget.Task
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import java.util.Date
@@ -25,9 +24,6 @@ class NewTasksViewModel(private val repository: StorageRepo = StorageRepo()):Vie
 
     private val hasUser: Boolean
         get() = repository.hasUser()
-
-    private val user: FirebaseUser?
-        get() = repository.user
 
     private fun userId() = Firebase.auth.currentUser?.uid.orEmpty()
 
@@ -74,7 +70,7 @@ class NewTasksViewModel(private val repository: StorageRepo = StorageRepo()):Vie
         )
     }
 
-    fun getTask(id: String): Task {
+     fun getTask(id: String): Task {
         val taskList =  taskListUiState.taskList.data!!
         return taskList.first{it.documentId == id}
     }
@@ -127,12 +123,11 @@ class NewTasksViewModel(private val repository: StorageRepo = StorageRepo()):Vie
         }
     }
 
-    fun toLocalDate(date: Timestamp): LocalDate {
-        val localDate = date.toDate()
+    private fun toLocalDate(date: Timestamp): LocalDate {
+        return date.toDate()
             .toInstant()
             .atZone(ZoneId.systemDefault())
             .toLocalDate()
-        return localDate
     }
 
 }

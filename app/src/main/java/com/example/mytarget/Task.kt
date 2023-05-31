@@ -1,6 +1,5 @@
 package com.example.mytarget
 
-import androidx.compose.ui.graphics.Color
 import com.google.firebase.Timestamp
 import java.util.Date
 
