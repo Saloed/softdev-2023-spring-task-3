@@ -117,7 +117,7 @@ fun Plans(
         mutableStateOf(LocalDate.now())
     }
     val formattedDate by remember {
-        derivedStateOf { DateTimeFormatter.ofPattern("dd MMM yyyy").format(pickedDate) }
+        derivedStateOf { DateTimeFormatter.ofPattern("dd MM yyyy").format(pickedDate) }
     }
     val dateDialogState = rememberMaterialDialogState()
     val openDialog = remember { mutableStateOf(false) }
