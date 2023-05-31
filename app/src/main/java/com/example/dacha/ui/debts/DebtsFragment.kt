@@ -4,7 +4,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,18 +13,19 @@ import com.example.dacha.R
 import com.example.dacha.data.model.*
 import com.example.dacha.databinding.FragmentDebtsBinding
 import com.example.dacha.ui.home.HomeViewModel
+import com.example.dacha.ui.products.ProductsViewModel
 import com.example.dacha.utils.*
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class DebtsFragment : Fragment() {
 
 
     val viewModel: DebtsViewModel by viewModels()
-    val homeVM: HomeViewModel by viewModels()
+    private val homeVM: HomeViewModel by viewModels()
+    private val productsVM: ProductsViewModel by viewModels()
     lateinit var binding: FragmentDebtsBinding
     var events = listOf<EventModel>()
     var people = listOf<PersonModel>()
@@ -34,12 +34,11 @@ class DebtsFragment : Fragment() {
     private val boughtProducts = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
     private val paidProducts = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
     val adapter by lazy {
-        DebtsViewPagerAdapter(onDebtClicked = { pos, name ->
+        DebtsViewPagerAdapter(onDebtClicked = { name ->
             onDebtClicked(
-                pos,
                 name
             )
-        }, onDebtLongClicked = { pos, name, debt -> onDebtLongClicked(pos, name, debt) })
+        }, onDebtLongClicked = { name, debt -> onDebtLongClicked(name, debt) })
     }
 
     override fun onCreateView(
@@ -48,8 +47,8 @@ class DebtsFragment : Fragment() {
     ): View {
         binding = FragmentDebtsBinding.inflate(inflater, container, false)
         homeVM.getPerson()
-        viewModel.getPeople()
-        viewModel.getEvents()
+        homeVM.getPeople()
+        productsVM.getEvents()
         viewModel.getTransactions()
 
         return binding.root
@@ -73,14 +72,15 @@ class DebtsFragment : Fragment() {
                 }
                 is UiState.Success -> {
                     binding.progressBar.hide()
-                    person = state.data!!
+                    if (state.data == null) toast(getString(R.string.go_login))
+                    else person = state.data
                 }
                 else -> {
                     binding.progressBar.show()
                 }
             }
         }
-        viewModel.people.observe(viewLifecycleOwner) { state ->
+        homeVM.people.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
                     binding.progressBar.show()
@@ -98,7 +98,7 @@ class DebtsFragment : Fragment() {
                 }
             }
         }
-        viewModel.events.observe(viewLifecycleOwner) { state ->
+        productsVM.events.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
                     binding.progressBar.show()
@@ -110,7 +110,7 @@ class DebtsFragment : Fragment() {
                 is UiState.Success -> {
                     binding.progressBar.hide()
                     events = state.data
-                    countDebts(events)
+                    getRawProducts(events)
                     adapter.updateEvents(events)
                 }
                 else -> {
@@ -138,18 +138,18 @@ class DebtsFragment : Fragment() {
         }
     }
 
-    private fun onDebtClicked(pos: Int, name: String) {
+    private fun onDebtClicked(name: String) {
         people.forEach {
             if (name == it.name) {
                 val clipboard = context?.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("Номер", it.number)
                 clipboard.setPrimaryClip(clip)
-                toast("Банк: ${it.bank}\nНомер скопирован")
+                toast(getString(R.string.bank, "${it.bank}\nНомер скопирован"))
             }
         }
     }
 
-    private fun onDebtLongClicked(pos: Int, name: String, debt: DebtModel) {
+    private fun onDebtLongClicked(name: String, debt: DebtModel) {
         var from = PersonModel()
         var to = PersonModel()
         people.forEach {
@@ -168,16 +168,17 @@ class DebtsFragment : Fragment() {
             homeVM.addNews(
                 news(
                     person,
-                    "Добавил(а) перевод ${transaction.from?.name} - ${transaction.to?.name} (${transaction.howMuch}P)"
+                    "${getString(R.string.add_transaction)} ${transaction.from?.name} - ${transaction.to?.name} (${transaction.howMuch} P)"
                 )
             )
+            toast(getString(R.string.transaction) + " " + getString(R.string.added))
             viewModel.getTransactions()
             dialog.dismiss()
         }
         dialog.show()
     }
 
-    private fun countDebts(events: List<EventModel>) {
+    private fun getRawProducts(events: List<EventModel>) {
         val rawProducts =
             mutableMapOf<String, MutableMap<String, MutableList<ResultProductModel>>>()
         for (event in events) {
@@ -208,9 +209,12 @@ class DebtsFragment : Fragment() {
             paidProducts[event.eInfo?.eKey.toString()] = eventPaid
             rawProducts[event.eInfo?.eKey.toString()] = resultProducts
         }
+        getDebts(rawProducts)
+    }
+
+    private fun getDebts(rawProducts: MutableMap<String, MutableMap<String, MutableList<ResultProductModel>>>) {
         val debts = mutableMapOf<String, MutableMap<String, MutableMap<String, Double>>>()
         val backMoney = mutableMapOf<String, MutableMap<String, Pair<Double, Double>>>()
-        val transfers = mutableMapOf<String, MutableList<DebtModel>>()
         rawProducts.forEach { event ->
             val eventDebts = mutableMapOf<String, MutableMap<String, Double>>()
             val eventBackMoney = mutableMapOf<String, Pair<Double, Double>>()
@@ -242,6 +246,14 @@ class DebtsFragment : Fragment() {
             backMoney[event.key] = eventBackMoney
             debts[event.key] = eventDebts
         }
+        getTransfers(debts, backMoney)
+    }
+
+    private fun getTransfers(
+        debts: Map<String, MutableMap<String, MutableMap<String, Double>>>,
+        backMoney: MutableMap<String, MutableMap<String, Pair<Double, Double>>>
+    ) {
+        val transfers = mutableMapOf<String, MutableList<DebtModel>>()
         debts.forEach { event ->
             var eventBackMoney = backMoney[event.key] as MutableMap<String, Pair<Double, Double>>
             var payers = mutableListOf<Pair<String, Double>>()

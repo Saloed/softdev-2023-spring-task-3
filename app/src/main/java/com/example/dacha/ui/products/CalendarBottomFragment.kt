@@ -186,7 +186,7 @@ class CalendarBottomFragment(private val rawEvents: List<EventModel>, private va
                 is UiState.Success -> {
                     isSuccessAddTask = true
                     binding.progressBar.hide()
-                    toast(state.data.second)
+                    toast(getString(R.string.event) + " " + getString(R.string.chosen))
                     this.dismiss()
                 }
             }

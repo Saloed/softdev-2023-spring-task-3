@@ -2,7 +2,6 @@ package com.example.dacha.ui.products
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,11 +23,11 @@ class ProductsFragment : Fragment() {
     private val homeVM: HomeViewModel by viewModels()
     lateinit var binding: FragmentProductsBinding
     val adapter by lazy {
-        PlanProductAdapter(onProductClicked = { pos, item -> onProductClicked(pos, item) })
+        PlanProductAdapter(onProductClicked = { item -> onProductClicked(item) })
     }
 
     private val purchaseAdapter by lazy {
-        PurchaseAdapter(onPurchaseClicked = { pos, item -> onPurchaseClicked(pos, item) })
+        PurchaseAdapter(onPurchaseClicked = { item -> onPurchaseClicked(item) })
     }
 
     var person = PersonModel()
@@ -122,37 +121,39 @@ class ProductsFragment : Fragment() {
             }
         }
 
-        binding.btnAddPlanProduct.setOnClickListener {
-            val planProductBottomFragment = PlanProductBottomFragment(
-                null,
-                chosenEvent?.ePeople ?: emptyList(),
-                chosenEventId.toString(),
-                person
-            )
+        if (chosenEventId.isNullOrEmpty()) {
+            binding.btnAddPlanProduct.setOnClickListener {
+                val planProductBottomFragment = PlanProductBottomFragment(
+                    null,
+                    chosenEvent?.ePeople ?: emptyList(),
+                    chosenEventId.toString(),
+                    person
+                )
 
-            planProductBottomFragment.setDismissListener {
-                if (it) {
-                    viewModel.getPlanProducts(chosenEventId.toString())
+                planProductBottomFragment.setDismissListener {
+                    if (it) {
+                        viewModel.getPlanProducts(chosenEventId.toString())
+                    }
                 }
+                planProductBottomFragment.show(childFragmentManager, "add plan product")
             }
-            planProductBottomFragment.show(childFragmentManager, "add plan product")
-        }
 
-        binding.btnAddPurchase.setOnClickListener {
-            val purchaseBottomFragment = PurchaseBottomFragment(
-                null,
-                planProducts,
-                chosenEvent?.ePeople ?: emptyList(),
-                chosenEvent as EventModel,
-                person
-            )
-            purchaseBottomFragment.setDismissListener {
-                if (it) {
-                    viewModel.getPlanProducts(chosenEventId.toString())
-                    viewModel.getPurchases(chosenEventId.toString())
+            binding.btnAddPurchase.setOnClickListener {
+                val purchaseBottomFragment = PurchaseBottomFragment(
+                    null,
+                    planProducts,
+                    chosenEvent?.ePeople ?: emptyList(),
+                    chosenEvent as EventModel,
+                    person
+                )
+                purchaseBottomFragment.setDismissListener {
+                    if (it) {
+                        viewModel.getPlanProducts(chosenEventId.toString())
+                        viewModel.getPurchases(chosenEventId.toString())
+                    }
                 }
+                purchaseBottomFragment.show(childFragmentManager, "add purchase")
             }
-            purchaseBottomFragment.show(childFragmentManager, "add purchase")
         }
         viewModel.getChosenEvent()
         binding.rvPlanProducts.layoutManager = LinearLayoutManager(requireContext())
@@ -176,7 +177,8 @@ class ProductsFragment : Fragment() {
                 }
                 is UiState.Success -> {
                     binding.progressBar.hide()
-                    person = state.data!!
+                    if (state.data == null) toast(getString(R.string.go_login))
+                    else person = state.data
                 }
                 else -> {
                     binding.progressBar.show()
@@ -283,7 +285,7 @@ class ProductsFragment : Fragment() {
         }
     }
 
-    private fun onProductClicked(pos: Int, item: PlanProductModel) {
+    private fun onProductClicked(item: PlanProductModel) {
         val planProductBottomFragment = PlanProductBottomFragment(
             item,
             chosenEvent?.ePeople ?: emptyList(),
@@ -298,7 +300,7 @@ class ProductsFragment : Fragment() {
         planProductBottomFragment.show(childFragmentManager, "change plan product")
     }
 
-    private fun onPurchaseClicked(pos: Int, item: PurchaseModel) {
+    private fun onPurchaseClicked(item: PurchaseModel) {
         val purchaseBottomFragment = PurchaseBottomFragment(
             item,
             planProducts,
@@ -362,13 +364,13 @@ class ProductsFragment : Fragment() {
                     break
                 } else {
                     chosenEvent = null
-                    binding.tvEventName.text = "Ничего не выбрано"
+                    binding.tvEventName.text = getString(R.string.nothing_chosen)
                     binding.tvEventDate.text = ""
                 }
             }
         } else {
             chosenEvent = null
-            binding.tvEventName.text = "Ничего не выбрано"
+            binding.tvEventName.text = getString(R.string.nothing_chosen)
             binding.tvEventDate.text = ""
         }
     }

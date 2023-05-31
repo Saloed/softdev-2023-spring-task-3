@@ -1,6 +1,5 @@
 package com.example.dacha.ui.dashboard
 
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import com.example.dacha.R
 import com.example.dacha.databinding.GalleryItemBinding
 import com.squareup.picasso.Picasso
 
-class GalleryAdapter(val onDeleteClicked: (Int, String) -> Unit):
+class GalleryAdapter(val onDeleteClicked: (String) -> Unit):
     RecyclerView.Adapter<GalleryAdapter.GalleryHolder>() {
 
     private var list: MutableList<String> = arrayListOf()
@@ -19,7 +18,7 @@ class GalleryAdapter(val onDeleteClicked: (Int, String) -> Unit):
             Picasso.get().load(photo).into(binding.iVP)
             binding.deletePhoto.setImageResource(R.drawable.baseline_clear_24)
             binding.deletePhoto.setOnClickListener {
-                onDeleteClicked.invoke(bindingAdapterPosition, photo)
+                onDeleteClicked.invoke(photo)
             }
         }
     }

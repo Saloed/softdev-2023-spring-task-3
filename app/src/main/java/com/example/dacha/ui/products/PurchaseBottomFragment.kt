@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +26,6 @@ import com.example.dacha.utils.*
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDateTime
 
 
 @AndroidEntryPoint
@@ -41,7 +39,7 @@ class PurchaseBottomFragment(
 
     lateinit var binding: PurchaseBottomSheetBinding
     val viewModel: ProductsViewModel by viewModels()
-    val homeVM: HomeViewModel by viewModels()
+    private val homeVM: HomeViewModel by viewModels()
     var closeFunction: ((Boolean) -> Unit)? = null
     var isSuccessAddTask: Boolean = false
 
@@ -56,6 +54,10 @@ class PurchaseBottomFragment(
 
     private val pProdToDelete = mutableMapOf<String, PlanProductModel>()
     private val pProdToAdd = mutableMapOf<String, PlanProductModel>()
+
+    private val bigSize = 8
+    private val bigHeight = 1200
+    private val bigWidth = 0
 
     var fullList = mutableListOf<String>()
 
@@ -89,8 +91,8 @@ class PurchaseBottomFragment(
         val payerPicker = binding.personFilledExposed
         val tvMarket = binding.etPurchaseMarket
         if (purchase == null) {
-            tvMarket.hint = "Магазин"
-            payerPicker.hint = "Кто оплатил"
+            tvMarket.hint = getString(R.string.market)
+            payerPicker.hint = getString(R.string.who_buy)
         } else {
             tvMarket.hint = purchase.purchaseInfo?.market
             payerPicker.hint = purchase.purchaseInfo?.paid?.name
@@ -118,10 +120,10 @@ class PurchaseBottomFragment(
         )
         lvProducts.adapter = lvAdapter
 
-        if (fullList.size > 8) {
+        if (fullList.size > bigSize) {
             val params = lvProducts.layoutParams
-            params.height = 1200
-            params.width = 0
+            params.height = bigHeight
+            params.width = bigWidth
             lvProducts.layoutParams = params
         }
 
@@ -139,9 +141,6 @@ class PurchaseBottomFragment(
             }
         }
 
-
-
-
         return binding.root
     }
 
@@ -157,16 +156,12 @@ class PurchaseBottomFragment(
             launcher.launch(ImagePickerConfig {
                 mode = ImagePickerMode.SINGLE
                 returnMode = ReturnMode.ALL
-                arrowColor = R.color.new_status_bar
-                imageTitle = "Выберите фото"
+                arrowColor = R.color.white
+                imageTitle = getString(R.string.choose_photo)
                 theme = R.style.Theme_Dacha
-                doneButtonText = "Готово"
+                doneButtonText = getString(R.string.done)
             }
             )
-        }
-
-        binding.addResultDialogBtn.setOnClickListener {
-
         }
 
         binding.purchaseDoneBtn.setOnClickListener {
@@ -196,14 +191,14 @@ class PurchaseBottomFragment(
                 is UiState.Success -> {
                     isSuccessAddTask = true
                     binding.progressBar.hide()
-                    toast(state.data.second)
                     updatePlans(pProdToDelete.values.toList(), pProdToAdd.values.toList())
                     homeVM.addNews(
                         news(
                             person,
-                            "Добавил(а) покупку в магазине ${state.data.first.purchaseInfo?.market}"
+                            "${getString(R.string.add_purchase)} ${state.data.purchaseInfo?.market}"
                         )
                     )
+                    toast(getString(R.string.purchase) + " " + getString(R.string.added))
                     this.dismiss()
                 }
             }
@@ -220,14 +215,14 @@ class PurchaseBottomFragment(
                 is UiState.Success -> {
                     isSuccessAddTask = true
                     binding.progressBar.hide()
-                    toast(state.data.second)
                     updatePlans(pProdToDelete.values.toList(), pProdToAdd.values.toList())
                     homeVM.addNews(
                         news(
                             person,
-                            "Обновил(а) покупку в магазине ${state.data.first.purchaseInfo?.market}"
+                            "${getString(R.string.update_purchase)} ${state.data.purchaseInfo?.market}"
                         )
                     )
+                    toast(getString(R.string.purchase) + " " + getString(R.string.updated))
                     this.dismiss()
                 }
             }
@@ -244,7 +239,6 @@ class PurchaseBottomFragment(
                 is UiState.Success -> {
                     isSuccessAddTask = true
                     binding.progressBar.hide()
-                    toast(state.data.second)
                     resultProducts.values.forEach {
                         pProdToAdd[it.rProduct.toString()] = PlanProductModel(
                             pAmount = it.rAmount,
@@ -257,9 +251,10 @@ class PurchaseBottomFragment(
                     homeVM.addNews(
                         news(
                             person,
-                            "Удалил(а) покупку в магазине ${state.data.first.purchaseInfo?.market}"
+                            "${getString(R.string.delete_purchase)} ${state.data.purchaseInfo?.market}"
                         )
                     )
+                    toast(getString(R.string.purchase) + " " + getString(R.string.deleted))
                     this.dismiss()
                 }
             }
@@ -282,9 +277,10 @@ class PurchaseBottomFragment(
                     homeVM.addNews(
                         news(
                             person,
-                            "Добавил(а) чек покупки в магазине ${purchase?.purchaseInfo?.market}"
+                            getString(R.string.add_check, purchase?.purchaseInfo?.market)
                         )
                     )
+                    toast(getString(R.string.photo) + " " + getString(R.string.added))
                 }
             }
         }

@@ -2,7 +2,6 @@ package com.example.dacha.ui.products
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,13 +36,7 @@ class EventBottomFragment(
 
     private var date: String? = event?.eInfo?.eDate
 
-//    var day = "00"
-//    var month = "00"
-//    var year = "2000"
-
-
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,13 +62,13 @@ class EventBottomFragment(
 
 
         if (toDelete) {
-            tvTop.text = "Удалить поездку?"
+            tvTop.text = getString(R.string.no_event)
             tfName.hide()
             datePicker.hide()
             lvPeoplePicker.hide()
             binding.tvEventPeople.hide()
             binding.eventAllPeopleBtn.hide()
-            btnDone.text = "Удалить"
+            btnDone.text = getString(R.string.to_delete)
         } else {
             people.forEach {
                 listOfPeople.add(it.name.toString())
@@ -94,22 +87,20 @@ class EventBottomFragment(
                 ) { _, year, month, day ->
                     date = "${String.format("%02d", day)}.${String.format("%02d", month + 1)}.$year"
                 }
-                tvTop.text = "Добавить"
+                tvTop.text = getString(R.string.to_add)
+                binding.etNameEvent.hint = getString(R.string.where)
             } else {
 
                 val dateSplit = event.eInfo?.eDate.toString().split(".")
-                val oldDay = dateSplit[0]
-                val oldMonth = dateSplit[1]
-                val oldYear = dateSplit[2]
                 datePicker.init(
-                    oldYear.toInt(),
-                    oldMonth.toInt() - 1,
-                    oldDay.toInt()
+                    dateSplit[2].toInt(),
+                    dateSplit[1].toInt() - 1,
+                    dateSplit[0].toInt()
                 ) { _, year, month, day ->
                     date = "${String.format("%02d", day)}.${String.format("%02d", month + 1)}.$year"
                 }
                 binding.etNameEvent.hint = event.eInfo?.eName.toString()
-                tvTop.text = "Изменить данные"
+                tvTop.text = getString(R.string.to_change)
                 event.ePeople?.forEach {
                     if (it.name in listOfPeople) lvPeoplePicker.setItemChecked(
                         listOfPeople.indexOf(
@@ -164,15 +155,15 @@ class EventBottomFragment(
                 }
                 is UiState.Success -> {
                     isSuccessAddTask = true
-                    viewModel.chooseEvent(state.data.first)
+                    viewModel.chooseEvent(state.data)
                     homeVM.addNews(
                         news(
                             person,
-                            "Добавил(а) поездку: ${state.data.first.eInfo?.eName}"
+                            getString(R.string.add_event, state.data.eInfo?.eName)
                         )
                     )
+                    toast(getString(R.string.event) + " " + getString(R.string.added))
                     binding.progressBar.hide()
-                    toast(state.data.second)
                     this.dismiss()
                 }
             }
@@ -188,15 +179,15 @@ class EventBottomFragment(
                 }
                 is UiState.Success -> {
                     isSuccessAddTask = true
-                    viewModel.chooseEvent(state.data.first)
+                    viewModel.chooseEvent(state.data)
                     homeVM.addNews(
                         news(
                             person,
-                            "Обновил(а) поездку: ${state.data.first.eInfo?.eName}"
+                            getString(R.string.update_event, state.data.eInfo?.eName)
                         )
                     )
+                    toast(getString(R.string.event) + " " + getString(R.string.updated))
                     binding.progressBar.hide()
-                    toast(state.data.second)
                     this.dismiss()
                 }
             }
@@ -216,10 +207,10 @@ class EventBottomFragment(
                     homeVM.addNews(
                         news(
                             person,
-                            "Удалил(а) поездку: ${state.data.first.eInfo?.eName}"
+                            getString(R.string.delete_event, state.data.eInfo?.eName)
                         )
                     )
-                    toast(state.data.second)
+                    toast(getString(R.string.event) + " " + getString(R.string.deleted))
                     this.dismiss()
                 }
             }

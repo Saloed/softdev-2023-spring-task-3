@@ -3,22 +3,24 @@ package com.example.dacha.ui.people
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.data.repository.PersonRepository
 import com.example.dacha.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PeopleViewModel @Inject constructor(val repository: PersonRepository) : ViewModel() {
-    private val _addPerson = MutableLiveData<UiState<Pair<PersonModel, String>>>()
-    val addPerson: LiveData<UiState<Pair<PersonModel, String>>> = _addPerson
+    private val _addPerson = MutableLiveData<UiState<PersonModel>>()
+    val addPerson: LiveData<UiState<PersonModel>> = _addPerson
 
-    private val _updatePerson = MutableLiveData<UiState<Pair<PersonModel, String>>>()
-    val updatePerson: LiveData<UiState<Pair<PersonModel, String>>> = _updatePerson
+    private val _updatePerson = MutableLiveData<UiState<PersonModel>>()
+    val updatePerson: LiveData<UiState<PersonModel>> = _updatePerson
 
-    private val _deletePerson = MutableLiveData<UiState<Pair<PersonModel, String>>>()
-    val deletePerson: LiveData<UiState<Pair<PersonModel, String>>> = _deletePerson
+    private val _deletePerson = MutableLiveData<UiState<PersonModel>>()
+    val deletePerson: LiveData<UiState<PersonModel>> = _deletePerson
 
     private val _people = MutableLiveData<UiState<List<PersonModel>>>()
     val people: LiveData<UiState<List<PersonModel>>> = _people
@@ -38,8 +40,9 @@ class PeopleViewModel @Inject constructor(val repository: PersonRepository) : Vi
         repository.deletePerson(person) {_deletePerson.value = it}
     }
 
-    fun getPeople() {
+    fun getPeople() = viewModelScope.launch {
         _people.value = UiState.Loading
-        repository.getPeople {_people.value = it}
+        val result = repository.getPeople()
+        _people.value = result
     }
 }

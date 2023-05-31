@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/montserrat"
-                android:text="TextView"
+                android:text="@string/album"
                 android:textColor="#1E1E1E"
                 android:textSize="28sp"
                 app:layout_constraintEnd_toEndOf="parent"

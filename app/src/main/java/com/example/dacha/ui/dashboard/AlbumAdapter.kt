@@ -12,8 +12,8 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 
 
 class AlbumAdapter(
-    val onAlbumClicked: (Int, AlbumModel) -> Unit,
-    val onAlbumLongClicked: (Int, AlbumModel) -> Unit
+    val onAlbumClicked: (AlbumModel) -> Unit,
+    val onAlbumLongClicked: (AlbumModel) -> Unit
 ) :
     RecyclerView.Adapter<AlbumAdapter.AlbumHolder>() {
 
@@ -35,13 +35,11 @@ class AlbumAdapter(
             }
             binding.cVAlbum.setOnClickListener {
                 onAlbumClicked.invoke(
-                    bindingAdapterPosition,
                     album
                 )
             }
             binding.cVAlbum.setOnLongClickListener {
                 onAlbumLongClicked.invoke(
-                    bindingAdapterPosition,
                     album
                 )
                 true

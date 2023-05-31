@@ -1,7 +1,6 @@
 package com.example.dacha.ui.people
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,23 +18,20 @@ import com.example.dacha.data.model.TransactionModel
 import com.example.dacha.databinding.FragmentPeopleBinding
 import com.example.dacha.ui.debts.DebtsViewModel
 import com.example.dacha.ui.home.HomeViewModel
-import com.example.dacha.ui.products.CalendarBottomFragment
-import com.example.dacha.ui.products.EventBottomFragment
 import com.example.dacha.utils.*
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class PeopleFragment : Fragment() {
 
     private val viewModel: PeopleViewModel by viewModels()
     private val debtsVM: DebtsViewModel by viewModels()
-    val homeVM: HomeViewModel by viewModels()
+    private val homeVM: HomeViewModel by viewModels()
     var deleteItemPos = -1
     lateinit var binding: FragmentPeopleBinding
     val adapter by lazy {
         PeopleAdapter(onDeleteClicked = { pos, item -> onDeleteClicked(pos, item) },
-            onPersonClicked = { pos, item -> onPersonClicked(pos, item) })
+            onPersonClicked = { item -> onPersonClicked(item) })
     }
     private var transactions = mutableListOf<TransactionModel>()
     private var news = mutableListOf<NewsModel>()
@@ -54,7 +50,7 @@ class PeopleFragment : Fragment() {
                 R.id.transactions_info -> {
                     val showTransactions = mutableListOf<String>()
                     transactions.forEach {
-                        showTransactions.add("${it.from?.name} перевел ${it.to?.name} ${it.howMuch}Р")
+                        showTransactions.add("${it.from?.name} перевел(а) ${it.to?.name} ${it.howMuch}Р")
                     }
                     val transactionsDialog =
                         requireContext().createDialog(R.layout.transactions_dialog, true)
@@ -68,15 +64,15 @@ class PeopleFragment : Fragment() {
                     listView.setOnItemClickListener { _, _, i, _ ->
                         val deleteDialog = requireContext().createDialog(R.layout.debt_dialog, true)
                         val tv = deleteDialog.findViewById<TextView>(R.id.tv_debt_top)
-                        tv.text = "Не было такого?"
+                        tv.text = getString(R.string.no_transaction)
                         val btn = deleteDialog.findViewById<Button>(R.id.send_dialog_btn)
-                        btn.text = "Удалить перевод"
+                        btn.text = getString(R.string.to_delete)
                         btn.setOnClickListener {
                             debtsVM.deleteTransaction(transactions[i])
                             homeVM.addNews(
                                 news(
                                     person,
-                                    "Удалил(а) перевод ${transactions[i].from?.name} - ${transactions[i].to?.name} (${transactions[i].howMuch}P)"
+                                    "${getString(R.string.delete_transaction)}${transactions[i].from?.name} - ${transactions[i].to?.name} (${transactions[i].howMuch} P)"
                                 )
                             )
                             transactionsAdapter.remove(showTransactions[i])
@@ -96,7 +92,7 @@ class PeopleFragment : Fragment() {
                     val showNews = mutableListOf<String>()
                     news.forEach {
                         showNews.add(
-                            "${it.person?.name ?: "Нет имени"}: ${it.info}\n${
+                            "${it.person?.name ?: getString(R.string.no_info)}: ${it.info}\n${
                                 it.date?.split(
                                     "T"
                                 )?.get(0)
@@ -106,7 +102,7 @@ class PeopleFragment : Fragment() {
                     val newsDialog =
                         requireContext().createDialog(R.layout.transactions_dialog, true)
                     val textView = newsDialog.findViewById<TextView>(R.id.tv_transactions_top)
-                    textView.text = "История"
+                    textView.text = getString(R.string.history)
                     val listView = newsDialog.findViewById<ListView>(R.id.lv_transactions)
                     val transactionsAdapter = ArrayAdapter(
                         this.requireContext(),
@@ -197,7 +193,8 @@ class PeopleFragment : Fragment() {
                 }
                 is UiState.Success -> {
                     binding.progressBar.hide()
-                    person = state.data!!
+                    if (state.data == null) toast(getString(R.string.go_login))
+                    else person = state.data
                 }
                 else -> {
                     binding.progressBar.show()
@@ -236,11 +233,11 @@ class PeopleFragment : Fragment() {
                     homeVM.addNews(
                         news(
                             person,
-                            "Удалил(а) ${state.data.first.name}"
+                            getString(R.string.delete, state.data.name)
                         )
                     )
                     if (deleteItemPos > -1) {
-                        toast(state.data.second)
+                        toast(getString(R.string.person) + " " + getString(R.string.deleted))
                         adapter.removeItem(deleteItemPos)
                     }
                 }
@@ -256,7 +253,7 @@ class PeopleFragment : Fragment() {
         viewModel.deletePerson(item)
     }
 
-    private fun onPersonClicked(pos: Int, item: PersonModel) {
+    private fun onPersonClicked(item: PersonModel) {
         val personBottomFragment = PersonBottomFragment(item)
         personBottomFragment.setDismissListener {
             if (it) {

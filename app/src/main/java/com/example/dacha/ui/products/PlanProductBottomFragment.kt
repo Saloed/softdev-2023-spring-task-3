@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter
 import androidx.core.util.forEach
 import androidx.fragment.app.viewModels
 import com.example.dacha.R
-import com.example.dacha.data.model.NewsModel
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.data.model.PlanProductModel
 import com.example.dacha.data.model.SimplePersonModel
@@ -18,7 +17,6 @@ import com.example.dacha.ui.home.HomeViewModel
 import com.example.dacha.utils.*
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDateTime
 
 
 @AndroidEntryPoint
@@ -31,7 +29,7 @@ class PlanProductBottomFragment(
 
     lateinit var binding: PlanProductBottomSheetLayoutBinding
     val viewModel: ProductsViewModel by viewModels()
-    val homeVM: HomeViewModel by viewModels()
+    private val homeVM: HomeViewModel by viewModels()
     var closeFunction: ((Boolean) -> Unit)? = null
     var isSuccessAddTask: Boolean = false
 
@@ -73,12 +71,12 @@ class PlanProductBottomFragment(
 
         if (product == null) {
             btnDelete.hide()
-            tvTop.text = "Добавить"
-            tfName.hint = "Название"
-            tfAmount.hint = "Количество"
+            tvTop.text = getString(R.string.to_add)
+            tfName.hint = getString(R.string.title)
+            tfAmount.hint = getString(R.string.amount)
         } else {
             btnDelete.show()
-            tvTop.text = "Изменить"
+            tvTop.text = getString(R.string.to_change)
             tfName.hint = product.pProduct
             tfAmount.hint = product.pAmount.toString()
             product.pWhose?.forEach {
@@ -140,10 +138,10 @@ class PlanProductBottomFragment(
                     homeVM.addNews(
                         news(
                             person!!,
-                            "Добавил(а) продукт ${state.data.first.pProduct}"
+                            getString(R.string.add_product, state.data.pProduct)
                         )
                     )
-                    toast(state.data.second)
+                    toast(getString(R.string.product) + " " + getString(R.string.added))
                     this.dismiss()
                 }
             }
@@ -163,10 +161,10 @@ class PlanProductBottomFragment(
                     homeVM.addNews(
                         news(
                             person!!,
-                            "Обновил(а) продукт ${state.data.first.pProduct}"
+                            getString(R.string.update_product, state.data.pProduct)
                         )
                     )
-                    toast(state.data.second)
+                    toast(getString(R.string.product) + " " + getString(R.string.updated))
                     this.dismiss()
                 }
             }
@@ -186,10 +184,10 @@ class PlanProductBottomFragment(
                     homeVM.addNews(
                         news(
                             person!!,
-                            "Удалил(а) продукт ${state.data.first.pProduct}"
+                            getString(R.string.delete_product, state.data.pProduct)
                         )
                     )
-                    toast(state.data.second)
+                    toast(getString(R.string.product) + " " + getString(R.string.deleted))
                     this.dismiss()
                 }
             }
@@ -198,9 +196,11 @@ class PlanProductBottomFragment(
 
     private fun validation(): Boolean {
         var isValid = true
-        if (binding.etPlanProductName.text.isNullOrEmpty()) {
+        if (binding.etPlanProductName.text.toString().isEmpty() &&
+            binding.planProductPeoplePicker.checkedItemCount == 0
+        ) {
             isValid = false
-            toast("Введите название")
+            toast(getString(R.string.empty_field))
         }
         return isValid
     }
@@ -212,7 +212,8 @@ class PlanProductBottomFragment(
         strAmount.replace(',', '.')
 
         amount = if (strAmount != "") strAmount.toDouble()
-        else product?.pAmount!!
+        else if (product!= null) product.pAmount!!
+        else 1.0
         val chosenPeople = mutableListOf<SimplePersonModel>()
         binding.planProductPeoplePicker.checkedItemPositions.forEach { key, value ->
             if (value) {

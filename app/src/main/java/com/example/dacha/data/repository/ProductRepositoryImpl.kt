@@ -3,7 +3,6 @@ package com.example.dacha.data.repository
 
 import android.content.SharedPreferences
 import android.net.Uri
-import android.util.Log
 import com.example.dacha.data.model.*
 import com.example.dacha.utils.FireDatabase
 import com.example.dacha.utils.SharedPrefConstants
@@ -12,18 +11,16 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class ProductRepositoryImpl(
     val database: FirebaseDatabase,
-    val shPref: SharedPreferences,
-    val storageReference: StorageReference
+    private val shPref: SharedPreferences,
+    private val storageReference: StorageReference
 ) :
     ProductRepository {
-    override fun addEvent(event: EventModel, result: (UiState<Pair<EventModel, String>>) -> Unit) {
+    override fun addEvent(event: EventModel, result: (UiState<EventModel>) -> Unit) {
         val ref = database.reference.child(FireDatabase.EVENTS).push()
         val uniqueKey = ref.key ?: "invalid"
         val newEvent = EventModel(
@@ -39,58 +36,58 @@ class ProductRepositoryImpl(
         ref
             .setValue(newEvent)
             .addOnSuccessListener {
-                result.invoke(UiState.Success(Pair(newEvent, "Поездка успешно добавлена")))
+                result(UiState.Success(newEvent))
             }
             .addOnFailureListener {
-                result.invoke(UiState.Failure(it.localizedMessage))
+                result(UiState.Failure(it.localizedMessage))
             }
     }
 
     override fun updateEvent(
         event: EventModel,
-        result: (UiState<Pair<EventModel, String>>) -> Unit
+        result: (UiState<EventModel>) -> Unit
     ) {
         val ref = database.reference.child(FireDatabase.EVENTS).child(event.eInfo?.eKey.toString())
         ref.child("einfo")
             .setValue(EventInfo(event.eInfo?.eDate, event.eInfo?.eKey, event.eInfo?.eName))
         ref.child("epeople").setValue(event.ePeople)
-        result.invoke(UiState.Success(Pair(event, "Поездка успешно обновлена")))
+        result(UiState.Success(event))
     }
 
     override fun deleteEvent(
         event: EventModel,
-        result: (UiState<Pair<EventModel, String>>) -> Unit
+        result: (UiState<EventModel>) -> Unit
     ) {
         val ref = database.reference.child(FireDatabase.EVENTS).child(event.eInfo?.eKey.toString())
         ref
             .removeValue()
             .addOnSuccessListener {
-                result.invoke(UiState.Success(Pair(event, "Поездка успешно удалена")))
+                result(UiState.Success(event))
             }
             .addOnFailureListener {
-                result.invoke(UiState.Failure(it.localizedMessage))
+                result(UiState.Failure(it.localizedMessage))
             }
     }
 
     override fun chooseEvent(
         event: EventModel,
-        result: (UiState<Pair<EventModel, String>>) -> Unit
+        result: (UiState<EventModel>) -> Unit
     ) {
         shPref.edit().putString(SharedPrefConstants.EVENT_ID, event.eInfo?.eKey).apply()
-        result.invoke(UiState.Success(Pair(event, "Поездка выбрана")))
+        result(UiState.Success(event))
     }
 
-    override fun getEvents(result: (UiState<List<EventModel>>) -> Unit) {
+    override suspend fun getEvents(): UiState<List<EventModel>> {
         val ref = database.reference.child(FireDatabase.EVENTS)
+        val events = arrayListOf<EventModel>()
         ref.get()
             .addOnSuccessListener {
-                val events = arrayListOf<EventModel>()
                 for (item in it.children) {
                     val event = item.getValue(EventModel::class.java)
                     if (event != null) events.add(event)
                 }
-                result.invoke(UiState.Success(events))
-            }
+            }.await()
+        return UiState.Success(events)
     }
 
     override fun getChosenEvent(result: (UiState<String?>) -> Unit) {
@@ -105,7 +102,7 @@ class ProductRepositoryImpl(
     override fun addPlanProduct(
         event: String,
         planProduct: PlanProductModel,
-        result: (UiState<Pair<PlanProductModel, String>>) -> Unit
+        result: (UiState<PlanProductModel>) -> Unit
     ) {
         val ref = database.reference.child(FireDatabase.EVENTS).child(event)
             .child(FireDatabase.PLAN_PRODUCT).push()
@@ -119,65 +116,65 @@ class ProductRepositoryImpl(
         ref
             .setValue(newPlanProduct)
             .addOnSuccessListener {
-                result.invoke(UiState.Success(Pair(newPlanProduct, "Продукт успешно добавлен")))
+                result(UiState.Success(newPlanProduct))
             }
             .addOnFailureListener {
-                result.invoke(UiState.Failure(it.localizedMessage))
+                result(UiState.Failure(it.localizedMessage))
             }
     }
 
     override fun updatePlanProduct(
         event: String,
         planProduct: PlanProductModel,
-        result: (UiState<Pair<PlanProductModel, String>>) -> Unit
+        result: (UiState<PlanProductModel>) -> Unit
     ) {
         val ref = database.reference.child(FireDatabase.EVENTS).child(event)
             .child(FireDatabase.PLAN_PRODUCT).child(planProduct.pKey.toString())
         ref
             .setValue(planProduct)
             .addOnSuccessListener {
-                result.invoke(UiState.Success(Pair(planProduct, "Продукт успешно обновлена")))
+                result(UiState.Success(planProduct))
             }
             .addOnFailureListener {
-                result.invoke(UiState.Failure(it.localizedMessage))
+                result(UiState.Failure(it.localizedMessage))
             }
     }
 
     override fun deletePlanProduct(
         event: String,
         planProduct: PlanProductModel,
-        result: (UiState<Pair<PlanProductModel, String>>) -> Unit
+        result: (UiState<PlanProductModel>) -> Unit
     ) {
         val ref = database.reference.child(FireDatabase.EVENTS).child(event)
             .child(FireDatabase.PLAN_PRODUCT).child(planProduct.pKey.toString())
         ref
             .removeValue()
             .addOnSuccessListener {
-                result.invoke(UiState.Success(Pair(planProduct, "Продукт успешно удалена")))
+                result(UiState.Success(planProduct))
             }
             .addOnFailureListener {
-                result.invoke(UiState.Failure(it.localizedMessage))
+                result(UiState.Failure(it.localizedMessage))
             }
     }
 
-    override fun getPlanProducts(event: String, result: (UiState<List<PlanProductModel>>) -> Unit) {
+    override suspend fun getPlanProducts(event: String): UiState<List<PlanProductModel>> {
         val ref = database.reference.child(FireDatabase.EVENTS).child(event)
             .child(FireDatabase.PLAN_PRODUCT)
+        val planProducts = arrayListOf<PlanProductModel>()
         ref.get()
             .addOnSuccessListener {
-                val planProducts = arrayListOf<PlanProductModel>()
                 for (item in it.children) {
-                    val event = item.getValue(PlanProductModel::class.java)
-                    if (event != null) planProducts.add(event)
+                    val planProduct = item.getValue(PlanProductModel::class.java)
+                    if (planProduct != null) planProducts.add(planProduct)
                 }
-                result.invoke(UiState.Success(planProducts))
-            }
+            }.await()
+        return UiState.Success(planProducts)
     }
 
     override fun addPurchase(
         event: String,
         purchase: PurchaseModel,
-        result: (UiState<Pair<PurchaseModel, String>>) -> Unit
+        result: (UiState<PurchaseModel>) -> Unit
     ) {
         val ref = database.reference.child(FireDatabase.EVENTS).child(event)
             .child(FireDatabase.PURCHASE).push()
@@ -194,59 +191,59 @@ class ProductRepositoryImpl(
         ref
             .setValue(newPurchase)
             .addOnSuccessListener {
-                result.invoke(UiState.Success(Pair(newPurchase, "Покупка успешно добавлена")))
+                result(UiState.Success(newPurchase))
             }
             .addOnFailureListener {
-                result.invoke(UiState.Failure(it.localizedMessage))
+                result(UiState.Failure(it.localizedMessage))
             }
     }
 
     override fun updatePurchase(
         event: String,
         purchase: PurchaseModel,
-        result: (UiState<Pair<PurchaseModel, String>>) -> Unit
+        result: (UiState<PurchaseModel>) -> Unit
     ) {
         val ref = database.reference.child(FireDatabase.EVENTS).child(event)
             .child(FireDatabase.PURCHASE).child(purchase.purchaseInfo?.key.toString())
         ref
             .setValue(purchase)
             .addOnSuccessListener {
-                result.invoke(UiState.Success(Pair(purchase, "Покупка успешно обновлена")))
+                result(UiState.Success(purchase))
             }
             .addOnFailureListener {
-                result.invoke(UiState.Failure(it.localizedMessage))
+                result(UiState.Failure(it.localizedMessage))
             }
     }
 
     override fun deletePurchase(
         event: String,
         purchase: PurchaseModel,
-        result: (UiState<Pair<PurchaseModel, String>>) -> Unit
+        result: (UiState<PurchaseModel>) -> Unit
     ) {
         val ref = database.reference.child(FireDatabase.EVENTS).child(event)
             .child(FireDatabase.PURCHASE).child(purchase.purchaseInfo?.key.toString())
         ref
             .removeValue()
             .addOnSuccessListener {
-                result.invoke(UiState.Success(Pair(purchase, "Покупка успешно удалена")))
+                result(UiState.Success(purchase))
             }
             .addOnFailureListener {
-                result.invoke(UiState.Failure(it.localizedMessage))
+                result(UiState.Failure(it.localizedMessage))
             }
     }
 
-    override fun getPurchase(event: String, result: (UiState<List<PurchaseModel>>) -> Unit) {
+    override suspend fun getPurchase(event: String): UiState<List<PurchaseModel>> {
         val ref = database.reference.child(FireDatabase.EVENTS).child(event)
             .child(FireDatabase.PURCHASE)
+        val purchases = arrayListOf<PurchaseModel>()
         ref.get()
             .addOnSuccessListener {
-                val purchases = arrayListOf<PurchaseModel>()
                 for (item in it.children) {
                     val purchase = item.getValue(PurchaseModel::class.java)
                     if (purchase != null) purchases.add(purchase)
                 }
-                result.invoke(UiState.Success(purchases))
-            }
+            }.await()
+        return UiState.Success(purchases)
     }
 
     override suspend fun uploadCheck(fileUri: Uri, onResult: (UiState<Pair<Uri, String>>) -> Unit) {
@@ -264,11 +261,11 @@ class ProductRepositoryImpl(
                     }
                     .await()
             }
-            onResult.invoke(UiState.Success(Pair(uri, url)))
+            onResult(UiState.Success(Pair(uri, url)))
         } catch (e: FirebaseException) {
-            onResult.invoke(UiState.Failure(e.message))
+            onResult(UiState.Failure(e.message))
         } catch (e: Exception) {
-            onResult.invoke(UiState.Failure(e.message))
+            onResult(UiState.Failure(e.message))
         }
     }
 

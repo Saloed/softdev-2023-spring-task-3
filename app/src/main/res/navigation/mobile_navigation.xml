@@ -10,7 +10,7 @@
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.dacha.ui.dashboard.DashboardFragment"
-        android:label="@string/title_galery"
+        android:label="@string/title_gallery"
         tools:layout="@layout/fragment_dashboard">
 
         <action

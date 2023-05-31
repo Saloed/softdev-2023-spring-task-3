@@ -4,12 +4,13 @@ import com.example.dacha.data.model.PersonModel
 import com.example.dacha.utils.FireDatabase
 import com.example.dacha.utils.UiState
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.tasks.await
 
 
 class PersonRepositoryImpl(val database: FirebaseDatabase) : PersonRepository {
     override fun addPerson(
         person: PersonModel,
-        result: (UiState<Pair<PersonModel, String>>) -> Unit
+        result: (UiState<PersonModel>) -> Unit
     ) {
         val ref = database.reference.child(FireDatabase.PEOPLE).push()
         val uniqueKey = ref.key ?: "invalid"
@@ -17,55 +18,53 @@ class PersonRepositoryImpl(val database: FirebaseDatabase) : PersonRepository {
         ref
             .setValue(person)
             .addOnSuccessListener {
-                result.invoke(UiState.Success(Pair(person, "Человек успешно добавлен")))
+                result(UiState.Success(person))
             }
             .addOnFailureListener {
-                result.invoke(UiState.Failure(it.localizedMessage))
+                result(UiState.Failure(it.localizedMessage))
             }
     }
 
     override fun updatePerson(
         person: PersonModel,
-        result: (UiState<Pair<PersonModel, String>>) -> Unit
+        result: (UiState<PersonModel>) -> Unit
     ) {
         val ref = database.reference.child(FireDatabase.PEOPLE).child(person.id.toString())
         ref
             .setValue(person)
             .addOnSuccessListener {
-                result.invoke(UiState.Success(Pair(person, "Данные успешно обновлены")))
+                result(UiState.Success(person))
             }
             .addOnFailureListener {
-                result.invoke(UiState.Failure(it.localizedMessage))
+                result(UiState.Failure(it.localizedMessage))
             }
     }
 
     override fun deletePerson(
         person: PersonModel,
-        result: (UiState<Pair<PersonModel, String>>) -> Unit
+        result: (UiState<PersonModel>) -> Unit
     ) {
         val ref = database.reference.child(FireDatabase.PEOPLE).child(person.id.toString())
         ref
             .removeValue()
             .addOnSuccessListener {
-                result.invoke(UiState.Success(Pair(person, "Человек успешно удален")))
+                result(UiState.Success(person))
             }
             .addOnFailureListener {
-                result.invoke(UiState.Failure(it.localizedMessage))
+                result(UiState.Failure(it.localizedMessage))
             }
     }
 
-    override fun getPeople(
-        result: (UiState<List<PersonModel>>) -> Unit
-    ) {
+    override suspend fun getPeople(): UiState<List<PersonModel>> {
         val ref = database.reference.child(FireDatabase.PEOPLE)
+        val people = arrayListOf<PersonModel>()
         ref.get()
             .addOnSuccessListener {
-                val people = arrayListOf<PersonModel>()
                 for (item in it.children) {
                     val person = item.getValue(PersonModel::class.java)
                     if (person != null) people.add(person)
                 }
-                result.invoke(UiState.Success(people))
-            }
+            }.await()
+        return UiState.Success(people)
     }
 }

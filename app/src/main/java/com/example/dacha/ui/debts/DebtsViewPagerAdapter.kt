@@ -1,6 +1,5 @@
 package com.example.dacha.ui.debts
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +11,8 @@ import com.example.dacha.databinding.DebtViewPagerBinding
 
 
 class DebtsViewPagerAdapter(
-    val onDebtClicked: ((Int, String) -> Unit)? = null,
-    val onDebtLongClicked: ((Int, String, DebtModel) -> Unit)? = null
+    val onDebtClicked: ((String) -> Unit)? = null,
+    val onDebtLongClicked: ((String, DebtModel) -> Unit)? = null
 ) :
     RecyclerView.Adapter<DebtsViewPagerAdapter.DebtsViewPagerViewHolder>() {
 
@@ -100,10 +99,10 @@ class DebtsViewPagerAdapter(
                 paid.reversed()
             )
             lvYouDebt.setOnItemClickListener { _, _, i, _ ->
-                onDebtClicked?.invoke(position, item.needToSend[i].dPerson.toString())
+                onDebtClicked?.invoke(item.needToSend[i].dPerson.toString())
             }
             lvYouDebt.setOnItemLongClickListener { _, _, i, _ ->
-                onDebtLongClicked?.invoke(position, item.name, item.needToSend[i])
+                onDebtLongClicked?.invoke(item.name, item.needToSend[i])
                 true
             }
         }

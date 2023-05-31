@@ -8,10 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dacha.R
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.databinding.PersonItemBinding
+import com.example.dacha.utils.hide
+import com.example.dacha.utils.show
 
 class PeopleAdapter(
     val onDeleteClicked: ((Int, PersonModel) -> Unit)? = null,
-    val onPersonClicked: ((Int, PersonModel) -> Unit)? = null
+    val onPersonClicked: ((PersonModel) -> Unit)? = null
 ) :
     RecyclerView.Adapter<PeopleAdapter.PeopleViewHolder>() {
 
@@ -53,21 +55,21 @@ class PeopleAdapter(
             val bank = item.bank
             val number = item.number
             tvName.text = name
-            if (bank == null) tvBank.visibility = View.GONE
+            if (bank == null) tvBank.hide()
             else {
                 tvBank.text = bank
-                tvBank.visibility = View.VISIBLE
+                tvBank.show()
             }
-            if (number == null) tvNumber.visibility = View.GONE
+            if (number == null) tvNumber.hide()
             else {
                 tvNumber.text = number
-                tvNumber.visibility = View.VISIBLE
+                tvNumber.show()
             }
             btnDelete.setOnClickListener {
                 onDeleteClicked?.invoke(position, item)
             }
             binding.personItem.setOnClickListener {
-                onPersonClicked?.invoke(position, item)
+                onPersonClicked?.invoke(item)
             }
         }
 

@@ -9,7 +9,7 @@ import com.example.dacha.data.model.PlanProductModel
 import com.example.dacha.databinding.SimpleListItemBinding
 
 class PlanProductAdapter(
-    val onProductClicked: ((Int, PlanProductModel) -> Unit)? = null
+    val onProductClicked: ((PlanProductModel) -> Unit)? = null
 ) :
     RecyclerView.Adapter<PlanProductAdapter.PlanProductViewHolder>() {
 
@@ -27,7 +27,7 @@ class PlanProductAdapter(
 
     override fun onBindViewHolder(holder: PlanProductViewHolder, position: Int) {
         val item = list[position]
-        holder.bind(item, position)
+        holder.bind(item)
     }
 
     fun updateList(list: MutableList<PlanProductModel>) {
@@ -40,7 +40,7 @@ class PlanProductAdapter(
         private val tvProduct = binding.tvProduct
         private val tvAmount = binding.tvAmount
         private val tvWhose = binding.tvWhose
-        fun bind(item: PlanProductModel, position: Int) {
+        fun bind(item: PlanProductModel) {
             val name = item.pProduct
             val amount = item.pAmount
             var whose = ""
@@ -58,7 +58,7 @@ class PlanProductAdapter(
                 .toString() else amount.toString()
             tvWhose.text = whose
             binding.planProductItem.setOnClickListener {
-                onProductClicked?.invoke(position, item)
+                onProductClicked?.invoke(item)
             }
         }
 

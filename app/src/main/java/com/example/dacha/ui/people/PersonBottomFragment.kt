@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.viewModels
 import com.example.dacha.R
-import com.example.dacha.data.model.NewsModel
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.databinding.BottomSheetLayoutBinding
 import com.example.dacha.ui.home.HomeViewModel
@@ -16,19 +15,20 @@ import com.example.dacha.utils.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDateTime
 
 
 private const val COLLAPSED_HEIGHT = 260
 
 @AndroidEntryPoint
-class PersonBottomFragment(private val person: PersonModel? = null) : BottomSheetDialogFragment() {
+class PersonBottomFragment(private val updatingPerson: PersonModel? = null) :
+    BottomSheetDialogFragment() {
 
     lateinit var binding: BottomSheetLayoutBinding
     val viewModel: PeopleViewModel by viewModels()
     private val homeVM: HomeViewModel by viewModels()
     var closeFunction: ((Boolean) -> Unit)? = null
     var isSuccessAddTask: Boolean = false
+    var person = PersonModel()
 
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
 
@@ -55,11 +55,11 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
             behavior.peekHeight = (COLLAPSED_HEIGHT * density).toInt()
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-            if (person == null) {
+            if (updatingPerson == null) {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 binding.layoutCollapsed.visibility = View.GONE
                 binding.layoutExpanded.visibility = View.VISIBLE
-                binding.bottomText.text = "Ввести данные"
+                binding.bottomText.text = getString(R.string.input_data)
             }
 
             behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -92,35 +92,63 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        person?.let {
-            binding.tvDetailName.text =
-                "Имя: ${it.name?.replaceFirstChar { it -> it.uppercaseChar() }}"
+        updatingPerson?.let {
+            binding.tvDetailName.text = getString(
+                R.string.name,
+                it.name?.replaceFirstChar { letter -> letter.uppercaseChar() })
             binding.tvDetailBank.text =
-                if (!it.bank.isNullOrEmpty()) "Банк: ${it.bank}" else "Банк неизвестен"
-            binding.etNamePerson.hint = if (!it.name.isNullOrEmpty()) it.name else "Имя"
-            binding.etBankPerson.hint = if (!it.bank.isNullOrEmpty()) it.bank else "Банк"
-            binding.etNumberPerson.hint = if (!it.number.isNullOrEmpty()) it.number else "Номер"
+                if (!it.bank.isNullOrEmpty()) getString(
+                    R.string.bank,
+                    it.bank
+                ) else getString(R.string.bank, getString(R.string.no_info))
+            binding.etNamePerson.hint = it.name
+            binding.etBankPerson.hint =
+                if (it.bank.isNullOrEmpty()) getString(R.string.simple_bank) else it.bank
+            binding.etNumberPerson.hint =
+                if (it.number.isNullOrEmpty()) getString(R.string.simple_number) else it.number
             binding.tvDetailNumber.text =
-                if (!it.number.isNullOrEmpty()) "Номер: ${it.number}" else "Номер неизвестен"
+                if (!it.number.isNullOrEmpty()) getString(
+                    R.string.number,
+                    it.number
+                ) else getString(R.string.number, getString(R.string.no_info))
         }
 
-        if (person == null) {
-            binding.etNamePerson.hint = "Имя"
-            binding.etBankPerson.hint = "Банк"
-            binding.etNumberPerson.hint = "Номер"
+        if (updatingPerson == null) {
+            binding.etNamePerson.hint = getString(R.string.simple_name)
+            binding.etBankPerson.hint = getString(R.string.simple_bank)
+            binding.etNumberPerson.hint = getString(R.string.simple_number)
         }
 
         binding.btnDonePerson.setOnClickListener {
-            if (person == null && validation()) {
-                viewModel.addPerson(getPerson())
-            } else if (person != null) {
-                viewModel.updatePerson(getPerson())
+            if (updatingPerson == null && validation()) {
+                viewModel.addPerson(getUpdatingPerson())
+            } else if (updatingPerson != null) {
+                viewModel.updatePerson(getUpdatingPerson())
             }
         }
         observer()
     }
 
     private fun observer() {
+        homeVM.person.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    binding.progressBar.show()
+                }
+                is UiState.Failure -> {
+                    binding.progressBar.hide()
+                    toast(state.error)
+                }
+                is UiState.Success -> {
+                    binding.progressBar.hide()
+                    if (state.data == null) toast(getString(R.string.go_login))
+                    else person = state.data
+                }
+                else -> {
+                    binding.progressBar.show()
+                }
+            }
+        }
         viewModel.addPerson.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
@@ -133,13 +161,13 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
                 is UiState.Success -> {
                     isSuccessAddTask = true
                     binding.progressBar.hide()
-                    toast(state.data.second)
                     homeVM.addNews(
                         news(
-                            person!!,
-                            "Добавил ${state.data.first.name}"
+                            person,
+                            getString(R.string.add, state.data.name)
                         )
                     )
+                    toast(getString(R.string.person) + " " + getString(R.string.added))
                     this.dismiss()
                 }
             }
@@ -156,13 +184,12 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
                 is UiState.Success -> {
                     isSuccessAddTask = true
                     binding.progressBar.hide()
-                    toast(state.data.second)
                     homeVM.addNews(
                         news(
-                            person!!,
-                            "Обновил ${state.data.first.name}"
+                            person, getString(R.string.update, state.data.name)
                         )
                     )
+                    toast(getString(R.string.person) + " " + getString(R.string.updated))
                     this.dismiss()
                 }
             }
@@ -173,16 +200,16 @@ class PersonBottomFragment(private val person: PersonModel? = null) : BottomShee
         var isValid = true
         if (binding.etNamePerson.text.isNullOrEmpty()) {
             isValid = false
-            toast("Введите имя")
+            toast(getString(R.string.empty_field))
         }
         return isValid
     }
 
-    private fun getPerson(): PersonModel {
-        val name = binding.etNamePerson.text.toString().ifEmpty { person?.name }
-        val bank = binding.etBankPerson.text.toString().ifEmpty { person?.bank }
-        val number = binding.etNumberPerson.text.toString().ifEmpty { person?.number }
-        return PersonModel(bank = bank, id = person?.id, name = name, number = number)
+    private fun getUpdatingPerson(): PersonModel {
+        val name = binding.etNamePerson.text.toString().ifEmpty { updatingPerson?.name }
+        val bank = binding.etBankPerson.text.toString().ifEmpty { updatingPerson?.bank }
+        val number = binding.etNumberPerson.text.toString().ifEmpty { updatingPerson?.number }
+        return PersonModel(bank = bank, id = updatingPerson?.id, name = name, number = number)
     }
 
     fun setDismissListener(function: ((Boolean) -> Unit)?) {

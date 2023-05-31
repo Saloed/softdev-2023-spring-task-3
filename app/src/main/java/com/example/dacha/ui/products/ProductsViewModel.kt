@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dacha.data.model.EventModel
-import com.example.dacha.data.model.PersonModel
 import com.example.dacha.data.model.PlanProductModel
 import com.example.dacha.data.model.PurchaseModel
 import com.example.dacha.data.repository.ProductRepository
@@ -17,24 +16,24 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductsViewModel @Inject constructor(val repository: ProductRepository) : ViewModel() {
-    private val _addEvent = MutableLiveData<UiState<Pair<EventModel, String>>>()
-    val addEvent: LiveData<UiState<Pair<EventModel, String>>> = _addEvent
+    private val _addEvent = MutableLiveData<UiState<EventModel>>()
+    val addEvent: LiveData<UiState<EventModel>> = _addEvent
 
     fun addEvent(event: EventModel) {
         _addEvent.value = UiState.Loading
         repository.addEvent(event) {_addEvent.value = it}
     }
 
-    private val _updateEvent = MutableLiveData<UiState<Pair<EventModel, String>>>()
-    val updateEvent: LiveData<UiState<Pair<EventModel, String>>> = _updateEvent
+    private val _updateEvent = MutableLiveData<UiState<EventModel>>()
+    val updateEvent: LiveData<UiState<EventModel>> = _updateEvent
 
     fun updateEvent(event: EventModel) {
         _updateEvent.value = UiState.Loading
         repository.updateEvent(event) {_updateEvent.value = it}
     }
 
-    private val _deleteEvent = MutableLiveData<UiState<Pair<EventModel, String>>>()
-    val deleteEvent: LiveData<UiState<Pair<EventModel, String>>> = _deleteEvent
+    private val _deleteEvent = MutableLiveData<UiState<EventModel>>()
+    val deleteEvent: LiveData<UiState<EventModel>> = _deleteEvent
 
     fun deleteEvent(event: EventModel) {
         _deleteEvent.value = UiState.Loading
@@ -44,13 +43,14 @@ class ProductsViewModel @Inject constructor(val repository: ProductRepository) :
     private val _events = MutableLiveData<UiState<List<EventModel>>>()
     val events: LiveData<UiState<List<EventModel>>> = _events
 
-    fun getEvents() {
+    fun getEvents() = viewModelScope.launch {
         _events.value = UiState.Loading
-        repository.getEvents {_events.value = it}
+        val result = repository.getEvents()
+        _events.value = result
     }
 
-    private val _chooseEvent = MutableLiveData<UiState<Pair<EventModel, String>>>()
-    val chooseEvent: LiveData<UiState<Pair<EventModel, String>>> = _chooseEvent
+    private val _chooseEvent = MutableLiveData<UiState<EventModel>>()
+    val chooseEvent: LiveData<UiState<EventModel>> = _chooseEvent
 
     fun chooseEvent(event: EventModel) {
         _chooseEvent.value = UiState.Loading
@@ -66,24 +66,24 @@ class ProductsViewModel @Inject constructor(val repository: ProductRepository) :
     }
 
 
-    private val _addPlanProduct = MutableLiveData<UiState<Pair<PlanProductModel, String>>>()
-    val addPlanProduct: LiveData<UiState<Pair<PlanProductModel, String>>> = _addPlanProduct
+    private val _addPlanProduct = MutableLiveData<UiState<PlanProductModel>>()
+    val addPlanProduct: LiveData<UiState<PlanProductModel>> = _addPlanProduct
 
     fun addPlanProduct(event: String, planProduct: PlanProductModel) {
         _addPlanProduct.value = UiState.Loading
         repository.addPlanProduct(event, planProduct) {_addPlanProduct.value = it}
     }
 
-    private val _updatePlanProduct = MutableLiveData<UiState<Pair<PlanProductModel, String>>>()
-    val updatePlanProduct: LiveData<UiState<Pair<PlanProductModel, String>>> = _updatePlanProduct
+    private val _updatePlanProduct = MutableLiveData<UiState<PlanProductModel>>()
+    val updatePlanProduct: LiveData<UiState<PlanProductModel>> = _updatePlanProduct
 
     fun updatePlanProduct(event: String, planProduct: PlanProductModel) {
         _updatePlanProduct.value = UiState.Loading
         repository.updatePlanProduct(event, planProduct) {_updatePlanProduct.value = it}
     }
 
-    private val _deletePlanProduct = MutableLiveData<UiState<Pair<PlanProductModel, String>>>()
-    val deletePlanProduct: LiveData<UiState<Pair<PlanProductModel, String>>> = _deletePlanProduct
+    private val _deletePlanProduct = MutableLiveData<UiState<PlanProductModel>>()
+    val deletePlanProduct: LiveData<UiState<PlanProductModel>> = _deletePlanProduct
 
     fun deletePlanProduct(event: String, planProduct: PlanProductModel) {
         _deletePlanProduct.value = UiState.Loading
@@ -93,29 +93,30 @@ class ProductsViewModel @Inject constructor(val repository: ProductRepository) :
     private val _planProducts = MutableLiveData<UiState<List<PlanProductModel>>>()
     val planProducts: LiveData<UiState<List<PlanProductModel>>> = _planProducts
 
-    fun getPlanProducts(event: String) {
+    fun getPlanProducts(event: String) = viewModelScope.launch {
         _planProducts.value = UiState.Loading
-        repository.getPlanProducts(event) {_planProducts.value = it}
+        val result = repository.getPlanProducts(event)
+        _planProducts.value = result
     }
 
-    private val _addPurchase = MutableLiveData<UiState<Pair<PurchaseModel, String>>>()
-    val addPurchase: LiveData<UiState<Pair<PurchaseModel, String>>> = _addPurchase
+    private val _addPurchase = MutableLiveData<UiState<PurchaseModel>>()
+    val addPurchase: LiveData<UiState<PurchaseModel>> = _addPurchase
 
     fun addPurchase(event: String, purchase: PurchaseModel) {
         _addPurchase.value = UiState.Loading
         repository.addPurchase(event, purchase) {_addPurchase.value = it}
     }
 
-    private val _updatePurchase = MutableLiveData<UiState<Pair<PurchaseModel, String>>>()
-    val updatePurchase: LiveData<UiState<Pair<PurchaseModel, String>>> = _updatePurchase
+    private val _updatePurchase = MutableLiveData<UiState<PurchaseModel>>()
+    val updatePurchase: LiveData<UiState<PurchaseModel>> = _updatePurchase
 
     fun updatePurchase(event: String, purchase: PurchaseModel) {
         _updatePurchase.value = UiState.Loading
         repository.updatePurchase(event, purchase) {_updatePurchase.value = it}
     }
 
-    private val _deletePurchase = MutableLiveData<UiState<Pair<PurchaseModel, String>>>()
-    val deletePurchase: LiveData<UiState<Pair<PurchaseModel, String>>> = _deletePurchase
+    private val _deletePurchase = MutableLiveData<UiState<PurchaseModel>>()
+    val deletePurchase: LiveData<UiState<PurchaseModel>> = _deletePurchase
 
     fun deletePurchase(event: String, purchase: PurchaseModel) {
         _deletePurchase.value = UiState.Loading
@@ -126,9 +127,10 @@ class ProductsViewModel @Inject constructor(val repository: ProductRepository) :
     private val _purchases = MutableLiveData<UiState<List<PurchaseModel>>>()
     val purchases: LiveData<UiState<List<PurchaseModel>>> = _purchases
 
-    fun getPurchases(event: String) {
+    fun getPurchases(event: String) = viewModelScope.launch {
         _purchases.value = UiState.Loading
-        repository.getPurchase(event) {_purchases.value = it}
+        val result = repository.getPurchase(event)
+        _purchases.value = result
     }
     fun onUploadCheck(fileUris: Uri, onResult: (UiState<Pair<Uri, String>>) -> Unit){
         onResult.invoke(UiState.Loading)

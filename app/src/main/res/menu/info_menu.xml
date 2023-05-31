@@ -5,12 +5,12 @@
         android:id="@+id/transactions_info"
         android:icon="@drawable/baseline_payment_24"
         android:orderInCategory="1"
-        android:title="Переводы"
-        app:showAsAction="ifRoom" />
+        android:title="@string/transfers"
+        android:showAsAction="ifRoom" />
     <item
         android:id="@+id/history_info"
         android:icon="@drawable/baseline_history"
         android:orderInCategory="1"
-        android:title="История"
-        app:showAsAction="ifRoom" />
+        android:title="@string/history"
+        android:showAsAction="ifRoom" />
 </menu>

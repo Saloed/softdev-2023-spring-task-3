@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso
 import com.stfalcon.imageviewer.StfalconImageViewer
 
 
-class PurchaseAdapter(val onPurchaseClicked: ((Int, PurchaseModel) -> Unit)? = null) :
+class PurchaseAdapter(val onPurchaseClicked: ((PurchaseModel) -> Unit)? = null) :
     RecyclerView.Adapter<PurchaseAdapter.PurchaseViewHolder>() {
 
 
@@ -41,10 +41,11 @@ class PurchaseAdapter(val onPurchaseClicked: ((Int, PurchaseModel) -> Unit)? = n
         }
 
 
-        fun bind(item: PurchaseModel, position: Int) {
+        fun bind(item: PurchaseModel) {
             tvProduct.text = item.purchaseInfo?.market
-            tvPayer.text = "Оплатил: ${item.purchaseInfo?.paid?.name}"
 
+
+            tvPayer.text = binding.root.context.getString(R.string.buy, item.purchaseInfo?.paid?.name)
             if (item.purchaseInfo?.photo.isNullOrEmpty()) btnCheck.hide()
             else {
                 btnCheck.show()
@@ -61,7 +62,7 @@ class PurchaseAdapter(val onPurchaseClicked: ((Int, PurchaseModel) -> Unit)? = n
             binding.childRv.setHasFixedSize(true)
             binding.childRv.adapter = childAdapter
             binding.purchaseContainer.setOnClickListener {
-                onPurchaseClicked?.invoke(bindingAdapterPosition, item)
+                onPurchaseClicked?.invoke(item)
             }
             binding.arrowImageview.setOnClickListener {
                 listExp[bindingAdapterPosition] = !listExp[bindingAdapterPosition]
@@ -92,6 +93,6 @@ class PurchaseAdapter(val onPurchaseClicked: ((Int, PurchaseModel) -> Unit)? = n
 
     override fun onBindViewHolder(holder: PurchaseViewHolder, position: Int) {
         val item = list[position]
-        holder.bind(item, position)
+        holder.bind(item)
     }
 }

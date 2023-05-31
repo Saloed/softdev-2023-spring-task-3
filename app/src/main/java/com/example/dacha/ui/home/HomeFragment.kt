@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
@@ -15,7 +14,6 @@ import com.example.dacha.databinding.FragmentHomeBinding
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.utils.*
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -58,7 +56,7 @@ class HomeFragment : Fragment() {
         binding.btnLogout.setOnClickListener {
             person?.let { it1 ->
                 viewModel.logout(it1)
-                updateUI("logout", "")
+                updateUI(HomeStates.DELETE, "")
             }
         }
 
@@ -91,7 +89,7 @@ class HomeFragment : Fragment() {
                     binding.progressBar.hide()
                     if (state.data == null) {
                         person = null
-                        updateUI("logout", "")
+                        updateUI(HomeStates.DELETE, "")
                     } else {
                         person = state.data
                         var name = person!!.name.toString()
@@ -101,7 +99,7 @@ class HomeFragment : Fragment() {
                                     it.name.toString()
                             }
                         }
-                        updateUI("add", name)
+                        updateUI(HomeStates.ADD, name)
                     }
                 }
                 else -> {
@@ -130,23 +128,23 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun updateUI(state: String, data: String) {
+    private fun updateUI(state: HomeStates, data: String) {
         when (state) {
-            "add" -> {
+            HomeStates.ADD -> {
                 binding.progressBar.hide()
                 binding.btgLogin.hide()
                 binding.tvGlobalName.show()
                 binding.btnLogout.show()
                 binding.tvGlobalName.text = data
             }
-            "choose" -> {
+            HomeStates.CHOOSE -> {
                 binding.progressBar.hide()
                 binding.btgLogin.hide()
                 binding.tvGlobalName.show()
                 binding.btnLogout.show()
                 binding.tvGlobalName.text = data
             }
-            "logout" -> {
+            HomeStates.DELETE -> {
                 binding.progressBar.hide()
                 person = null
                 binding.btgLogin.show()
@@ -162,12 +160,12 @@ class HomeFragment : Fragment() {
         val editText = dialog.findViewById<EditText>(R.id.name_dialog_et)
         button.setOnClickListener {
             if (editText.text.toString().isEmpty()) {
-                toast("Введите имя")
+                toast(getString(R.string.empty_field))
             } else {
                 val text = editText.text.toString()
                 viewModel.addPerson(text)
                 dialog.dismiss()
-                updateUI("add", text)
+                updateUI(HomeStates.ADD, text)
             }
         }
         dialog.show()
@@ -192,9 +190,11 @@ class HomeFragment : Fragment() {
         dialog.findViewById<MaterialButton>(R.id.name_dialog_btn)?.setOnClickListener {
             viewModel.choosePerson(newPerson)
             dialog.dismiss()
-            updateUI("choose", newPerson.name.toString())
+            updateUI(HomeStates.CHOOSE, newPerson.name.toString())
         }
-
     }
 
+    enum class HomeStates {
+        ADD, CHOOSE, DELETE
+    }
 }

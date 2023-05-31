@@ -1,26 +1,22 @@
 package com.example.dacha.utils
 
 object FireDatabase {
-    val PEOPLE = "people"
-    val DEBTS = "debts"
-    val EVENTS = "events"
-    val PLAN_PRODUCT = "eplanProducts"
-    val PURCHASE = "epurchases"
-    val EDATE = "edate"
-    val ENAME = "ename"
-    val EPEOPLE = "epeople"
-    val TRANSACTIONS = "transactions"
-    val GALLERY = "gallery"
-    val NEWS = "news"
+    const val PEOPLE = "people"
+    const val EVENTS = "events"
+    const val PLAN_PRODUCT = "eplanProducts"
+    const val PURCHASE = "epurchases"
+    const val TRANSACTIONS = "transactions"
+    const val GALLERY = "gallery"
+    const val NEWS = "news"
 }
 
 object SharedPrefConstants {
-    val LOCAL_SHARED_PREF = "local_shared_pref"
-    val NAME = "name"
-    val ID = "id"
-    val EVENT_ID = "event_id"
+    const val LOCAL_SHARED_PREF = "local_shared_pref"
+    const val NAME = "name"
+    const val ID = "id"
+    const val EVENT_ID = "event_id"
 }
 
 object FirebaseStorageConstants {
-    val ROOT_DIRECTORY = "app"
+    const val ROOT_DIRECTORY = "app"
 }

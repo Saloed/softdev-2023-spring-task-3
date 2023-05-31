@@ -14,42 +14,43 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(val repository: DashboardRepository) : ViewModel() {
-    private val _addAlbum = MutableLiveData<UiState<Pair<AlbumModel, String>>>()
-    val addAlbum: LiveData<UiState<Pair<AlbumModel, String>>> = _addAlbum
+    private val _addAlbum = MutableLiveData<UiState<AlbumModel>>()
+    val addAlbum: LiveData<UiState<AlbumModel>> = _addAlbum
 
     fun addAlbum(album: AlbumModel) {
         _addAlbum.value = UiState.Loading
-        repository.addAlbum(album) {_addAlbum.value = it}
+        repository.addAlbum(album) { _addAlbum.value = it }
     }
 
-    private val _updateAlbum = MutableLiveData<UiState<Pair<AlbumModel, String>>>()
-    val updateAlbum: LiveData<UiState<Pair<AlbumModel, String>>> = _updateAlbum
+    private val _updateAlbum = MutableLiveData<UiState<AlbumModel>>()
+    val updateAlbum: LiveData<UiState<AlbumModel>> = _updateAlbum
 
     fun updateAlbum(album: AlbumModel) {
         _updateAlbum.value = UiState.Loading
-        repository.updateAlbum(album) {_updateAlbum.value = it}
+        repository.updateAlbum(album) { _updateAlbum.value = it }
     }
 
-    private val _deleteAlbum = MutableLiveData<UiState<Pair<AlbumModel, String>>>()
-    val deleteAlbum: LiveData<UiState<Pair<AlbumModel, String>>> = _deleteAlbum
+    private val _deleteAlbum = MutableLiveData<UiState<AlbumModel>>()
+    val deleteAlbum: LiveData<UiState<AlbumModel>> = _deleteAlbum
 
     fun deleteAlbum(album: AlbumModel) {
         _deleteAlbum.value = UiState.Loading
-        repository.deleteAlbum(album) {_deleteAlbum.value = it}
+        repository.deleteAlbum(album) { _deleteAlbum.value = it }
     }
 
     private val _albums = MutableLiveData<UiState<List<AlbumModel>>>()
     val albums: LiveData<UiState<List<AlbumModel>>> = _albums
 
-    fun getAlbums() {
+    fun getAlbums() = viewModelScope.launch {
         _albums.value = UiState.Loading
-        repository.getAlbums {_albums.value = it}
+        val result = repository.getAlbums()
+        _albums.value = result
     }
 
-    fun onUploadFiles(fileUris: List<Uri>, onResult: (UiState<Map<Uri, String>>) -> Unit){
+    fun onUploadFiles(fileUris: List<Uri>, onResult: (UiState<Map<Uri, String>>) -> Unit) {
         onResult.invoke(UiState.Loading)
         viewModelScope.launch {
-            repository.uploadFiles(fileUris,onResult)
+            repository.uploadFiles(fileUris, onResult)
         }
     }
 }

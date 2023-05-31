@@ -3,25 +3,27 @@ package com.example.dacha.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.dacha.data.model.NewsModel
 import com.example.dacha.data.model.PersonModel
 import com.example.dacha.data.repository.HomeRepository
 import com.example.dacha.utils.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(val repository: HomeRepository) : ViewModel() {
-    private val _addPerson = MutableLiveData<UiState<Pair<PersonModel, String>>>()
-    val addPerson: LiveData<UiState<Pair<PersonModel, String>>> = _addPerson
+    private val _addPerson = MutableLiveData<UiState<PersonModel>>()
+    val addPerson: LiveData<UiState<PersonModel>> = _addPerson
 
     fun addPerson(name: String) {
         _addPerson.value = UiState.Loading
         repository.addPerson(name) {_addPerson.value = it}
     }
 
-    private val _choosePerson = MutableLiveData<UiState<Pair<PersonModel, String>>>()
-    val choosePerson: LiveData<UiState<Pair<PersonModel, String>>> = _choosePerson
+    private val _choosePerson = MutableLiveData<UiState<PersonModel>>()
+    val choosePerson: LiveData<UiState<PersonModel>> = _choosePerson
 
     fun choosePerson(person: PersonModel) {
         _choosePerson.value = UiState.Loading
@@ -31,13 +33,14 @@ class HomeViewModel @Inject constructor(val repository: HomeRepository) : ViewMo
     private val _people = MutableLiveData<UiState<List<PersonModel>>>()
     val people: LiveData<UiState<List<PersonModel>>> = _people
 
-    fun getPeople() {
+    fun getPeople() = viewModelScope.launch {
         _people.value = UiState.Loading
-        repository.getPeople {_people.value = it}
+        val result = repository.getPeople()
+        _people.value = result
     }
 
-    private val _logout = MutableLiveData<UiState<Pair<PersonModel, String>>>()
-    val logout: LiveData<UiState<Pair<PersonModel, String>>> = _logout
+    private val _logout = MutableLiveData<UiState<PersonModel>>()
+    val logout: LiveData<UiState<PersonModel>> = _logout
 
     fun logout(person: PersonModel) {
         _logout.value = UiState.Loading
@@ -57,9 +60,9 @@ class HomeViewModel @Inject constructor(val repository: HomeRepository) : ViewMo
 
     private val _news = MutableLiveData<UiState<List<NewsModel>>>()
     val news: LiveData<UiState<List<NewsModel>>> = _news
-    fun getNews() {
+    fun getNews() = viewModelScope.launch {
         _news.value = UiState.Loading
-        repository.getNews {_news.value = it}
+        val result = repository.getNews()
+        _news.value = result
     }
-
 }
