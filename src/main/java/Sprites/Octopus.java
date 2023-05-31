@@ -8,11 +8,11 @@ import static HelperClasses.Constants.Enemy.*;
 import static HelperClasses.HelpMethods.CanMoveHere;
 import static HelperClasses.HelpMethods.IsFloor;
 
-public class Octopus extends Enemy{
+public class Octopus extends Enemy {
 
     public Octopus(float x, float y) {
         super(x, y, OctopusWidthScaled, OctopusHeightScaled, Octopus);
-        createHitbox( 26, 24);
+        createHitbox(26, 24);
         createAttackHitbox(30, 24, 35);
         speed = 0.35f * Scale;
         attackRange = (int) (TileSize * 1.5);
@@ -55,6 +55,7 @@ public class Octopus extends Enemy{
             }
         }
     }
+
     protected void attackMove(int[][] lvlData) {
         float xSpeed;
         if (dir == Left) xSpeed = -speed;

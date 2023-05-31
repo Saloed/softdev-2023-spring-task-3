@@ -14,7 +14,7 @@ public class LevelManager {
     private final Playing playing;
     private BufferedImage[] levelImage;
     private BufferedImage[] water;
-    private final ArrayList<Level> levels;
+    public ArrayList<Level> levels;
     public int lvlIndex = 0, animationIndex, animationTick;
 
     public LevelManager(Playing playing) {

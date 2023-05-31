@@ -15,7 +15,7 @@ public class HelpMethods {
     }
 
     private static boolean Abroad(float x, float y, int[][] lvlData) {
-        int maxWidth = lvlData[0].length * GameWidth;
+        int maxWidth = lvlData[0].length * TileSize;
         if (x < 0 || x >= maxWidth) return true;
         if (y < 0 || y >= GameHeight) return true;
 
@@ -80,18 +80,33 @@ public class HelpMethods {
 
     public static boolean IsAllTileClear(int xStart, int xEnd, int y, int[][] lvlData) {
         for (int i = 0; i < xEnd - xStart; i++) {
-            if (IsTileSolid(i + xStart, y, lvlData)) return false;
-            if (!IsTileSolid(i + xStart, y + 1, lvlData)) return false;
+            if (IsTileSolid(xStart + i, y, lvlData))
+                if (IsTileSolid(xStart + i, y - 1, lvlData)) return false;
         }
         return true;
     }
 
-    public static boolean IsWayClear(int[][] lvlData, Rectangle2D.Float anotherHitbox, Rectangle2D.Float mcHitbox, int tileY) {
-        int mcTileX = (int) (mcHitbox.x / TileSize);
+    public static boolean IsAllTilesWalkable(int xStart, int xEnd, int y, int[][] lvlData) {
+        if (IsAllTileClear(xStart, xEnd, y, lvlData))
+            for (int i = 0; i < xEnd - xStart; i++)
+                if (!IsTileSolid(xStart + i, y + 1, lvlData))
+                    return false;
+        return true;
+    }
+
+    public static boolean IsWayClear(int[][] lvlData, Rectangle2D.Float anotherHitbox, Rectangle2D.Float mcHitbox, int yTile) {
         int anotherTileX = (int) (anotherHitbox.x / TileSize);
-        if (anotherTileX > mcTileX)
-            return IsAllTileClear(anotherTileX, mcTileX, tileY, lvlData);
+
+        int mcTileX;
+
+        if (Abroad(mcHitbox.x, mcHitbox.y + mcHitbox.height + 1, lvlData))
+            mcTileX = (int) (mcHitbox.x / TileSize);
         else
-            return IsAllTileClear(mcTileX, anotherTileX, tileY, lvlData);
+            mcTileX = (int) ((mcHitbox.x + mcHitbox.width) / TileSize);
+
+        if (anotherTileX > mcTileX)
+            return IsAllTilesWalkable(mcTileX, anotherTileX, yTile, lvlData);
+        else
+            return IsAllTilesWalkable(anotherTileX, mcTileX, yTile, lvlData);
     }
 }

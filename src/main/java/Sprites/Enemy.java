@@ -114,12 +114,13 @@ public abstract class Enemy extends Entity {
 
     public void hurt(int damage) {
         currentHealth -= damage;
-        if (currentHealth <= 0) changeAction(Dead);
-        else changeAction(Hit);
+        if (currentHealth <= 0) {
+            changeAction(Dead);
+        } else changeAction(Hit);
     }
 
     protected boolean canSeeMainCharacter(MainCharacter mainCharacter, int[][] lvlData) {
-        int mcTileY = (int) (mainCharacter.hitbox.y / TileSize);
+        int mcTileY = (int) (mainCharacter.getHitbox().y / TileSize);
         if (mcTileY == tileY)
             if (inRange(mainCharacter))
                 return IsWayClear(lvlData, hitbox, mainCharacter.hitbox, tileY);

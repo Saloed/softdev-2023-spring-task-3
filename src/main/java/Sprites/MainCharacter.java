@@ -316,4 +316,8 @@ public class MainCharacter extends Entity {
         if (IsEntityOnFloor(hitbox, lvlData))
             inAir = true;
     }
+
+    public int getCurrentMoney() {
+        return currentMoney;
+    }
 }

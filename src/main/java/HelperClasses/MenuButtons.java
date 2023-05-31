@@ -26,7 +26,7 @@ public class MenuButtons {
     }
 
     private void initBorders() {
-        borders = new Rectangle( x - xOffset, y, ButtonWidthScaled, ButtonHeightScaled);
+        borders = new Rectangle(x - xOffset, y, ButtonWidthScaled, ButtonHeightScaled);
     }
 
     private void loadImages() {
@@ -37,11 +37,11 @@ public class MenuButtons {
         }
     }
 
-    public void draw(Graphics g){
+    public void draw(Graphics g) {
         g.drawImage(images[index], x - xOffset, y, ButtonWidthScaled, ButtonHeightScaled, null);
     }
 
-    public void update(){
+    public void update() {
         index = 0;
         if (mouseOver) index = 1;
         if (mousePressed) index = 2;
@@ -59,15 +59,15 @@ public class MenuButtons {
         this.mousePressed = mousePressed;
     }
 
-    public Rectangle getBorders(){
+    public Rectangle getBorders() {
         return borders;
     }
 
-    public void applyGameState(){
+    public void applyGameState() {
         GameState.gameState = gameState;
     }
 
-    public void resetBool(){
+    public void resetBool() {
         mouseOver = false;
         mousePressed = false;
     }

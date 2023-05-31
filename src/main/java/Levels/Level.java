@@ -2,8 +2,10 @@ package Levels;
 
 import GameObjects.Money;
 import GameObjects.Spike;
+
 import static HelperClasses.Constants.Enemy.*;
 import static HelperClasses.Constants.Objects.*;
+
 import Sprites.Crab;
 import Sprites.Octopus;
 
@@ -53,8 +55,8 @@ public class Level {
     private void createEnemies(int green, int x, int y) {
         switch (green) {
             case Crab:
-               crabs.add(new Crab(x * TileSize, y * TileSize));
-               break;
+                crabs.add(new Crab(x * TileSize, y * TileSize));
+                break;
             case Octopus:
                 octopuses.add(new Octopus(x * TileSize, y * TileSize));
                 break;
