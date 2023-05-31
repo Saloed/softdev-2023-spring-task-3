@@ -1,12 +1,10 @@
-package com.example.mytarget.tryingthisshit
+package com.example.mytarget
 
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.mytarget.StorageRepo
-import com.example.mytarget.Task
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

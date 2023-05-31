@@ -50,7 +50,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.mytarget.tryingthisshit.NewTasksViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -67,7 +66,7 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
-import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 
@@ -515,6 +514,6 @@ fun TaskList(
 }
 
 fun convertToTimestamp(localDate: LocalDate): Timestamp {
-    val milliseconds = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    val milliseconds = localDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
     return Timestamp(milliseconds / 1000, (milliseconds % 1000 * 1000000).toInt())
 }

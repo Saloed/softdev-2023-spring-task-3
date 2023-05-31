@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.example.mytarget.tryingthisshit.NewTasksViewModel
 import com.example.mytarget.ui.theme.MyTargetTheme
 
 class MainActivity : ComponentActivity() {
