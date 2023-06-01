@@ -10,17 +10,15 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<StackPane fx:id="papa" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.game.view_control.Controller">
+<StackPane fx:id="papa" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-family: Harpseal;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.game.view_control.Controller">
    <children>
-      <BorderPane prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #fddfbd;" StackPane.alignment="CENTER">
+      <BorderPane prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #fddfbd; -fx-font-family: inherit;" StackPane.alignment="CENTER">
          <top>
-            <Pane prefHeight="85.0" prefWidth="640.0" BorderPane.alignment="CENTER">
+            <Pane prefHeight="85.0" prefWidth="640.0" style="-fx-font-family: inherit;" BorderPane.alignment="CENTER">
                <children>
-                  <Text layoutX="14.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Harpseal; -fx-font-size: 34.0;" text="SCORE: " wrappingWidth="140.53671264648438">
-                  </Text>
-                  <Label fx:id="scoreLabel" layoutX="155.0" layoutY="25.0" prefHeight="35.0" prefWidth="234.0" style="-fx-font-family: Harpseal; -fx-font-size: 34.0;" text="0">
+                  <Label layoutX="14.0" layoutY="25.0" style="-fx-font-size: 34;" text="SCORE: " />
+                  <Label fx:id="scoreLabel" layoutX="151.0" layoutY="25.0" prefHeight="35.0" prefWidth="234.0" style="-fx-font-size: 34.0;" text="0">
                   </Label>
                   <Button fx:id="restartButton" layoutX="651.0" layoutY="23.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#restart" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #f18b06; -fx-background-radius: 50%;">
                      <graphic>
@@ -44,10 +42,8 @@
             </Pane>
          </top>
          <bottom>
-            <Pane prefHeight="55.0" prefWidth="640.0" BorderPane.alignment="CENTER">
+            <Pane prefHeight="55.0" prefWidth="640.0" style="-fx-font-family: inherit;" BorderPane.alignment="CENTER">
                <children>
-                  <Text layoutX="14.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: Harpseal; -fx-font-size: 24.0;" text="CONTROLS: W, E, A, D, Z, X">
-                  </Text>
                   <Button layoutX="646.0" layoutY="7.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#returnToMenu" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #f18b06;">
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0">
@@ -57,13 +53,14 @@
                         </ImageView>
                      </graphic>
                   </Button>
+                  <Label layoutX="14.0" layoutY="15.0" style="-fx-font-size: 24;" text="CONTROLS: W, E, A, D, Z, X" />
                </children>
             </Pane>
          </bottom>
          <center>
-            <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="200.0" style="-fx-font-family: inherit;" BorderPane.alignment="CENTER">
                <children>
-                  <Pane fx:id="fieldPane" prefHeight="560.0" prefWidth="700.0" StackPane.alignment="CENTER" />
+                  <Pane fx:id="fieldPane" prefHeight="560.0" prefWidth="700.0" style="-fx-font-family: inherit;" StackPane.alignment="CENTER" />
                </children>
                <BorderPane.margin>
                   <Insets />
@@ -71,10 +68,10 @@
             </StackPane>
          </center>
       </BorderPane>
-      <Pane fx:id="startPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" StackPane.alignment="CENTER">
+      <Pane fx:id="startPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-family: inherit;" StackPane.alignment="CENTER">
          <children>
             <Label opacity="0.4" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #f5ca1f;" />
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" style="-fx-font-family: Harpseal; -fx-font-size: 27.0;" text="ENTER SIDE SIZE" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" style="-fx-font-size: 27.0;" text="ENTER SIDE SIZE" textAlignment="CENTER">
             </Label>
             <TextField fx:id="sideLength" alignment="CENTER" layoutX="311.0" layoutY="375.0" onKeyPressed="#enterText" prefHeight="25.0" prefWidth="79.0" promptText="3" style="-fx-background-color: #d3a376; -fx-text-fill: #fafafa; -fx-prompt-text-fill: #eaeaea; -fx-border-color: #4f2d12; -fx-border-radius: 3%;">
                <font>
@@ -84,27 +81,27 @@
                <font>
                   <Font name="Harpseal" size="12.0" />
                </font></Button>
-            <Label fx:id="warningLabel" layoutX="264.0" layoutY="440.0" prefHeight="58.0" prefWidth="173.0" style="-fx-font-family: harpseal;" text="Invalid size! Recommended: 2 &lt; n &lt; 10" textAlignment="CENTER" visible="false" wrapText="true" />
+            <Label fx:id="warningLabel" layoutX="264.0" layoutY="440.0" prefHeight="58.0" prefWidth="173.0" text="Invalid size! Recommended: 2 &lt; n &lt; 10" textAlignment="CENTER" visible="false" wrapText="true" />
          </children>
          <StackPane.margin>
             <Insets />
          </StackPane.margin>
       </Pane>
-      <Pane fx:id="failPane" prefHeight="200.0" prefWidth="200.0" visible="false" StackPane.alignment="CENTER">
+      <Pane fx:id="failPane" prefHeight="200.0" prefWidth="200.0" style="-fx-font-family: inherit;" visible="false" StackPane.alignment="CENTER">
          <children>
             <Label opacity="0.4" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #f5ca1f;" />
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" style="-fx-font-family: Harpseal; -fx-font-size: 27.0;" text="Game Over" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" style="-fx-font-size: 27.0;" text="Game Over" textAlignment="CENTER">
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="184.0" layoutY="363.0" prefHeight="34.0" prefWidth="317.0" style="-fx-font-family: Harpseal; -fx-font-size: 15;" text="PRESS ANY BUTTON TO RESTART" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="184.0" layoutY="363.0" prefHeight="34.0" prefWidth="317.0" style="-fx-font-size: 15;" text="PRESS ANY BUTTON TO RESTART" textAlignment="CENTER">
             </Label>
          </children>
       </Pane>
-      <Pane fx:id="winPane" prefHeight="200.0" prefWidth="200.0" visible="false" StackPane.alignment="CENTER">
+      <Pane fx:id="winPane" prefHeight="200.0" prefWidth="200.0" style="-fx-font-family: inherit;" visible="false" StackPane.alignment="CENTER">
          <children>
             <Label opacity="0.4" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #f5ca1f;" />
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" style="-fx-font-family: Harpseal; -fx-font-size: 27.0;" text="You won!" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="700.0" prefWidth="700.0" style="-fx-font-size: 27.0;" text="You won!" textAlignment="CENTER">
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="154.0" prefHeight="449.0" prefWidth="585.0" style="-fx-font-family: Harpseal; -fx-font-size: 15;" text="PRESS ANY BUTTON TO RESTART" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="154.0" prefHeight="449.0" prefWidth="585.0" style="-fx-font-size: 15;" text="PRESS ANY BUTTON TO RESTART" textAlignment="CENTER">
             </Label>
          </children>
       </Pane>
