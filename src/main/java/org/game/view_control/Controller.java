@@ -138,7 +138,7 @@ public class Controller {
             for (int r = 0; r < fieldOptions.getArraySide(); r++) {
                 if(gameField[q][r] != null) {
                     int valOfTile = logic.getGrid().getState(q, r);
-                    String style = "-fx-background-color: " + Colors.valueOf("TILE" + valOfTile).getColor() +
+                    String style = "-fx-background-color: " + Colors.colors.get(valOfTile) +
                             "; -fx-background-radius: 50%; -fx-text-fill: #fafafa; " +
                             "-fx-font-family: Harpseal; -fx-font-size: " + fieldOptions.getDiameter() * 0.27;
                     gameField[q][r].setStyle(style);

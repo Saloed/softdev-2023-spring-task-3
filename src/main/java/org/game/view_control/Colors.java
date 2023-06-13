@@ -1,21 +1,28 @@
 package org.game.view_control;
 
-public enum Colors {
+import java.util.HashMap;
 
-    TILE0("transparent"), TILE2("#dacab8"), TILE4("#99928b"),
-    TILE8("#dfa16f"), TILE16("#e68f42"), TILE32("#f17e56"),
-    TILE64("#e94832"), TILE128("#f6d872"), TILE256("#e5c452"),
-    TILE512("#dcb635"), TILE1024("#e8cb29"), TILE2048("#f5ca1f"),
-    TILE4096("#f8d801"), TILE8192("#c32c08"), TILE16384("#060100");
+public class Colors {
 
-    private final String color;
+    public final static HashMap<Integer, String> colors = new HashMap<>();
 
-    Colors(String color) {
-        this.color = color;
-    }
+    static {
+        colors.put(0, "#ccb69f");
+        colors.put(2, "#dacab8");
+        colors.put(4, "#99928b");
+        colors.put(8, "#dfa16f");
+        colors.put(16, "#e68f42");
+        colors.put(32, "#f17e56");
+        colors.put(64, "#e94832");
+        colors.put(128, "#f6d872");
+        colors.put(256, "#e5c452");
+        colors.put(512, "#dcb635");
+        colors.put(1024, "#e8cb29");
+        colors.put(2048, "#f5ca1f");
+        colors.put(4096, "#f8d801");
+        colors.put(8192, "#c32c08");
+        colors.put(16384, "#060100");
 
-    public String getColor() {
-        return color;
     }
 
 }
