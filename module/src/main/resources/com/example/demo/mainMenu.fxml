@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?language javascript?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="1080.0" maxWidth="1920.0" minHeight="500.0" minWidth="700.0" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #708090;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.Controllers.Controller">
+   <AnchorPane prefHeight="500.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER" layoutX="50.0" layoutY="7.0" prefHeight="694.0" prefWidth="1820.0" AnchorPane.bottomAnchor="379.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="7.0">
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="58.0" text="THE" VBox.vgrow="ALWAYS">
+            <font>
+               <Font name="Segoe UI Emoji" size="30.0" />
+            </font>
+         </Label>
+      </VBox>
+      <VBox alignment="CENTER" layoutX="50.0" layoutY="47.0" prefHeight="500.0" prefWidth="600.0" spacing="10.0" AnchorPane.bottomAnchor="-47.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="47.0">
+         <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="700.0" text="TESSERACT" VBox.vgrow="ALWAYS">
+            <font>
+               <Font name="Gill Sans Ultra Bold" size="96.0" />
+            </font>
+         </Label>
+         <Button id="StartButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Play" prefHeight="60.0" prefWidth="280.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 20;                  -fx-border-width: 2;" text="PLAY" VBox.vgrow="ALWAYS">
+            <font>
+               <Font name="Leelawadee Bold" size="29.0" />
+            </font>
+            <VBox.margin>
+               <Insets />
+            </VBox.margin>
+         </Button>
+         <Button id="SettingsButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Settings" prefHeight="60.0" prefWidth="280.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 20;                  -fx-border-width: 2;" text="SETTINGS" VBox.vgrow="ALWAYS">
+            <font>
+               <Font name="Leelawadee Bold" size="29.0" />
+            </font>
+         </Button>
+         <Button id="InformationButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Information" prefHeight="60.0" prefWidth="280.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 20;                  -fx-border-width: 2;" text="INFORMATION" VBox.vgrow="ALWAYS">
+            <font>
+               <Font name="Leelawadee Bold" size="29.0" />
+            </font>
+         </Button>
+         <Button id="HallOfFameButton" alignment="CENTER" contentDisplay="CENTER" layoutX="780.0" layoutY="620.0" mnemonicParsing="false" onAction="#HallOfFame" prefHeight="60.0" prefWidth="280.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 20;                  -fx-border-width: 2;" text="HALL OF FAME">
+            <font>
+               <Font name="Leelawadee Bold" size="29.0" />
+            </font>
+         </Button>
+         <Button id="QuitButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Quit" prefHeight="60.0" prefWidth="280.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 20;                  -fx-border-width: 2;" text="QUIT" VBox.vgrow="ALWAYS">
+            <font>
+               <Font name="Leelawadee Bold" size="29.0" />
+            </font>
+         </Button>
+      </VBox>
+   </AnchorPane>
+   <AnchorPane fx:id="PlayPane" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #708090;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Label alignment="CENTER" layoutX="483.0" layoutY="13.0" prefHeight="147.0" prefWidth="518.0" text="LEVELS">
+         <font>
+            <Font name="Gill Sans Ultra Bold" size="79.0" />
+         </font>
+      </Label>
+      <Button id="StartButton" fx:id="Level0Button" layoutX="50.0" layoutY="187.0" mnemonicParsing="false" onAction="#PlayLevel0" prefHeight="72.0" prefWidth="72.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 20;               -fx-background-radius: 20; -fx-border-width: 3;" text="0">
+         <font>
+            <Font name="Calibri Bold" size="37.0" />
+         </font>
+      </Button>
+      <Label layoutX="50.0" layoutY="128.0" text="Training level">
+         <font>
+            <Font name="Leelawadee UI" size="44.0" />
+         </font>
+      </Label>
+      <Label layoutX="50.0" layoutY="261.0" text="Amateur levels">
+         <font>
+            <Font name="Leelawadee UI" size="44.0" />
+         </font>
+      </Label>
+      <Label layoutX="50.0" layoutY="404.0" text="Pro levels">
+         <font>
+            <Font name="Leelawadee UI" size="44.0" />
+         </font>
+      </Label>
+      <Button id="StartButton" fx:id="Level1Button" layoutX="47.0" layoutY="327.0" mnemonicParsing="false" onAction="#PlayLevel1" prefHeight="72.0" prefWidth="72.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 20;               -fx-background-radius: 20; -fx-border-width: 3;" text="1">
+         <font>
+            <Font name="Calibri Bold" size="37.0" />
+         </font>
+      </Button>
+      <Button id="StartButton" fx:id="Level4Button" layoutX="47.0" layoutY="470.0" mnemonicParsing="false" onAction="#PlayLevel4" prefHeight="72.0" prefWidth="72.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 20;               -fx-background-radius: 20; -fx-border-width: 3;" text="4">
+         <font>
+            <Font name="Calibri Bold" size="37.0" />
+         </font>
+      </Button>
+      <Button id="BackButton" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#BackPlay" prefHeight="66.0" prefWidth="64.0" style="-fx-background-radius: 30; -fx-border-radius: 30; -fx-background-color: #708090;               -fx-border-color: #696969; -fx-border-width: 3;" text="&lt;" textFill="#534e4e">
+         <font>
+            <Font name="Impact" size="34.0" />
+         </font>
+      </Button>
+      <Button id="StartButton" fx:id="Level2Button" layoutX="143.0" layoutY="327.0" mnemonicParsing="false" onAction="#PlayLevel2" prefHeight="72.0" prefWidth="72.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 20;               -fx-background-radius: 20; -fx-border-width: 3;" text="2">
+         <font>
+            <Font name="Calibri Bold" size="37.0" />
+         </font>
+      </Button>
+      <Button id="StartButton" fx:id="Level3Button" layoutX="236.0" layoutY="327.0" mnemonicParsing="false" onAction="#PlayLevel3" prefHeight="72.0" prefWidth="72.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 20;               -fx-background-radius: 20; -fx-border-width: 3;" text="3">
+         <font>
+            <Font name="Calibri Bold" size="37.0" />
+         </font>
+      </Button>
+   </AnchorPane>
+   <AnchorPane fx:id="SettingsPane" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #708090;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Button id="BackButton" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#BackSettings" prefHeight="72.0" prefWidth="72.0" style="-fx-background-radius: 20; -fx-border-radius: 30; -fx-background-color: #708090;               -fx-border-color: #696969; -fx-border-width: 3;" text="&lt;" textFill="#534e4e">
+         <font>
+            <Font name="Impact" size="28.0" />
+         </font>
+      </Button>
+      <Label layoutX="260.0" layoutY="670.0" text="Pause - ">
+         <font>
+            <Font name="Century Gothic" size="27.0" />
+         </font>
+      </Label>
+      <Label layoutX="51.0" layoutY="163.0" text="Controls:">
+         <font>
+            <Font name="Century Gothic Bold" size="35.0" />
+         </font>
+      </Label>
+      <Label layoutX="150.0" layoutY="250.0" text="Move Forward - ">
+         <font>
+            <Font name="Century Gothic" size="27.0" />
+         </font>
+      </Label>
+      <Label layoutX="192.0" layoutY="320.0" text="Move Back - ">
+         <font>
+            <Font name="Century Gothic" size="27.0" />
+         </font>
+      </Label>
+      <Label layoutX="209.0" layoutY="390.0" text="Move Left - ">
+         <font>
+            <Font name="Century Gothic" size="27.0" />
+         </font>
+      </Label>
+      <Label layoutX="191.0" layoutY="460.0" text="Move Right - ">
+         <font>
+            <Font name="Century Gothic" size="27.0" />
+         </font>
+      </Label>
+      <Label layoutX="266.0" layoutY="530.0" text="Jump - ">
+         <font>
+            <Font name="Century Gothic" size="27.0" />
+         </font>
+      </Label>
+      <Label layoutX="108.0" layoutY="600.0" text="Dimension Rotate - ">
+         <font>
+            <Font name="Century Gothic" size="27.0" />
+         </font>
+      </Label>
+      <Button id="StartButton" layoutX="386.0" layoutY="237.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 15;               -fx-background-radius: 15; -fx-border-width: 3;" text="W">
+         <font>
+            <Font name="Calibri Bold" size="23.0" />
+         </font>
+      </Button>
+      <Button id="StartButton" layoutX="386.0" layoutY="307.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 15;               -fx-background-radius: 15; -fx-border-width: 3;" text="S">
+         <font>
+            <Font name="Calibri Bold" size="23.0" />
+         </font>
+      </Button>
+      <Button id="StartButton" layoutX="386.0" layoutY="377.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 15;               -fx-background-radius: 15; -fx-border-width: 3;" text="A">
+         <font>
+            <Font name="Calibri Bold" size="23.0" />
+         </font>
+      </Button>
+      <Button id="StartButton" layoutX="386.0" layoutY="518.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="118.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 15;               -fx-background-radius: 15; -fx-border-width: 3;" text="Space">
+         <font>
+            <Font name="Calibri Bold" size="23.0" />
+         </font>
+      </Button>
+      <Button id="StartButton" layoutX="386.0" layoutY="447.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 15;               -fx-background-radius: 15; -fx-border-width: 3;" text="D">
+         <font>
+            <Font name="Calibri Bold" size="23.0" />
+         </font>
+      </Button>
+      <Button id="StartButton" layoutX="386.0" layoutY="588.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 15;               -fx-background-radius: 15; -fx-border-width: 3;" text="R">
+         <font>
+            <Font name="Calibri Bold" size="23.0" />
+         </font>
+      </Button>
+      <Button id="StartButton" layoutX="386.0" layoutY="659.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" style="-fx-background-color: #708090; -fx-border-color: #696969; -fx-border-radius: 15;               -fx-background-radius: 15; -fx-border-width: 3;" text="P">
+         <font>
+            <Font name="Calibri Bold" size="23.0" />
+         </font>
+      </Button>
+      <VBox alignment="CENTER" layoutX="170.0" layoutY="-109.0" prefHeight="545.0" prefWidth="1580.0" AnchorPane.bottomAnchor="644.0" AnchorPane.leftAnchor="170.0" AnchorPane.rightAnchor="170.0" AnchorPane.topAnchor="-109.0">
+         <Label prefHeight="75.0" prefWidth="386.0" text="SETTINGS:" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+            <font>
+               <Font name="Gill Sans Ultra Bold" size="60.0" />
+            </font>
+         </Label>
+      </VBox>
+   </AnchorPane>
+   <AnchorPane fx:id="InformationPane" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #708090;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER" layoutX="50.0" layoutY="49.0" prefHeight="424.0" prefWidth="600.0" AnchorPane.bottomAnchor="27.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="49.0">
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="651.0" prefWidth="1376.0" text="This game is called &quot;The Tesseract&quot; after the four-dimensional hypercube, which we cannot see in its full glory, because we only see two-dimensional pictures of the three-dimensional space around us. This phenomenon is taken as the basis of the game. The main character lives in a two-dimensional world, but we, the inhabitants of the three-dimensional world, help him to overcome various obstacles, because we see what the hero does not see. Use your ingenuity and game mechanics to guide your character to the right path. Good luck!" textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS">
+            <font>
+               <Font name="Century Gothic" size="46.0" />
+            </font>
+         </Label>
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="194.0" prefWidth="1620.0" text="The Tesseract was created by Alexandr Vyssotskiy. All rights reserved." textAlignment="CENTER" wrapText="true" VBox.vgrow="ALWAYS">
+            <font>
+               <Font name="Century Gothic" size="46.0" />
+            </font>
+         </Label>
+      </VBox>
+      <Button id="BackButton" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#BackInformation" prefHeight="72.0" prefWidth="72.0" style="-fx-background-radius: 30; -fx-border-radius: 30; -fx-background-color: #708090;               -fx-border-color: #696969; -fx-border-width: 3;" text="&lt;" textFill="#534e4e">
+         <font>
+            <Font name="Impact" size="26.0" />
+         </font>
+      </Button>
+   </AnchorPane>
+   <AnchorPane fx:id="HallOfFamePane" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #708090;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER" layoutX="469.0" layoutY="87.0" prefHeight="194.0" prefWidth="1003.0"
+            AnchorPane.bottomAnchor="799.0" AnchorPane.leftAnchor="469.0" AnchorPane.rightAnchor="448.0"
+            AnchorPane.topAnchor="87.0">
+         <Label prefHeight="99.0" prefWidth="470.0" text="RECORDS">
+            <font>
+               <Font name="Gill Sans Ultra Bold" size="79.0"/>
+            </font>
+         </Label>
+      </VBox>
+      <Button id="BackButton" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#BackHallOfFame" prefHeight="72.0" prefWidth="72.0" style="-fx-background-radius: 30; -fx-border-radius: 30; -fx-background-color: #708090;               -fx-border-color: #696969; -fx-border-width: 3;" text="&lt;" textFill="#534e4e">
+         <font>
+            <Font name="Impact" size="26.0" />
+         </font>
+      </Button>
+      <Label alignment="CENTER" layoutX="70.0" layoutY="200.0" text="Level 0 -">
+         <font>
+            <Font name="Gill Sans Ultra Bold" size="42.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="70.0" layoutY="300.0" text="Level 1 -">
+         <font>
+            <Font name="Gill Sans Ultra Bold" size="42.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="70.0" layoutY="400.0" text="Level 2 -">
+         <font>
+            <Font name="Gill Sans Ultra Bold" size="42.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="70.0" layoutY="500.0" text="Level 3 -">
+         <font>
+            <Font name="Gill Sans Ultra Bold" size="42.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="70.0" layoutY="600.0" text="Level 4 -">
+         <font>
+            <Font name="Gill Sans Ultra Bold" size="42.0" />
+         </font>
+      </Label>
+      <Label fx:id="Record0" alignment="CENTER" layoutX="320.0" layoutY="205.0" text="N/A">
+         <font>
+            <Font name="Gill Sans MT" size="42.0" />
+         </font>
+      </Label>
+      <Label fx:id="Record1" alignment="CENTER" layoutX="320.0" layoutY="305.0" text="N/A">
+         <font>
+            <Font name="Gill Sans MT" size="42.0" />
+         </font>
+      </Label>
+      <Label fx:id="Record2" alignment="CENTER" layoutX="320.0" layoutY="405.0" text="N/A">
+         <font>
+            <Font name="Gill Sans MT" size="42.0" />
+         </font>
+      </Label>
+      <Label fx:id="Record3" alignment="CENTER" layoutX="320.0" layoutY="505.0" text="N/A">
+         <font>
+            <Font name="Gill Sans MT" size="42.0" />
+         </font>
+      </Label>
+      <Label fx:id="Record4" alignment="CENTER" layoutX="320.0" layoutY="605.0" text="N/A">
+         <font>
+            <Font name="Gill Sans MT" size="42.0" />
+         </font>
+      </Label>
+   </AnchorPane>
+   <AnchorPane fx:id="QuitPane" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #708090;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="CENTER" layoutX="50.0" layoutY="191.0" prefHeight="100.0" prefWidth="600.0" AnchorPane.bottomAnchor="209.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="191.0">
+         <Label alignment="CENTER" text="Are you sure you want to exit?" VBox.vgrow="SOMETIMES">
+            <font>
+               <Font name="Gill Sans Ultra Bold" size="44.0" />
+            </font>
+         </Label>
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="600.0" spacing="70.0">
+            <Button fx:id="YesButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Yes" prefHeight="70.0" prefWidth="150.0" style="-fx-background-color: #708090; -fx-background-radius: 30; -fx-border-color: #696969;                     -fx-border-radius: 30; -fx-border-width: 3;" text="YES" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="System Bold" size="26.0" />
+               </font>
+            </Button>
+            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#No" prefHeight="70.0" prefWidth="150.0" style="-fx-background-color: #708090; -fx-background-radius: 30; -fx-border-color: #696969;                     -fx-border-radius: 30; -fx-border-width: 3;" text="NO" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="System Bold" size="26.0" />
+               </font>
+            </Button>
+         </HBox>
+      </VBox>
+   </AnchorPane>
+</AnchorPane>
