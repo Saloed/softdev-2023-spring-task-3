@@ -117,7 +117,7 @@ public class UserData {
         basicConfigs.setProperty("mail.smtp.host", "smtp.gmail.com\n");
         basicConfigs.setProperty("mail.smtp.port", "465\n");
         basicConfigs.setProperty("mail.imap.host", "imap.gmail.com\n");
-        basicConfigs.setProperty("mail.imap.port", "993");
+        basicConfigs.setProperty("mail.imap.port", "993\n");
         new File(System.getProperty("user.home") + File.separator + ".mail").mkdirs();
         try (FileWriter users = new FileWriter(System.getProperty("user.home") +
                 File.separator + ".mail" + File.separator + "users.txt");

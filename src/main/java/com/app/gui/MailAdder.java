@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import javax.mail.*;
 import java.io.*;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +97,8 @@ public class MailAdder extends Stage {
         Properties basicProps = new Properties();
         try {
             currentPath = Paths.get("").toRealPath().toString();
-            basicProps.load(new FileInputStream(currentPath + "/src/main/resources/props/basicConfigs.properties"));
+            basicProps.load(new FileInputStream(System.getProperty("user.home") + File.separator +
+                    ".mail" + File.separator + "basicConfigs.properties"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -148,7 +150,8 @@ public class MailAdder extends Stage {
                 Stage dialogStage = new Stage();
                 dialogStage.initModality(Modality.WINDOW_MODAL);
 
-                Button ok = new Button("Ok"); ok.setOnAction((ActionEvent ev) -> this.close());
+                Button ok = new Button("Ok");
+                ok.setOnAction((ActionEvent ev) -> this.close());
                 VBox vbox = new VBox(new Text("Couldn't add email"), ok);
                 vbox.setAlignment(Pos.CENTER);
                 vbox.setPadding(new Insets(15));
