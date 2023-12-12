@@ -8,6 +8,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -40,7 +41,7 @@ public class MessageReceiver extends Stage {
         setWidth(Screen.getScreens().get(0).getBounds().getMaxX() / partOfTheScreen);
         setHeight(Screen.getScreens().get(0).getBounds().getMaxY() / partOfTheScreen);
         setTitle("ReceivedMessage");
-        setResizable(false);
+        setResizable(true);
         show();
     }
 
@@ -65,14 +66,16 @@ public class MessageReceiver extends Stage {
         TextArea text = new TextArea();
         mainPane.getChildren().add(text);
         //
+        WebView reflectHtml = new WebView();
+        mainPane.getChildren().add(reflectHtml);
+        //
         ComboBox<String> download = new ComboBox<>();
         download.setValue("Files");
         mainPane.getChildren().add(download);
 
-        // Checking whether multipart
         Multipart mp;
         MimeBodyPart[] allParts;
-        try {
+        if (message.getContent() instanceof Multipart) {
             mp = (Multipart) message.getContent();
             int count = mp.getCount();
             if (count == 0) return;
@@ -84,6 +87,9 @@ public class MessageReceiver extends Stage {
                 MimeBodyPart part = (MimeBodyPart) mp.getBodyPart(i);
                 if (part.getContentType().toLowerCase().contains("text/plain")) {
                     textItSelf.append(part.getContent()).append("\n");
+                }
+                else if (part.getContentType().toLowerCase().contains("text/html")) {
+                    reflectHtml.getEngine().loadContent(part.getContent().toString());
                 } else {
                     download.getItems().add(UserData.decode(part.getFileName()));
                 }
@@ -105,8 +111,23 @@ public class MessageReceiver extends Stage {
                     }
                 }
             });
-        } catch (IOException | MessagingException e) {
-            throw new RuntimeException(e);
+        } else if (message.getContent() instanceof MimeBodyPart) {
+            MimeBodyPart content = (MimeBodyPart) message.getContent();
+            if (content.getContentType().toLowerCase().contains("text/plain")) {
+                text.setText((String) content.getContent() + '\n');
+            }
+            else if (content.getContentType().toLowerCase().contains("text/html")) {
+                reflectHtml.getEngine().loadContent(content.getContent().toString());
+            } else {
+                download.getItems().add(UserData.decode(content.getFileName()));
+            }
+        } else {
+            String str = (String)message.getContent();
+            if (str.contains("!DOCTYPE html") || str.contains("!DOCTYPE HTML")) {
+                reflectHtml.getEngine().loadContent(str);
+            } else {
+                text.setText(str);
+            }
         }
     }
 }
