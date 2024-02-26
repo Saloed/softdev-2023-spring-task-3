@@ -1,6 +1,6 @@
-# Почтовый клиент
-Аутентификация осуществляется по паролю приложения
-### Для запуска:
+# Mail Client
+Authentication processes via app password
+### Run:
 ```
 mvn javafx:run
 ```
